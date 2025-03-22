@@ -1,0 +1,46 @@
+{
+  "Hero": {
+    "title": "QuantumPoly",
+    "subtitle": "Die Verschmelzung von künstlicher Intelligenz mit nachhaltiger Innovation und Metaverse-Zukunft",
+    "button": "Zukunft mitgestalten"
+  },
+  "About": {
+    "title": "Über Uns",
+    "description": "QuantumPoly führt die Konvergenz von Quantencomputing, Blockchain und nachhaltigen KI-Lösungen an. Wir entwickeln Technologien, die die nächste digitale Revolution prägen werden, während wir ethische Standards und Umweltverantwortung wahren."
+  },
+  "Vision": {
+    "title": "Unsere Vision",
+    "description": "Wir stellen uns eine Welt vor, in der Technologie das menschliche Potenzial ohne Kompromisse erweitert. Unser Team aus Visionären, Ingenieuren und ethischen KI-Experten ist bestrebt, Systeme zu entwickeln, die sowohl Innovation als auch Verantwortung priorisieren."
+  },
+  "Newsletter": {
+    "title": "Bleiben Sie informiert",
+    "description": "Abonnieren Sie unseren Newsletter für die neuesten Entwicklungen in Quantentechnologie und nachhaltiger KI.",
+    "placeholder": "Ihre E-Mail-Adresse",
+    "button": "Abonnieren",
+    "successMessage": "Vielen Dank für Ihr Abonnement!"
+  },
+  "Footer": {
+    "copyright": "© 2023 QuantumPoly. Alle Rechte vorbehalten.",
+    "links": {
+      "privacy": "Datenschutzerklärung",
+      "terms": "Nutzungsbedingungen",
+      "contact": "Kontakt"
+    }
+  },
+  "CookieBanner": {
+    "message": "Wir verwenden Cookies, um Ihre Erfahrung auf unserer Website zu verbessern.",
+    "accept": "Alle akzeptieren",
+    "decline": "Nur wesentliche",
+    "settings": "Cookie-Einstellungen"
+  },
+  "Legal": {
+    "impressum": "Impressum",
+    "privacy": "Datenschutz"
+  },
+  "LanguageSwitcher": {
+    "title": "Sprache",
+    "en": "Englisch",
+    "de": "Deutsch",
+    "tr": "Türkisch"
+  }
+} 

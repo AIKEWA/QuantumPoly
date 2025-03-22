@@ -1,0 +1,23 @@
+{
+  "extends": [
+    "next/core-web-vitals",
+    "plugin:tailwindcss/recommended"
+  ],
+  "plugins": [
+    "tailwindcss",
+    "prettier",
+    "eslint-plugin-prettier"
+  ],
+  "rules": {
+    "tailwindcss/no-custom-classname": "warn",
+    "tailwindcss/classnames-order": "warn",
+    "react/no-unescaped-entities": "off",
+    "no-restricted-syntax": [
+      "error",
+      {
+        "selector": "ExportNamedDeclaration[declaration.type='VariableDeclaration'][declaration.declarations.0.id.name='config'] CallExpression[callee.type!='Literal']",
+        "message": "Next.js middleware config.matcher must use static values, not function calls or expressions."
+      }
+    ]
+  }
+} 
