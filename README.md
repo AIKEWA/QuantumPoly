@@ -231,6 +231,17 @@ The project is configured for deployment on Vercel, but can be deployed on any p
 
 - `NEXT_PUBLIC_ANALYTICS_ID`: Vercel Analytics ID (optional)
 
+Python tooling is available to manage additional secrets:
+
+```bash
+python generate_secrets_example.py
+```
+
+This creates a `secrets_example.env` file with placeholders for required values
+defined in `config.py` (`DB_URL`, `API_KEY`, `DEBUG_MODE`). Copy this file to
+`.env` and edit the values or export them in your environment before running any
+Python code that calls `config.get_settings()`.
+
 ## 🤝 Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
