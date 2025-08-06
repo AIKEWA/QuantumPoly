@@ -27,7 +27,7 @@ export default function About() {
               <div className="w-full h-full rounded flex items-center justify-center bg-black bg-opacity-70">
                 <div className="text-center">
                   <div className="mb-4 text-6xl">🧠</div>
-                  <p className="text-cyan-400 font-mono">// FUTURISTIC ILLUSTRATION</p>
+                  <p className="text-cyan-400 font-mono">{/* FUTURISTIC ILLUSTRATION */}VISUALIZATION</p>
                 </div>
               </div>
             </div>
