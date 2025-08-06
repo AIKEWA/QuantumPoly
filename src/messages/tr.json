@@ -1,0 +1,46 @@
+{
+  "Hero": {
+    "title": "QuantumPoly",
+    "subtitle": "Yapay Zekayı Sürdürülebilir İnovasyon ve Metaverse Geleceğiyle Birleştirmek",
+    "button": "Geleceğe Katılın"
+  },
+  "About": {
+    "title": "Hakkımızda",
+    "description": "QuantumPoly, kuantum hesaplama, blok zincir ve sürdürülebilir yapay zeka çözümlerinin yakınsamasına öncülük ediyor. Etik standartları ve çevresel sorumluluğu korurken, bir sonraki dijital devrimi şekillendirecek teknolojileri geliştiriyoruz."
+  },
+  "Vision": {
+    "title": "Vizyonumuz",
+    "description": "Teknolojinin insan potansiyelini ödün vermeden geliştirdiği bir dünya hayal ediyoruz. Vizyoner, mühendis ve etik yapay zeka uzmanlarından oluşan ekibimiz, hem yeniliği hem de sorumluluğu ön planda tutan sistemler geliştirmeyi taahhüt ediyor."
+  },
+  "Newsletter": {
+    "title": "Güncel Kalın",
+    "description": "Kuantum teknolojisi ve sürdürülebilir yapay zeka gelişmelerindeki en son gelişmeler için bültenimize abone olun.",
+    "placeholder": "E-posta adresiniz",
+    "button": "Abone Ol",
+    "successMessage": "Abone olduğunuz için teşekkür ederiz!"
+  },
+  "Footer": {
+    "copyright": "© 2023 QuantumPoly. Tüm hakları saklıdır.",
+    "links": {
+      "privacy": "Gizlilik Politikası",
+      "terms": "Kullanım Koşulları",
+      "contact": "İletişim"
+    }
+  },
+  "CookieBanner": {
+    "message": "Web sitemizde deneyiminizi geliştirmek için çerezler kullanıyoruz.",
+    "accept": "Tümünü Kabul Et",
+    "decline": "Sadece Gerekli Olanlar",
+    "settings": "Çerez Ayarları"
+  },
+  "Legal": {
+    "impressum": "Künye",
+    "privacy": "Gizlilik Politikası"
+  },
+  "LanguageSwitcher": {
+    "title": "Dil",
+    "en": "İngilizce",
+    "de": "Almanca",
+    "tr": "Türkçe"
+  }
+} 

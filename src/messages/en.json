@@ -1,0 +1,46 @@
+{
+  "Hero": {
+    "title": "QuantumPoly",
+    "subtitle": "Merging Artificial Intelligence with Sustainable Innovation and Metaverse Futures",
+    "button": "Join the Future"
+  },
+  "About": {
+    "title": "About Us",
+    "description": "QuantumPoly leads the convergence of quantum computing, blockchain, and sustainable AI solutions. We're pioneering technologies that will shape the next digital revolution while maintaining ethical standards and environmental responsibility."
+  },
+  "Vision": {
+    "title": "Our Vision",
+    "description": "We envision a world where technology enhances human potential without compromise. Our team of visionaries, engineers, and ethical AI experts are committed to developing systems that prioritize both innovation and responsibility."
+  },
+  "Newsletter": {
+    "title": "Stay Updated",
+    "description": "Subscribe to our newsletter for the latest in quantum technology and sustainable AI developments.",
+    "placeholder": "Your email address",
+    "button": "Subscribe",
+    "successMessage": "Thank you for subscribing!"
+  },
+  "Footer": {
+    "copyright": "© 2023 QuantumPoly. All rights reserved.",
+    "links": {
+      "privacy": "Privacy Policy",
+      "terms": "Terms of Service",
+      "contact": "Contact"
+    }
+  },
+  "CookieBanner": {
+    "message": "We use cookies to enhance your experience on our website.",
+    "accept": "Accept All",
+    "decline": "Essential Only",
+    "settings": "Cookie Settings"
+  },
+  "Legal": {
+    "impressum": "Legal Notice",
+    "privacy": "Privacy Policy"
+  },
+  "LanguageSwitcher": {
+    "title": "Language",
+    "en": "English",
+    "de": "German",
+    "tr": "Turkish"
+  }
+} 
