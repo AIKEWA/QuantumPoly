@@ -1,0 +1,40 @@
+{
+  "nav": {
+    "home": "Home",
+    "about": "About",
+    "vision": "Vision",
+    "contact": "Contact"
+  },
+  "hero": {
+    "title": "QuantumPoly - The Future, Now",
+    "subtitle": "Blending AI, Sustainability, and the Metaverse into a visionary future",
+    "cta": "Explore the Future"
+  },
+  "about": {
+    "title": "About QuantumPoly",
+    "description": "We are pioneering the intersection of quantum computing, artificial intelligence, and sustainable technology to create tomorrow's solutions today."
+  },
+  "vision": {
+    "title": "Our Vision",
+    "description": "Building a sustainable digital future through quantum-powered innovations"
+  },
+  "newsletter": {
+    "title": "Stay Updated",
+    "description": "Get the latest updates on our quantum innovations",
+    "placeholder": "Enter your email",
+    "subscribe": "Subscribe",
+    "success": "Successfully subscribed!",
+    "error": "Please enter a valid email address"
+  },
+  "footer": {
+    "copyright": "© 2024 QuantumPoly. All rights reserved.",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Something went wrong",
+    "retry": "Try again",
+    "close": "Close"
+  }
+}

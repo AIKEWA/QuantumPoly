@@ -1,28 +1,18 @@
-import '../styles/globals.css';
-import { Metadata } from 'next';
+/**
+ * Legacy Root Layout - Redirects to Internationalized Layout
+ *
+ * This file maintains compatibility for any non-localized routes
+ * and redirects users to the appropriate localized version.
+ */
 
-export const metadata: Metadata = {
-  title: 'QuantumPoly - The Future, Now',
-  description: 'QuantumPoly blends AI, Sustainability, and the Metaverse into a visionary future.',
-  keywords: 'AI, Quantum Computing, Metaverse, Sustainability',
-  robots: 'index, follow',
-};
-
-export const viewport = {
-  width: 'device-width',
-  initialScale: 1,
-};
+import { redirect } from 'next/navigation';
+import { defaultLocale } from '../../i18n';
 
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  return (
-    <html lang="en">
-      <body className="min-h-screen font-sans antialiased">
-        {children}
-      </body>
-    </html>
-  );
-} 
+  // Redirect to the default locale
+  redirect(`/${defaultLocale}`);
+}

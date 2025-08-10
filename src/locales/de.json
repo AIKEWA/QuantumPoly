@@ -1,0 +1,77 @@
+{
+  "nav": {
+    "home": "Startseite",
+    "about": "Über uns",
+    "vision": "Vision",
+    "contact": "Kontakt",
+    "language": "Sprache"
+  },
+  "hero": {
+    "title": "QuantumPoly",
+    "subtitle": "Vereinigung von Künstlicher Intelligenz mit Nachhaltiger Innovation und Metaverse-Zukünften",
+    "cta": "Der Zukunft beitreten",
+    "scrollIndicator": "Nach unten scrollen, um mehr zu erfahren"
+  },
+  "about": {
+    "title": "Über QuantumPoly",
+    "description": "Wir sind Pioniere am Schnittpunkt von Quantencomputing, Künstlicher Intelligenz und nachhaltiger Technologie, um Lösungen für morgen zu schaffen.",
+    "features": {
+      "ai": {
+        "title": "Künstliche Intelligenz",
+        "description": "Fortgeschrittene KI-Systeme, die lernen, sich anpassen und evolieren, um komplexe globale Herausforderungen zu lösen."
+      },
+      "quantum": {
+        "title": "Quantencomputing",
+        "description": "Nutzung der Quantenmechanik zur Verarbeitung von Informationen in beispiellosen Maßstäben und Geschwindigkeiten."
+      },
+      "sustainability": {
+        "title": "Nachhaltige Innovation",
+        "description": "Entwicklung von Technologien, die unseren Planeten schützen und das menschliche Potenzial vorantreiben."
+      }
+    }
+  },
+  "vision": {
+    "title": "Unsere Vision",
+    "description": "Aufbau einer nachhaltigen digitalen Zukunft durch quantengetriebene Innovationen, die der gesamten Menschheit zugutekommen.",
+    "goals": {
+      "innovation": "Durchbruchinnovationen in der Quantentechnologie vorantreiben",
+      "sustainability": "Umweltverantwortliche Lösungen schaffen",
+      "accessibility": "Fortgeschrittene Technologie für alle zugänglich machen"
+    }
+  },
+  "newsletter": {
+    "title": "Bleiben Sie auf dem Laufenden",
+    "description": "Erhalten Sie die neuesten Updates zu unseren Quanteninnovationen und Durchbrüchen in nachhaltiger Technologie.",
+    "placeholder": "Geben Sie Ihre E-Mail-Adresse ein",
+    "subscribe": "Jetzt abonnieren",
+    "success": "Erfolgreich abonniert! Willkommen in der Zukunft.",
+    "error": "Bitte geben Sie eine gültige E-Mail-Adresse ein",
+    "privacy": "Wir respektieren Ihre Privatsphäre. Kein Spam, jederzeit abbestellbar."
+  },
+  "footer": {
+    "copyright": "© 2024 QuantumPoly. Alle Rechte vorbehalten.",
+    "privacy": "Datenschutzrichtlinie",
+    "terms": "Nutzungsbedingungen",
+    "social": {
+      "follow": "Folgen Sie uns",
+      "twitter": "Auf Twitter folgen",
+      "github": "Auf GitHub ansehen",
+      "linkedin": "Auf LinkedIn verbinden"
+    }
+  },
+  "common": {
+    "loading": "Laden...",
+    "error": "Etwas ist schiefgelaufen",
+    "retry": "Erneut versuchen",
+    "close": "Schließen",
+    "save": "Speichern",
+    "cancel": "Abbrechen",
+    "confirm": "Bestätigen",
+    "search": "Suchen"
+  },
+  "language": {
+    "switchTo": "Wechseln zu {language}",
+    "current": "Aktuelle Sprache: {language}",
+    "available": "Verfügbare Sprachen"
+  }
+}

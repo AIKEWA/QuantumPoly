@@ -1,0 +1,77 @@
+{
+  "nav": {
+    "home": "Anasayfa",
+    "about": "Hakkımızda",
+    "vision": "Vizyon",
+    "contact": "İletişim",
+    "language": "Dil"
+  },
+  "hero": {
+    "title": "QuantumPoly",
+    "subtitle": "Yapay Zeka'yı Sürdürülebilir İnovasyon ve Metaverse Gelecekleri ile Birleştirme",
+    "cta": "Geleceğe Katıl",
+    "scrollIndicator": "Daha fazla öğrenmek için aşağı kaydırın"
+  },
+  "about": {
+    "title": "QuantumPoly Hakkında",
+    "description": "Kuantum hesaplama, yapay zeka ve sürdürülebilir teknolojinin kesişim noktasında öncülük ederek yarının çözümlerini bugün yaratıyoruz.",
+    "features": {
+      "ai": {
+        "title": "Yapay Zeka",
+        "description": "Karmaşık küresel zorlukları çözmek için öğrenen, adapte olan ve evrilen gelişmiş AI sistemleri."
+      },
+      "quantum": {
+        "title": "Kuantum Hesaplama",
+        "description": "Bilgiyi benzeri görülmemiş ölçeklerde ve hızlarda işlemek için kuantum mekaniğini kullanma."
+      },
+      "sustainability": {
+        "title": "Sürdürülebilir İnovasyon",
+        "description": "Gezegenimizi koruyan teknolojiler geliştirirken insan potansiyelini ilerletme."
+      }
+    }
+  },
+  "vision": {
+    "title": "Vizyonumuz",
+    "description": "Tüm insanlığa fayda sağlayan kuantum destekli inovasyonlar yoluyla sürdürülebilir bir dijital gelecek inşa etmek.",
+    "goals": {
+      "innovation": "Kuantum teknolojisinde çığır açan inovasyonları yönlendirmek",
+      "sustainability": "Çevreye duyarlı çözümler yaratmak",
+      "accessibility": "Gelişmiş teknolojiyi herkes için erişilebilir kılmak"
+    }
+  },
+  "newsletter": {
+    "title": "Güncel Kalın",
+    "description": "Kuantum inovasyonlarımız ve sürdürülebilir teknoloji atılımlarımız hakkında en son güncellemeleri alın.",
+    "placeholder": "E-posta adresinizi girin",
+    "subscribe": "Şimdi Abone Ol",
+    "success": "Başarıyla abone oldunuz! Geleceğe hoş geldiniz.",
+    "error": "Lütfen geçerli bir e-posta adresi girin",
+    "privacy": "Gizliliğinize saygı duyuyoruz. Spam yok, istediğiniz zaman abonelikten çıkın."
+  },
+  "footer": {
+    "copyright": "© 2024 QuantumPoly. Tüm hakları saklıdır.",
+    "privacy": "Gizlilik Politikası",
+    "terms": "Hizmet Şartları",
+    "social": {
+      "follow": "Bizi takip edin",
+      "twitter": "Twitter'da takip et",
+      "github": "GitHub'da görüntüle",
+      "linkedin": "LinkedIn'de bağlan"
+    }
+  },
+  "common": {
+    "loading": "Yükleniyor...",
+    "error": "Bir şeyler yanlış gitti",
+    "retry": "Tekrar dene",
+    "close": "Kapat",
+    "save": "Kaydet",
+    "cancel": "İptal",
+    "confirm": "Onayla",
+    "search": "Ara"
+  },
+  "language": {
+    "switchTo": "{language} diline geç",
+    "current": "Mevcut dil: {language}",
+    "available": "Kullanılabilir diller"
+  }
+}

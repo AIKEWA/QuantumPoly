@@ -1,0 +1,77 @@
+{
+  "nav": {
+    "home": "Home",
+    "about": "About",
+    "vision": "Vision",
+    "contact": "Contact",
+    "language": "Language"
+  },
+  "hero": {
+    "title": "QuantumPoly",
+    "subtitle": "Merging Artificial Intelligence with Sustainable Innovation and Metaverse Futures",
+    "cta": "Join the Future",
+    "scrollIndicator": "Scroll down to learn more"
+  },
+  "about": {
+    "title": "About QuantumPoly",
+    "description": "We are pioneering the intersection of quantum computing, artificial intelligence, and sustainable technology to create tomorrow's solutions today.",
+    "features": {
+      "ai": {
+        "title": "Artificial Intelligence",
+        "description": "Advanced AI systems that learn, adapt, and evolve to solve complex global challenges."
+      },
+      "quantum": {
+        "title": "Quantum Computing",
+        "description": "Harnessing quantum mechanics to process information at unprecedented scales and speeds."
+      },
+      "sustainability": {
+        "title": "Sustainable Innovation",
+        "description": "Building technologies that protect our planet while advancing human potential."
+      }
+    }
+  },
+  "vision": {
+    "title": "Our Vision",
+    "description": "Building a sustainable digital future through quantum-powered innovations that benefit all humanity.",
+    "goals": {
+      "innovation": "Drive breakthrough innovations in quantum technology",
+      "sustainability": "Create environmentally responsible solutions",
+      "accessibility": "Make advanced technology accessible to everyone"
+    }
+  },
+  "newsletter": {
+    "title": "Stay Updated",
+    "description": "Get the latest updates on our quantum innovations and sustainable technology breakthroughs.",
+    "placeholder": "Enter your email address",
+    "subscribe": "Subscribe Now",
+    "success": "Successfully subscribed! Welcome to the future.",
+    "error": "Please enter a valid email address",
+    "privacy": "We respect your privacy. No spam, unsubscribe anytime."
+  },
+  "footer": {
+    "copyright": "© 2024 QuantumPoly. All rights reserved.",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service",
+    "social": {
+      "follow": "Follow us",
+      "twitter": "Follow on Twitter",
+      "github": "View on GitHub",
+      "linkedin": "Connect on LinkedIn"
+    }
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Something went wrong",
+    "retry": "Try again",
+    "close": "Close",
+    "save": "Save",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "search": "Search"
+  },
+  "language": {
+    "switchTo": "Switch to {language}",
+    "current": "Current language: {language}",
+    "available": "Available languages"
+  }
+}
