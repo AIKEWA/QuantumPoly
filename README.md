@@ -1,3 +1,43 @@
+## i18n & Logger Conventions
+
+### i18n
+- Canonical module: `src/i18n/index.ts`.
+- Add new locales by adding `src/locales/<locale>.json` and calling `i18n.loadLocale(locale, dict)` at startup if needed.
+- Missing key policy:
+  - Development: warns in console with call stack.
+  - Production: throws to fail build/tests.
+- Usage example:
+```ts
+import { i18n } from '@/i18n';
+i18n.setLocale('de');
+i18n.t('welcome.title', { name: 'Aykut' });
+```
+
+### Logger
+- Import from `src/utils/logger.ts`.
+- Quickstart:
+```ts
+import { info, withErrorLogging, timeStart } from '@/utils/logger';
+const stop = timeStart('loadDashboard');
+// ... work ...
+stop(); // logs elapsed
+const safe = withErrorLogging(doRiskyThing, 'RiskyThing');
+safe();
+```
+- Config overrides, persistence key, and clearing logs:
+```ts
+import { updateConfig, clearStoredLogs } from '@/utils/logger';
+updateConfig({ localStorageKey: 'app.logs', debounceMs: 250 });
+clearStoredLogs();
+```
+
+### QA Checklist (manual)
+- Change locale via UI → strings update instantly; no console missing-key warnings.
+- Force a missing key → expected dev warning appears.
+- Trigger 200+ logs quickly → app stays responsive; logs persist after refresh.
+- Simulate SSR route render → no window references crash the build.
+- Wrap a throwing function with `withErrorLogging` → error recorded & rethrown.
+
 # QuantumPoly - Modular UI Excellence
 
 A Next.js application showcasing modular, accessible, and internationalized React components built with comprehensive testing and documentation.
@@ -275,6 +315,50 @@ npm run storybook
 ```
 
 Access Storybook at [http://localhost:6006](http://localhost:6006)
+
+## 📘 Storybook v9 Setup (Next.js)
+
+This repository is already configured for Storybook v9 with Next.js.
+
+### Install (if setting up from scratch)
+
+```bash
+npm i -D storybook @storybook/nextjs @storybook/react @storybook/addon-links @storybook/addon-docs @storybook/test
+```
+
+### Scripts
+
+```json
+{
+  "storybook": "storybook dev -p 6006",
+  "build-storybook": "storybook build"
+}
+```
+
+### Configuration
+
+- `/.storybook/main.ts` — uses `@storybook/nextjs` framework and enables autodocs:
+  - `stories`: `src/**/*.stories.@(js|jsx|ts|tsx|mdx)`
+  - `addons`: `@storybook/addon-docs`, `@storybook/addon-links`
+  - `docs.autodocs: 'tag'`
+  - `staticDirs: ['public']`
+- `/.storybook/preview.tsx` — global parameters and decorators:
+  - Loads `src/styles/globals.css`
+  - Configures actions, controls, backgrounds, viewport, a11y and docs
+  - Wraps stories in a layout container for light/dark background testing
+
+### Writing Stories
+
+- Place stories alongside components, e.g. `src/components/Hero.stories.tsx`.
+- Supported names: `*.stories.tsx` or `*.story.tsx`.
+- Add the `autodocs` tag on stories or rely on project-level `tags: ['autodocs']`.
+
+### Troubleshooting
+
+- Node 18+ is required.
+- If you encounter peer dependency warnings/errors:
+  1) Remove `node_modules` and lockfile, 2) `npm install` again.
+- Ensure all Storybook packages are on the same major/minor version (v9.x).
 
 ## 🎨 Design System
 
