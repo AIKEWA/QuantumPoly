@@ -60,7 +60,8 @@ jobs:
       - name: Deploy Prebuilt (Preview)
         id: deploy
         run: |
-          url=$(npx vercel deploy --prebuilt --token=$VERCEL_TOKEN)
+          url=$(npx vercel deploy --prebuilt --token="$VERCEL_TOKEN")
           echo "url=$url" >> $GITHUB_OUTPUT
       - name: Echo Preview URL
-        run: echo "Preview URL: ${{ steps.deploy.outputs.url }}"
+        run: |
+          echo "Preview URL: ${{ steps.deploy.outputs.url }}"
