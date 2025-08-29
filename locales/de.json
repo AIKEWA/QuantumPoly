@@ -1,0 +1,9 @@
+{
+  "hero": { "title": "Gestalte die Zukunft.", "subtitle": "Schneller liefern mit Klarheit.", "cta": "Loslegen" },
+  "about": { "heading": "Über uns", "body": "Wir entwickeln robuste Produkte." },
+  "vision": { "heading": "Unsere Vision", "points": ["Barrierefrei", "Leistungsstark", "Nachhaltig"] },
+  "newsletter": { "heading": "Bleib informiert", "emailLabel": "E-Mail-Adresse", "submit": "Abonnieren", "success": "Danke! Du bist dabei." },
+  "footer": { "copyright": "© {{year}} QuantumPoly" },
+  "language": { "label": "Sprache", "en": "English", "de": "Deutsch", "tr": "Türkçe" }
+}
+

@@ -1,0 +1,9 @@
+{
+  "hero": { "title": "Build the future.", "subtitle": "Ship faster with clarity.", "cta": "Get Started" },
+  "about": { "heading": "About Us", "body": "We craft resilient products." },
+  "vision": { "heading": "Our Vision", "points": ["Accessible", "Performant", "Sustainable"] },
+  "newsletter": { "heading": "Stay in the loop", "emailLabel": "Email address", "submit": "Subscribe", "success": "Thanks! You're in." },
+  "footer": { "copyright": "© {{year}} QuantumPoly" },
+  "language": { "label": "Language", "en": "English", "de": "Deutsch", "tr": "Türkçe" }
+}
+

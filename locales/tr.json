@@ -1,0 +1,9 @@
+{
+  "hero": { "title": "Geleceği inşa et.", "subtitle": "Daha hızlı ve net teslim et.", "cta": "Başla" },
+  "about": { "heading": "Hakkımızda", "body": "Dayanıklı ürünler geliştiriyoruz." },
+  "vision": { "heading": "Vizyonumuz", "points": ["Erişilebilir", "Performanslı", "Sürdürülebilir"] },
+  "newsletter": { "heading": "Güncel kal", "emailLabel": "E-posta adresi", "submit": "Abone ol", "success": "Teşekkürler! Listemize eklendin." },
+  "footer": { "copyright": "© {{year}} QuantumPoly" },
+  "language": { "label": "Dil", "en": "English", "de": "Deutsch", "tr": "Türkçe" }
+}
+
