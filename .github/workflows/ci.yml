@@ -59,6 +59,7 @@ jobs:
         run: |
           url=$(npx vercel deploy --prebuilt --token="$VERCEL_TOKEN")
           echo "url=$url" >> $GITHUB_OUTPUT
-      - run: echo "🔗 Vercel Preview: ${{ steps.deploy.outputs.url }}" >> $GITHUB_STEP_SUMMARY
+      - name: Add Preview URL to summary
+        run: echo "🔗 Vercel Preview: ${{ steps.deploy.outputs.url }}" | tee -a $GITHUB_STEP_SUMMARY
     outputs:
       preview_url: ${{ steps.deploy.outputs.url }}
