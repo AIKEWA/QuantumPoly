@@ -4,10 +4,11 @@ import { notFound } from 'next/navigation';
 
 // Thin re-export that defers to canonical locales and messages
 export default getRequestConfig(async ({ locale }) => {
-  if (!(locales as readonly string[]).includes(locale)) {
+  if (!locale || !(locales as readonly string[]).includes(locale)) {
     notFound();
   }
   return {
+    locale,
     messages: (await import(`../src/locales/${locale}.json`)).default,
   };
 });

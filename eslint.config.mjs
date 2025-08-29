@@ -42,6 +42,13 @@ const eslintConfig = [
       ],
     },
   },
+  // Disable typed linting for Storybook stories to avoid TS project parsing
+  {
+    files: ['**/*.stories.ts', '**/*.stories.tsx', '**/*.stories.js', '**/*.stories.jsx'],
+    languageOptions: {
+      parserOptions: { project: null },
+    },
+  },
   {
     ignores: [
       '.next/**/*',
@@ -52,6 +59,9 @@ const eslintConfig = [
       'coverage/**/*',
       '*.config.js',
       '*.config.mjs',
+      // Ignore Storybook config and stories from typed linting
+      '.storybook/**/*',
+      '**/*.stories.*',
     ],
   },
   ...prettierConfig,

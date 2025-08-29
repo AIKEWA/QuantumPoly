@@ -1,3 +1,17 @@
+import type { StorybookConfig } from '@storybook/nextjs';
+
+const config: StorybookConfig = {
+  framework: { name: '@storybook/nextjs' },
+  addons: [
+    '@storybook/addon-docs',
+    '@storybook/addon-links',
+    // optional: '@storybook/addon-controls', '@storybook/addon-backgrounds', '@storybook/addon-viewport'
+  ],
+  stories: ['../src/**/*.stories.@(ts|tsx)']
+};
+
+export default config;
+
 /**
  * @fileoverview Storybook main configuration
  * @module .storybook/main

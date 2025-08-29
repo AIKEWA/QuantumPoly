@@ -33,6 +33,8 @@ export interface AboutProps extends BaseComponentProps {
   title?: string;
   /** Main description text (optional - uses translation if not provided) */
   description?: string;
+  /** Optional array of paragraph strings to render rich content */
+  content?: string[];
   /** Alt text for visual content */
   visualAltText?: string;
   /** Optional image source for the about section */
@@ -57,6 +59,8 @@ export interface VisionProps extends BaseComponentProps {
   title?: string;
   /** Description text (optional - uses translation if not provided) */
   description?: string;
+  /** Optional list of pillars to render; defaults provided by component */
+  pillars?: VisionPillar[];
 }
 
 // Newsletter component props interface
@@ -65,11 +69,15 @@ export interface NewsletterProps extends BaseComponentProps {
   title?: string;
   /** Description text (optional - uses translation if not provided) */
   description?: string;
-  /** Email input placeholder text (optional - uses translation if not provided) */
+  /** Email input placeholder text (alias: placeholder) */
+  emailPlaceholder?: string;
+  /** Deprecated alias for emailPlaceholder */
   placeholder?: string;
   /** Subscribe button text (optional - uses translation if not provided) */
   subscribeText?: string;
-  /** Privacy notice text (optional - uses translation if not provided) */
+  /** Privacy notice text (alias: privacyNote) */
+  privacyText?: string;
+  /** Deprecated alias for privacyText */
   privacyNote?: string;
   /** Form submission handler */
   onSubmit?: (email: string) => void | Promise<void>;
@@ -96,13 +104,13 @@ export interface SocialLink {
 // Footer component props interface
 export interface FooterProps extends BaseComponentProps {
   /** Company/brand name */
-  brandName: string;
+  brandName?: string;
   /** Copyright text */
-  copyrightText: string;
+  copyrightText?: string;
   /** Tagline or motto */
-  tagline: string;
+  tagline?: string;
   /** Social media links */
-  socialLinks: SocialLink[];
+  socialLinks?: SocialLink[];
   /** Additional footer links */
   footerLinks?: Array<{
     label: string;

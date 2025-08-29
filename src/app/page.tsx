@@ -26,30 +26,9 @@ export default function Home() {
   // REVIEW: Consider adding locale detection and i18n here
   // FEEDBACK: Should we add structured data for SEO?
 
-  // Handler for hero CTA interaction
-  const handleHeroCTA = () => {
-    // DISCUSS: Add analytics tracking
-    const newsletterSection = document.querySelector('#newsletter-section');
-    if (newsletterSection) {
-      newsletterSection.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start',
-      });
-    }
-  };
+  // NOTE: Avoid passing event handlers from Server Components to Client Components
 
-  // Handler for newsletter submission
-  const handleNewsletterSubmit = async (email: string) => {
-    // REVIEW: Implement actual newsletter subscription logic
-    // This is a placeholder for demonstration
-    console.log('Newsletter subscription:', email);
-
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000));
-
-    // In a real implementation, this would call your newsletter API
-    // throw new Error('Subscription failed'); // Uncomment to test error handling
-  };
+  // NOTE: Avoid passing event handlers from Server Components to Client Components
 
   return (
     <>
@@ -60,7 +39,6 @@ export default function Home() {
           title="QuantumPoly"
           subtitle="Merging Artificial Intelligence with Sustainable Innovation and Metaverse Futures"
           ctaText="Join the Future"
-          onCtaClick={handleHeroCTA}
           scrollIndicatorLabel="Scroll down to learn more about QuantumPoly"
         />
 
@@ -106,7 +84,6 @@ export default function Home() {
           emailPlaceholder="Enter your email"
           subscribeText="Subscribe"
           privacyText="We respect your privacy. Unsubscribe at any time."
-          onSubmit={handleNewsletterSubmit}
         />
 
         {/* Footer Section */}

@@ -74,11 +74,6 @@ export default async function HomePage({ params: { locale } }: HomePageProps) {
         subtitle={heroT('subtitle')}
         ctaText={heroT('cta')}
         scrollIndicatorLabel={heroT('scrollIndicator')}
-        onCtaClick={() => {
-          // Scroll to about section
-          const aboutSection = document.querySelector('#about-section');
-          aboutSection?.scrollIntoView({ behavior: 'smooth' });
-        }}
       />
 
       {/* About Section */}

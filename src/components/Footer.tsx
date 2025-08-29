@@ -108,7 +108,7 @@ export default function Footer(props: FooterProps) {
               className="flex flex-wrap justify-center gap-6 text-sm"
               aria-label="Footer navigation"
             >
-              {footerLinks.map((link, index) => (
+              {footerLinks.map((link: { label: string; href: string }, index: number) => (
                 <a
                   key={index}
                   href={link.href}
@@ -132,7 +132,7 @@ export default function Footer(props: FooterProps) {
             aria-label="Social media links"
             role="navigation"
           >
-            {computedSocialLinks.map((link, index) => (
+            {computedSocialLinks.map((link: SocialLink, index: number) => (
               <a
                 key={index}
                 href={link.href}

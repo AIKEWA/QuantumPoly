@@ -21,6 +21,7 @@ import { useTranslations } from 'next-intl';
 export default function About({
   title,
   description,
+  content,
   visualAltText = 'Futuristic brain visualization representing AI and quantum computing integration',
   imageSrc,
   className = '',
@@ -63,9 +64,9 @@ export default function About({
         <div className="flex flex-col items-center gap-8 sm:gap-12 lg:flex-row">
           {/* Content Section */}
           <div className="lg:w-1/2">
-            {Array.isArray((props as any).content) && (props as any).content.length > 0 ? (
+            {Array.isArray(content) && content.length > 0 ? (
               <div aria-describedby={`${id}-content`}>
-                {(props as any).content.map((paragraph: string, index: number) => (
+                {content.map((paragraph: string, index: number) => (
                   <p
                     key={index}
                     className="text-base leading-relaxed text-gray-700 transition-colors duration-300 sm:text-lg dark:text-gray-300"

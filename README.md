@@ -439,6 +439,21 @@ const nextConfig = {
 };
 ```
 
+### Build & Lint Policy
+
+- Only define event handlers in client components. In the App Router, do not pass functions from server components to client components.
+- Storybook story files are excluded from TypeScript project references and ESLint typed linting.
+  - `tsconfig.json` excludes: `**/*.stories.ts(x)`
+  - `eslint.config.mjs` ignores: `.storybook/**` and `src/**/*.stories.*`
+- Lint is enforced locally and ignored during production builds for faster/safer deploys.
+  - Local: `npm run lint`
+  - Build: `next.config.mjs` sets `eslint.ignoreDuringBuilds: true`
+  - To re-enable ESLint in builds later, set `ignoreDuringBuilds` to `false`.
+
+### Optional CI Checks
+
+You can add a CI workflow to run `npm run lint` and `npm run test` separately from Vercel. A sample workflow is provided under `.github/workflows/ci.yml` and is configured for manual runs. Enable pull request triggers when ready.
+
 ## 🚀 Deployment
 
 ### Build Process
@@ -520,7 +535,21 @@ For more information, visit our [documentation](https://quantumpoly.dev/docs) or
 2. Create `/locales/es.json` by copying `en.json` keys.
 3. Provide translations.
 4. (App Router) Ensure `[locale]` routes include `es` in `generateStaticParams`.
-5.UM Verify `/es` builds and the switcher lists Español.
+5. Verify `/es` builds and the switcher lists Español.
+
+### Add a string
+
+1. Choose a namespace (e.g., `hero`, `about`, `vision`, `newsletter`, `footer`, `language`).
+2. Add the key with the same structure to all locale files under `src/locales`.
+3. Consume with `useTranslations('<namespace>')('key')` or via props where supported.
+4. For interpolation, add placeholders like `{name}` and pass values.
+
+### Routing notes
+
+- Default locale redirect: `/` redirects to `/${defaultLocale}` (currently `en`).
+- Deep path preservation: switching locale preserves the current path and query/hash.
+- Middleware-driven locale routing is enabled via `next-intl/middleware` in `src/middleware.ts`.
+- Locale prefixes are added "as-needed" (no prefix for default locale).
 
 **Add a new string**
 

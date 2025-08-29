@@ -21,11 +21,12 @@ export default getRequestConfig(async ({ locale }) => {
   // Validate at the edge
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
   const supported = (await import('./src/i18n/index')).locales;
-  if (!supported.includes(locale as any)) {
+  if (!locale || !supported.includes(locale as any)) {
     notFound();
   }
 
   return {
+    locale,
     messages: (await import(`./src/locales/${locale}.json`)).default,
     timeZone: 'Europe/Berlin',
   };

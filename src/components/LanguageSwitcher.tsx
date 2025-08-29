@@ -102,6 +102,30 @@ export default function LanguageSwitcher({
         } catch {}
       }
       await Promise.resolve(router.push(fullPath));
+      // After navigation, try to move focus to the main heading for a11y
+      // Attempt multiple times in case of async rendering
+      const tryFocus = () => {
+        const target =
+          (document.getElementById('page-title') as HTMLElement | null) ||
+          (document.getElementById('main-content') as HTMLElement | null) ||
+          (document.querySelector('h1') as HTMLElement | null);
+        if (target && typeof target.focus === 'function') {
+          target.focus();
+          return true;
+        }
+        return false;
+      };
+      // Try immediately and then retry a few times
+      if (!tryFocus()) {
+        let attempts = 0;
+        const maxAttempts = 10;
+        const interval = window.setInterval(() => {
+          attempts += 1;
+          if (tryFocus() || attempts >= maxAttempts) {
+            window.clearInterval(interval);
+          }
+        }, 100);
+      }
     } catch (err) {
       // eslint-disable-next-line no-console
       console.error('Failed to change language:', err);

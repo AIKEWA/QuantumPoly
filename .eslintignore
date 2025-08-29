@@ -31,3 +31,7 @@ coverage/
 
 # Documentation build
 docs/dist/
+
+# Storybook and stories
+.storybook/
+**/*.stories.*
