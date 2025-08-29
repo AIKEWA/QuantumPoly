@@ -37,6 +37,20 @@
       "innovation": "Drive breakthrough innovations in quantum technology",
       "sustainability": "Create environmentally responsible solutions",
       "accessibility": "Make advanced technology accessible to everyone"
+    },
+    "pillars": {
+      "ai": {
+        "title": "Artificial Intelligence",
+        "description": "Advanced AI systems that learn, adapt, and evolve to solve complex global challenges."
+      },
+      "sustainability": {
+        "title": "Sustainable Innovation",
+        "description": "Building technologies that protect our planet while advancing human potential."
+      },
+      "metaverse": {
+        "title": "Metaverse Futures",
+        "description": "Creating immersive virtual worlds that blend reality with quantum-powered experiences."
+      }
     }
   },
   "newsletter": {
@@ -72,6 +86,7 @@
   "language": {
     "switchTo": "Switch to {language}",
     "current": "Current language: {language}",
-    "available": "Available languages"
+    "available": "Available languages",
+    "label": "Select language"
   }
 }

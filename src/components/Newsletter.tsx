@@ -110,7 +110,8 @@ export default function Newsletter({
 
   const currentLoading = isLoading || localLoading;
   const currentSuccess = successMessage || localSuccess;
-  const currentError = errorMessage || localError;
+  // Prefer validation error over external submission error message
+  const currentError = localError || errorMessage || '';
 
   return (
     <section
@@ -164,6 +165,7 @@ export default function Newsletter({
             onSubmit={handleSubmit}
             noValidate
             aria-describedby={`${id}-description`}
+            role="form"
           >
             <div className="flex flex-col gap-4 sm:flex-row">
               <div className="flex-1">
@@ -186,9 +188,10 @@ export default function Newsletter({
 
               <button
                 type="submit"
-                disabled={currentLoading || !email.trim()}
+                disabled={currentLoading || (!email.trim() && !isSubmitted)}
                 className="transform rounded-lg bg-gradient-to-r from-cyan-500 to-blue-600 px-6 py-3 font-medium text-white transition-all duration-300 hover:scale-105 hover:from-cyan-400 hover:to-blue-500 focus:scale-105 focus:outline-none focus:ring-4 focus:ring-cyan-500/50 active:scale-95 disabled:transform-none disabled:cursor-not-allowed disabled:opacity-50 dark:from-cyan-400 dark:to-blue-500 dark:hover:from-cyan-300 dark:hover:to-blue-400"
                 aria-describedby="subscribe-status"
+                aria-label={subscribeText}
               >
                 {currentLoading ? (
                   <span className="flex items-center gap-2">

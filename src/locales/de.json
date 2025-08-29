@@ -37,6 +37,20 @@
       "innovation": "Durchbruchinnovationen in der Quantentechnologie vorantreiben",
       "sustainability": "Umweltverantwortliche Lösungen schaffen",
       "accessibility": "Fortgeschrittene Technologie für alle zugänglich machen"
+    },
+    "pillars": {
+      "ai": {
+        "title": "Künstliche Intelligenz",
+        "description": "Fortgeschrittene KI-Systeme, die lernen, sich anpassen und evolieren, um komplexe globale Herausforderungen zu lösen."
+      },
+      "sustainability": {
+        "title": "Nachhaltige Innovation",
+        "description": "Entwicklung von Technologien, die unseren Planeten schützen und das menschliche Potenzial vorantreiben."
+      },
+      "metaverse": {
+        "title": "Metaverse-Zukünfte",
+        "description": "Schaffung immersiver virtueller Welten, die Realität mit quantengetriebenen Erfahrungen verschmelzen."
+      }
     }
   },
   "newsletter": {
@@ -72,6 +86,7 @@
   "language": {
     "switchTo": "Wechseln zu {language}",
     "current": "Aktuelle Sprache: {language}",
-    "available": "Verfügbare Sprachen"
+    "available": "Verfügbare Sprachen",
+    "label": "Sprache auswählen"
   }
 }

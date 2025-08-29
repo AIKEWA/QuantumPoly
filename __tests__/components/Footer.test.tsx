@@ -4,6 +4,9 @@
  */
 
 import React from 'react';
+jest.mock('next-intl', () => ({
+  useTranslations: () => ((ns?: string) => (key: string) => `${ns ? ns + '.' : ''}${key}`),
+}));
 import { render, screen, fireEvent } from '@testing-library/react';
 import {
   describe,

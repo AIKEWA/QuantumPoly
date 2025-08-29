@@ -19,9 +19,10 @@ const createJestConfig = nextJest({
 const customJestConfig = {
   setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
   testEnvironment: 'jsdom',
+  moduleDirectories: ['node_modules', '<rootDir>'],
 
-  // Module name mapping for path aliases
-  moduleNameMapping: {
+  // Module name mapping for path aliases and static assets
+  moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
     '^@/components/(.*)$': '<rootDir>/src/components/$1',
     '^@/lib/(.*)$': '<rootDir>/src/lib/$1',
@@ -29,6 +30,8 @@ const customJestConfig = {
     '^@/types/(.*)$': '<rootDir>/src/types/$1',
     '^@/hooks/(.*)$': '<rootDir>/src/hooks/$1',
     '^@/locales/(.*)$': '<rootDir>/src/locales/$1',
+    '\\.(css|less|scss|sass)$': 'identity-obj-proxy',
+    '\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$': '<rootDir>/__mocks__/fileMock.js',
   },
 
   // Test patterns
@@ -74,6 +77,10 @@ const customJestConfig = {
     '^.+\\.(js|jsx|ts|tsx)$': ['babel-jest', { presets: ['next/babel'] }],
   },
 
+  transformIgnorePatterns: [
+    '/node_modules/(?!(next-intl|use-intl)/)',
+  ],
+
   // Module file extensions
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json'],
 
@@ -83,23 +90,10 @@ const customJestConfig = {
   // Verbose output for detailed test results
   verbose: true,
 
-  // Enable watch plugins for better development experience
-  watchPlugins: [
-    'jest-watch-typeahead/filename',
-    'jest-watch-typeahead/testname',
-  ],
+  // Ignore nested app inside repo to avoid haste collisions
+  modulePathIgnorePatterns: ['<rootDir>/quantumpoly/'],
 
-  // Mock static assets
-  moduleNameMapping: {
-    ...module.exports?.moduleNameMapping,
-    '\\.(css|less|scss|sass)$': 'identity-obj-proxy',
-    '\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$':
-      '<rootDir>/__mocks__/fileMock.js',
-  },
-
-  // Global setup
-  globalSetup: '<rootDir>/jest.global-setup.js',
-  globalTeardown: '<rootDir>/jest.global-teardown.js',
+  // (watchPlugins removed due to missing dependency)
 };
 
 // createJestConfig is exported this way to ensure that next/jest can load the Next.js config which is async

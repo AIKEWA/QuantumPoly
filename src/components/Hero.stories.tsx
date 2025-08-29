@@ -4,7 +4,6 @@
  */
 
 import type { Meta, StoryObj } from '@storybook/react';
-import { action } from '@storybook/addon-actions';
 import Hero from './Hero';
 
 const meta: Meta<typeof Hero> = {
@@ -106,7 +105,7 @@ type Story = StoryObj<typeof meta>;
 // Default hero story
 export const Default: Story = {
   args: {
-    onCtaClick: action('cta-clicked'),
+    onCtaClick: () => {},
   },
 };
 
@@ -118,7 +117,7 @@ export const CustomContent: Story = {
       'Transforming ideas into reality through cutting-edge technology and sustainable practices.',
     ctaText: 'Get Started',
     scrollIndicatorLabel: 'Scroll to explore our services',
-    onCtaClick: action('custom-cta-clicked'),
+    onCtaClick: () => {},
   },
   parameters: {
     docs: {
@@ -138,7 +137,7 @@ export const Multilingual: Story = {
       'Fusionando Inteligencia Artificial con Innovación Sostenible y Futuros del Metaverso',
     ctaText: 'Únete al Futuro',
     scrollIndicatorLabel: 'Desplázate hacia abajo para obtener más información',
-    onCtaClick: action('multilingual-cta-clicked'),
+    onCtaClick: () => {},
   },
   parameters: {
     docs: {
@@ -157,7 +156,7 @@ export const LongContent: Story = {
     subtitle:
       'Discover the future of computational power with our advanced quantum algorithms, sustainable AI practices, and immersive metaverse experiences that bridge the gap between virtual and physical realities while maintaining ecological responsibility.',
     ctaText: 'Explore the Platform',
-    onCtaClick: action('long-content-cta-clicked'),
+    onCtaClick: () => {},
   },
   parameters: {
     docs: {
@@ -175,7 +174,7 @@ export const Minimal: Story = {
     title: 'QuantumPoly',
     subtitle: 'Future. Now.',
     ctaText: 'Begin',
-    onCtaClick: action('minimal-cta-clicked'),
+    onCtaClick: () => {},
   },
   parameters: {
     docs: {
@@ -190,7 +189,7 @@ export const Minimal: Story = {
 // Dark theme showcase
 export const DarkTheme: Story = {
   args: {
-    onCtaClick: action('dark-theme-cta-clicked'),
+    onCtaClick: () => {},
   },
   parameters: {
     backgrounds: { default: 'dark' },
@@ -243,7 +242,7 @@ This story demonstrates the accessibility features of the Hero component:
 // Mobile responsive
 export const Mobile: Story = {
   args: {
-    onCtaClick: action('mobile-cta-clicked'),
+    onCtaClick: () => {},
   },
   parameters: {
     viewport: {
@@ -261,7 +260,7 @@ export const Mobile: Story = {
 // Tablet responsive
 export const Tablet: Story = {
   args: {
-    onCtaClick: action('tablet-cta-clicked'),
+    onCtaClick: fn(),
   },
   parameters: {
     viewport: {

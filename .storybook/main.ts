@@ -12,14 +12,11 @@ const config: StorybookConfig = {
   ],
 
   addons: [
-    '@storybook/addon-links',
-    '@storybook/addon-essentials',
-    '@storybook/addon-interactions',
-    '@storybook/addon-a11y', // Accessibility testing
     '@storybook/addon-docs',
-    '@storybook/addon-controls',
-    '@storybook/addon-viewport',
-    '@storybook/addon-backgrounds',
+    '@storybook/addon-links',
+    // '@storybook/addon-controls',
+    // '@storybook/addon-backgrounds',
+    // '@storybook/addon-viewport',
   ],
 
   framework: {
@@ -47,15 +44,7 @@ const config: StorybookConfig = {
 
   staticDirs: ['../public'],
 
-  webpackFinal: async config => {
-    // Handle CSS imports
-    config.module?.rules?.push({
-      test: /\.css$/,
-      use: ['style-loader', 'css-loader', 'postcss-loader'],
-    });
-
-    return config;
-  },
+  // Rely on @storybook/nextjs defaults for CSS & PostCSS handling
 };
 
 export default config;

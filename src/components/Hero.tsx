@@ -107,7 +107,8 @@ export default function Hero({
         <button
           onClick={handleScrollClick}
           className="animate-bounce rounded-full p-2 transition-colors duration-300 hover:bg-cyan-500/20 focus:outline-none focus:ring-4 focus:ring-cyan-500/50 dark:hover:bg-cyan-400/20"
-          aria-label={displayScrollLabel}
+          aria-hidden="true"
+          tabIndex={-1}
           type="button"
         >
           <svg

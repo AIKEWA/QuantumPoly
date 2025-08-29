@@ -10,6 +10,32 @@
 
 import '@testing-library/jest-dom';
 
+// Provide a stable next-intl mock across tests to avoid ESM issues and ensure
+// components receive realistic translations sourced from English messages.
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const enMessages = require('./src/locales/en.json');
+
+function getFromMessages(path) {
+  const parts = path.split('.');
+  let cur = enMessages;
+  for (const p of parts) {
+    if (!cur) return path;
+    cur = cur[p];
+  }
+  return typeof cur === 'string' ? cur : path;
+}
+
+jest.mock('next-intl', () => ({
+  useTranslations: (ns) => (key) => getFromMessages(`${ns ? ns + '.' : ''}${key}`),
+  NextIntlClientProvider: ({ children }) => children,
+}));
+
+jest.mock('next-intl/server', () => ({
+  getTranslations: async ({ namespace } = {}) => (key) => getFromMessages(`${namespace ? namespace + '.' : ''}${key}`),
+  getMessages: async () => enMessages,
+  getRequestConfig: () => () => ({ messages: enMessages }),
+}));
+
 // Mock Next.js router
 jest.mock('next/router', () => ({
   useRouter() {

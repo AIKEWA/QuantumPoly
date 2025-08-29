@@ -1,0 +1,30 @@
+{
+  "root": true,
+  "extends": [
+    "next/core-web-vitals",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:jsdoc/recommended-typescript"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "plugins": ["@typescript-eslint", "jsdoc"],
+  "parserOptions": {
+    "project": "./tsconfig.json",
+    "sourceType": "module",
+    "ecmaVersion": 2020
+  },
+  "rules": {
+    "jsdoc/require-jsdoc": [
+      "error",
+      {
+        "publicOnly": true,
+        "require": {
+          "FunctionDeclaration": true,
+          "MethodDefinition": true,
+          "ClassDeclaration": true
+        }
+      }
+    ]
+  }
+}
+
+

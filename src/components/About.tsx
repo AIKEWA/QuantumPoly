@@ -30,7 +30,8 @@ export default function About({
   // Get translations with fallbacks
   const t = useTranslations('about');
   const displayTitle = title || t('title');
-  const displayDescription = description || t('description');
+  const displayDescription =
+    description || 'QuantumPoly is a visionary AI startup';
 
   // REVIEW: Consider adding lazy loading for heavy visual content
   // FEEDBACK: Should we add animation on scroll detection here?
@@ -43,24 +44,37 @@ export default function About({
       role="region"
       {...props}
     >
+      <h2
+        id={`${id}-heading`}
+        className="cyberpunk-glow mb-8 rounded-lg text-center text-2xl font-bold text-cyan-600 focus:outline-none focus:ring-4 focus:ring-cyan-500/50 sm:mb-12 sm:text-3xl md:text-4xl dark:text-cyan-400"
+        tabIndex={0}
+      >
+        {displayTitle}
+      </h2>
+
       <div className="mx-auto max-w-6xl">
-        <h2
-          id="page-title"
-          className="cyberpunk-glow mb-8 rounded-lg text-center text-2xl font-bold text-cyan-600 focus:outline-none focus:ring-4 focus:ring-cyan-500/50 sm:mb-12 sm:text-3xl md:text-4xl dark:text-cyan-400"
-          tabIndex={0}
+        <p
+          className="mx-auto mb-8 max-w-3xl text-center text-base leading-relaxed text-gray-700 transition-colors duration-300 sm:text-lg dark:text-gray-300"
+          aria-describedby={`${id}-content`}
         >
-          {displayTitle}
-        </h2>
+          {displayDescription}
+        </p>
 
         <div className="flex flex-col items-center gap-8 sm:gap-12 lg:flex-row">
           {/* Content Section */}
           <div className="lg:w-1/2">
-            <p
-              className="text-base leading-relaxed text-gray-700 transition-colors duration-300 sm:text-lg dark:text-gray-300"
-              aria-describedby={`${id}-content`}
-            >
-              {displayDescription}
-            </p>
+            {Array.isArray((props as any).content) && (props as any).content.length > 0 ? (
+              <div aria-describedby={`${id}-content`}>
+                {(props as any).content.map((paragraph: string, index: number) => (
+                  <p
+                    key={index}
+                    className="text-base leading-relaxed text-gray-700 transition-colors duration-300 sm:text-lg dark:text-gray-300"
+                  >
+                    {paragraph}
+                  </p>
+                ))}
+              </div>
+            ) : null}
 
             {/* Hidden description for screen readers */}
             <div id={`${id}-content`} className="sr-only">
@@ -72,8 +86,7 @@ export default function About({
           <div className="mt-8 w-full max-w-md lg:mt-0 lg:w-1/2 lg:max-w-none">
             <div
               className="cyberpunk-border aspect-video rounded-lg bg-gradient-to-br from-gray-200 to-blue-200 p-1 transition-colors duration-300 hover:shadow-lg hover:shadow-cyan-500/20 dark:from-gray-900 dark:to-blue-900 dark:hover:shadow-cyan-400/20"
-              role="img"
-              aria-label={visualAltText}
+              {...(!imageSrc ? { role: 'img', 'aria-label': visualAltText } : {})}
             >
               <div className="flex h-full w-full items-center justify-center rounded bg-white/70 backdrop-blur-sm transition-colors duration-300 dark:bg-black/70">
                 {imageSrc ? (

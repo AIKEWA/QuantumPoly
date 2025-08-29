@@ -29,7 +29,6 @@ jest.mock('next/navigation', () => ({
 
 // Mock next-intl hooks
 jest.mock('next-intl', () => ({
-  ...jest.requireActual('next-intl'),
   useLocale: jest.fn(() => 'en'),
   useTranslations: jest.fn(() => (key: string) => {
     const translations: Record<string, string> = {
@@ -39,6 +38,7 @@ jest.mock('next-intl', () => ({
     };
     return translations[key] || key;
   }),
+  NextIntlClientProvider: ({ children }: any) => children,
 }));
 
 // Mock translations

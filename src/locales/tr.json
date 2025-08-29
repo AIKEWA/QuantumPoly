@@ -37,6 +37,20 @@
       "innovation": "Kuantum teknolojisinde çığır açan inovasyonları yönlendirmek",
       "sustainability": "Çevreye duyarlı çözümler yaratmak",
       "accessibility": "Gelişmiş teknolojiyi herkes için erişilebilir kılmak"
+    },
+    "pillars": {
+      "ai": {
+        "title": "Yapay Zeka",
+        "description": "Karmaşık küresel zorlukları çözmek için öğrenen, adapte olan ve evrilen gelişmiş AI sistemleri."
+      },
+      "sustainability": {
+        "title": "Sürdürülebilir İnovasyon",
+        "description": "Gezegenimizi koruyan teknolojiler geliştirirken insan potansiyelini ilerletme."
+      },
+      "metaverse": {
+        "title": "Metaverse Gelecekleri",
+        "description": "Gerçekliği kuantum destekli deneyimlerle harmanlayan sürükleyici sanal dünyalar yaratma."
+      }
     }
   },
   "newsletter": {
@@ -72,6 +86,7 @@
   "language": {
     "switchTo": "{language} diline geç",
     "current": "Mevcut dil: {language}",
-    "available": "Kullanılabilir diller"
+    "available": "Kullanılabilir diller",
+    "label": "Dil seçin"
   }
 }
