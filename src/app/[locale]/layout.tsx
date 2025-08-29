@@ -11,7 +11,7 @@
 
 import '@/styles/globals.css';
 import { NextIntlClientProvider } from 'next-intl';
-import { getMessages, getTranslations } from 'next-intl/server';
+import { getTranslations } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { ReactNode } from 'react';
 import { locales, type Locale, getTextDirection } from '../../../i18n';
@@ -104,7 +104,7 @@ export async function generateMetadata({
  * This enables static generation for all locale variants of the application.
  */
 export function generateStaticParams() {
-  return locales.map(locale => ({ locale }));
+  return [{ locale: 'en' }, { locale: 'de' }, { locale: 'tr' }];
 }
 
 /**
@@ -127,7 +127,7 @@ export default async function RootLayout({
   // FEEDBACK: Monitor message loading performance across different locales
   let messages;
   try {
-    messages = await getMessages();
+    messages = (await import(`../../../messages/${locale}.json`)).default;
   } catch (error) {
     console.error(`Failed to load messages for locale: ${locale}`, error);
     notFound();

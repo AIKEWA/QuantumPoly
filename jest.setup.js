@@ -13,7 +13,7 @@ import '@testing-library/jest-dom';
 // Provide a stable next-intl mock across tests to avoid ESM issues and ensure
 // components receive realistic translations sourced from English messages.
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const enMessages = require('./src/locales/en.json');
+const enMessages = require('./messages/en.json');
 
 function getFromMessages(path) {
   const parts = path.split('.');

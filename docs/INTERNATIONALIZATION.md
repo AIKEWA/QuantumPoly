@@ -92,7 +92,7 @@ export const defaultLocale: Locale = 'en';
 
 export default getRequestConfig(async ({ locale }) => {
   // Load messages for the current locale
-  const messages = (await import(`./src/locales/${locale}.json`)).default;
+  const messages = (await import(`./messages/${locale}.json`)).default;
 
   return {
     messages,
@@ -132,7 +132,7 @@ export const config = {
 
 ## 📝 Translation Files
 
-### Structure Example (`src/locales/en.json`)
+### Structure Example (`messages/en.json`)
 
 ```json
 {
@@ -400,7 +400,7 @@ export const localeFlags: Record<Locale, string> = {
 
 ### Step 2: Create Translation File
 
-Create `src/locales/fr.json` with the same structure as existing files:
+Create `messages/fr.json` with the same structure as existing files:
 
 ```json
 {
@@ -581,7 +581,7 @@ const nextConfig = {
 // i18n.ts
 export default getRequestConfig(async ({ locale }) => {
   try {
-    const messages = (await import(`./src/locales/${locale}.json`)).default;
+    const messages = (await import(`./messages/${locale}.json`)).default;
     console.log(`Loaded ${locale} translations:`, Object.keys(messages));
     return { messages };
   } catch (error) {
@@ -750,7 +750,7 @@ const measureTranslationLoad = async (locale: string) => {
   const start = performance.now();
 
   try {
-    await import(`./src/locales/${locale}.json`);
+    await import(`./messages/${locale}.json`);
     const end = performance.now();
 
     console.log(`Translation load time for ${locale}: ${end - start}ms`);

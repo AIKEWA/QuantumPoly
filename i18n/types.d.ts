@@ -1,7 +1,7 @@
 // next-intl message typing based on our English locale
 // Ensures `useTranslations` and related helpers are type-safe
 
-import en from '../src/locales/en.json';
+import en from '../messages/en.json';
 
 type Messages = typeof en;
 

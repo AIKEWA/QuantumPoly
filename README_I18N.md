@@ -111,9 +111,9 @@ next.config.mjs                   # Next.js integration
 ### **Translations**
 
 ```
-src/locales/en.json              # English translations
-src/locales/de.json              # German translations
-src/locales/tr.json              # Turkish translations
+messages/en.json                 # English translations
+messages/de.json                 # German translations
+messages/tr.json                 # Turkish translations
 ```
 
 ### **Components**

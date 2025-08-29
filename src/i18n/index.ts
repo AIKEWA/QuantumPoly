@@ -7,11 +7,11 @@
 
 // Preload known locale dictionaries statically for bundlers and SSR
 // eslint-disable-next-line @typescript-eslint/consistent-type-imports
-import enJson from '../locales/en.json';
+import enJson from '../../messages/en.json';
 // eslint-disable-next-line @typescript-eslint/consistent-type-imports
-import deJson from '../locales/de.json';
+import deJson from '../../messages/de.json';
 // eslint-disable-next-line @typescript-eslint/consistent-type-imports
-import trJson from '../locales/tr.json';
+import trJson from '../../messages/tr.json';
 
 export const locales = ['en', 'de', 'tr'] as const;
 export type Locale = (typeof locales)[number];

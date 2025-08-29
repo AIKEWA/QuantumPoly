@@ -2,7 +2,7 @@
 
 ### i18n
 - Canonical module: `src/i18n/index.ts`.
-- Add new locales by adding `src/locales/<locale>.json` and calling `i18n.loadLocale(locale, dict)` at startup if needed.
+- Add new locales by adding `messages/<locale>.json` and calling `i18n.loadLocale(locale, dict)` at startup if needed.
 - Missing key policy:
   - Development: warns in console with call stack.
   - Production: throws to fail build/tests.

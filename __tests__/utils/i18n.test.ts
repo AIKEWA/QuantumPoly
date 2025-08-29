@@ -109,7 +109,7 @@ describe('i18n Configuration', () => {
 describe('Translation Message Loading', () => {
   describe('Message Files', () => {
     it('can load English messages', async () => {
-      const messages = await import('../../src/locales/en.json');
+      const messages = await import('../../messages/en.json');
 
       expect(messages).toBeDefined();
       expect(messages.nav).toBeDefined();
@@ -123,7 +123,7 @@ describe('Translation Message Loading', () => {
     });
 
     it('can load German messages', async () => {
-      const messages = await import('../../src/locales/de.json');
+      const messages = await import('../../messages/de.json');
 
       expect(messages).toBeDefined();
       expect(messages.nav).toBeDefined();
@@ -131,7 +131,7 @@ describe('Translation Message Loading', () => {
     });
 
     it('can load Turkish messages', async () => {
-      const messages = await import('../../src/locales/tr.json');
+      const messages = await import('../../messages/tr.json');
 
       expect(messages).toBeDefined();
       expect(messages.nav).toBeDefined();
@@ -145,9 +145,9 @@ describe('Translation Message Loading', () => {
     let trMessages: any;
 
     beforeAll(async () => {
-      enMessages = await import('../../src/locales/en.json');
-      deMessages = await import('../../src/locales/de.json');
-      trMessages = await import('../../src/locales/tr.json');
+      enMessages = await import('../../messages/en.json');
+      deMessages = await import('../../messages/de.json');
+      trMessages = await import('../../messages/tr.json');
     });
 
     it('has consistent top-level keys across all locales', () => {
@@ -201,7 +201,7 @@ describe('Translation Message Loading', () => {
     let enMessages: any;
 
     beforeAll(async () => {
-      enMessages = await import('../../src/locales/en.json');
+      enMessages = await import('../../messages/en.json');
     });
 
     it('supports variable interpolation in language messages', () => {
@@ -210,8 +210,8 @@ describe('Translation Message Loading', () => {
     });
 
     it('has consistent interpolation patterns across locales', async () => {
-      const deMessages = await import('../../src/locales/de.json');
-      const trMessages = await import('../../src/locales/tr.json');
+      const deMessages = await import('../../messages/de.json');
+      const trMessages = await import('../../messages/tr.json');
 
       // Check that interpolation variables match across languages
       expect(deMessages.language.switchTo).toContain('{language}');
