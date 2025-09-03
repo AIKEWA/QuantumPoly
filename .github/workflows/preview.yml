@@ -1,0 +1,118 @@
+name: Preview Deployment
+
+on:
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  preview:
+    name: Deploy Preview (Vercel)
+    runs-on: ubuntu-latest
+    outputs:
+      preview_url: ${{ steps.deploy.outputs.preview_url }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install deps
+        run: npm ci
+
+      - name: Install Vercel CLI
+        run: npm i -g vercel@latest
+
+      - name: Pull Vercel env (preview)
+        run: vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
+      - name: Build (prebuilt output)
+        run: vercel build --token=${{ secrets.VERCEL_TOKEN }}
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
+      - id: deploy
+        name: Deploy preview
+        run: |
+          URL=$(vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }})
+          echo "preview_url=$URL" >> "$GITHUB_OUTPUT"
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
+      - name: Upload prebuilt artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: vercel-prebuilt
+          path: .vercel/output
+
+      - name: Comment preview URL on PR
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const body = `🚀 **Preview deployed:** ${{ steps.deploy.outputs.preview_url }}
+            
+            ## Preview Links
+            - 🌐 [Main Page](${{ steps.deploy.outputs.preview_url }})
+            - 📚 [Storybook](${{ steps.deploy.outputs.preview_url }}/storybook-static)
+            
+            ## Quality Gates
+            - ✅ Lighthouse CI will run against this preview
+            - ✅ Accessibility score must be 1.0
+            - ⚠️ Performance & SEO scores should be ≥ 0.9
+            `;
+            
+            github.rest.issues.createComment({
+              ...context.repo,
+              issue_number: context.issue.number,
+              body
+            });
+
+  lighthouse:
+    name: Lighthouse CI (Preview)
+    runs-on: ubuntu-latest
+    needs: preview
+    steps:
+      - uses: actions/checkout@v4
+      
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+          
+      - name: Install LHCI
+        run: npm i -D @lhci/cli && npm ci
+        
+      - name: Run Lighthouse CI (strict a11y)
+        run: npx lhci autorun --collect.url="${{ needs.preview.outputs.preview_url }}" --collect.numberOfRuns=2
+        
+      - name: Comment Lighthouse results on PR
+        if: always() && github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const body = `## 🔍 Lighthouse CI Results
+            
+            Preview URL tested: ${{ needs.preview.outputs.preview_url }}
+            
+            **Quality Gates:**
+            - 🎯 Accessibility: Required score = 1.0
+            - ⚡ Performance: Warning if < 0.9
+            - 🔍 SEO: Warning if < 0.9
+            - ✨ Best Practices: Warning if < 0.9
+            
+            Check the full report in the workflow logs above.
+            `;
+            
+            github.rest.issues.createComment({
+              ...context.repo,
+              issue_number: context.issue.number,
+              body
+            });

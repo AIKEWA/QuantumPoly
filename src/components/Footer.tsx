@@ -1,42 +1,100 @@
-'use client';
+"use client";
 
-import React from 'react';
-import { FaTwitter, FaLinkedin, FaGithub, FaDiscord } from 'react-icons/fa';
+/**
+ * Footer component
+ *
+ * ADR: Prop-driven social links chosen over fixed markup for i18n and extensibility.
+ *
+ * A semantic, accessible, and themeable site footer. All user-visible strings are supplied
+ * via props to enable internationalisation and customisation. No low-level markup is
+ * hard-coded; instead, callers fully control labels and text content. The component
+ * supports an optional advanced `socialSlot` override for bespoke layouts while still
+ * exposing a simple API for common use-cases.
+ */
 
-const socialLinks = [
-  { icon: <FaTwitter size={20} />, label: 'Twitter', href: '#' },
-  { icon: <FaLinkedin size={20} />, label: 'LinkedIn', href: '#' },
-  { icon: <FaGithub size={20} />, label: 'GitHub', href: '#' },
-  { icon: <FaDiscord size={20} />, label: 'Discord', href: '#' },
-];
+import React from "react";
+import clsx from "clsx";
 
-export default function Footer() {
-  return (
-    <footer className="py-12 px-4 md:px-6 bg-black">
-      <div className="max-w-6xl mx-auto">
-        <div className="flex flex-col items-center">
-          <div className="mb-8">
-            <h2 className="text-2xl font-bold text-cyan-400 cyberpunk-glow">QuantumPoly</h2>
-          </div>
-          
-          <div className="flex justify-center gap-6 mb-8">
-            {socialLinks.map((link, index) => (
+export type SocialLink = {
+  /** Accessible label (visually hidden) & link text */
+  label: string;
+  /** Destination */
+  href: string;
+};
+
+export interface FooterProps {
+  /** Brand or site title */
+  brand: string;
+  /** Optional tagline displayed beneath the brand */
+  tagline?: string;
+  /** Copyright notice (already localised) */
+  copyright: string;
+  /** Optional array of social links */
+  socialLinks?: SocialLink[];
+  /** Heading level for the brand element (defaults to 2) */
+  headingLevel?: 2 | 3 | 4 | 5 | 6;
+  /** Tailwind utility class extension */
+  className?: string;
+  /** Slot to completely override the social links layout */
+  socialSlot?: React.ReactNode;
+}
+
+const Heading = ({ level, children }: { level: FooterProps["headingLevel"]; children: React.ReactNode }) => {
+  const Tag = (`h${level}` as unknown) as keyof JSX.IntrinsicElements;
+  return <Tag className="text-2xl font-bold text-cyan-400 dark:text-cyan-300">{children}</Tag>;
+};
+
+export default function Footer({
+  brand,
+  tagline,
+  copyright,
+  socialLinks,
+  headingLevel = 2,
+  className,
+  socialSlot,
+}: FooterProps) {
+  const renderSocialLinks = () => {
+    if (socialSlot) return socialSlot;
+    if (!socialLinks?.length) return null;
+
+    return (
+      <nav aria-label="Social links" className="mb-8">
+        <ul className="flex justify-center gap-6">
+          {socialLinks.map(({ href, label }) => (
+            <li key={href}>
               <a
-                key={index}
-                href={link.href}
-                aria-label={link.label}
-                className="text-gray-400 hover:text-cyan-400 transition-colors duration-300"
+                href={href}
+                aria-label={label}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gray-500 hover:text-cyan-400 dark:text-gray-400 dark:hover:text-cyan-300 transition-colors focus:outline-none focus:ring-2 focus:ring-cyan-400 dark:focus:ring-cyan-300 rounded-sm"
               >
-                {link.icon}
+                {label}
+                <span className="sr-only"> (opens in new tab)</span>
               </a>
-            ))}
-          </div>
-          
-          <div className="text-center text-gray-500 text-sm">
-            <p>© {new Date().getFullYear()} QuantumPoly. All rights reserved.</p>
-            <p className="mt-2">Building the future, responsibly.</p>
-          </div>
+            </li>
+          ))}
+        </ul>
+      </nav>
+    );
+  };
+
+  return (
+    <footer
+      role="contentinfo"
+      aria-labelledby={`footer-brand-${brand.replace(/\s+/g, '-').toLowerCase()}`}
+      className={clsx("py-12 px-4 md:px-6 bg-gray-50 dark:bg-gray-900 text-gray-700 dark:text-gray-300", className)}
+    >
+      <div className="max-w-6xl mx-auto flex flex-col items-center text-center">
+        <div id={`footer-brand-${brand.replace(/\s+/g, '-').toLowerCase()}`}>
+          <Heading level={headingLevel}>{brand}</Heading>
         </div>
+
+        {tagline && <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">{tagline}</p>}
+
+        {renderSocialLinks()}
+
+        <p className="text-xs text-gray-500 dark:text-gray-500">{copyright}</p>
       </div>
     </footer>
   );

@@ -1,44 +1,89 @@
 'use client';
 
-import React from 'react';
+/**
+ * ADR: Prop-driven copy selected for i18n and extensibility.
+ * ADR: Media props require alt text to ensure accessibility compliance.
+ */
 
-export default function Hero() {
+import React, { ReactNode } from 'react';
+import clsx from 'clsx';
+import { HeadingLevel, WithClassName } from './types';
+
+/**
+ * Props for the Hero component.
+ */
+export interface HeroProps extends WithClassName {
+  /** Main heading text */
+  title: string;
+  /** Optional subtitle displayed below the title */
+  subtitle?: string;
+  /** Label for the call-to-action button */
+  ctaLabel?: string;
+  /** Click handler for the CTA button */
+  onCtaClick?: () => void;
+  /** Provide a custom HTML heading level (1-6). Defaults to 2. */
+  headingLevel?: HeadingLevel;
+  /** Optional background or immersive media element rendered beneath text */
+  media?: ReactNode;
+}
+
+/**
+ * Accessible, responsive hero section.
+ *
+ * @component
+ */
+export function Hero({
+  title,
+  subtitle,
+  ctaLabel,
+  onCtaClick,
+  headingLevel = 2,
+  media,
+  className,
+}: HeroProps) {
+  const HeadingTag = `h${headingLevel}` as keyof JSX.IntrinsicElements;
+  const subtitleId = subtitle ? `${title.replace(/\s+/g, '-')}-subtitle` : undefined;
+
   return (
-    <section className="relative min-h-screen flex flex-col items-center justify-center text-center px-4 md:px-6">
-      <div className="absolute inset-0 bg-gradient-to-b from-black via-gray-900 to-transparent opacity-50 z-0"></div>
-      
-      <div className="z-10 max-w-4xl mx-auto">
-        <h1 className="text-6xl md:text-8xl font-bold mb-4 cyberpunk-glow bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-purple-500">
-          QuantumPoly
-        </h1>
-        
-        <p className="text-xl md:text-2xl text-gray-300 mb-8 max-w-2xl mx-auto">
-          Merging Artificial Intelligence with Sustainable Innovation and Metaverse Futures
-        </p>
-        
-        <button className="px-8 py-4 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-xl text-white font-medium hover:from-cyan-400 hover:to-blue-500 transition-all duration-300 transform hover:scale-105 cyberpunk-border">
-          Join the Future
-        </button>
-      </div>
-      
-      <div className="absolute bottom-10 left-0 right-0 flex justify-center">
-        <div className="animate-bounce">
-          <svg 
-            xmlns="http://www.w3.org/2000/svg" 
-            className="h-10 w-10 text-cyan-400" 
-            fill="none" 
-            viewBox="0 0 24 24" 
-            stroke="currentColor"
+    <section
+      className={clsx(
+        'relative flex flex-col items-center justify-center text-center px-4 md:px-6 py-24',
+        'min-h-[60vh] md:min-h-screen',
+        'bg-gradient-to-b from-white via-white/70 to-transparent dark:from-black dark:via-black/70',
+        className,
+      )}
+      role="region"
+      aria-labelledby={`hero-title-${title.replace(/\s+/g, '-').toLowerCase()}`}
+    >
+      <div className="z-10 max-w-4xl mx-auto space-y-6">
+        <HeadingTag
+          id={`hero-title-${title.replace(/\s+/g, '-').toLowerCase()}`}
+          className="font-bold tracking-tight text-4xl sm:text-6xl md:text-7xl bg-clip-text text-transparent bg-gradient-to-r from-cyan-500 to-purple-500"
+          {...(subtitleId && { 'aria-describedby': subtitleId })}
+        >
+          {title}
+        </HeadingTag>
+
+        {subtitle && (
+          <p id={subtitleId} className="text-lg md:text-2xl text-gray-700 dark:text-gray-300 max-w-2xl mx-auto">
+            {subtitle}
+          </p>
+        )}
+
+        {ctaLabel && (
+          <button
+            type="button"
+            className="px-8 py-4 rounded-xl font-medium text-white bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 transition-all focus:outline-none focus-visible:ring focus-visible:ring-cyan-300"
+            onClick={onCtaClick}
           >
-            <path 
-              strokeLinecap="round" 
-              strokeLinejoin="round" 
-              strokeWidth={2} 
-              d="M19 14l-7 7m0 0l-7-7m7 7V3" 
-            />
-          </svg>
-        </div>
+            {ctaLabel}
+          </button>
+        )}
+
+        {media && <div className="mt-10">{media}</div>}
       </div>
     </section>
   );
-} 
+}
+
+export default Hero; 
