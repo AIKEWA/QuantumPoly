@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { action } from '@storybook/addon-actions';
-import Hero from '@/components/Hero';
+
+import { Hero } from '@/components/Hero';
 
 const meta: Meta<typeof Hero> = {
   title: 'Components/Hero',
@@ -51,18 +51,12 @@ The Hero component is a prop-driven, accessible hero section that supports:
       options: [1, 2, 3, 4, 5, 6],
       description: 'HTML heading level (h1-h6)',
     },
-    onCtaClick: {
-      action: 'CTA clicked',
-      description: 'Click handler for the CTA button',
-    },
     className: {
       control: 'text',
       description: 'Additional CSS classes',
     },
   },
-  args: {
-    onCtaClick: action('CTA clicked'),
-  },
+  args: {},
 };
 
 export default meta;
@@ -88,7 +82,8 @@ export const DarkMode: Story = {
     backgrounds: { default: 'dark' },
     docs: {
       description: {
-        story: 'Hero component with dark theme applied demonstrating accessible contrast ratios and theme-aware styling.',
+        story:
+          'Hero component with dark theme applied demonstrating accessible contrast ratios and theme-aware styling.',
       },
     },
   },
@@ -104,7 +99,7 @@ export const DarkMode: Story = {
 export const WithoutCTA: Story = {
   args: {
     title: 'About Our Mission',
-    subtitle: 'We are building the infrastructure for tomorrow\'s quantum-powered world',
+    subtitle: "We are building the infrastructure for tomorrow's quantum-powered world",
     headingLevel: 2,
   },
   parameters: {
@@ -123,7 +118,7 @@ export const WithMedia: Story = {
     ctaLabel: 'Explore Technology',
     headingLevel: 1,
     media: (
-      <div className="w-32 h-32 bg-gradient-to-br from-cyan-500 to-purple-600 rounded-full flex items-center justify-center">
+      <div className="flex h-32 w-32 items-center justify-center rounded-full bg-gradient-to-br from-cyan-500 to-purple-600">
         <span className="text-6xl">⚛️</span>
       </div>
     ),
@@ -154,7 +149,8 @@ export const MinimalHeading: Story = {
 export const LongContent: Story = {
   args: {
     title: 'Revolutionary Quantum Computing Platform for Next-Generation Applications',
-    subtitle: 'QuantumPoly combines cutting-edge quantum algorithms with decentralized network architecture to deliver unprecedented computational capabilities for research institutions, enterprises, and developers worldwide',
+    subtitle:
+      'QuantumPoly combines cutting-edge quantum algorithms with decentralized network architecture to deliver unprecedented computational capabilities for research institutions, enterprises, and developers worldwide',
     ctaLabel: 'Start Your Quantum Journey Today',
     headingLevel: 1,
   },

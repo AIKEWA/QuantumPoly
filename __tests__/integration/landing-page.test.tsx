@@ -1,26 +1,31 @@
 /**
  * Integration Test: Landing Page Composition
- * 
+ *
  * Purpose: System-level verification of the five core components working together:
  * Hero, About, Vision, NewsletterForm, Footer
- * 
+ *
  * ADR: Integration testing chosen over unit-only approach to catch composition regressions,
  * accessibility flows, and cross-component interaction issues early.
  */
 
-import React from 'react';
 import { render, screen, within, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import Hero from '@/components/Hero';
-import About from '@/components/About';
-import Vision from '@/components/Vision';
-import NewsletterForm from '@/components/NewsletterForm';
-import Footer from '@/components/Footer';
+import React from 'react';
+
+import { About } from '@/components/About';
+import { Footer } from '@/components/Footer';
+import { Hero } from '@/components/Hero';
+import { NewsletterForm } from '@/components/NewsletterForm';
+import { Vision } from '@/components/Vision';
 
 /**
  * Test-only composition component that represents the full landing page layout
  */
-function Landing({ onSubscribe = async () => {} }: { onSubscribe?: (email: string) => Promise<void> }) {
+function Landing({
+  onSubscribe = async () => {},
+}: {
+  onSubscribe?: (email: string) => Promise<void>;
+}) {
   return (
     <div data-testid="landing-root">
       <Hero
@@ -28,11 +33,14 @@ function Landing({ onSubscribe = async () => {} }: { onSubscribe?: (email: strin
         subtitle="Leading the future of ethical AI"
         ctaLabel="Get Started"
         headingLevel={1}
-        onCtaClick={() => {}}
       />
       <About
         title="About Us"
-        body={<p id="about-desc">We build ethical AI systems that prioritize safety, transparency, and human values.</p>}
+        body={
+          <p id="about-desc">
+            We build ethical AI systems that prioritize safety, transparency, and human values.
+          </p>
+        }
         headingLevel={2}
       />
       <Vision
@@ -41,7 +49,10 @@ function Landing({ onSubscribe = async () => {} }: { onSubscribe?: (email: strin
         pillars={[
           { title: 'Safety', description: 'Built-in accessibility and secure design.' },
           { title: 'Scale', description: 'Cloud-native architecture for global reach.' },
-          { title: 'Openness', description: 'Prop-driven internationalization and open standards.' },
+          {
+            title: 'Openness',
+            description: 'Prop-driven internationalization and open standards.',
+          },
         ]}
       />
       <NewsletterForm
@@ -71,20 +82,22 @@ describe('Landing Page Integration', () => {
   describe('Heading Hierarchy', () => {
     test('has exactly one H1 and appropriate subheadings', () => {
       render(<Landing />);
-      
+
       // Should have exactly one H1 (main hero title)
       const h1Elements = screen.getAllByRole('heading', { level: 1 });
       expect(h1Elements).toHaveLength(1);
       expect(h1Elements[0]).toHaveTextContent('Welcome to QuantumPoly');
-      
+
       // Should have multiple H2s for sections
       const h2Elements = screen.getAllByRole('heading', { level: 2 });
       expect(h2Elements.length).toBeGreaterThan(0);
-      
+
       // Verify specific section headings are present
       expect(screen.getByRole('heading', { level: 2, name: /about us/i })).toBeInTheDocument();
       expect(screen.getByRole('heading', { level: 2, name: /our vision/i })).toBeInTheDocument();
-      expect(screen.getByRole('heading', { level: 2, name: /stay in the loop/i })).toBeInTheDocument();
+      expect(
+        screen.getByRole('heading', { level: 2, name: /stay in the loop/i }),
+      ).toBeInTheDocument();
       expect(screen.getByRole('heading', { level: 2, name: /quantumpoly/i })).toBeInTheDocument();
     });
   });
@@ -118,14 +131,14 @@ describe('Landing Page Integration', () => {
     test('supports dark mode class toggling', () => {
       const { getByTestId } = render(<Landing />);
       const root = getByTestId('landing-root');
-      
+
       // Initially no dark class
       expect(root.classList.contains('dark')).toBe(false);
-      
+
       // Simulate dark mode toggle
       root.classList.add('dark');
       expect(root.classList.contains('dark')).toBe(true);
-      
+
       // Can be removed
       root.classList.remove('dark');
       expect(root.classList.contains('dark')).toBe(false);
@@ -170,7 +183,7 @@ describe('Landing Page Integration', () => {
 
       // Wait for success state and check button text changes
       await act(async () => {
-        await new Promise(resolve => setTimeout(resolve, 100));
+        await new Promise((resolve) => setTimeout(resolve, 100));
       });
 
       // Should show success message on the button

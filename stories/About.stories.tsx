@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import About from '@/components/About';
+
+import { About } from '@/components/About';
 
 const meta: Meta<typeof About> = {
   title: 'Components/About',
@@ -73,7 +74,8 @@ export const DarkMode: Story = {
     backgrounds: { default: 'dark' },
     docs: {
       description: {
-        story: 'About component with dark theme applied demonstrating accessible contrast ratios and content visibility.',
+        story:
+          'About component with dark theme applied demonstrating accessible contrast ratios and content visibility.',
       },
     },
   },
@@ -92,12 +94,19 @@ export const WithRichContent: Story = {
     body: (
       <div className="space-y-4">
         <p>
-          QuantumPoly leverages state-of-the-art technologies to deliver unprecedented computational capabilities:
+          QuantumPoly leverages state-of-the-art technologies to deliver unprecedented computational
+          capabilities:
         </p>
-        <ul className="list-disc list-inside space-y-2">
-          <li><strong>Quantum Algorithms:</strong> Advanced optimization and simulation protocols</li>
-          <li><strong>Distributed Computing:</strong> Scalable cloud-native architecture</li>
-          <li><strong>Cryptographic Security:</strong> Post-quantum encryption standards</li>
+        <ul className="list-inside list-disc space-y-2">
+          <li>
+            <strong>Quantum Algorithms:</strong> Advanced optimization and simulation protocols
+          </li>
+          <li>
+            <strong>Distributed Computing:</strong> Scalable cloud-native architecture
+          </li>
+          <li>
+            <strong>Cryptographic Security:</strong> Post-quantum encryption standards
+          </li>
         </ul>
         <p>
           <em>Experience the future of computing today.</em>
@@ -134,15 +143,13 @@ export const WithInteractiveContent: Story = {
   args: {
     title: 'Get Involved',
     body: (
-      <div className="text-center space-y-4">
-        <p>
-          Join our community of quantum computing enthusiasts and researchers.
-        </p>
-        <div className="flex gap-4 justify-center">
-          <button className="px-4 py-2 bg-cyan-500 text-white rounded-md hover:bg-cyan-600 transition-colors">
+      <div className="space-y-4 text-center">
+        <p>Join our community of quantum computing enthusiasts and researchers.</p>
+        <div className="flex justify-center gap-4">
+          <button className="rounded-md bg-cyan-500 px-4 py-2 text-white transition-colors hover:bg-cyan-600">
             Join Discord
           </button>
-          <button className="px-4 py-2 border border-cyan-500 text-cyan-500 rounded-md hover:bg-cyan-50 transition-colors">
+          <button className="rounded-md border border-cyan-500 px-4 py-2 text-cyan-500 transition-colors hover:bg-cyan-50">
             Read Documentation
           </button>
         </div>
@@ -165,18 +172,19 @@ export const MultiParagraph: Story = {
     body: (
       <div className="space-y-6">
         <p>
-          Founded in 2024, QuantumPoly emerged from cutting-edge research at leading quantum physics laboratories. 
-          Our team of quantum scientists, software engineers, and cryptography experts recognized the need for 
-          accessible quantum computing platforms.
+          Founded in 2024, QuantumPoly emerged from cutting-edge research at leading quantum physics
+          laboratories. Our team of quantum scientists, software engineers, and cryptography experts
+          recognized the need for accessible quantum computing platforms.
         </p>
         <p>
-          Today, we're building the infrastructure that will power tomorrow's quantum applications, from drug 
-          discovery and financial modeling to optimization problems that classical computers cannot solve efficiently.
+          Today, we're building the infrastructure that will power tomorrow's quantum applications,
+          from drug discovery and financial modeling to optimization problems that classical
+          computers cannot solve efficiently.
         </p>
         <p>
-          Our vision extends beyond just providing quantum computing resources—we're creating an ecosystem 
-          where developers and researchers can collaborate, innovate, and push the boundaries of what's possible 
-          with quantum technology.
+          Our vision extends beyond just providing quantum computing resources—we're creating an
+          ecosystem where developers and researchers can collaborate, innovate, and push the
+          boundaries of what's possible with quantum technology.
         </p>
       </div>
     ),

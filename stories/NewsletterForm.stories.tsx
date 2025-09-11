@@ -1,6 +1,7 @@
-import type { Meta, StoryObj } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
-import NewsletterForm from '@/components/NewsletterForm';
+import type { Meta, StoryObj } from '@storybook/react';
+
+import { NewsletterForm } from '@/components/NewsletterForm';
 
 const meta: Meta<typeof NewsletterForm> = {
   title: 'Components/NewsletterForm',
@@ -114,7 +115,8 @@ export const DarkMode: Story = {
     backgrounds: { default: 'dark' },
     docs: {
       description: {
-        story: 'Newsletter form with dark theme applied demonstrating accessible contrast and live region behavior.',
+        story:
+          'Newsletter form with dark theme applied demonstrating accessible contrast and live region behavior.',
       },
     },
   },
@@ -177,7 +179,7 @@ export const AsyncSimulation: Story = {
     onSubscribe: async (email: string) => {
       action('form submitted')(email);
       // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      await new Promise((resolve) => setTimeout(resolve, 2000));
       if (email.includes('test-error')) {
         throw new Error('Simulated error');
       }
@@ -186,7 +188,8 @@ export const AsyncSimulation: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'Newsletter form with simulated async submission (2 second delay). Try "test-error@example.com" to trigger an error.',
+        story:
+          'Newsletter form with simulated async submission (2 second delay). Try "test-error@example.com" to trigger an error.',
       },
     },
   },
@@ -214,7 +217,8 @@ export const CompactStyle: Story = {
 export const DetailedForm: Story = {
   args: {
     title: 'QuantumPoly Research Newsletter',
-    description: 'Join thousands of researchers, developers, and quantum computing enthusiasts who rely on our weekly newsletter for the latest breakthroughs in quantum algorithms, hardware developments, and industry applications. Unsubscribe anytime.',
+    description:
+      'Join thousands of researchers, developers, and quantum computing enthusiasts who rely on our weekly newsletter for the latest breakthroughs in quantum algorithms, hardware developments, and industry applications. Unsubscribe anytime.',
     emailLabel: 'Your email address',
     emailPlaceholder: 'Enter your email to join our community',
     submitLabel: 'Subscribe to Weekly Updates',
@@ -243,11 +247,12 @@ export const ErrorState: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'Form pre-configured to show error state. Type an invalid email and submit to see error handling.',
+        story:
+          'Form pre-configured to show error state. Type an invalid email and submit to see error handling.',
       },
     },
   },
-  play: async ({ canvasElement }) => {
+  play: async () => {
     // Note: In real Storybook, you could use @storybook/addon-interactions
     // to automatically trigger the error state for demonstration
   },

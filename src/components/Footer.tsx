@@ -1,5 +1,3 @@
-"use client";
-
 /**
  * Footer component
  *
@@ -12,8 +10,8 @@
  * exposing a simple API for common use-cases.
  */
 
-import React from "react";
-import clsx from "clsx";
+import clsx from 'clsx';
+import React from 'react';
 
 export type SocialLink = {
   /** Accessible label (visually hidden) & link text */
@@ -39,12 +37,18 @@ export interface FooterProps {
   socialSlot?: React.ReactNode;
 }
 
-const Heading = ({ level, children }: { level: FooterProps["headingLevel"]; children: React.ReactNode }) => {
-  const Tag = (`h${level}` as unknown) as keyof JSX.IntrinsicElements;
+const Heading = ({
+  level,
+  children,
+}: {
+  level: FooterProps['headingLevel'];
+  children: React.ReactNode;
+}) => {
+  const Tag = `h${level}` as unknown as keyof JSX.IntrinsicElements;
   return <Tag className="text-2xl font-bold text-cyan-400 dark:text-cyan-300">{children}</Tag>;
 };
 
-export default function Footer({
+export function Footer({
   brand,
   tagline,
   copyright,
@@ -64,13 +68,12 @@ export default function Footer({
             <li key={href}>
               <a
                 href={href}
-                aria-label={label}
+                aria-label={`${label} (opens in new tab)`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-gray-500 hover:text-cyan-400 dark:text-gray-400 dark:hover:text-cyan-300 transition-colors focus:outline-none focus:ring-2 focus:ring-cyan-400 dark:focus:ring-cyan-300 rounded-sm"
+                className="rounded-sm text-gray-500 transition-colors hover:text-cyan-400 focus:outline-none focus:ring-2 focus:ring-cyan-400 dark:text-gray-400 dark:hover:text-cyan-300 dark:focus:ring-cyan-300"
               >
                 {label}
-                <span className="sr-only"> (opens in new tab)</span>
               </a>
             </li>
           ))}
@@ -83,9 +86,12 @@ export default function Footer({
     <footer
       role="contentinfo"
       aria-labelledby={`footer-brand-${brand.replace(/\s+/g, '-').toLowerCase()}`}
-      className={clsx("py-12 px-4 md:px-6 bg-gray-50 dark:bg-gray-900 text-gray-700 dark:text-gray-300", className)}
+      className={clsx(
+        'bg-gray-50 px-4 py-12 text-gray-700 md:px-6 dark:bg-gray-900 dark:text-gray-300',
+        className,
+      )}
     >
-      <div className="max-w-6xl mx-auto flex flex-col items-center text-center">
+      <div className="mx-auto flex max-w-6xl flex-col items-center text-center">
         <div id={`footer-brand-${brand.replace(/\s+/g, '-').toLowerCase()}`}>
           <Heading level={headingLevel}>{brand}</Heading>
         </div>
@@ -98,4 +104,4 @@ export default function Footer({
       </div>
     </footer>
   );
-} 
+}

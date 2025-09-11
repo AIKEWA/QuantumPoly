@@ -34,7 +34,19 @@ jobs:
         run: npm ci
 
       - name: Lint code
-        run: npm run lint
+        run: npm run lint -- --max-warnings=0
+
+      - name: Tailwind color guard
+        run: |
+          VIOLATIONS=$(npm run -s lint:tw-colors)
+          if [ -n "$VIOLATIONS" ]; then
+            echo "❌ Found raw color classnames in Tailwind utilities:"
+            echo "$VIOLATIONS"
+            echo "Please use design tokens from tailwind.config.js instead of raw hex/rgb/hsl values."
+            exit 1
+          else
+            echo "✅ No raw color classnames found"
+          fi
 
       - name: Type check
         run: npm run type-check
@@ -170,7 +182,7 @@ jobs:
       - name: Run Lighthouse CI for accessibility and contrast
         run: |
           echo "🔍 Running Lighthouse accessibility audit with strict contrast checking..."
-          npx lhci autorun
+          npx lhci autorun --config=.lighthouserc.js --collect.settings.onlyCategories=accessibility
         env:
           # Add any required environment variables here if needed
           CI: true

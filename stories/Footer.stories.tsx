@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import Footer from '@/components/Footer';
+
+import { Footer } from '@/components/Footer';
 
 const meta: Meta<typeof Footer> = {
   title: 'Components/Footer',
@@ -102,7 +103,8 @@ export const DarkMode: Story = {
     backgrounds: { default: 'dark' },
     docs: {
       description: {
-        story: 'Footer component with dark theme applied demonstrating accessible contrast and social link styling.',
+        story:
+          'Footer component with dark theme applied demonstrating accessible contrast and social link styling.',
       },
     },
   },
@@ -180,27 +182,27 @@ export const CustomSocialSlot: Story = {
     headingLevel: 2,
     socialSlot: (
       <div className="mb-8 text-center">
-        <h3 className="text-lg font-semibold mb-4 text-cyan-400">Join Our Community</h3>
+        <h3 className="mb-4 text-lg font-semibold text-cyan-400">Join Our Community</h3>
         <div className="flex flex-wrap justify-center gap-4">
-          <a 
-            href="https://twitter.com/quantumpoly" 
-            className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors"
+          <a
+            href="https://twitter.com/quantumpoly"
+            className="rounded-md bg-blue-500 px-4 py-2 text-white transition-colors hover:bg-blue-600"
             target="_blank"
             rel="noopener noreferrer"
           >
             Follow on Twitter
           </a>
-          <a 
-            href="https://github.com/quantumpoly" 
-            className="px-4 py-2 bg-gray-800 text-white rounded-md hover:bg-gray-700 transition-colors"
+          <a
+            href="https://github.com/quantumpoly"
+            className="rounded-md bg-gray-800 px-4 py-2 text-white transition-colors hover:bg-gray-700"
             target="_blank"
             rel="noopener noreferrer"
           >
             Star on GitHub
           </a>
-          <a 
-            href="https://discord.gg/quantumpoly" 
-            className="px-4 py-2 bg-indigo-500 text-white rounded-md hover:bg-indigo-600 transition-colors"
+          <a
+            href="https://discord.gg/quantumpoly"
+            className="rounded-md bg-indigo-500 px-4 py-2 text-white transition-colors hover:bg-indigo-600"
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -242,7 +244,8 @@ export const DifferentHeadingLevels: Story = {
 export const LongBrandName: Story = {
   args: {
     brand: 'QuantumPoly Advanced Research Initiative',
-    tagline: 'Democratizing quantum computing through collaborative research and open-source development',
+    tagline:
+      'Democratizing quantum computing through collaborative research and open-source development',
     copyright: '© 2024 QuantumPoly Advanced Research Initiative. All rights reserved worldwide.',
     headingLevel: 2,
     socialLinks: [

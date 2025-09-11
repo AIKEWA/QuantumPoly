@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import Vision from '@/components/Vision';
+
+import { Vision } from '@/components/Vision';
 
 const meta: Meta<typeof Vision> = {
   title: 'Components/Vision',
@@ -68,17 +69,20 @@ export const Default: Story = {
     pillars: [
       {
         title: 'Innovation',
-        description: 'Pushing the boundaries of quantum computing to solve problems previously thought impossible.',
+        description:
+          'Pushing the boundaries of quantum computing to solve problems previously thought impossible.',
         icon: '🚀',
       },
       {
         title: 'Accessibility',
-        description: 'Making quantum computing accessible to researchers, developers, and enterprises worldwide.',
+        description:
+          'Making quantum computing accessible to researchers, developers, and enterprises worldwide.',
         icon: '🌍',
       },
       {
         title: 'Collaboration',
-        description: 'Building an open ecosystem where quantum innovations can flourish through partnership.',
+        description:
+          'Building an open ecosystem where quantum innovations can flourish through partnership.',
         icon: '🤝',
       },
     ],
@@ -92,17 +96,20 @@ export const DarkMode: Story = {
     pillars: [
       {
         title: 'Innovation',
-        description: 'Pushing the boundaries of quantum computing to solve problems previously thought impossible.',
+        description:
+          'Pushing the boundaries of quantum computing to solve problems previously thought impossible.',
         icon: '🚀',
       },
       {
         title: 'Accessibility',
-        description: 'Making quantum computing accessible to researchers, developers, and enterprises worldwide.',
+        description:
+          'Making quantum computing accessible to researchers, developers, and enterprises worldwide.',
         icon: '🌍',
       },
       {
         title: 'Collaboration',
-        description: 'Building an open ecosystem where quantum innovations can flourish through partnership.',
+        description:
+          'Building an open ecosystem where quantum innovations can flourish through partnership.',
         icon: '🤝',
       },
     ],
@@ -111,7 +118,8 @@ export const DarkMode: Story = {
     backgrounds: { default: 'dark' },
     docs: {
       description: {
-        story: 'Vision component with dark theme applied demonstrating accessible contrast and card styling.',
+        story:
+          'Vision component with dark theme applied demonstrating accessible contrast and card styling.',
       },
     },
   },
@@ -131,12 +139,14 @@ export const TwoPillars: Story = {
     pillars: [
       {
         title: 'Security First',
-        description: 'Every quantum algorithm and communication protocol is built with post-quantum cryptographic standards.',
+        description:
+          'Every quantum algorithm and communication protocol is built with post-quantum cryptographic standards.',
         icon: '🔒',
       },
       {
         title: 'Performance Optimized',
-        description: 'Maximizing quantum advantage through efficient algorithm design and hardware optimization.',
+        description:
+          'Maximizing quantum advantage through efficient algorithm design and hardware optimization.',
         icon: '⚡',
       },
     ],
@@ -193,15 +203,18 @@ export const WithoutIcons: Story = {
     pillars: [
       {
         title: 'Reliability',
-        description: 'Building quantum systems that researchers and enterprises can depend on for critical workloads.',
+        description:
+          'Building quantum systems that researchers and enterprises can depend on for critical workloads.',
       },
       {
         title: 'Scalability',
-        description: 'Designing infrastructure that grows with advancing quantum hardware capabilities.',
+        description:
+          'Designing infrastructure that grows with advancing quantum hardware capabilities.',
       },
       {
         title: 'Interoperability',
-        description: 'Ensuring compatibility across different quantum computing platforms and classical systems.',
+        description:
+          'Ensuring compatibility across different quantum computing platforms and classical systems.',
       },
     ],
   },
@@ -223,21 +236,43 @@ export const WithSVGIcons: Story = {
         title: 'Quantum Supremacy',
         description: 'Achieving computational advantages that classical computers cannot match.',
         icon: (
-          <svg className="w-16 h-16" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="32" cy="32" r="30" stroke="currentColor" strokeWidth="2" fill="none"/>
-            <circle cx="32" cy="32" r="20" stroke="currentColor" strokeWidth="2" fill="none"/>
-            <circle cx="32" cy="32" r="10" stroke="currentColor" strokeWidth="2" fill="none"/>
-            <circle cx="32" cy="32" r="2" fill="currentColor"/>
+          <svg
+            className="h-16 w-16"
+            viewBox="0 0 64 64"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <circle cx="32" cy="32" r="30" stroke="currentColor" strokeWidth="2" fill="none" />
+            <circle cx="32" cy="32" r="20" stroke="currentColor" strokeWidth="2" fill="none" />
+            <circle cx="32" cy="32" r="10" stroke="currentColor" strokeWidth="2" fill="none" />
+            <circle cx="32" cy="32" r="2" fill="currentColor" />
           </svg>
         ),
       },
       {
         title: 'Error Correction',
-        description: 'Implementing fault-tolerant quantum computing with advanced error correction protocols.',
+        description:
+          'Implementing fault-tolerant quantum computing with advanced error correction protocols.',
         icon: (
-          <svg className="w-16 h-16" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M32 8L56 32L32 56L8 32L32 8Z" stroke="currentColor" strokeWidth="2" fill="none"/>
-            <path d="M24 32L29 37L40 26" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+          <svg
+            className="h-16 w-16"
+            viewBox="0 0 64 64"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M32 8L56 32L32 56L8 32L32 8Z"
+              stroke="currentColor"
+              strokeWidth="2"
+              fill="none"
+            />
+            <path
+              d="M24 32L29 37L40 26"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
           </svg>
         ),
       },
@@ -245,10 +280,29 @@ export const WithSVGIcons: Story = {
         title: 'Network Security',
         description: 'Quantum-safe cryptography protecting data in the post-quantum era.',
         icon: (
-          <svg className="w-16 h-16" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect x="16" y="24" width="32" height="24" rx="2" stroke="currentColor" strokeWidth="2" fill="none"/>
-            <path d="M24 24V16C24 12 28 8 32 8C36 8 40 12 40 16V24" stroke="currentColor" strokeWidth="2" fill="none"/>
-            <circle cx="32" cy="36" r="4" fill="currentColor"/>
+          <svg
+            className="h-16 w-16"
+            viewBox="0 0 64 64"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <rect
+              x="16"
+              y="24"
+              width="32"
+              height="24"
+              rx="2"
+              stroke="currentColor"
+              strokeWidth="2"
+              fill="none"
+            />
+            <path
+              d="M24 24V16C24 12 28 8 32 8C36 8 40 12 40 16V24"
+              stroke="currentColor"
+              strokeWidth="2"
+              fill="none"
+            />
+            <circle cx="32" cy="36" r="4" fill="currentColor" />
           </svg>
         ),
       },
@@ -270,23 +324,26 @@ export const CustomIconRenderer: Story = {
     pillars: [
       {
         title: 'Quantum Machine Learning',
-        description: 'Exploring how quantum computing can accelerate artificial intelligence and pattern recognition.',
+        description:
+          'Exploring how quantum computing can accelerate artificial intelligence and pattern recognition.',
         icon: '🤖',
       },
       {
         title: 'Cryptanalysis',
-        description: 'Developing quantum algorithms for breaking classical encryption while building quantum-safe alternatives.',
+        description:
+          'Developing quantum algorithms for breaking classical encryption while building quantum-safe alternatives.',
         icon: '🔐',
       },
       {
         title: 'Simulation',
-        description: 'Modeling complex quantum systems for materials science, chemistry, and physics research.',
+        description:
+          'Modeling complex quantum systems for materials science, chemistry, and physics research.',
         icon: '🧪',
       },
     ],
     iconRenderer: (icon, title) => (
-      <div 
-        className="w-20 h-20 bg-gradient-to-br from-cyan-500 to-purple-600 rounded-full flex items-center justify-center text-3xl shadow-lg"
+      <div
+        className="flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-cyan-500 to-purple-600 text-3xl shadow-lg"
         role="img"
         aria-label={`${title} icon`}
       >

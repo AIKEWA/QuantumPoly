@@ -1,24 +1,23 @@
-'use client';
-
-import Hero from '../components/Hero';
-import About from '../components/About';
-import Vision from '../components/Vision';
-import NewsletterForm from '../components/NewsletterForm';
-import Footer from '../components/Footer';
+import { About } from '@/components/About';
+import { Footer } from '@/components/Footer';
+import { Hero } from '@/components/Hero';
+import { NewsletterForm } from '@/components/NewsletterForm';
+import { Vision } from '@/components/Vision';
 
 export default function Home() {
   return (
-    <main className="flex flex-col min-h-screen">
+    <main className="flex min-h-screen flex-col">
       <Hero
         title="Welcome to QuantumPoly"
         subtitle="Leading the future of ethical AI"
         ctaLabel="Get Started"
         headingLevel={1}
-        onCtaClick={() => window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' })}
       />
       <About
         title="About Us"
-        body={<p>We build ethical AI systems that prioritize safety, transparency, and human values.</p>}
+        body={
+          <p>We build ethical AI systems that prioritize safety, transparency, and human values.</p>
+        }
         headingLevel={2}
       />
       <Vision
@@ -27,7 +26,10 @@ export default function Home() {
         pillars={[
           { title: 'Safety', description: 'Built-in accessibility and secure design.' },
           { title: 'Scale', description: 'Cloud-native architecture for global reach.' },
-          { title: 'Openness', description: 'Prop-driven internationalization and open standards.' },
+          {
+            title: 'Openness',
+            description: 'Prop-driven internationalization and open standards.',
+          },
         ]}
       />
       <NewsletterForm
@@ -50,4 +52,4 @@ export default function Home() {
       />
     </main>
   );
-} 
+}

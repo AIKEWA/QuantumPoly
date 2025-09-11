@@ -5,17 +5,17 @@
 
 // Mock CSS module for testing
 const mockCSS = {
-  supports: (property, value) => true,
+  supports: () => true,
   getPropertyValue: (property) => {
     const mockValues = {
       '--cyberpunk-primary': '#00ffff',
       '--cyberpunk-secondary': '#ff00ff',
       '--cyberpunk-dark': '#0a0a0a',
       '--background': '#ffffff',
-      '--foreground': '#171717'
+      '--foreground': '#171717',
     };
     return mockValues[property] || '';
-  }
+  },
 };
 
 // Mock window.CSS for testing CSS support
@@ -34,7 +34,7 @@ describe('QuantumPoly Global Styles', () => {
       const testElement = document.createElement('div');
       testElement.style.setProperty('--test-primary', 'var(--cyberpunk-primary)');
       document.body.appendChild(testElement);
-      
+
       // Verify CSS custom properties are properly defined
       expect(CSS.supports('color', 'var(--cyberpunk-primary)')).toBe(true);
       expect(CSS.supports('color', 'var(--cyberpunk-secondary)')).toBe(true);
@@ -51,7 +51,7 @@ describe('QuantumPoly Global Styles', () => {
       const element = document.createElement('span');
       element.className = 'cyberpunk-glow';
       document.body.appendChild(element);
-      
+
       // Verify the element has the cyberpunk-glow class
       expect(element.classList.contains('cyberpunk-glow')).toBe(true);
     });
@@ -60,7 +60,7 @@ describe('QuantumPoly Global Styles', () => {
       const element = document.createElement('div');
       element.className = 'cyberpunk-border';
       document.body.appendChild(element);
-      
+
       expect(element.classList.contains('cyberpunk-border')).toBe(true);
     });
 
@@ -68,7 +68,7 @@ describe('QuantumPoly Global Styles', () => {
       const element = document.createElement('p');
       element.className = 'text-responsive';
       document.body.appendChild(element);
-      
+
       expect(element.classList.contains('text-responsive')).toBe(true);
     });
   });
@@ -78,7 +78,7 @@ describe('QuantumPoly Global Styles', () => {
       const button = document.createElement('button');
       button.className = 'focus-visible';
       document.body.appendChild(button);
-      
+
       expect(button.classList.contains('focus-visible')).toBe(true);
     });
 
@@ -86,7 +86,7 @@ describe('QuantumPoly Global Styles', () => {
       // Mock matchMedia for reduced motion
       Object.defineProperty(window, 'matchMedia', {
         writable: true,
-        value: jest.fn().mockImplementation(query => ({
+        value: jest.fn().mockImplementation((query) => ({
           matches: query.includes('prefers-reduced-motion: reduce'),
           media: query,
           onchange: null,
@@ -129,7 +129,7 @@ describe('CSS Integration', () => {
   test('should maintain cyberpunk theme consistency', () => {
     const primaryColor = CSS.getPropertyValue('--cyberpunk-primary');
     const secondaryColor = CSS.getPropertyValue('--cyberpunk-secondary');
-    
+
     expect(primaryColor).toBe('#00ffff');
     expect(secondaryColor).toBe('#ff00ff');
   });

@@ -91,7 +91,7 @@ jobs:
         run: npm i -D @lhci/cli && npm ci
         
       - name: Run Lighthouse CI (strict a11y)
-        run: npx lhci autorun --collect.url="${{ needs.preview.outputs.preview_url }}" --collect.numberOfRuns=2
+        run: npx lhci autorun --config=.lighthouserc.js --collect.settings.onlyCategories=accessibility --collect.url="${{ needs.preview.outputs.preview_url }}" --collect.numberOfRuns=2
         
       - name: Comment Lighthouse results on PR
         if: always() && github.event_name == 'pull_request'

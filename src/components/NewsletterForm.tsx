@@ -17,8 +17,8 @@
  */
 'use client';
 
-import React, { useState, FormEvent } from 'react';
 import clsx from 'clsx';
+import React, { useState, FormEvent } from 'react';
 
 /** Props for NewsletterForm */
 export interface NewsletterFormProps {
@@ -93,24 +93,24 @@ export function NewsletterForm({
   const isInvalid = Boolean(error);
 
   return (
-    <section 
-      className={clsx('w-full max-w-xl mx-auto', className)}
+    <section
+      className={clsx('mx-auto w-full max-w-xl', className)}
       aria-labelledby="newsletter-title"
       role="region"
     >
-      <h2 
+      <h2
         id="newsletter-title"
-        className="text-2xl font-bold text-center text-cyan-600 dark:text-cyan-400 mb-4"
+        className="mb-4 text-center text-2xl font-bold text-cyan-600 dark:text-cyan-400"
       >
         {title}
       </h2>
       {description && (
-        <p className="text-center text-gray-700 dark:text-gray-300 mb-6">{description}</p>
+        <p className="mb-6 text-center text-gray-700 dark:text-gray-300">{description}</p>
       )}
 
-      <form 
-        onSubmit={handleSubmit} 
-        className="space-y-4" 
+      <form
+        onSubmit={handleSubmit}
+        className="space-y-4"
         noValidate
         role="form"
         aria-label="Newsletter subscription"
@@ -122,12 +122,15 @@ export function NewsletterForm({
           <input
             id="newsletter-email"
             type="email"
+            name="email"
+            autoComplete="email"
+            inputMode="email"
             placeholder={emailPlaceholder}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             className={clsx(
-              'px-4 py-3 rounded-md border focus:outline-none focus:ring-2 focus:ring-cyan-400',
-              'bg-white/80 dark:bg-black/40 backdrop-blur-md',
+              'rounded-md border px-4 py-3 focus:outline-none focus:ring-2 focus:ring-cyan-400',
+              'bg-white/80 backdrop-blur-md dark:bg-black/40',
               isInvalid
                 ? 'border-red-500 text-red-900 placeholder-red-300'
                 : 'border-gray-300 dark:border-gray-600',
@@ -141,7 +144,7 @@ export function NewsletterForm({
         <button
           type="submit"
           disabled={status === 'submitting' || status === 'success'}
-          className="w-full px-4 py-3 rounded-md font-medium text-white bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-cyan-400"
+          className="w-full rounded-md bg-gradient-to-r from-cyan-500 to-blue-600 px-4 py-3 font-medium text-white hover:from-cyan-400 hover:to-blue-500 focus:outline-none focus:ring-2 focus:ring-cyan-400 disabled:opacity-50"
         >
           {status === 'success' ? successMessage : submitLabel}
         </button>
@@ -150,7 +153,7 @@ export function NewsletterForm({
           id="newsletter-status"
           role="status"
           aria-live="polite"
-          className="text-sm text-center min-h-[1.25rem]"
+          className="min-h-[1.25rem] text-center text-sm"
         >
           {isInvalid && (
             <p id="newsletter-error" className="text-red-600 dark:text-red-400">
@@ -162,5 +165,3 @@ export function NewsletterForm({
     </section>
   );
 }
-
-export default NewsletterForm;
