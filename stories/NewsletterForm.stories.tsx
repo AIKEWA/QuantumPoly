@@ -1,4 +1,3 @@
-import { action } from '@storybook/addon-actions';
 import type { Meta, StoryObj } from '@storybook/react';
 
 import { NewsletterForm } from '@/components/NewsletterForm';
@@ -66,7 +65,6 @@ The NewsletterForm component provides an accessible email subscription form:
       description: 'Message shown on validation or submission error',
     },
     onSubscribe: {
-      action: 'form submitted',
       description: 'Async function called with email on form submission',
     },
     validationRegex: {
@@ -80,7 +78,7 @@ The NewsletterForm component provides an accessible email subscription form:
   },
   args: {
     onSubscribe: async (email: string) => {
-      action('form submitted')(email);
+      console.log('Newsletter subscription:', email);
       return Promise.resolve();
     },
   },
@@ -177,7 +175,7 @@ export const AsyncSimulation: Story = {
     successMessage: 'Access request submitted!',
     errorMessage: 'Submission failed. Please try again.',
     onSubscribe: async (email: string) => {
-      action('form submitted')(email);
+      console.log('Developer API access request:', email);
       // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 2000));
       if (email.includes('test-error')) {
