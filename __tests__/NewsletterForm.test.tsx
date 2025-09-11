@@ -4,6 +4,14 @@ import React from 'react';
 
 import { NewsletterForm } from '@/components/NewsletterForm';
 
+import {
+  createRejectingOnSubscribe,
+  createSlowOnSubscribe,
+  defaultProps,
+  setupNewsletterForm,
+  testEmails,
+  testPatterns,
+} from './helpers/newsletter-form-helpers';
 import { act } from '../test/utils/act';
 
 /**
@@ -14,27 +22,6 @@ import { act } from '../test/utils/act';
  * and ensure production-grade a11y compliance.
  */
 describe('NewsletterForm Component', () => {
-  const defaultProps = {
-    title: 'Subscribe to Updates',
-    description: 'Get the latest news from QuantumPoly',
-    emailLabel: 'Email address',
-    emailPlaceholder: 'Enter your email',
-    submitLabel: 'Subscribe',
-    successMessage: 'Successfully subscribed!',
-    errorMessage: 'Please enter a valid email address',
-  };
-
-  // FEEDBACK: Helper function reduces test setup duplication and ensures consistent mock behavior
-  function setup(overrides: Partial<React.ComponentProps<typeof NewsletterForm>> = {}) {
-    const onSubscribe = jest.fn(async () => {
-      // Simulate realistic async behavior with small delay
-      await new Promise((resolve) => setTimeout(resolve, 10));
-    });
-
-    render(<NewsletterForm {...defaultProps} onSubscribe={onSubscribe} {...overrides} />);
-    return { onSubscribe };
-  }
-
   it('renders all user-visible text from props', () => {
     render(<NewsletterForm {...defaultProps} />);
 
@@ -55,26 +42,20 @@ describe('NewsletterForm Component', () => {
   });
 
   it('non-critical errors and success use role=status (aria-live=polite)', async () => {
-    const user = userEvent.setup();
-    setup();
-
-    const emailInput = screen.getByRole('textbox', { name: defaultProps.emailLabel });
-    const submitButton = screen.getByRole('button', { name: defaultProps.submitLabel });
+    const { user, elements } = setupNewsletterForm();
 
     // Test invalid email path - should use role="status" for non-critical validation
     await act(async () => {
-      await user.clear(emailInput);
-      await user.type(emailInput, 'invalid-email');
-      await user.click(submitButton);
+      await testPatterns.typeAndSubmit(user, testEmails.invalid);
     });
 
     await waitFor(() => {
-      expect(emailInput).toHaveAttribute('aria-invalid', 'true');
-      expect(emailInput).toHaveAttribute('aria-describedby', 'newsletter-error');
+      expect(elements.emailInput()).toHaveAttribute('aria-invalid', 'true');
+      expect(elements.emailInput()).toHaveAttribute('aria-describedby', 'newsletter-error');
     });
 
     // Verify error is announced via status region (aria-live=polite), NOT alert
-    const statusRegion = screen.getByRole('status');
+    const statusRegion = elements.statusRegion();
     expect(statusRegion).toHaveAttribute('aria-live', 'polite');
     expect(statusRegion).not.toHaveAttribute('role', 'alert');
 
@@ -84,110 +65,88 @@ describe('NewsletterForm Component', () => {
 
     // Test valid email path - success should also use role="status"
     await act(async () => {
-      await user.clear(emailInput);
-      await user.type(emailInput, 'test@example.com');
-      await user.click(submitButton);
+      await testPatterns.typeAndSubmit(user, testEmails.valid);
     });
 
     await waitFor(() => {
-      const statusAfterSuccess = screen.getByRole('status');
+      const statusAfterSuccess = elements.statusRegion();
       expect(statusAfterSuccess).toHaveAttribute('aria-live', 'polite');
-      expect(submitButton).toHaveTextContent(defaultProps.successMessage);
-      expect(emailInput).not.toHaveAttribute('aria-invalid', 'true');
+      expect(elements.submitButton()).toHaveTextContent(defaultProps.successMessage);
+      expect(elements.emailInput()).not.toHaveAttribute('aria-invalid', 'true');
     });
   });
 
   it('uses custom validationRegex when provided', async () => {
-    const user = userEvent.setup();
     const customRegex = /^[a-zA-Z0-9._%+-]+@example\.com$/; // Only example.com emails
-    const { onSubscribe } = setup({ validationRegex: customRegex });
-
-    const emailInput = screen.getByRole('textbox', { name: defaultProps.emailLabel });
-    const submitButton = screen.getByRole('button', { name: defaultProps.submitLabel });
+    const { onSubscribe, user, elements } = setupNewsletterForm({ validationRegex: customRegex });
 
     // Test invalid email (not @example.com)
     await act(async () => {
-      await user.clear(emailInput);
-      await user.type(emailInput, 'test@gmail.com');
-      await user.click(submitButton);
+      await testPatterns.typeAndSubmit(user, testEmails.customInvalid);
     });
 
     await waitFor(() => {
-      expect(emailInput).toHaveAttribute('aria-invalid', 'true');
+      expect(elements.emailInput()).toHaveAttribute('aria-invalid', 'true');
     });
     expect(screen.getByText(defaultProps.errorMessage)).toBeInTheDocument();
 
     // Clear and test valid email with custom regex
     await act(async () => {
-      await user.clear(emailInput);
-      await user.type(emailInput, 'test@example.com');
-      await user.click(submitButton);
+      await testPatterns.typeAndSubmit(user, testEmails.customValid);
     });
 
     // FEEDBACK: Verify custom validation passes and submission occurs
-    expect(onSubscribe).toHaveBeenCalledWith('test@example.com');
+    expect(onSubscribe).toHaveBeenCalledWith(testEmails.customValid);
     await waitFor(() => {
       expect(screen.queryByText(defaultProps.errorMessage)).not.toBeInTheDocument();
-      expect(emailInput).not.toHaveAttribute('aria-invalid', 'true');
+      expect(elements.emailInput()).not.toHaveAttribute('aria-invalid', 'true');
     });
   });
 
   it('calls onSubscribe with valid email and shows success message', async () => {
-    const user = userEvent.setup();
-    const { onSubscribe } = setup();
-
-    const emailInput = screen.getByRole('textbox', { name: defaultProps.emailLabel });
-    const submitButton = screen.getByRole('button', { name: defaultProps.submitLabel });
+    const { onSubscribe, user, elements } = setupNewsletterForm();
 
     await act(async () => {
-      await user.clear(emailInput);
-      await user.type(emailInput, 'test@example.com');
-      await user.click(submitButton);
+      await testPatterns.typeAndSubmit(user, testEmails.valid);
     });
 
     // FEEDBACK: Verify async submission call
-    expect(onSubscribe).toHaveBeenCalledWith('test@example.com');
+    expect(onSubscribe).toHaveBeenCalledWith(testEmails.valid);
 
     // REVIEW: Wait for async success state updates
     await waitFor(() => {
-      expect(submitButton).toHaveTextContent(defaultProps.successMessage);
-      expect(submitButton).toBeDisabled(); // Success state disables button
+      expect(elements.submitButton()).toHaveTextContent(defaultProps.successMessage);
+      expect(elements.submitButton()).toBeDisabled(); // Success state disables button
     });
 
     // DISCUSS: Verify input cleared and aria-invalid reset
-    expect(emailInput).toHaveValue('');
-    expect(emailInput).not.toHaveAttribute('aria-invalid', 'true');
+    expect(elements.emailInput()).toHaveValue('');
+    expect(elements.emailInput()).not.toHaveAttribute('aria-invalid', 'true');
   });
 
   it('handles onSubscribe rejection and shows error', async () => {
-    const user = userEvent.setup();
-    const rejectedOnSubscribe = jest.fn().mockRejectedValue(new Error('Network error'));
-    setup({ onSubscribe: rejectedOnSubscribe });
-
-    const emailInput = screen.getByRole('textbox', { name: defaultProps.emailLabel });
-    const submitButton = screen.getByRole('button', { name: defaultProps.submitLabel });
+    const rejectedOnSubscribe = createRejectingOnSubscribe();
+    const { user, elements } = setupNewsletterForm({ onSubscribe: rejectedOnSubscribe });
 
     await act(async () => {
-      await user.clear(emailInput);
-      await user.type(emailInput, 'test@example.com');
-      await user.click(submitButton);
+      await testPatterns.typeAndSubmit(user, testEmails.valid);
     });
 
-    expect(rejectedOnSubscribe).toHaveBeenCalledWith('test@example.com');
+    expect(rejectedOnSubscribe).toHaveBeenCalledWith(testEmails.valid);
 
     // REVIEW: Wait for async error handling and a11y state updates
     await waitFor(() => {
-      expect(emailInput).toHaveAttribute('aria-invalid', 'true');
+      expect(elements.emailInput()).toHaveAttribute('aria-invalid', 'true');
     });
 
-    const statusRegion = screen.getByRole('status');
+    const statusRegion = elements.statusRegion();
     const errorElement = within(statusRegion).getByText(defaultProps.errorMessage);
     expect(errorElement).toBeInTheDocument();
   });
 
   it('success message appears and is announced to screen readers', async () => {
     const user = userEvent.setup();
-    const { onSubscribe } = setup();
+    const { onSubscribe } = setupNewsletterForm();
 
     const emailInput = screen.getByRole('textbox', { name: defaultProps.emailLabel });
     const submitButton = screen.getByRole('button', { name: defaultProps.submitLabel });
@@ -210,37 +169,25 @@ describe('NewsletterForm Component', () => {
   });
 
   it('disables submit button during submission and success states', async () => {
-    const user = userEvent.setup();
-    let resolveSubmission: () => void;
-    const slowOnSubscribe = jest.fn(
-      () =>
-        new Promise<void>((resolve) => {
-          resolveSubmission = resolve;
-        }),
-    );
-    setup({ onSubscribe: slowOnSubscribe });
-
-    const emailInput = screen.getByRole('textbox', { name: defaultProps.emailLabel });
-    const submitButton = screen.getByRole('button', { name: defaultProps.submitLabel });
+    const { slowOnSubscribe, resolveSubmission } = createSlowOnSubscribe();
+    const { user, elements } = setupNewsletterForm({ onSubscribe: slowOnSubscribe });
 
     await act(async () => {
-      await user.clear(emailInput);
-      await user.type(emailInput, 'test@example.com');
-      await user.click(submitButton);
+      await testPatterns.typeAndSubmit(user, testEmails.valid);
     });
 
     // REVIEW: Button should be disabled during async submission
-    expect(submitButton).toBeDisabled();
+    expect(elements.submitButton()).toBeDisabled();
 
     // Resolve the async submission
     await act(async () => {
-      resolveSubmission!();
+      resolveSubmission();
     });
 
     await waitFor(() => {
       // FEEDBACK: Button remains disabled in success state with updated text
-      expect(submitButton).toBeDisabled();
-      expect(submitButton).toHaveTextContent(defaultProps.successMessage);
+      expect(elements.submitButton()).toBeDisabled();
+      expect(elements.submitButton()).toHaveTextContent(defaultProps.successMessage);
     });
   });
 
@@ -288,23 +235,17 @@ describe('NewsletterForm Component', () => {
   });
 
   it('handles form submission via Enter key', async () => {
-    const user = userEvent.setup();
-    const { onSubscribe } = setup();
-
-    const emailInput = screen.getByRole('textbox', { name: defaultProps.emailLabel });
+    const { onSubscribe, user, elements } = setupNewsletterForm();
 
     await act(async () => {
-      await user.clear(emailInput);
-      await user.type(emailInput, 'test@example.com');
-      await user.keyboard('{Enter}');
+      await testPatterns.typeAndSubmitWithEnter(user, testEmails.valid);
     });
 
     // FEEDBACK: Verify Enter key triggers async form submission
-    expect(onSubscribe).toHaveBeenCalledWith('test@example.com');
+    expect(onSubscribe).toHaveBeenCalledWith(testEmails.valid);
 
     await waitFor(() => {
-      const submitButton = screen.getByRole('button');
-      expect(submitButton).toHaveTextContent(defaultProps.successMessage);
+      expect(elements.submitButton()).toHaveTextContent(defaultProps.successMessage);
     });
   });
 
