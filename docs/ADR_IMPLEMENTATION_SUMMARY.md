@@ -112,12 +112,20 @@ All ADR requirements are automatically enforced through:
 
 ---
 
+## Configuration Notes
+
+### ESLint Version Strategy
+
+- **Current Setup**: Flat Config runs with ESLint 8.57.1; planned upgrade to ESLint 9 as soon as Next.js is compatible
+- **Compatibility**: Next.js eslint-config-next requires ESLint 8.x, blocking immediate upgrade to ESLint 9
+- **Monitoring**: Regular checks for Next.js ESLint 9 compatibility updates
+
 ## Next Steps
 
 ### Maintenance
 
 - **Regular Reviews**: Quarterly assessment of ADR effectiveness
-- **Tool Updates**: Keep ESLint rules and plugins current
+- **Tool Updates**: Keep ESLint rules and plugins current (pending Next.js ESLint 9 compatibility)
 - **Team Training**: Ongoing education on architectural standards
 
 ### Future Enhancements

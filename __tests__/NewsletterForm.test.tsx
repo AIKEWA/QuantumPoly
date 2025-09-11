@@ -11,7 +11,7 @@ import {
   setupNewsletterForm,
   testEmails,
   testPatterns,
-} from './helpers/newsletter-form-helpers';
+} from './utils/newsletter-form-helpers';
 import { act } from '../test/utils/act';
 
 /**

@@ -1,4 +1,5 @@
 /** @type {import('jest').Config} */
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const nextJest = require('next/jest');
 
 const createJestConfig = nextJest({
@@ -15,6 +16,7 @@ const customJestConfig = {
     '<rootDir>/node_modules/',
     '<rootDir>/storybook-static/',
   ],
+  testMatch: ['**/__tests__/**/*.test.(js|jsx|ts|tsx)'],
   collectCoverageFrom: [
     'src/**/*.{js,jsx,ts,tsx}',
     '!src/**/*.d.ts',

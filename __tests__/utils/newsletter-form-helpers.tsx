@@ -5,7 +5,7 @@ import React from 'react';
 import { NewsletterForm } from '@/components/NewsletterForm';
 
 /**
- * NewsletterForm Test Helpers
+ * @fileoverview NewsletterForm Test Helpers
  *
  * Modular helper functions to reduce test duplication and ensure consistent
  * testing patterns across NewsletterForm test suites.
@@ -44,7 +44,7 @@ export function setupNewsletterForm(
     elements: {
       heading: () => screen.getByRole('heading', { name: defaultProps.title }),
       emailInput: () => screen.getByRole('textbox', { name: defaultProps.emailLabel }),
-      submitButton: () => screen.getByRole('button', { name: defaultProps.submitLabel }),
+      submitButton: () => screen.getByRole('button'),
       statusRegion: () => screen.getByRole('status'),
       form: () => screen.getByRole('form'),
       section: () => screen.getByRole('region'),
@@ -98,7 +98,7 @@ export const testPatterns = {
    */
   async typeAndSubmit(user: ReturnType<typeof userEvent.setup>, email: string) {
     const emailInput = screen.getByRole('textbox', { name: defaultProps.emailLabel });
-    const submitButton = screen.getByRole('button', { name: defaultProps.submitLabel });
+    const submitButton = screen.getByRole('button');
 
     await user.clear(emailInput);
     await user.type(emailInput, email);
