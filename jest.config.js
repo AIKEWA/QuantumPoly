@@ -21,6 +21,10 @@ const customJestConfig = {
     'src/**/*.{js,jsx,ts,tsx}',
     '!src/**/*.d.ts',
     '!src/**/*.stories.{js,jsx,ts,tsx}',
+    '!src/middleware.ts',
+    '!src/i18n.ts',
+    '!src/locales/**/index.ts',
+    '!src/app/**/layout.tsx',
   ],
   coverageThreshold: {
     global: {
@@ -34,9 +38,7 @@ const customJestConfig = {
     // Handle module aliases (if you use them in your Next.js app)
     '^@/(.*)$': '<rootDir>/src/$1',
   },
-  transformIgnorePatterns: [
-    'node_modules/(?!(next-intl)/)',
-  ],
+  transformIgnorePatterns: ['node_modules/(?!(next-intl)/)'],
 };
 
 // createJestConfig is exported this way to ensure that next/jest can load the Next.js config which is async
