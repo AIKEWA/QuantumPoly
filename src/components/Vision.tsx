@@ -62,7 +62,7 @@ export function Vision({ title, pillars, headingLevel = 2, className, iconRender
               <h3 className="mb-4 text-xl font-semibold text-cyan-700 dark:text-cyan-300">
                 {pillar.title}
               </h3>
-              <p className="text-gray-700 dark:text-gray-300">{pillar.description}</p>
+              <p className="text-gray-800 dark:text-gray-200">{pillar.description}</p>
               <div
                 className="absolute -bottom-4 left-1/2 h-1 w-1/4 -translate-x-1/2 bg-gradient-to-r from-cyan-400 to-purple-500"
                 aria-hidden="true"

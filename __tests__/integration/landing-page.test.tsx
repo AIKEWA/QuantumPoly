@@ -17,6 +17,22 @@ import { Footer } from '@/components/Footer';
 import { Hero } from '@/components/Hero';
 import { NewsletterForm } from '@/components/NewsletterForm';
 import { Vision } from '@/components/Vision';
+import enMessages from '@/locales/en/index';
+
+// Mock useTranslations to return actual English translations  
+jest.mock('next-intl', () => ({
+  useTranslations: (namespace: string) => (key: string) => {
+    const keys = key.split('.');
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Required for dynamic message access
+    let value: unknown = (enMessages as Record<string, unknown>)[namespace];
+    for (const k of keys) {
+      value = (value as Record<string, unknown>)?.[k];
+    }
+    return value || `${namespace}.${key}`;
+  },
+  useLocale: () => 'en',
+  NextIntlClientProvider: ({ children }: { children: React.ReactNode }) => children,
+}));
 
 /**
  * Test-only composition component that represents the full landing page layout

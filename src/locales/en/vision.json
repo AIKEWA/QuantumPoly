@@ -1,0 +1,18 @@
+{
+  "title": "Our Vision",
+  "pillars": {
+    "safety": {
+      "title": "Safety",
+      "description": "Built-in accessibility and secure design."
+    },
+    "scale": {
+      "title": "Scale",
+      "description": "Cloud-native architecture for global reach."
+    },
+    "openness": {
+      "title": "Openness",
+      "description": "Prop-driven internationalization and open standards."
+    }
+  }
+}
+

@@ -14,6 +14,8 @@ const csp = [
   "object-src 'none'",
 ].join('; ');
 
+const withNextIntl = require('next-intl/plugin')('./src/i18n.ts');
+
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
@@ -71,4 +73,4 @@ const nextConfig = {
   },
 };
 
-module.exports = nextConfig;
+module.exports = withNextIntl(nextConfig);

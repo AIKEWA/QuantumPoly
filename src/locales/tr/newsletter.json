@@ -1,0 +1,9 @@
+{
+  "title": "Haberdar Olun",
+  "emailLabel": "E-posta Adresi",
+  "emailPlaceholder": "siz@ornek.com",
+  "submitLabel": "Abone Ol",
+  "successMessage": "Abone olduğunuz için teşekkürler!",
+  "errorMessage": "Lütfen geçerli bir e-posta adresi girin."
+}
+

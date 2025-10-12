@@ -1,0 +1,48 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:base",
+    ":dependencyDashboard",
+    ":semanticCommits",
+    ":automergeDigest",
+    ":automergeBranch"
+  ],
+  "schedule": ["after 10pm every weekday", "every weekend"],
+  "timezone": "Europe/Berlin",
+  "labels": ["dependencies"],
+  "packageRules": [
+    {
+      "description": "Block ESLint 9 until eslint-config-next compatibility - see ADR 0007",
+      "matchPackageNames": ["eslint"],
+      "matchUpdateTypes": ["major"],
+      "enabled": false,
+      "addLabels": ["blocked:eslint9"]
+    },
+    {
+      "description": "Auto-merge non-major updates for well-tested packages",
+      "matchPackagePatterns": ["^@types/", "^@testing-library/"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "automerge": true
+    },
+    {
+      "description": "Group Storybook updates",
+      "matchPackagePatterns": ["^@storybook/"],
+      "groupName": "storybook",
+      "addLabels": ["storybook"]
+    },
+    {
+      "description": "Group Next.js ecosystem updates",
+      "matchPackagePatterns": ["^next", "^eslint-config-next"],
+      "groupName": "nextjs",
+      "addLabels": ["nextjs"]
+    }
+  ],
+  "vulnerabilityAlerts": {
+    "labels": ["security"],
+    "assignees": ["@frontend-team"]
+  },
+  "lockFileMaintenance": {
+    "enabled": true,
+    "schedule": ["before 6am on Monday"]
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "title": "Stay in the Loop",
+  "emailLabel": "Email Address",
+  "emailPlaceholder": "you@example.com",
+  "submitLabel": "Subscribe",
+  "successMessage": "Thanks for subscribing!",
+  "errorMessage": "Please enter a valid email."
+}
+

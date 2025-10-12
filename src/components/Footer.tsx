@@ -13,6 +13,8 @@
 import clsx from 'clsx';
 import React from 'react';
 
+import { LanguageSwitcher } from './LanguageSwitcher';
+
 export type SocialLink = {
   /** Accessible label (visually hidden) & link text */
   label: string;
@@ -100,7 +102,11 @@ export function Footer({
 
         {renderSocialLinks()}
 
-        <p className="text-xs text-gray-500 dark:text-gray-500">{copyright}</p>
+        <div className="mb-4 flex justify-center">
+          <LanguageSwitcher />
+        </div>
+
+        <p className="text-xs text-gray-600 dark:text-gray-400">{copyright}</p>
       </div>
     </footer>
   );

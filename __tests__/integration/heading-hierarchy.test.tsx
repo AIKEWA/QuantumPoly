@@ -13,11 +13,32 @@
 import { render, screen } from '@testing-library/react';
 import React from 'react';
 
-import Home from '@/app/page';
+import Home from '@/app/[locale]/page';
+import enMessages from '@/locales/en/index';
+
+// Mock useTranslations to return actual English translations
+jest.mock('next-intl', () => ({
+  useTranslations: (namespace: string) => (key: string) => {
+    const keys = key.split('.');
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Required for dynamic message access
+    let value: unknown = (enMessages as Record<string, unknown>)[namespace];
+    for (const k of keys) {
+      value = (value as Record<string, unknown>)?.[k];
+    }
+    return value || `${namespace}.${key}`;
+  },
+  useLocale: () => 'en',
+  NextIntlClientProvider: ({ children }: { children: React.ReactNode }) => children,
+}));
+
+// Helper to render (no need for wrapper since mock handles it)
+function renderWithI18n(component: React.ReactElement) {
+  return render(component);
+}
 
 describe('Landing Page - Heading Hierarchy & Landmarks', () => {
   it('has exactly one H1 heading on the page', () => {
-    const { container } = render(<Home />);
+    const { container } = renderWithI18n(<Home />);
 
     const h1Elements = container.querySelectorAll('h1');
     expect(h1Elements).toHaveLength(1);
@@ -27,7 +48,7 @@ describe('Landing Page - Heading Hierarchy & Landmarks', () => {
   });
 
   it('all regions have valid aria-labelledby pointing to visible headings', () => {
-    const { container } = render(<Home />);
+    const { container } = renderWithI18n(<Home />);
 
     const regions = screen.getAllByRole('region');
     expect(regions.length).toBeGreaterThan(0);
@@ -47,7 +68,7 @@ describe('Landing Page - Heading Hierarchy & Landmarks', () => {
   });
 
   it('Footer has proper contentinfo landmark with labeled brand heading', () => {
-    render(<Home />);
+    renderWithI18n(<Home />);
 
     const footer = screen.getByRole('contentinfo');
     expect(footer).toBeInTheDocument();
@@ -63,7 +84,7 @@ describe('Landing Page - Heading Hierarchy & Landmarks', () => {
   });
 
   it('Newsletter section uses role=region with proper labeling', () => {
-    render(<Home />);
+    renderWithI18n(<Home />);
 
     const newsletterRegion = screen.getByRole('region', { name: /stay in the loop/i });
     expect(newsletterRegion).toBeInTheDocument();
@@ -76,7 +97,7 @@ describe('Landing Page - Heading Hierarchy & Landmarks', () => {
   });
 
   it('main sections follow proper heading hierarchy (H1 > H2 > H3)', () => {
-    const { container } = render(<Home />);
+    const { container } = renderWithI18n(<Home />);
 
     // Get all headings in document order
     const allHeadings = container.querySelectorAll('h1, h2, h3, h4, h5, h6');
@@ -97,7 +118,7 @@ describe('Landing Page - Heading Hierarchy & Landmarks', () => {
   });
 
   it('Hero section has proper region role and labeling', () => {
-    render(<Home />);
+    renderWithI18n(<Home />);
 
     const heroRegion = screen.getByRole('region', { name: /welcome to quantumpoly/i });
     expect(heroRegion).toBeInTheDocument();
@@ -111,7 +132,7 @@ describe('Landing Page - Heading Hierarchy & Landmarks', () => {
   });
 
   it('About and Vision sections have proper H2 headings and region labeling', () => {
-    render(<Home />);
+    renderWithI18n(<Home />);
 
     // Test About section
     const aboutRegion = screen.getByRole('region', { name: /about us/i });
@@ -133,7 +154,7 @@ describe('Landing Page - Heading Hierarchy & Landmarks', () => {
   });
 
   it('Vision pillars use H3 headings under the main H2', () => {
-    render(<Home />);
+    renderWithI18n(<Home />);
 
     // Find all H3 elements within the Vision section
     const visionSection = screen.getByRole('region', { name: /our vision/i });
@@ -147,7 +168,7 @@ describe('Landing Page - Heading Hierarchy & Landmarks', () => {
   });
 
   it('provides comprehensive landmark coverage for screen reader navigation', () => {
-    render(<Home />);
+    renderWithI18n(<Home />);
 
     // Verify key landmarks exist for screen reader users
     expect(screen.getByRole('main')).toBeInTheDocument();

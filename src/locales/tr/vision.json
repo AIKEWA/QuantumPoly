@@ -1,0 +1,18 @@
+{
+  "title": "Vizyonumuz",
+  "pillars": {
+    "safety": {
+      "title": "Güvenlik",
+      "description": "Yerleşik erişilebilirlik ve güvenli tasarım."
+    },
+    "scale": {
+      "title": "Ölçek",
+      "description": "Küresel erişim için bulut tabanlı mimari."
+    },
+    "openness": {
+      "title": "Açıklık",
+      "description": "Özellik odaklı uluslararasılaşma ve açık standartlar."
+    }
+  }
+}
+

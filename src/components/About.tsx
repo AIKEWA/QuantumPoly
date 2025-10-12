@@ -33,7 +33,7 @@ export function About({ title, body, headingLevel = 2, className }: AboutProps) 
         </HeadingTag>
         <div
           id={bodyId}
-          className="text-center text-lg leading-relaxed text-gray-700 dark:text-gray-300"
+          className="text-center text-lg leading-relaxed text-gray-800 dark:text-gray-200"
         >
           {body}
         </div>

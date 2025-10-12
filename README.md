@@ -125,7 +125,49 @@ src/
 
 ## Internationalization (i18n)
 
-The project is prepared for internationalization with the `src/locales/` directory structure. Future implementation will support multiple languages for global accessibility.
+QuantumPoly supports multiple languages using [next-intl](https://next-intl-docs.vercel.app/).
+
+### Supported Languages
+
+- **English (en)** - Default
+- **German (de)** - Deutsch
+- **Turkish (tr)** - Türkçe
+
+### Using Translations in Components
+
+```tsx
+import { useTranslations } from 'next-intl';
+
+export function MyComponent() {
+  const t = useTranslations('hero');
+  return <h1>{t('title')}</h1>;
+}
+```
+
+### URL Structure
+
+All routes are prefixed with the locale:
+- `/en` - English
+- `/de` - German  
+- `/tr` - Turkish
+
+### Locale Switching
+
+Users can switch languages using the language selector in the footer. The selection is persisted via cookies and preserves the current page context.
+
+### Adding New Languages
+
+See the comprehensive [I18N Guide](./docs/I18N_GUIDE.md) for detailed instructions on adding new languages, translation keys, and testing patterns.
+
+### Translation Files
+
+Located in `src/locales/{locale}/`:
+- `hero.json` - Hero section
+- `about.json` - About section
+- `vision.json` - Vision section
+- `newsletter.json` - Newsletter form
+- `footer.json` - Footer content
+- `common.json` - Shared content (metadata, language names)
 
 ## Project Structure Details
 
@@ -228,6 +270,73 @@ Each component includes:
 - **Multiple Variants** — different configurations and use cases
 - **Controls** — interactive prop editing
 - **Documentation** — usage notes and accessibility guidelines
+
+## Storybook—How we write stories
+
+Our Storybook follows Component Story Format 3 (CSF3) with TypeScript integration and accessibility-first design. All stories must include proper accessibility testing and realistic usage examples.
+
+### Story Template
+
+```typescript
+// Example.stories.tsx
+import type { Meta, StoryObj } from '@storybook/react';
+import { Button } from './Button';
+
+const meta: Meta<typeof Button> = {
+  title: 'Components/Button',
+  component: Button,
+  parameters: {
+    a11y: { disable: false },
+    layout: 'centered',
+  },
+  argTypes: {
+    variant: {
+      control: { type: 'select' },
+      options: ['primary', 'secondary', 'danger'],
+      description: 'Visual variant of the component',
+    },
+    disabled: {
+      control: 'boolean',
+      description: 'Whether the component is disabled',
+    },
+  },
+};
+
+export default meta;
+type Story = StoryObj<typeof meta>;
+
+export const Default: Story = {
+  args: {
+    children: 'Click me',
+    variant: 'primary',
+  },
+};
+
+export const WithInteraction: Story = {
+  args: {
+    ...Default.args,
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    
+    // Test accessibility and interactions
+    const button = canvas.getByRole('button');
+    await userEvent.click(button);
+    
+    await expect(button).toHaveFocus();
+  },
+};
+```
+
+### Required Story Types
+- **Default**: Most common usage scenario
+- **All Variants**: Cover all prop combinations
+- **Interactive States**: Hover, focus, active with play functions
+- **Error/Edge Cases**: Error states, loading states, disabled states
+- **Accessibility Examples**: Screen reader scenarios, keyboard navigation
+
+### Guidelines Document
+For complete guidelines, see [Storybook Hygiene Guidelines](./docs/STORYBOOK_HYGIENE_GUIDELINES.md).
 
 
 <!-- PROPS:START -->

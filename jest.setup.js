@@ -42,3 +42,28 @@ Object.defineProperty(window, 'matchMedia', {
     dispatchEvent: jest.fn(),
   })),
 });
+
+// Mock next-intl for tests
+jest.mock('next-intl', () => ({
+  useTranslations: (namespace) => (key) => `${namespace}.${key}`,
+  useLocale: () => 'en',
+  NextIntlClientProvider: ({ children }) => children,
+}));
+
+// Mock next-intl/server for tests
+jest.mock('next-intl/server', () => ({
+  getMessages: async () => ({}),
+  getRequestConfig: jest.fn(),
+}));
+
+// Mock next/navigation for tests
+jest.mock('next/navigation', () => ({
+  useRouter: () => ({
+    push: jest.fn(),
+    replace: jest.fn(),
+    prefetch: jest.fn(),
+  }),
+  usePathname: () => '/en',
+  useSearchParams: () => ({}), // Simple mock object
+  notFound: jest.fn(),
+}));

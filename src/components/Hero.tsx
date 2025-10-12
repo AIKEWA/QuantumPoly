@@ -57,7 +57,7 @@ export function Hero({ title, subtitle, ctaLabel, headingLevel = 2, media, class
         {subtitle && (
           <p
             id={subtitleId}
-            className="mx-auto max-w-2xl text-lg text-gray-700 md:text-2xl dark:text-gray-300"
+            className="mx-auto max-w-2xl text-lg text-gray-800 md:text-2xl dark:text-gray-200"
           >
             {subtitle}
           </p>
