@@ -1,0 +1,18 @@
+{
+  "title": "La Nostra Visione",
+  "pillars": {
+    "safety": {
+      "title": "Sicurezza",
+      "description": "Accessibilità integrata e design sicuro."
+    },
+    "scale": {
+      "title": "Scala",
+      "description": "Architettura cloud-native per una portata globale."
+    },
+    "openness": {
+      "title": "Apertura",
+      "description": "Internazionalizzazione basata su proprietà e standard aperti."
+    }
+  }
+}
+

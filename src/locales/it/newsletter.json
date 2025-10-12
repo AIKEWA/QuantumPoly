@@ -1,0 +1,15 @@
+{
+  "title": "Rimani Aggiornato",
+  "emailLabel": "Indirizzo Email",
+  "emailPlaceholder": "tu@esempio.com",
+  "submitLabel": "Iscriviti",
+  "successMessage": "Grazie per esserti iscritto!",
+  "errorMessage": "Si prega di inserire un'email valida.",
+  "invalidEmail": "Si prega di fornire un indirizzo email valido.",
+  "alreadySubscribed": "Questa email è già iscritta.",
+  "success": "Iscrizione alla nostra newsletter riuscita!",
+  "rateLimited": "Troppe richieste. Riprova più tardi.",
+  "rateLimitExceeded": "Limite di tasso superato. Attendere prima di riprovare.",
+  "serverError": "Si è verificato un errore imprevisto. Riprova."
+}
+

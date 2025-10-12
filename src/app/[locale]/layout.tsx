@@ -3,20 +3,27 @@ import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
 import { ReactNode } from 'react';
 
-import { isValidLocale } from '@/i18n';
+import { isValidLocale, getLocaleDirection, type Locale } from '@/i18n';
 import '../../styles/globals.css';
 
 type Props = {
   children: ReactNode;
-  params: { locale: string };
+  params: Promise<{ locale: string }>;
 };
 
 export function generateStaticParams() {
-  return [{ locale: 'en' }, { locale: 'de' }, { locale: 'tr' }];
+  return [
+    { locale: 'en' },
+    { locale: 'de' },
+    { locale: 'tr' },
+    { locale: 'es' },
+    { locale: 'fr' },
+    { locale: 'it' },
+  ];
 }
 
 export async function generateMetadata({ params }: Props) {
-  const { locale } = params;
+  const { locale } = await params;
 
   if (!isValidLocale(locale)) {
     notFound();
@@ -36,6 +43,9 @@ export async function generateMetadata({ params }: Props) {
         en: '/en',
         de: '/de',
         tr: '/tr',
+        es: '/es',
+        fr: '/fr',
+        it: '/it',
       },
     },
   };
@@ -47,7 +57,7 @@ export const viewport = {
 };
 
 export default async function RootLayout({ children, params }: Props) {
-  const { locale } = params;
+  const { locale } = await params;
 
   if (!isValidLocale(locale)) {
     notFound();
@@ -55,8 +65,15 @@ export default async function RootLayout({ children, params }: Props) {
 
   const messages = await getMessages();
 
+  // Defensive check: warn if messages are missing
+  if (!messages || Object.keys(messages).length === 0) {
+    console.error(`⚠️ Missing messages for locale: ${locale}`);
+  }
+
+  const direction = getLocaleDirection(locale as Locale);
+
   return (
-    <html lang={locale}>
+    <html lang={locale} dir={direction}>
       <body className="min-h-screen font-sans antialiased">
         <NextIntlClientProvider locale={locale} messages={messages}>
           {children}

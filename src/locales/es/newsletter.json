@@ -1,0 +1,15 @@
+{
+  "title": "Mantente Informado",
+  "emailLabel": "Correo Electrónico",
+  "emailPlaceholder": "tu@ejemplo.com",
+  "submitLabel": "Suscribirse",
+  "successMessage": "¡Gracias por suscribirte!",
+  "errorMessage": "Por favor, introduce un correo válido.",
+  "invalidEmail": "Por favor, proporciona una dirección de correo válida.",
+  "alreadySubscribed": "Este correo ya está suscrito.",
+  "success": "¡Suscripción exitosa a nuestro boletín!",
+  "rateLimited": "Demasiadas solicitudes. Por favor, inténtalo más tarde.",
+  "rateLimitExceeded": "Límite de tasa excedido. Por favor, espera antes de intentar de nuevo.",
+  "serverError": "Ocurrió un error inesperado. Por favor, inténtalo de nuevo."
+}
+

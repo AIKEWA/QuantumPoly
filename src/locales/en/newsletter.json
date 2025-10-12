@@ -4,6 +4,12 @@
   "emailPlaceholder": "you@example.com",
   "submitLabel": "Subscribe",
   "successMessage": "Thanks for subscribing!",
-  "errorMessage": "Please enter a valid email."
+  "errorMessage": "Please enter a valid email.",
+  "invalidEmail": "Please provide a valid email address.",
+  "alreadySubscribed": "This email is already subscribed.",
+  "success": "Successfully subscribed to our newsletter!",
+  "rateLimited": "Too many requests. Please try again later.",
+  "rateLimitExceeded": "Rate limit exceeded. Please wait before trying again.",
+  "serverError": "An unexpected error occurred. Please try again."
 }
 

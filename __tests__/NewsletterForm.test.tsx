@@ -191,7 +191,17 @@ describe('NewsletterForm Component', () => {
     });
   });
 
-  it('falls back to default behavior when no onSubscribe is provided', async () => {
+  it('uses API integration in auto mode when no onSubscribe is provided', async () => {
+    // Mock successful API response
+    global.fetch = jest.fn(() =>
+      Promise.resolve({
+        ok: true,
+        status: 201,
+        json: () => Promise.resolve({ messageKey: 'newsletter.success' }),
+        headers: new Headers(),
+      } as Response),
+    );
+
     const user = userEvent.setup();
     render(<NewsletterForm {...defaultProps} />); // No onSubscribe prop
 
@@ -204,7 +214,7 @@ describe('NewsletterForm Component', () => {
       await user.click(submitButton);
     });
 
-    // REVIEW: Wait for async fallback simulation (600ms timeout in component)
+    // REVIEW: Wait for async API call to complete
     await waitFor(
       () => {
         expect(submitButton).toHaveTextContent(defaultProps.successMessage);
@@ -213,8 +223,20 @@ describe('NewsletterForm Component', () => {
       { timeout: 1000 },
     );
 
+    // Verify API was called
+    expect(global.fetch).toHaveBeenCalledWith(
+      '/api/newsletter',
+      expect.objectContaining({
+        method: 'POST',
+        body: JSON.stringify({ email: 'test@example.com' }),
+      }),
+    );
+
     // Verify email is cleared in success state
     expect(emailInput).toHaveValue('');
+
+    // Clean up mock
+    jest.restoreAllMocks();
   });
 
   it('form has proper semantic structure', () => {

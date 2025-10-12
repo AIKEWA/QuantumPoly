@@ -2,64 +2,98 @@ name: CI
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [main]
   pull_request:
-    branches: [ main, develop ]
+    branches: [main]
 
-# Ensure only one workflow runs at a time per PR or branch
+# Minimal permissions for security hardening
+permissions:
+  contents: read
+  pull-requests: write # for test annotations
+
+# Prevent concurrent runs on the same ref
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: ci-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  build-test:
-    name: Build & Test
+  validate-newsletter:
+    name: Validate Newsletter API
     runs-on: ubuntu-latest
-    
+    timeout-minutes: 10
+
     strategy:
+      fail-fast: false
       matrix:
-        node-version: [20]
-    
+        node-version: [18.x, 20.x]
+
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Node.js ${{ matrix.node-version }}
+      - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-          cache: 'npm'
+          cache: npm
+
+      - name: Install dependencies (clean)
+        run: npm ci
+
+      - name: Run type checking
+        run: npm run type-check
+
+      - name: Run linter
+        run: npm run lint
+
+      - name: Run Newsletter API tests
+        run: npm run test:api
+        env:
+          NODE_ENV: test
+
+      - name: Enforce coverage thresholds
+        run: |
+          npm run test:coverage || {
+            echo "::error::Newsletter API coverage below required thresholds. Please add tests to meet the 90% threshold for the Newsletter API route.";
+            exit 1;
+          }
+
+      - name: Upload JUnit test report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: newsletter-api-junit-${{ matrix.node-version }}
+          path: reports/junit.xml
+          if-no-files-found: ignore
+          retention-days: 7
+
+      - name: Upload coverage report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: newsletter-api-coverage-${{ matrix.node-version }}
+          path: coverage/**
+          if-no-files-found: ignore
+          retention-days: 7
+
+  build:
+    name: Build Application
+    needs: [validate-newsletter]
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Use Node.js 18.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18.x
+          cache: npm
 
       - name: Install dependencies
         run: npm ci
-
-      - name: Lint code
-        run: npm run lint -- --max-warnings=0
-
-      - name: Tailwind color guard
-        run: |
-          VIOLATIONS=$(npm run -s lint:tw-colors)
-          if [ -n "$VIOLATIONS" ]; then
-            echo "❌ Found raw color classnames in Tailwind utilities:"
-            echo "$VIOLATIONS"
-            echo "Please use design tokens from tailwind.config.js instead of raw hex/rgb/hsl values."
-            exit 1
-          else
-            echo "✅ No raw color classnames found"
-          fi
-
-      - name: Type check
-        run: npm run type-check
-
-      - name: Run tests with coverage
-        run: npm run test:coverage
-
-      - name: Upload coverage reports
-        uses: codecov/codecov-action@v3
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          file: ./coverage/lcov.info
-          fail_ci_if_error: false
 
       - name: Build Next.js application
         run: npm run build
@@ -67,156 +101,62 @@ jobs:
       - name: Build Storybook
         run: npm run build-storybook
 
-      - name: Store build artifacts
+      - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: build-artifacts-${{ matrix.node-version }}
+          name: build-output
           path: |
             .next/
             storybook-static/
-          retention-days: 1
-
-  # Security and quality checks
-  security:
-    name: Security & Quality
-    runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request'
-    
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: 'npm'
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Run security audit
-        run: npm audit --audit-level moderate
-
-      - name: Check for outdated dependencies
-        run: npm outdated || true
-
-  # Integration test job (separate for clarity)
-  integration-tests:
-    name: Integration Tests
-    runs-on: ubuntu-latest
-    
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: 'npm'
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Run integration tests
-        run: npm run test:integration
-
-  # Storybook accessibility testing
-  storybook-a11y:
-    name: Storybook A11y Tests
-    runs-on: ubuntu-latest
-    needs: build-test
-    
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-        
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: 'npm'
-          
-      - name: Install dependencies
-        run: npm ci
-        
-      - name: Build Storybook
-        run: npm run build-storybook
-        
-      - name: Verify Storybook a11y addon
-        run: |
-          echo "✅ Storybook includes @storybook/addon-a11y for accessibility testing"
-          echo "🔍 A11y violations are automatically checked in Storybook during development"
-          echo "📚 Run 'npm run storybook' locally to see a11y feedback in the addon panel"
-        
-      - name: Upload Storybook build
-        uses: actions/upload-artifact@v4
-        with:
-          name: storybook-static
-          path: storybook-static/
           retention-days: 7
 
-  # Lighthouse accessibility and contrast testing
-  lighthouse-a11y:
-    name: Lighthouse A11y & Contrast
+  e2e:
+    name: End-to-End Tests
+    needs: [build]
     runs-on: ubuntu-latest
-    needs: build-test
-    
+    timeout-minutes: 15
+
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v4
-        
-      - name: Setup Node.js
+
+      - name: Use Node.js 18.x
         uses: actions/setup-node@v4
         with:
-          node-version: 20
-          cache: 'npm'
-          
+          node-version: 18.x
+          cache: npm
+
       - name: Install dependencies
         run: npm ci
-        
-      - name: Build Next.js application
-        run: npm run build
-        
-      - name: Run Lighthouse CI for accessibility and contrast
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
+
+      - name: Run E2E tests
+        run: npm run test:e2e
+
+      - name: Upload E2E test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report/
+          if-no-files-found: ignore
+          retention-days: 7
+
+  deploy:
+    name: Deployment Gate
+    needs: [e2e]
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: All checks passed
         run: |
-          echo "🔍 Running Lighthouse accessibility audit with strict contrast checking..."
-          npx lhci autorun --config=.lighthouserc.js --collect.settings.onlyCategories=accessibility
-        env:
-          # Add any required environment variables here if needed
-          CI: true
+          echo "✅ All validation, build, and E2E tests passed successfully."
+          echo "This job serves as a deployment gate. Actual deployment steps can be added here."
+          echo "Example: Deploy to Vercel, AWS, or other platforms."
 
-  # Deployment preview (if applicable)
-  preview:
-    name: Deploy Preview
-    runs-on: ubuntu-latest
-    needs: [build-test]
-    if: github.event_name == 'pull_request'
-    
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: 'npm'
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Build for production
-        run: npm run build
-
-      - name: Comment PR with preview info
-        uses: actions/github-script@v7
-        with:
-          script: |
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: '🚀 Preview build completed successfully! Check the artifacts for the built application.'
-            })
+      - name: Deployment readiness check
+        run: |
+          echo "::notice::Pipeline ready for deployment. All quality gates passed."

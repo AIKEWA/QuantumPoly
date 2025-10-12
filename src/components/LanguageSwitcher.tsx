@@ -45,10 +45,12 @@ export function LanguageSwitcher({ className = '' }: LanguageSwitcherProps) {
       </label>
       <select
         id="language-switcher"
+        name="locale"
         value={locale}
         onChange={handleLocaleChange}
         disabled={isPending}
         aria-label={t('switchLanguage')}
+        data-testid="language-switcher"
         className="
           appearance-none rounded-md border border-gray-300 bg-white px-4 py-2 pr-8
           text-sm font-medium text-gray-700
@@ -59,7 +61,7 @@ export function LanguageSwitcher({ className = '' }: LanguageSwitcherProps) {
         "
       >
         {locales.map((loc) => (
-          <option key={loc} value={loc}>
+          <option key={loc} value={loc} data-locale={loc}>
             {t(loc)}
           </option>
         ))}

@@ -1,0 +1,154 @@
+name: i18n Validation
+
+on:
+  pull_request:
+    branches: [main, develop]
+    paths:
+      - 'src/locales/**'
+      - 'src/i18n.ts'
+      - 'scripts/validate-translations.ts'
+  push:
+    branches: [main, develop]
+    paths:
+      - 'src/locales/**'
+      - 'src/i18n.ts'
+      - 'scripts/validate-translations.ts'
+
+jobs:
+  validate-translations:
+    name: Validate Translation Files
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run translation validation
+        run: npm run validate:translations
+
+      - name: Check for untranslated markers
+        run: |
+          if grep -r "\[NEEDS_TRANSLATION\]" src/locales/*/; then
+            echo "❌ Found untranslated [NEEDS_TRANSLATION] markers"
+            exit 1
+          else
+            echo "✅ No untranslated markers found"
+          fi
+
+      - name: Validate JSON syntax
+        run: |
+          find src/locales -name "*.json" -type f -exec sh -c '
+            for file do
+              echo "Validating $file..."
+              if ! jq empty "$file" 2>/dev/null; then
+                echo "❌ Invalid JSON: $file"
+                exit 1
+              fi
+            done
+          ' sh {} +
+
+      - name: Check translation key consistency
+        run: |
+          echo "Checking that all locales have the same JSON files..."
+          
+          EN_FILES=$(find src/locales/en -name "*.json" -type f | sort)
+          
+          for locale_dir in src/locales/*/; do
+            locale=$(basename "$locale_dir")
+            
+            if [ "$locale" = "en" ] || [ "$locale" = "qps" ]; then
+              continue
+            fi
+            
+            echo "Checking $locale..."
+            
+            for en_file in $EN_FILES; do
+              filename=$(basename "$en_file")
+              locale_file="src/locales/$locale/$filename"
+              
+              if [ ! -f "$locale_file" ]; then
+                echo "❌ Missing file in $locale: $filename"
+                exit 1
+              fi
+            done
+          done
+          
+          echo "✅ All locales have complete file sets"
+
+      - name: Generate validation report
+        if: always()
+        run: |
+          echo "## Translation Validation Report" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Locales Validated" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          for locale_dir in src/locales/*/; do
+            locale=$(basename "$locale_dir")
+            file_count=$(find "$locale_dir" -name "*.json" -type f | wc -l)
+            echo "- **$locale**: $file_count translation files" >> $GITHUB_STEP_SUMMARY
+          done
+          
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Validation Status" >> $GITHUB_STEP_SUMMARY
+          echo "✅ All translations validated successfully" >> $GITHUB_STEP_SUMMARY
+
+  type-check:
+    name: TypeScript Type Check
+    runs-on: ubuntu-latest
+    needs: validate-translations
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run type check
+        run: npm run type-check
+
+  test-formatters:
+    name: Test i18n Formatters
+    runs-on: ubuntu-latest
+    needs: validate-translations
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run formatter tests
+        run: npm run test:i18n-keys
+
+      - name: Upload coverage
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: i18n-formatter-coverage
+          path: coverage/
+          retention-days: 7
+

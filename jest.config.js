@@ -27,6 +27,14 @@ const customJestConfig = {
     '!src/app/**/layout.tsx',
   ],
   coverageThreshold: {
+    // Route-specific thresholds for security-critical API endpoints (Block 4.4)
+    'src/app/api/newsletter/route.ts': {
+      branches: 90,
+      functions: 90,
+      lines: 90,
+      statements: 90,
+    },
+    // Global thresholds for all other files
     global: {
       branches: 80,
       functions: 85,

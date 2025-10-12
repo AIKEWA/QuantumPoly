@@ -4,6 +4,12 @@
   "emailPlaceholder": "ihre@example.com",
   "submitLabel": "Abonnieren",
   "successMessage": "Vielen Dank für Ihr Abonnement!",
-  "errorMessage": "Bitte geben Sie eine gültige E-Mail-Adresse ein."
+  "errorMessage": "Bitte geben Sie eine gültige E-Mail-Adresse ein.",
+  "invalidEmail": "Bitte geben Sie eine gültige E-Mail-Adresse an.",
+  "alreadySubscribed": "Diese E-Mail-Adresse ist bereits abonniert.",
+  "success": "Erfolgreich für unseren Newsletter angemeldet!",
+  "rateLimited": "Zu viele Anfragen. Bitte versuchen Sie es später erneut.",
+  "rateLimitExceeded": "Ratenlimit überschritten. Bitte warten Sie, bevor Sie es erneut versuchen.",
+  "serverError": "Ein unerwarteter Fehler ist aufgetreten. Bitte versuchen Sie es erneut."
 }
 

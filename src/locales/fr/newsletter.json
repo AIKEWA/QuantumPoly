@@ -1,0 +1,15 @@
+{
+  "title": "Restez Informé",
+  "emailLabel": "Adresse E-mail",
+  "emailPlaceholder": "vous@exemple.com",
+  "submitLabel": "S'abonner",
+  "successMessage": "Merci de vous être abonné !",
+  "errorMessage": "Veuillez entrer un e-mail valide.",
+  "invalidEmail": "Veuillez fournir une adresse e-mail valide.",
+  "alreadySubscribed": "Cet e-mail est déjà abonné.",
+  "success": "Inscription réussie à notre newsletter !",
+  "rateLimited": "Trop de requêtes. Veuillez réessayer plus tard.",
+  "rateLimitExceeded": "Limite de débit dépassée. Veuillez attendre avant de réessayer.",
+  "serverError": "Une erreur inattendue s'est produite. Veuillez réessayer."
+}
+

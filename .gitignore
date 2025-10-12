@@ -148,6 +148,7 @@ dist
 
 # testing
 /coverage
+/reports
 
 # next.js
 /.next/

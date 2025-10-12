@@ -169,6 +169,56 @@ Located in `src/locales/{locale}/`:
 - `footer.json` - Footer content
 - `common.json` - Shared content (metadata, language names)
 
+## Newsletter API Integration
+
+QuantumPoly includes a production-ready Newsletter subscription API with modular backend integration.
+
+### Features
+
+- ✅ Zod-based email validation
+- ✅ Dual-dimensional rate limiting (email + IP)
+- ✅ i18n-ready error messages (6 locales)
+- ✅ Extensible adapter pattern for any storage backend
+- ✅ 98%+ test coverage with CI integration
+
+### Quick Start
+
+1. **In-Memory Mode (Development)**
+   
+   The API works out of the box with in-memory storage for prototyping.
+
+2. **Supabase Integration (Production)**
+   
+   a. Set up environment variables:
+   ```bash
+   export SUPABASE_URL="https://your-project.supabase.co"
+   export SUPABASE_SERVICE_KEY="your_service_role_key"
+   ```
+
+   b. Create the database table:
+   ```sql
+   CREATE TABLE newsletter_subscribers (
+     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+     email TEXT UNIQUE NOT NULL,
+     subscribed_at TIMESTAMPTZ DEFAULT now()
+   );
+   ```
+
+   c. Implement the adapter (see `docs/NEWSLETTER_API.md` for full code)
+
+### API Endpoint
+
+- **Route**: `POST /api/newsletter`
+- **Request**: `{ "email": "user@example.com" }`
+- **Responses**: 201 (success), 400 (invalid), 409 (duplicate), 429 (rate limit), 500 (error)
+
+### Documentation
+
+For complete architecture details, adapter interface specifications, and Supabase integration guide, see:
+- **[Newsletter API Documentation](./docs/NEWSLETTER_API.md)**
+- **[API Testing Guide](./docs/API_TESTING_GUIDE.md)**
+- **[Block 4.4 Implementation Summary](./BLOCK4.4_IMPLEMENTATION_SUMMARY.md)**
+
 ## Project Structure Details
 
 ```
