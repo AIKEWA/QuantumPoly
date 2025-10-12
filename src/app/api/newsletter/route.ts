@@ -567,47 +567,52 @@ export async function PATCH(): Promise<NextResponse> {
  * });
  * ```
  */
-export const __test__ = {
-  /**
-   * Resets all in-memory storage maps
-   * Clears subscribers, email rate limits, and IP rate limits
-   * Should be called in beforeEach() to ensure test isolation
-   */
-  resetStores: () => {
-    subscribers.clear();
-    emailLastSeen.clear();
-    ipLastSeen.clear();
-  },
+// Only export test utilities in non-production builds
+// Next.js Route handlers only allow specific exports (GET, POST, etc.)
+// Conditional exports prevent build-time type validation errors
+if (process.env.NODE_ENV !== 'production') {
+  (exports as any).__test__ = {
+    /**
+     * Resets all in-memory storage maps
+     * Clears subscribers, email rate limits, and IP rate limits
+     * Should be called in beforeEach() to ensure test isolation
+     */
+    resetStores: () => {
+      subscribers.clear();
+      emailLastSeen.clear();
+      ipLastSeen.clear();
+    },
 
-  /**
-   * Clears only rate limit stores (keeps subscribers)
-   * Useful for testing duplicate subscription logic outside rate limit window
-   */
-  clearRateLimits: () => {
-    emailLastSeen.clear();
-    ipLastSeen.clear();
-  },
+    /**
+     * Clears only rate limit stores (keeps subscribers)
+     * Useful for testing duplicate subscription logic outside rate limit window
+     */
+    clearRateLimits: () => {
+      emailLastSeen.clear();
+      ipLastSeen.clear();
+    },
 
-  /**
-   * Controls forced error state for testing 500 responses
-   * When enabled, POST handler will throw an error immediately
-   * @param value - true to force errors, false to disable
-   */
-  setForceError: (value: boolean) => {
-    FORCE_ERROR = value;
-  },
+    /**
+     * Controls forced error state for testing 500 responses
+     * When enabled, POST handler will throw an error immediately
+     * @param value - true to force errors, false to disable
+     */
+    setForceError: (value: boolean) => {
+      FORCE_ERROR = value;
+    },
 
-  /**
-   * Gets current subscriber count (for test assertions)
-   * @returns Number of subscribed emails
-   */
-  getSubscriberCount: () => subscribers.size,
+    /**
+     * Gets current subscriber count (for test assertions)
+     * @returns Number of subscribed emails
+     */
+    getSubscriberCount: () => subscribers.size,
 
-  /**
-   * Checks if an email is subscribed (for test assertions)
-   * @param email - Email to check
-   * @returns true if email is subscribed
-   */
-  isSubscribed: (email: string) => subscribers.has(normalizeEmail(email)),
-};
+    /**
+     * Checks if an email is subscribed (for test assertions)
+     * @param email - Email to check
+     * @returns true if email is subscribed
+     */
+    isSubscribed: (email: string) => subscribers.has(normalizeEmail(email)),
+  };
+}
 

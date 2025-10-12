@@ -5,6 +5,7 @@
  */
 
 import { test, expect } from '@playwright/test';
+
 import {
   getSupportedLocales,
   navigateToLocale,

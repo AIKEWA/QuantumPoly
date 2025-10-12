@@ -363,9 +363,7 @@ export function formatNumberRange(
 ): string {
   const formatter = new Intl.NumberFormat(locale, options);
   
-  // @ts-expect-error - formatRange is available but not in all TypeScript definitions
   if (typeof formatter.formatRange === 'function') {
-    // @ts-expect-error - formatRange is available but not in all TypeScript definitions
     return formatter.formatRange(start, end);
   }
   
