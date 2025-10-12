@@ -1,27 +1,27 @@
 /**
  * @fileoverview NewsletterForm Async & Error Scenario Tests
- * 
+ *
  * Focused testing of asynchronous operations, error handling, and edge cases
  * using the modularized helper utilities. These tests complement the main
  * NewsletterForm tests with specialized async and error scenario coverage.
  */
 
-import { render, screen, waitFor } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { /* render, */ screen, waitFor } from '@testing-library/react';
+// import userEvent from '@testing-library/user-event';
 import { act } from 'react-dom/test-utils';
 
-import { NewsletterForm } from '@/components/NewsletterForm';
+// import { NewsletterForm } from '@/components/NewsletterForm';
 
-import { 
+import {
   createControlledAsyncSubmission,
-  createDelayedOnSubscribe, 
+  createDelayedOnSubscribe,
   createFlakeyOnSubscribe,
-  createTimeoutOnSubscribe,
+  // createTimeoutOnSubscribe,
   createTrackingOnSubscribe,
-  asyncTestUtils,
+  // asyncTestUtils,
 } from './utils/newsletter-async-helpers';
 import {
-  errorScenarios,
+  // errorScenarios,
   createErrorScenarioMock,
   createCyclingErrorMock,
   errorTriggerEmails,
@@ -57,7 +57,8 @@ describe('NewsletterForm Async Operations', () => {
     });
 
     it('tracks multiple submission attempts with metadata', async () => {
-      const { trackingOnSubscribe, getAttempts, getSuccessfulAttempts, clearAttempts } = createTrackingOnSubscribe();
+      const { trackingOnSubscribe, getAttempts, getSuccessfulAttempts, clearAttempts } =
+        createTrackingOnSubscribe();
 
       // Clear any previous attempts
       clearAttempts();
@@ -78,12 +79,12 @@ describe('NewsletterForm Async Operations', () => {
       // Verify tracking data
       const attempts = getAttempts();
       const successful = getSuccessfulAttempts();
-      
+
       expect(attempts).toHaveLength(testEmails.length);
       expect(successful.length).toBeGreaterThan(0); // Some should succeed (80% success rate)
-      
+
       // Verify metadata structure
-      attempts.forEach(attempt => {
+      attempts.forEach((attempt) => {
         expect(attempt).toHaveProperty('email');
         expect(attempt).toHaveProperty('timestamp');
         expect(attempt).toHaveProperty('success');
@@ -181,7 +182,11 @@ describe('NewsletterForm Error Scenarios', () => {
     });
 
     it('cycles through different error scenarios', async () => {
-      const { cyclingMock, resetCycle } = createCyclingErrorMock(['networkTimeout', 'rateLimited', 'serverOverload']);
+      const { cyclingMock, resetCycle } = createCyclingErrorMock([
+        'networkTimeout',
+        'rateLimited',
+        'serverOverload',
+      ]);
       const { user } = setupNewsletterForm({ onSubscribe: cyclingMock });
 
       // Test multiple submissions with different errors
@@ -196,7 +201,7 @@ describe('NewsletterForm Error Scenarios', () => {
       }
 
       expect(cyclingMock).toHaveBeenCalledTimes(3);
-      
+
       // Reset and test cycle restart
       resetCycle();
       expect(cyclingMock).toHaveBeenCalledTimes(3); // Should not change call count
@@ -267,7 +272,7 @@ describe('NewsletterForm Error Scenarios', () => {
       // Verify error state is cleared
       await errorRecoveryUtils.validateErrorClearing(
         () => screen.queryByText(defaultProps.errorMessage),
-        () => elements.emailInput()
+        () => elements.emailInput(),
       );
     });
 
@@ -291,7 +296,7 @@ describe('NewsletterForm Error Scenarios', () => {
             }
           });
         },
-        5 // Max 5 retries
+        5, // Max 5 retries
       );
 
       expect(retryAttempts.successfulRetry).toBe(4); // Should succeed on 4th attempt
@@ -312,9 +317,12 @@ describe('NewsletterForm Error Scenarios', () => {
       expect(elements.submitButton()).toBeDisabled();
 
       // Wait for completion with extended timeout
-      await waitFor(() => {
-        expect(elements.submitButton()).toHaveTextContent(defaultProps.successMessage);
-      }, { timeout: 2000 });
+      await waitFor(
+        () => {
+          expect(elements.submitButton()).toHaveTextContent(defaultProps.successMessage);
+        },
+        { timeout: 2000 },
+      );
     });
 
     it('handles rapid successive submissions correctly', async () => {
