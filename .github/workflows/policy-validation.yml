@@ -1,0 +1,125 @@
+name: Policy Review Validation
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'content/policies/**'
+      - 'src/lib/policies/**'
+      - 'scripts/validate-policy-reviews.ts'
+  schedule:
+    # Run nightly at 2 AM UTC
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+
+# Minimal permissions for security
+permissions:
+  contents: read
+  pull-requests: write
+
+# Prevent concurrent runs on the same PR
+concurrency:
+  group: policy-validation-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate-policies:
+    name: Validate Policy Reviews
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run policy review validation
+        id: validate
+        run: |
+          echo "Running policy review validation..."
+          npm run type-check
+          ts-node --compiler-options '{"module":"commonjs"}' scripts/validate-policy-reviews.ts || echo "VALIDATION_FAILED=true" >> $GITHUB_ENV
+        continue-on-error: true
+
+      - name: Check validation results
+        id: check
+        run: |
+          if [ -f validation_output.json ]; then
+            echo "Validation output generated successfully"
+            
+            # Parse results
+            OVERDUE_COUNT=$(jq -r '.overdueCount' validation_output.json)
+            ERROR_COUNT=$(jq -r '.errorCount' validation_output.json)
+            
+            echo "OVERDUE_COUNT=$OVERDUE_COUNT" >> $GITHUB_ENV
+            echo "ERROR_COUNT=$ERROR_COUNT" >> $GITHUB_ENV
+            
+            echo "📊 Results: $ERROR_COUNT schema errors, $OVERDUE_COUNT overdue reviews"
+            
+            # Fail on schema errors
+            if [ "$ERROR_COUNT" -gt 0 ]; then
+              echo "❌ Schema validation failed. See validation_output.json for details."
+              exit 1
+            fi
+          else
+            echo "❌ validation_output.json not found"
+            exit 1
+          fi
+
+      - name: Post overdue review comment
+        if: github.event_name == 'pull_request' && env.OVERDUE_COUNT != '0'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          echo "Posting overdue review comment to PR #$PR_NUMBER..."
+          ts-node --compiler-options '{"module":"commonjs"}' scripts/post-overdue-comments.ts
+        continue-on-error: true
+
+      - name: Upload validation artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: policy-validation-report
+          path: validation_output.json
+          if-no-files-found: warn
+          retention-days: 30
+
+      - name: Validation summary
+        if: always()
+        run: |
+          echo "## Policy Validation Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          if [ -f validation_output.json ]; then
+            TOTAL=$(jq -r '.totalPolicies' validation_output.json)
+            OVERDUE=$(jq -r '.overdueCount' validation_output.json)
+            ERRORS=$(jq -r '.errorCount' validation_output.json)
+            TIMESTAMP=$(jq -r '.timestamp' validation_output.json)
+            
+            echo "- **Total Policies:** $TOTAL" >> $GITHUB_STEP_SUMMARY
+            echo "- **Schema Errors:** $ERRORS" >> $GITHUB_STEP_SUMMARY
+            echo "- **Overdue Reviews:** $OVERDUE" >> $GITHUB_STEP_SUMMARY
+            echo "- **Validated At:** $TIMESTAMP" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            
+            if [ "$ERRORS" -gt 0 ]; then
+              echo "❌ **Status:** Failed (schema errors)" >> $GITHUB_STEP_SUMMARY
+            elif [ "$OVERDUE" -gt 0 ]; then
+              echo "⚠️ **Status:** Warning (overdue reviews)" >> $GITHUB_STEP_SUMMARY
+            else
+              echo "✅ **Status:** All policies valid" >> $GITHUB_STEP_SUMMARY
+            fi
+          else
+            echo "❌ Validation did not complete successfully" >> $GITHUB_STEP_SUMMARY
+          fi
+
