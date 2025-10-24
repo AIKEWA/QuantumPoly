@@ -6,10 +6,12 @@ const isPreview = process.env.VERCEL_ENV === 'preview';
 
 const csp = [
   "default-src 'self'",
-  "script-src 'self'",
-  "style-src 'self'",
-  "img-src 'self' data:",
-  "font-src 'self'",
+  // Next.js requires 'unsafe-inline' and 'unsafe-eval' for React hydration and HMR
+  // TODO: Migrate to nonce-based CSP for enhanced security
+  "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
+  "style-src 'self' 'unsafe-inline'",
+  "img-src 'self' data: blob:",
+  "font-src 'self' data:",
   "connect-src 'self'",
   "frame-ancestors 'none'",
   "base-uri 'self'",
