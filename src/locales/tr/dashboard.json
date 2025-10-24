@@ -1,0 +1,107 @@
+{
+  "title": "Etik Yönetişim Panosu",
+  "subtitle": "Teknik uyumluluk ve etik bütünlüğün şeffaf ölçümü",
+  "eii": "Etik Bütünlük Endeksi",
+  "eiiShort": "EBE",
+  "score": "Puan",
+  "categories": {
+    "seo": "SEO ve Görünürlük",
+    "a11y": "Erişilebilirlik",
+    "performance": "Performans",
+    "bundle": "Paket Verimliliği"
+  },
+  "categoryDescriptions": {
+    "seo": "Arama motoru optimizasyonu ve içerik keşfedilebilirliği metrikleri",
+    "a11y": "Web İçeriği Erişilebilirlik Kılavuzları (WCAG 2.2 AA) uyumluluğu",
+    "performance": "Sayfa yükleme süreleri, yanıt verme ve kaynak verimliliği",
+    "bundle": "JavaScript paket boyutu optimizasyonu ve kod bölme"
+  },
+  "badges": {
+    "gold": "Altın",
+    "silver": "Gümüş",
+    "bronze": "Bronz",
+    "amber": "İyileştirme gerekli"
+  },
+  "tags": {
+    "a11yClean": "Erişilebilir",
+    "energyEfficient": "Enerji Verimli",
+    "transparencyVerified": "Şeffaflık Doğrulandı",
+    "wcag22AA": "WCAG 2.2 AA",
+    "gdprCompliant": "GDPR Uyumlu",
+    "performanceOptimized": "Performans Optimize Edildi",
+    "seoBestPractices": "SEO En İyi Uygulamaları"
+  },
+  "explainability": {
+    "eii": {
+      "what": "Etik Bütünlük Endeksi (EBE), teknik uyumluluk metriklerini tek bir şeffaflık ölçüsünde toplayan bileşik bir puandır. 0 ile 100 arasında değişir; daha yüksek puanlar daha iyi etik ve teknik uygulamaları gösterir.",
+      "how": "EBE ağırlıklı bir formül kullanılarak hesaplanır: %30 Erişilebilirlik + %30 Performans + %20 SEO + %20 Paket Verimliliği. Her kategori, endüstri standartları ve en iyi uygulamalara göre 0-100 arasında puanlanır.",
+      "why": "Yüksek bir EBE, kapsayıcı tasarıma, çevresel sürdürülebilirliğe ve kullanıcı merkezli geliştirmeye olan bağlılığı gösterir. Paydaşların web uygulamalarının etik olgunluğunu hızlı bir şekilde değerlendirmesini sağlar."
+    },
+    "seo": {
+      "what": "SEO metrikleri, web sitesinin semantik HTML, meta etiketleri, yapılandırılmış veriler ve içerik erişilebilirliği dahil olmak üzere arama motoru optimizasyonu en iyi uygulamalarını ne kadar iyi takip ettiğini ölçer.",
+      "how": "Puanlar, uygun meta verileri, mobil uyumluluk, taranabilirlik ve şema işaretlemesini kontrol eden Google Lighthouse SEO denetimlerinden elde edilir.",
+      "why": "İyi SEO, bilgiye eşit erişim sağlar ve yardımcı teknolojileri kullananlar da dahil olmak üzere tüm kullanıcılar için içerik keşfini destekler."
+    },
+    "a11y": {
+      "what": "Erişilebilirlik metrikleri, sitenin engelli kişiler tarafından kullanılabilir olmasını sağlayan Web İçeriği Erişilebilirlik Kılavuzları (WCAG 2.2 Seviye AA) ile uyumluluğu değerlendirir.",
+      "how": "axe-core ve Lighthouse ile otomatik testler renk kontrastını, ARIA etiketlerini, klavye navigasyonunu, ekran okuyucu uyumluluğunu ve semantik HTML'yi kontrol eder.",
+      "why": "Erişilebilirlik temel bir insan hakkıdır. WCAG uyumluluğu, görme, işitme, motor ve bilişsel engelli kullanıcılar için dijital kapsayıcılık sağlar."
+    },
+    "performance": {
+      "what": "Performans metrikleri, Core Web Vitals ve diğer verimlilik göstergelerini kullanarak sayfa yükleme sürelerini, etkileşimi ve görsel kararlılığı ölçer.",
+      "how": "Lighthouse performans denetimleri Largest Contentful Paint (LCP), Total Blocking Time (TBT), Cumulative Layout Shift (CLS) ve diğer zamanlama metriklerini ölçer.",
+      "why": "Hızlı, duyarlı web siteleri kullanıcı deneyimini iyileştirir ve enerji tüketimini azaltır. Performans, yavaş bağlantılarda veya düşük güçlü cihazlarda kullanıcılar için erişilebilirliği doğrudan etkiler."
+    },
+    "bundle": {
+      "what": "Paket verimliliği, JavaScript kod boyutunu ve optimizasyonunu ölçer ve kullanıcıların uygulamayı kullanmak için ne kadar veri indirmesi gerektiğini değerlendirir.",
+      "how": "Derleme zamanı analizi, JavaScript paket boyutlarını bütçelerle karşılaştırır (örneğin, rota başına <250KB). Puanlar, daha küçük paketleri ve etkili kod bölmeyi tercih eder.",
+      "why": "Daha küçük paketler bant genişliği maliyetlerini azaltır, daha yavaş ağlarda daha hızlı yüklenir ve azaltılmış enerji tüketimi yoluyla çevresel etkiyi en aza indirir."
+    }
+  },
+  "trend": {
+    "title": "Zaman İçinde EBE Trendi",
+    "description": "CI çalıştırmaları boyunca Etik Bütünlük Endeksi'nin tarihsel ilerlemesi",
+    "xAxis": "Tarih",
+    "yAxis": "EBE Puanı",
+    "noData": "Henüz tarihsel veri mevcut değil. Trend verileri oluşturmak için etik toplama işlemini birden çok kez çalıştırın."
+  },
+  "ledger": {
+    "title": "Şeffaflık Defteri",
+    "description": "Kriptografik doğrulama ile tüm etik ölçümlerin değiştirilemez denetim izi",
+    "viewLedger": "Tam Defteri Görüntüle",
+    "entry": "Giriş",
+    "timestamp": "Zaman Damgası",
+    "commit": "Git Commit",
+    "merkleRoot": "Merkle Kökü",
+    "signature": "GPG İmzası",
+    "signed": "İmzalı",
+    "unsigned": "İmzasız",
+    "verified": "Doğrulandı",
+    "downloadJSON": "Defteri İndir (JSON)"
+  },
+  "metadata": {
+    "project": "Proje",
+    "version": "Sürüm",
+    "commit": "Commit",
+    "timestamp": "Son Güncelleme",
+    "hash": "Veri Hash",
+    "verifiedBy": "Doğrulayan",
+    "legalAudit": "Yasal Denetim Raporu"
+  },
+  "actions": {
+    "viewDetails": "Detayları Görüntüle",
+    "viewSource": "Kaynağı Görüntüle",
+    "exportReport": "Raporu Dışa Aktar",
+    "shareScorecard": "Puan Kartını Paylaş"
+  },
+  "footer": {
+    "compliance": "Uyumluluk Çerçeveleri",
+    "gdpr": "GDPR Madde 5 ve 25",
+    "euAIAct": "AB Yapay Zeka Yasası 2024",
+    "iso42001": "ISO 42001",
+    "ieee7000": "IEEE 7000",
+    "methodology": "Puanlama Metodolojisi",
+    "openSource": "Açık Kaynak",
+    "auditTrail": "Denetim İzi"
+  }
+}

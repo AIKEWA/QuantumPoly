@@ -42,7 +42,6 @@ export function Vision({ title, pillars, headingLevel = 2, className, iconRender
         'bg-gradient-to-b from-gray-100 to-white px-4 py-20 md:px-6 dark:from-gray-900 dark:to-black',
         className,
       )}
-      role="region"
       aria-labelledby={`vision-title-${title.replace(/\s+/g, '-').toLowerCase()}`}
     >
       <div className="mx-auto max-w-6xl">

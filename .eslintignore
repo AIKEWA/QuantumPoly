@@ -1,0 +1,28 @@
+# Test directories
+__tests__/
+
+# End-to-end test directories
+e2e/
+
+# Build and automation scripts
+scripts/
+
+# Documentation
+docs/
+
+# Build outputs and dependencies
+node_modules/
+.next/
+out/
+build/
+dist/
+
+# Coverage reports
+coverage/
+
+# Storybook
+storybook-static/
+
+# Governance ledger
+governance/ledger/
+

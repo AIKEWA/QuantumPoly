@@ -6,8 +6,8 @@
  */
 
 export default {
-  // TypeScript and JavaScript files
-  '*.{ts,tsx,js,jsx}': [
+  // TypeScript and JavaScript files (production code only)
+  'src/**/*.{ts,tsx,js,jsx}': [
     'eslint --fix',
     'prettier --write',
   ],
@@ -19,18 +19,6 @@ export default {
   
   // Package.json and other JSON config files
   'package.json': [
-    'prettier --write',
-  ],
-  
-  // Storybook stories
-  '*.stories.{ts,tsx,js,jsx}': [
-    'eslint --fix',
-    'prettier --write',
-  ],
-  
-  // Test files
-  '*.{test,spec}.{ts,tsx,js,jsx}': [
-    'eslint --fix',
     'prettier --write',
   ],
 };

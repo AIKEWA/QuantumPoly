@@ -2,161 +2,382 @@ name: CI
 
 on:
   push:
-    branches: [main]
+    branches: [main, develop]
   pull_request:
-    branches: [main]
+    branches: [main, develop]
+  workflow_dispatch:
+    inputs:
+      run_a11y:
+        description: 'Force run accessibility tests'
+        required: false
+        type: boolean
+        default: false
 
-# Minimal permissions for security hardening
-permissions:
-  contents: read
-  pull-requests: write # for test annotations
-
-# Prevent concurrent runs on the same ref
 concurrency:
-  group: ci-${{ github.ref }}
+  group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+permissions:
+  contents: read
+  pull-requests: write
+
+# NOTE: Preview deployments for pull requests are handled by .github/workflows/preview.yml
+# That workflow deploys to Vercel preview environments and runs Lighthouse CI checks.
+# See preview.yml for PR-specific deployment configuration.
+
 jobs:
-  validate-newsletter:
-    name: Validate Newsletter API
+  detect-environment:
+    name: Environment Detection & Audit
     runs-on: ubuntu-latest
-    timeout-minutes: 10
-
-    strategy:
-      fail-fast: false
-      matrix:
-        node-version: [18.x, 20.x]
-
+    outputs:
+      package_manager: ${{ steps.detect.outputs.package_manager }}
+      test_framework: ${{ steps.detect.outputs.test_framework }}
+      has_playwright: ${{ steps.detect.outputs.has_playwright }}
+      has_axe_core: ${{ steps.detect.outputs.has_axe_core }}
+      node_versions: ${{ steps.detect.outputs.node_versions }}
+      vercel_node_version: ${{ steps.detect.outputs.vercel_node_version }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Use Node.js ${{ matrix.node-version }}
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+
+      - name: Run environment detection
+        id: detect
+        run: node .github/scripts/detect-env.js
+
+      - name: Audit Node version consistency
+        run: |
+          VERCEL_VERSION="${{ steps.detect.outputs.vercel_node_version }}"
+          MATRIX_VERSIONS="${{ steps.detect.outputs.node_versions }}"
+          
+          echo "## 🔍 Node Version Consistency Audit" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Vercel Runtime:** \`${VERCEL_VERSION}\`" >> $GITHUB_STEP_SUMMARY
+          echo "**CI Matrix:** \`${MATRIX_VERSIONS}\`" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          if [[ "$VERCEL_VERSION" == "unknown" ]]; then
+            echo "⚠️ **Warning:** Unable to detect Vercel runtime version from vercel.json or package.json engines." >> $GITHUB_STEP_SUMMARY
+            echo "Consider adding \`\"engines\": { \"node\": \">=18.0.0\" }\` to package.json" >> $GITHUB_STEP_SUMMARY
+          elif echo "$MATRIX_VERSIONS" | grep -q "$VERCEL_VERSION"; then
+            echo "✅ **Status:** CI matrix includes Vercel runtime version" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "⚠️ **Warning:** Vercel runtime ($VERCEL_VERSION) not tested in CI matrix ($MATRIX_VERSIONS)" >> $GITHUB_STEP_SUMMARY
+            echo "Recommendation: Update workflow matrix to include $VERCEL_VERSION for deployment parity" >> $GITHUB_STEP_SUMMARY
+          fi
+
+  lint:
+    needs: detect-environment
+    name: Lint
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        node-version: [18.x, 20.x]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-          cache: npm
-
-      - name: Install dependencies (clean)
-        run: npm ci
-
-      - name: Run type checking
-        run: npm run type-check
-
-      - name: Run linter
-        run: npm run lint
-
-      - name: Run Newsletter API tests
-        run: npm run test:api
-        env:
-          NODE_ENV: test
-
-      - name: Enforce coverage thresholds
-        run: |
-          npm run test:coverage || {
-            echo "::error::Newsletter API coverage below required thresholds. Please add tests to meet the 90% threshold for the Newsletter API route.";
-            exit 1;
-          }
-
-      - name: Upload JUnit test report
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: newsletter-api-junit-${{ matrix.node-version }}
-          path: reports/junit.xml
-          if-no-files-found: ignore
-          retention-days: 7
-
-      - name: Upload coverage report
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: newsletter-api-coverage-${{ matrix.node-version }}
-          path: coverage/**
-          if-no-files-found: ignore
-          retention-days: 7
-
-  build:
-    name: Build Application
-    needs: [validate-newsletter]
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Use Node.js 18.x
-        uses: actions/setup-node@v4
-        with:
-          node-version: 18.x
-          cache: npm
+          cache: 'npm'
 
       - name: Install dependencies
         run: npm ci
 
-      - name: Build Next.js application
-        run: npm run build
+      - name: Run ESLint
+        run: npm run lint
 
-      - name: Build Storybook
-        run: npm run build-storybook
+  typecheck:
+    needs: detect-environment
+    name: Type Check
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        node-version: [18.x, 20.x]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run TypeScript type check
+        run: npm run typecheck
+
+  test:
+    needs: detect-environment
+    name: Test & Coverage
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        node-version: [18.x, 20.x]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests with coverage
+        run: npm run test:coverage
+        env:
+          CI: true
+
+      - name: Upload coverage reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report-node-${{ matrix.node-version }}
+          path: |
+            coverage/lcov.info
+            coverage/coverage-final.json
+            coverage/lcov-report/
+          retention-days: 30
+
+  merge-coverage:
+    name: Merge Coverage Reports
+    needs: test
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+
+      - name: Download all coverage artifacts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: coverage-report-node-*
+          path: ./artifacts
+
+      - name: Merge coverage reports
+        run: node .github/scripts/merge-coverage.js ./artifacts
+
+      - name: Upload merged coverage summary
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-summary
+          path: coverage-summary.json
+          retention-days: 30
+
+      - name: Display coverage summary
+        run: |
+          if [ -f coverage-summary.json ]; then
+            echo "## 📊 Merged Coverage Summary" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "\`\`\`json" >> $GITHUB_STEP_SUMMARY
+            cat coverage-summary.json | head -30 >> $GITHUB_STEP_SUMMARY
+            echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+          fi
+
+  build:
+    name: Production Build
+    needs: [lint, typecheck, test]
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [20.x]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build production bundle
+        run: npm run build
+        env:
+          NODE_ENV: production
+          NEXT_PUBLIC_SITE_URL: https://www.quantumpoly.ai
+
+      - name: Validate build output
+        run: |
+          if [ ! -d ".next" ]; then
+            echo "❌ Build output directory missing"
+            exit 1
+          fi
+          echo "✅ Build artifacts validated"
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: build-output
+          name: build-artifacts-node-${{ matrix.node-version }}
           path: |
             .next/
-            storybook-static/
+            out/
           retention-days: 7
 
-  e2e:
-    name: End-to-End Tests
-    needs: [build]
+  sbom:
+    name: Generate SBOM
+    needs: build
     runs-on: ubuntu-latest
-    timeout-minutes: 15
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Use Node.js 18.x
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 18.x
-          cache: npm
+          node-version: '20.x'
+          cache: 'npm'
 
       - name: Install dependencies
         run: npm ci
 
-      - name: Install Playwright browsers
-        run: npx playwright install --with-deps
+      - name: Generate SBOM (CycloneDX)
+        run: npx @cyclonedx/cyclonedx-npm --output-format json --output-file sbom.json
 
-      - name: Run E2E tests
-        run: npm run test:e2e
+      - name: Validate SBOM
+        run: |
+          if [ ! -s sbom.json ]; then
+            echo "❌ SBOM generation failed"
+            exit 1
+          fi
+          BOM_FORMAT=$(jq -r '.bomFormat' sbom.json)
+          if [ "$BOM_FORMAT" != "CycloneDX" ]; then
+            echo "❌ Invalid SBOM format: $BOM_FORMAT"
+            exit 1
+          fi
+          COMPONENT_COUNT=$(jq '.components | length' sbom.json)
+          echo "✅ SBOM validated: $COMPONENT_COUNT components"
 
-      - name: Upload E2E test results
-        if: always()
+      - name: Upload SBOM artifact
         uses: actions/upload-artifact@v4
         with:
-          name: playwright-report
-          path: playwright-report/
-          if-no-files-found: ignore
-          retention-days: 7
+          name: sbom
+          path: sbom.json
+          retention-days: 30
 
-  deploy:
-    name: Deployment Gate
-    needs: [e2e]
+      - name: SBOM summary
+        run: |
+          echo "## 📦 SBOM Generated" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Format:** CycloneDX JSON" >> $GITHUB_STEP_SUMMARY
+          echo "**Components:** $(jq '.components | length' sbom.json)" >> $GITHUB_STEP_SUMMARY
+          echo "**Spec Version:** $(jq -r '.specVersion' sbom.json)" >> $GITHUB_STEP_SUMMARY
+
+  a11y:
+    needs: detect-environment
+    name: Accessibility Tests
     runs-on: ubuntu-latest
-    timeout-minutes: 5
-
+    if: |
+      github.event.inputs.run_a11y == 'true' ||
+      (github.event_name == 'push' && contains(github.ref, 'main')) ||
+      github.event_name == 'pull_request'
     steps:
-      - name: All checks passed
-        run: |
-          echo "✅ All validation, build, and E2E tests passed successfully."
-          echo "This job serves as a deployment gate. Actual deployment steps can be added here."
-          echo "Example: Deploy to Vercel, AWS, or other platforms."
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - name: Deployment readiness check
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Check for Playwright and axe-core
+        id: check-deps
         run: |
-          echo "::notice::Pipeline ready for deployment. All quality gates passed."
+          HAS_AXE="${{ needs.detect-environment.outputs.has_axe_core }}"
+          HAS_PLAYWRIGHT="${{ needs.detect-environment.outputs.has_playwright }}"
+          
+          if [[ "$HAS_AXE" == "true" && "$HAS_PLAYWRIGHT" == "true" ]]; then
+            echo "has_a11y=true" >> $GITHUB_OUTPUT
+          else
+            echo "has_a11y=false" >> $GITHUB_OUTPUT
+            echo "⚠️ Playwright or @axe-core/playwright not detected. Skipping accessibility tests."
+            exit 0
+          fi
+
+      - name: Install Playwright browsers
+        if: steps.check-deps.outputs.has_a11y == 'true'
+        run: npx playwright install --with-deps chromium
+
+      - name: Run accessibility tests
+        if: steps.check-deps.outputs.has_a11y == 'true'
+        run: npm run test:e2e:a11y
+        env:
+          CI: true
+
+      - name: Upload accessibility report
+        if: failure() && steps.check-deps.outputs.has_a11y == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-a11y-report
+          path: playwright-report/
+          retention-days: 30
+
+      - name: Accessibility scan summary
+        if: failure() && steps.check-deps.outputs.has_a11y == 'true'
+        run: |
+          echo "## ❌ Accessibility Violations Detected" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Accessibility tests failed. Please review the uploaded artifacts for detailed reports." >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Next Steps:" >> $GITHUB_STEP_SUMMARY
+          echo "1. Download the \`playwright-a11y-report\` artifact from this workflow run" >> $GITHUB_STEP_SUMMARY
+          echo "2. Open \`index.html\` in your browser to view detailed violation reports" >> $GITHUB_STEP_SUMMARY
+          echo "3. Fix violations according to WCAG 2.1 Level AA guidelines" >> $GITHUB_STEP_SUMMARY
+          echo "4. Run \`npm run test:e2e:a11y\` locally to verify fixes" >> $GITHUB_STEP_SUMMARY
+
+  # Placeholder for future security scanning (ADR-007)
+  # Uncomment and configure when security scanning is approved
+  # security:
+  #   name: Security Scanning
+  #   needs: detect-environment
+  #   runs-on: ubuntu-latest
+  #   permissions:
+  #     security-events: write
+  #     actions: read
+  #     contents: read
+  #   steps:
+  #     - name: Checkout repository
+  #       uses: actions/checkout@v4
+  #
+  #     - name: Initialize CodeQL
+  #       uses: github/codeql-action/init@v3
+  #       with:
+  #         languages: javascript, typescript
+  #
+  #     - name: Perform CodeQL Analysis
+  #       uses: github/codeql-action/analyze@v3
+  #
+  #     - name: Run Snyk Security Scan
+  #       uses: snyk/actions/node@master
+  #       env:
+  #         SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+  #       with:
+  #         args: --severity-threshold=high

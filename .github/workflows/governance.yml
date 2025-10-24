@@ -1,0 +1,173 @@
+name: Ethical Governance Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  schedule:
+    # Run weekly on Sundays at 00:00 UTC
+    - cron: '0 0 * * 0'
+  workflow_dispatch: # Allow manual triggering
+
+permissions:
+  contents: write # Needed to commit updated governance data
+
+jobs:
+  ethical-governance:
+    name: Aggregate & Verify Ethical Metrics
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Full history for commit analysis
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+
+      - name: Build project
+        run: npm run build
+        continue-on-error: true # Build may fail, but we still want metrics
+
+      - name: Run Lighthouse CI
+        run: |
+          npm run build || true
+          npm run lh:ci || true
+        continue-on-error: true
+
+      - name: Run accessibility tests
+        run: npm run test:a11y || true
+        continue-on-error: true
+
+      - name: Aggregate ethical metrics
+        run: npm run ethics:aggregate
+
+      - name: Validate ethical data
+        run: npm run ethics:validate
+
+      - name: Update transparency ledger
+        run: npm run ethics:ledger-update
+        env:
+          CI: 'true'
+          GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY || '' }}
+          GPG_KEY_ID: ${{ secrets.GPG_KEY_ID || '' }}
+
+      - name: Verify ledger integrity
+        run: npm run ethics:verify-ledger
+
+      - name: Generate ethics badge
+        run: npm run ethics:badge
+
+      - name: Commit updated governance data
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          
+          git add reports/governance/ governance/ledger/ public/ethics-badge.svg || true
+          
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "chore: update ethical governance data [skip ci]"
+            git push
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload governance artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ethical-governance-reports
+          path: |
+            reports/governance/
+            governance/ledger/
+            public/ethics-badge.svg
+          retention-days: 90
+
+      - name: Comment PR with EII score
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const dashboardPath = 'reports/governance/dashboard-data.json';
+            
+            if (!fs.existsSync(dashboardPath)) {
+              console.log('Dashboard data not found, skipping comment');
+              return;
+            }
+            
+            const data = JSON.parse(fs.readFileSync(dashboardPath, 'utf8'));
+            
+            const tierEmoji = data.eii >= 95 ? '🥇' : data.eii >= 90 ? '🥈' : data.eii >= 75 ? '🥉' : '⚠️';
+            
+            const comment = `## ${tierEmoji} Ethical Integrity Index: ${data.eii.toFixed(1)}/100
+            
+            | Metric | Score |
+            |--------|-------|
+            | SEO | ${data.metrics.seo} |
+            | Accessibility | ${data.metrics.a11y} |
+            | Performance | ${data.metrics.performance} |
+            | Bundle | ${data.metrics.bundle} |
+            
+            **Tags:** ${data.tags.join(', ')}
+            
+            View detailed dashboard: \`/dashboard\`
+            
+            ---
+            *Ethical Governance Pipeline • [Learn more](docs/governance/)*`;
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });
+
+      - name: Notify on score degradation
+        if: github.ref == 'refs/heads/main'
+        run: |
+          node -e "
+          const fs = require('fs');
+          const historyPath = 'reports/governance/metrics-history.json';
+          
+          if (!fs.existsSync(historyPath)) {
+            console.log('No history available for comparison');
+            process.exit(0);
+          }
+          
+          const history = JSON.parse(fs.readFileSync(historyPath, 'utf8'));
+          
+          if (history.length < 2) {
+            console.log('Insufficient history for comparison');
+            process.exit(0);
+          }
+          
+          const current = history[history.length - 1];
+          const previous = history[history.length - 2];
+          
+          const diff = current.eii - previous.eii;
+          
+          if (diff < -5) {
+            console.log('⚠️  WARNING: EII decreased by ' + Math.abs(diff).toFixed(1) + ' points');
+            console.log('Previous: ' + previous.eii.toFixed(1));
+            console.log('Current: ' + current.eii.toFixed(1));
+            process.exit(1);
+          } else if (diff > 0) {
+            console.log('✅ EII improved by ' + diff.toFixed(1) + ' points');
+          } else {
+            console.log('➡️  EII unchanged');
+          }
+          "
+

@@ -1,0 +1,320 @@
+# Reusable Workflow: GPG Ledger Signing & Verification
+#
+# Purpose:
+#   Cryptographically sign governance ledger artifacts and verify signature integrity.
+#   Provides optional security layer for compliance (SOC 2, ISO 27001, EWA-GOV 7.4).
+#
+# Usage:
+#   Called from release.yml after successful production deployment and ledger update.
+#   Requires manual activation via workflow input (EWA-HIL-02 compliance).
+#
+# Security:
+#   - Secrets never exposed in logs
+#   - Temporary isolated keyring with strict permissions
+#   - Graceful skip when disabled or secrets missing
+#   - Verification failure causes job failure with clear error
+#
+# Compliance:
+#   - SOC 2 CC6.1: Cryptographic proof of audit log integrity
+#   - ISO 27001 A.12.4.2: Protection of log information
+#   - EWA-GOV Control 7.4: Cryptographic proof of change ledger integrity
+#   - EWA-HIL-02: Manual override governance
+
+name: GPG Sign Ledger
+
+on:
+  workflow_call:
+    inputs:
+      ledger_file_path:
+        description: 'Path to ledger JSON file to sign (e.g., governance/ledger/releases/2025-10-23-v1.0.0.json)'
+        required: true
+        type: string
+      sign_enabled:
+        description: 'Enable GPG signing (true/false)'
+        required: false
+        type: boolean
+        default: false
+    secrets:
+      GPG_PRIVATE_KEY:
+        description: 'ASCII-armored GPG private key'
+        required: false
+      GPG_KEY_ID:
+        description: 'GPG key ID (short or long format)'
+        required: false
+
+jobs:
+  sign-and-verify:
+    name: Sign & Verify Ledger
+    runs-on: ubuntu-latest
+    
+    # Only run if signing is enabled AND secrets are available
+    if: ${{ inputs.sign_enabled == true }}
+    
+    steps:
+      # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      # STEP 1: Environment Validation
+      # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      
+      - name: Validate Prerequisites
+        id: validate
+        run: |
+          set -euo pipefail
+          
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          echo "GPG Ledger Signing - Prerequisites Validation"
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          echo ""
+          
+          # Check if secrets are provided
+          if [ -z "${{ secrets.GPG_PRIVATE_KEY }}" ] || [ -z "${{ secrets.GPG_KEY_ID }}" ]; then
+            echo "❌ ERROR: GPG secrets not configured"
+            echo ""
+            echo "Required GitHub Secrets:"
+            echo "  - GPG_PRIVATE_KEY: ASCII-armored private key"
+            echo "  - GPG_KEY_ID: Key identifier"
+            echo ""
+            echo "See: docs/governance/GPG_SIGNING_WORKFLOW.md"
+            echo ""
+            echo "status=skip" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+          
+          # Check if ledger file exists
+          if [ ! -f "${{ inputs.ledger_file_path }}" ]; then
+            echo "❌ ERROR: Ledger file not found: ${{ inputs.ledger_file_path }}"
+            exit 1
+          fi
+          
+          echo "✅ Ledger file: ${{ inputs.ledger_file_path }}"
+          echo "✅ GPG secrets configured"
+          echo "✅ Prerequisites validated"
+          echo ""
+          echo "status=proceed" >> $GITHUB_OUTPUT
+
+      # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      # STEP 2: Setup GPG Environment
+      # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      
+      - name: Checkout Repository
+        if: steps.validate.outputs.status == 'proceed'
+        uses: actions/checkout@v4
+      
+      - name: Setup GPG Keyring
+        if: steps.validate.outputs.status == 'proceed'
+        id: setup
+        env:
+          GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+          GPG_KEY_ID: ${{ secrets.GPG_KEY_ID }}
+        run: |
+          set -euo pipefail
+          
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          echo "GPG Environment Setup"
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          echo ""
+          
+          # Create temporary isolated GPG home directory
+          export GNUPGHOME="${{ runner.temp }}/gnupg"
+          mkdir -p "$GNUPGHOME"
+          chmod 700 "$GNUPGHOME"
+          
+          echo "✅ Created temporary keyring: $GNUPGHOME"
+          
+          # Save GNUPGHOME for subsequent steps
+          echo "GNUPGHOME=$GNUPGHOME" >> $GITHUB_ENV
+          
+          # Import private key
+          echo "📥 Importing GPG private key..."
+          echo "$GPG_PRIVATE_KEY" | gpg --batch --yes --import 2>&1 | \
+            grep -E "(secret key imported|unchanged)" || true
+          
+          # Verify key imported successfully
+          if ! gpg --list-secret-keys "$GPG_KEY_ID" &>/dev/null; then
+            echo "❌ ERROR: Failed to import GPG key with ID: $GPG_KEY_ID"
+            exit 1
+          fi
+          
+          # Show last 8 chars of fingerprint (safe to log)
+          FINGERPRINT=$(gpg --list-keys --with-colons "$GPG_KEY_ID" | \
+            awk -F: '/^fpr:/ {print $10; exit}')
+          FINGERPRINT_SHORT="${FINGERPRINT: -8}"
+          
+          echo "✅ Key imported successfully"
+          echo "   Key ID: $GPG_KEY_ID"
+          echo "   Fingerprint (last 8): ********$FINGERPRINT_SHORT"
+          echo ""
+
+      # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      # STEP 3: Clearsign Ledger File
+      # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      
+      - name: Sign Ledger File
+        if: steps.validate.outputs.status == 'proceed'
+        env:
+          GPG_KEY_ID: ${{ secrets.GPG_KEY_ID }}
+        run: |
+          set -euo pipefail
+          
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          echo "GPG Clearsign Operation"
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          echo ""
+          
+          LEDGER_FILE="${{ inputs.ledger_file_path }}"
+          SIGNATURE_FILE="${LEDGER_FILE}.asc"
+          
+          echo "📄 Input:  $LEDGER_FILE"
+          echo "🔏 Output: $SIGNATURE_FILE"
+          echo ""
+          
+          # Remove existing signature if present (idempotency)
+          if [ -f "$SIGNATURE_FILE" ]; then
+            echo "⚠️  Removing existing signature (re-signing)"
+            rm "$SIGNATURE_FILE"
+          fi
+          
+          # Clearsign the ledger file
+          echo "🔐 Signing with key: $GPG_KEY_ID"
+          gpg --batch --yes \
+              --local-user "$GPG_KEY_ID" \
+              --output "$SIGNATURE_FILE" \
+              --clearsign "$LEDGER_FILE"
+          
+          if [ ! -f "$SIGNATURE_FILE" ]; then
+            echo "❌ ERROR: Signature file not created"
+            exit 1
+          fi
+          
+          # Show signature file size (verification of creation)
+          SIGNATURE_SIZE=$(wc -c < "$SIGNATURE_FILE")
+          
+          echo "✅ Signature created successfully"
+          echo "   File: $SIGNATURE_FILE"
+          echo "   Size: $SIGNATURE_SIZE bytes"
+          echo ""
+
+      # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      # STEP 4: Verify Signature
+      # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      
+      - name: Verify Signature
+        if: steps.validate.outputs.status == 'proceed'
+        run: |
+          set -euo pipefail
+          
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          echo "GPG Signature Verification"
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          echo ""
+          
+          SIGNATURE_FILE="${{ inputs.ledger_file_path }}.asc"
+          
+          echo "🔍 Verifying: $SIGNATURE_FILE"
+          echo ""
+          
+          # Verify signature (capture output for inspection)
+          if ! gpg --verify "$SIGNATURE_FILE" 2>&1 | tee /tmp/verify_output.txt; then
+            echo ""
+            echo "❌ ERROR: Signature verification failed"
+            echo ""
+            echo "Possible causes:"
+            echo "  - Ledger file was modified after signing"
+            echo "  - Wrong GPG key used"
+            echo "  - Signature file corrupted"
+            echo ""
+            echo "Remediation:"
+            echo "  1. Verify ledger file integrity"
+            echo "  2. Check GPG_KEY_ID matches the signing key"
+            echo "  3. Re-run signing workflow"
+            echo ""
+            exit 1
+          fi
+          
+          echo ""
+          echo "✅ Signature verification PASSED"
+          echo "   Ledger integrity confirmed"
+          echo "   Signature is cryptographically valid"
+          echo ""
+
+      # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      # STEP 5: Upload Artifacts
+      # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      
+      - name: Upload Signature Artifacts
+        if: steps.validate.outputs.status == 'proceed'
+        uses: actions/upload-artifact@v4
+        with:
+          name: ledger-signatures
+          path: |
+            ${{ inputs.ledger_file_path }}.asc
+          retention-days: 90
+          if-no-files-found: error
+
+      # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      # STEP 6: Summary Report
+      # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      
+      - name: Generate Summary
+        if: always()
+        run: |
+          set -euo pipefail
+          
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" >> $GITHUB_STEP_SUMMARY
+          echo "## 🔐 GPG Ledger Signing Report" >> $GITHUB_STEP_SUMMARY
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          if [ "${{ steps.validate.outputs.status }}" == "skip" ]; then
+            echo "### ⏭️  Signing Skipped" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "**Reason:** GPG secrets not configured or signing disabled" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "To enable GPG signing:" >> $GITHUB_STEP_SUMMARY
+            echo "1. Configure \`GPG_PRIVATE_KEY\` and \`GPG_KEY_ID\` secrets" >> $GITHUB_STEP_SUMMARY
+            echo "2. Set \`sign_enabled: true\` in workflow call" >> $GITHUB_STEP_SUMMARY
+            echo "3. See: \`docs/governance/GPG_SIGNING_WORKFLOW.md\`" >> $GITHUB_STEP_SUMMARY
+          elif [ "${{ job.status }}" == "success" ]; then
+            echo "### ✅ Signing Successful" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "| Property | Value |" >> $GITHUB_STEP_SUMMARY
+            echo "|----------|-------|" >> $GITHUB_STEP_SUMMARY
+            echo "| **Ledger File** | \`${{ inputs.ledger_file_path }}\` |" >> $GITHUB_STEP_SUMMARY
+            echo "| **Signature File** | \`${{ inputs.ledger_file_path }}.asc\` |" >> $GITHUB_STEP_SUMMARY
+            echo "| **Verification** | ✅ PASSED |" >> $GITHUB_STEP_SUMMARY
+            echo "| **Artifact Retention** | 90 days |" >> $GITHUB_STEP_SUMMARY
+            echo "| **Workflow Run** | [${{ github.run_id }}](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}) |" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "#### Verification Commands" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "\`\`\`bash" >> $GITHUB_STEP_SUMMARY
+            echo "# Import public key (if not already done)" >> $GITHUB_STEP_SUMMARY
+            echo "gpg --import governance/keys/cicd-public.key" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "# Verify signature" >> $GITHUB_STEP_SUMMARY
+            echo "gpg --verify ${{ inputs.ledger_file_path }}.asc" >> $GITHUB_STEP_SUMMARY
+            echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "### ❌ Signing Failed" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "**Status:** Job failed during signing or verification" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "Check workflow logs for detailed error messages." >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "**Troubleshooting:** \`docs/governance/GPG_SIGNING_WORKFLOW.md#troubleshooting\`" >> $GITHUB_STEP_SUMMARY
+          fi
+          
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+      # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      # STEP 7: Cleanup
+      # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      
+      - name: Cleanup GPG Keyring
+        if: always()
+        run: |
+          # Remove temporary keyring (security hygiene)
+          if [ -n "${GNUPGHOME:-}" ] && [ -d "$GNUPGHOME" ]; then
+            rm -rf "$GNUPGHOME"
+            echo "✅ Temporary keyring cleaned up"
+          fi
+

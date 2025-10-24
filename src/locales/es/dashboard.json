@@ -1,0 +1,107 @@
+{
+  "title": "Panel de Gobernanza Ética",
+  "subtitle": "Medición transparente del cumplimiento técnico y la integridad ética",
+  "eii": "Índice de Integridad Ética",
+  "eiiShort": "IIE",
+  "score": "Puntuación",
+  "categories": {
+    "seo": "SEO y Visibilidad",
+    "a11y": "Accesibilidad",
+    "performance": "Rendimiento",
+    "bundle": "Eficiencia del Bundle"
+  },
+  "categoryDescriptions": {
+    "seo": "Optimización para motores de búsqueda y descubribilidad del contenido",
+    "a11y": "Cumplimiento de las Pautas de Accesibilidad al Contenido Web (WCAG 2.2 AA)",
+    "performance": "Tiempos de carga, capacidad de respuesta y eficiencia de recursos",
+    "bundle": "Optimización del tamaño del bundle JavaScript y división de código"
+  },
+  "badges": {
+    "gold": "Oro",
+    "silver": "Plata",
+    "bronze": "Bronce",
+    "amber": "Necesita mejora"
+  },
+  "tags": {
+    "a11yClean": "Accesible",
+    "energyEfficient": "Eficiente energéticamente",
+    "transparencyVerified": "Transparencia verificada",
+    "wcag22AA": "WCAG 2.2 AA",
+    "gdprCompliant": "Cumple con GDPR",
+    "performanceOptimized": "Rendimiento optimizado",
+    "seoBestPractices": "Mejores prácticas SEO"
+  },
+  "explainability": {
+    "eii": {
+      "what": "El Índice de Integridad Ética (IIE) es una puntuación compuesta que agrega métricas de cumplimiento técnico en una sola medida de transparencia. Va de 0 a 100, donde puntuaciones más altas indican mejores prácticas éticas y técnicas.",
+      "how": "El IIE se calcula usando una fórmula ponderada: 30% Accesibilidad + 30% Rendimiento + 20% SEO + 20% Eficiencia del Bundle. Cada categoría se puntúa de 0 a 100 según estándares de la industria y mejores prácticas.",
+      "why": "Un IIE alto demuestra compromiso con el diseño inclusivo, la sostenibilidad ambiental y el desarrollo centrado en el usuario. Permite a las partes interesadas evaluar rápidamente la madurez ética de las aplicaciones web."
+    },
+    "seo": {
+      "what": "Las métricas de SEO miden qué tan bien el sitio web sigue las mejores prácticas de optimización para motores de búsqueda, incluyendo HTML semántico, meta etiquetas, datos estructurados y accesibilidad del contenido.",
+      "how": "Las puntuaciones provienen de las auditorías SEO de Google Lighthouse, que verifican metadatos apropiados, compatibilidad móvil, rastreabilidad y marcado de esquema.",
+      "why": "Un buen SEO garantiza acceso equitativo a la información y apoya el descubrimiento de contenido para todos los usuarios, incluidos aquellos que usan tecnologías de asistencia."
+    },
+    "a11y": {
+      "what": "Las métricas de accesibilidad evalúan el cumplimiento de las Pautas de Accesibilidad al Contenido Web (WCAG 2.2 Nivel AA), asegurando que el sitio sea utilizable por personas con discapacidades.",
+      "how": "Las pruebas automatizadas con axe-core y Lighthouse verifican contraste de color, etiquetas ARIA, navegación por teclado, compatibilidad con lectores de pantalla y HTML semántico.",
+      "why": "La accesibilidad es un derecho humano fundamental. El cumplimiento de WCAG garantiza la inclusión digital para usuarios con discapacidades visuales, auditivas, motoras y cognitivas."
+    },
+    "performance": {
+      "what": "Las métricas de rendimiento miden tiempos de carga de página, interactividad y estabilidad visual usando Core Web Vitals y otros indicadores de eficiencia.",
+      "how": "Las auditorías de rendimiento de Lighthouse miden Largest Contentful Paint (LCP), Total Blocking Time (TBT), Cumulative Layout Shift (CLS) y otras métricas de tiempo.",
+      "why": "Los sitios web rápidos y receptivos mejoran la experiencia del usuario y reducen el consumo de energía. El rendimiento impacta directamente la accesibilidad para usuarios en conexiones lentas o dispositivos de bajo rendimiento."
+    },
+    "bundle": {
+      "what": "La eficiencia del bundle mide el tamaño del código JavaScript y la optimización, evaluando cuántos datos deben descargar los usuarios para usar la aplicación.",
+      "how": "El análisis en tiempo de compilación compara los tamaños de bundle JavaScript con presupuestos (por ejemplo, <250 KB por ruta). Las puntuaciones favorecen bundles más pequeños y división de código efectiva.",
+      "why": "Los bundles más pequeños reducen costos de ancho de banda, cargan más rápido en redes más lentas y minimizan el impacto ambiental mediante un consumo de energía reducido."
+    }
+  },
+  "trend": {
+    "title": "Tendencia del IIE a lo largo del tiempo",
+    "description": "Progresión histórica del Índice de Integridad Ética a través de ejecuciones CI",
+    "xAxis": "Fecha",
+    "yAxis": "Puntuación IIE",
+    "noData": "Aún no hay datos históricos disponibles. Ejecute la agregación ética varias veces para construir datos de tendencia."
+  },
+  "ledger": {
+    "title": "Registro de Transparencia",
+    "description": "Rastro de auditoría inmutable de todas las mediciones éticas con verificación criptográfica",
+    "viewLedger": "Ver registro completo",
+    "entry": "Entrada",
+    "timestamp": "Marca de tiempo",
+    "commit": "Commit Git",
+    "merkleRoot": "Raíz de Merkle",
+    "signature": "Firma GPG",
+    "signed": "Firmado",
+    "unsigned": "Sin firmar",
+    "verified": "Verificado",
+    "downloadJSON": "Descargar registro (JSON)"
+  },
+  "metadata": {
+    "project": "Proyecto",
+    "version": "Versión",
+    "commit": "Commit",
+    "timestamp": "Última actualización",
+    "hash": "Hash de datos",
+    "verifiedBy": "Verificado por",
+    "legalAudit": "Informe de auditoría legal"
+  },
+  "actions": {
+    "viewDetails": "Ver detalles",
+    "viewSource": "Ver fuente",
+    "exportReport": "Exportar informe",
+    "shareScorecard": "Compartir cuadro de mando"
+  },
+  "footer": {
+    "compliance": "Marcos de cumplimiento",
+    "gdpr": "GDPR Art. 5 y 25",
+    "euAIAct": "Ley de IA de la UE 2024",
+    "iso42001": "ISO 42001",
+    "ieee7000": "IEEE 7000",
+    "methodology": "Metodología de puntuación",
+    "openSource": "Código abierto",
+    "auditTrail": "Rastro de auditoría"
+  }
+}

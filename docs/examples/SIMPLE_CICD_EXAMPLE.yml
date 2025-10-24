@@ -1,0 +1,441 @@
+# ============================================================================
+# SIMPLIFIED CI/CD REFERENCE WORKFLOW
+# ============================================================================
+# PURPOSE: Educational example demonstrating minimal viable CI/CD pipeline
+# 
+# This is a SIMPLIFIED version for learning purposes. The production
+# QuantumPoly pipeline (ci.yml + release.yml) includes additional features:
+# - Governance validation (ethics, policies, ledger)
+# - Comprehensive accessibility testing (jest-axe, Playwright, Lighthouse)
+# - Performance budgets and optimization validation
+# - Storybook component library building
+# - Extended artifact retention for compliance
+# - GPG-signed ledger updates
+#
+# For production use, refer to:
+# - .github/workflows/ci.yml (full quality gates)
+# - .github/workflows/release.yml (full deployment pipeline)
+# ============================================================================
+
+name: CI/CD - Simplified Example
+
+# Trigger on PRs and pushes to main
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+    tags:
+      - 'v*.*.*'
+
+# Minimal permissions for security
+permissions:
+  contents: read
+  pull-requests: write
+  deployments: write
+
+# Prevent concurrent runs on same ref
+concurrency:
+  group: simple-cicd-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # ==========================================================================
+  # QUALITY GATES
+  # ==========================================================================
+  # Single job validates code quality (lint, typecheck, tests)
+  # In production: Split into parallel jobs for faster feedback
+  # ==========================================================================
+  quality:
+    name: Quality Gates
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Node 20.x LTS with npm caching
+      # Cache reduces install time from ~60s to ~15s
+      - name: Setup Node.js 20.x LTS
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      # Install dependencies
+      # npm ci: Clean install from package-lock.json (reproducible)
+      - name: Install dependencies
+        run: npm ci
+
+      # Code quality checks
+      # Fail fast: Stop on first error to provide quick feedback
+      - name: Run ESLint
+        run: npm run lint
+
+      - name: Run TypeScript type checking
+        run: npm run typecheck
+
+      - name: Run tests with coverage
+        run: npm run test -- --coverage
+
+      # Upload test coverage for review
+      # Retention: 30 days (balance cost vs debugging needs)
+      - name: Upload coverage report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage/
+          retention-days: 30
+
+  # ==========================================================================
+  # BUILD VERIFICATION
+  # ==========================================================================
+  # Verify production build succeeds
+  # Depends on quality job passing (fail-fast if code issues)
+  # ==========================================================================
+  build:
+    name: Build
+    needs: [quality]
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 20.x LTS
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      # Production build
+      # Next.js generates optimized static/server files
+      - name: Build application
+        run: npm run build
+        env:
+          NODE_ENV: production
+
+      # Optional: Upload build for deployment
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-output
+          path: .next/
+          retention-days: 7
+
+  # ==========================================================================
+  # PREVIEW DEPLOYMENT (PR only)
+  # ==========================================================================
+  # Deploy preview for PRs to test changes before merge
+  # Requires: VERCEL_TOKEN, VERCEL_ORG_ID, VERCEL_PROJECT_ID secrets
+  # ==========================================================================
+  deploy-preview:
+    name: Deploy Preview
+    needs: [build]
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 20.x LTS
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      # Install Vercel CLI
+      # Alternative: Use vercel/action for simpler setup
+      - name: Install Vercel CLI
+        run: npm i -g vercel@latest
+
+      # Pull preview environment configuration
+      - name: Pull Vercel environment
+        run: vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
+      # Build for deployment
+      - name: Build with Vercel
+        run: vercel build --token=${{ secrets.VERCEL_TOKEN }}
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
+      # Deploy to preview URL
+      - name: Deploy to Vercel
+        id: deploy
+        run: |
+          URL=$(vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }})
+          echo "url=$URL" >> "$GITHUB_OUTPUT"
+          echo "Preview deployed: $URL"
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
+      # Comment preview URL on PR
+      - name: Comment preview URL on PR
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const comment = `## 🚀 Preview Deployment
+            
+            **Preview URL:** ${{ steps.deploy.outputs.url }}
+            
+            This preview will be available until the PR is closed or a new commit is pushed.`;
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });
+
+  # ==========================================================================
+  # STAGING DEPLOYMENT (main branch only)
+  # ==========================================================================
+  # Automatic deployment when PR merges to main
+  # No approval required (staging is for QA validation)
+  # ==========================================================================
+  deploy-staging:
+    name: Deploy Staging
+    needs: [build]
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 20.x LTS
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Vercel CLI
+        run: npm i -g vercel@latest
+
+      - name: Pull Vercel environment (preview)
+        run: vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
+      - name: Build with Vercel
+        run: vercel build --token=${{ secrets.VERCEL_TOKEN }}
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
+      - name: Deploy to Vercel
+        id: deploy
+        run: |
+          URL=$(vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }})
+          echo "url=$URL" >> "$GITHUB_OUTPUT"
+          echo "Staging deployed: $URL"
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
+      - name: Staging deployment summary
+        run: |
+          echo "### 🎯 Staging Deployment" >> $GITHUB_STEP_SUMMARY
+          echo "**URL:** ${{ steps.deploy.outputs.url }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Branch:** main" >> $GITHUB_STEP_SUMMARY
+          echo "Staging is ready for QA validation." >> $GITHUB_STEP_SUMMARY
+
+  # ==========================================================================
+  # PRODUCTION DEPLOYMENT (tags only, with manual approval)
+  # ==========================================================================
+  # Deployed only when tag v*.*.* is pushed
+  # Requires manual approval via GitHub Environment
+  # ==========================================================================
+  deploy-production:
+    name: Deploy Production
+    needs: [build]
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/v')
+    # GitHub Environment triggers manual approval gate
+    # Setup: Repository → Settings → Environments → Create "production"
+    # Add required reviewers for approval
+    environment:
+      name: production
+      url: https://www.yourdomain.com
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 20.x LTS
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Vercel CLI
+        run: npm i -g vercel@latest
+
+      # Pull PRODUCTION environment configuration
+      # Critical: Uses production-specific environment variables
+      - name: Pull Vercel environment (production)
+        run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
+      # Build with --prod flag for production optimizations
+      - name: Build with Vercel (production)
+        run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
+      # Deploy with --prod flag
+      # Marks deployment as production in Vercel dashboard
+      - name: Deploy to production
+        id: deploy
+        run: |
+          URL=$(vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }})
+          echo "url=$URL" >> "$GITHUB_OUTPUT"
+          echo "Production deployed: $URL"
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
+      # Optional: Alias to custom domain
+      # Requires DNS CNAME: www.yourdomain.com → cname.vercel-dns.com
+      - name: Alias to custom domain
+        run: |
+          vercel alias set ${{ steps.deploy.outputs.url }} www.yourdomain.com --token=${{ secrets.VERCEL_TOKEN }} --scope=${{ secrets.VERCEL_ORG_ID }}
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        continue-on-error: true
+
+      - name: Production deployment summary
+        run: |
+          echo "### 🎉 Production Deployment" >> $GITHUB_STEP_SUMMARY
+          echo "**URL:** https://www.yourdomain.com" >> $GITHUB_STEP_SUMMARY
+          echo "**Vercel URL:** ${{ steps.deploy.outputs.url }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Tag:** ${GITHUB_REF#refs/tags/}" >> $GITHUB_STEP_SUMMARY
+          echo "Production is live!" >> $GITHUB_STEP_SUMMARY
+
+# ============================================================================
+# COMPARISON TO PRODUCTION QUANTUMPOLY WORKFLOW
+# ============================================================================
+#
+# This simplified workflow omits the following production features:
+#
+# 1. **Parallel Job Execution**
+#    - Production: 6 parallel jobs (quality, a11y, perf, governance, build, e2e)
+#    - Simplified: 2 sequential jobs (quality → build)
+#    - Trade-off: Faster feedback vs simpler configuration
+#
+# 2. **Comprehensive Accessibility Testing**
+#    - Production: jest-axe + Playwright axe + Lighthouse ≥95
+#    - Simplified: None (relies on manual testing)
+#    - Impact: WCAG compliance not automated
+#
+# 3. **Performance Validation**
+#    - Production: Bundle budgets + Lighthouse performance ≥90
+#    - Simplified: None
+#    - Impact: Performance regressions not caught automatically
+#
+# 4. **Governance & Ethics Validation**
+#    - Production: Translation validation, policy reviews, ethics metrics, ledger
+#    - Simplified: None
+#    - Impact: No automated governance checks
+#
+# 5. **Storybook Component Library**
+#    - Production: Builds and validates Storybook
+#    - Simplified: None
+#    - Impact: Component library not validated
+#
+# 6. **End-to-End Testing**
+#    - Production: Full Playwright E2E suite
+#    - Simplified: None
+#    - Impact: Integration issues may reach staging/production
+#
+# 7. **Artifact Retention Strategy**
+#    - Production: Tiered retention (7/30/90 days for compliance)
+#    - Simplified: Uniform 30 days
+#    - Impact: Shorter compliance audit trail
+#
+# 8. **Deployment Audit Trail**
+#    - Production: Governance ledger with deployment metadata
+#    - Simplified: None
+#    - Impact: No cryptographic audit trail
+#
+# 9. **Two-Key Approval System**
+#    - Production: Git tag + GitHub Release + Human approval
+#    - Simplified: Git tag + Human approval only
+#    - Impact: Single approval gate (less governance)
+#
+# 10. **Separation of Concerns**
+#     - Production: Separate ci.yml (verification) and release.yml (deployment)
+#     - Simplified: Single workflow file
+#     - Impact: Less granular permission scoping
+#
+# ============================================================================
+# WHEN TO USE THIS SIMPLIFIED WORKFLOW
+# ============================================================================
+#
+# ✅ Good for:
+# - Learning CI/CD concepts
+# - Small projects without compliance requirements
+# - Rapid prototyping and MVPs
+# - Projects with manual QA processes
+#
+# ❌ Not suitable for:
+# - Production applications requiring WCAG compliance
+# - Projects with SOC 2, ISO 27001, or similar compliance needs
+# - Applications handling sensitive user data
+# - Projects requiring cryptographic audit trails
+# - High-traffic applications requiring performance guarantees
+#
+# ============================================================================
+# SETUP INSTRUCTIONS
+# ============================================================================
+#
+# 1. Create GitHub Secrets (Repository → Settings → Secrets):
+#    - VERCEL_TOKEN: Get from Vercel account settings
+#    - VERCEL_ORG_ID: Get from .vercel/project.json (run `vercel link`)
+#    - VERCEL_PROJECT_ID: Get from .vercel/project.json
+#
+# 2. Create GitHub Environment (Repository → Settings → Environments):
+#    - Name: production
+#    - Protection rules: Add required reviewers
+#    - Deployment branches: Only tags matching v*
+#
+# 3. Configure DNS (at your domain registrar):
+#    - Add CNAME record: www → cname.vercel-dns.com
+#    - Verify in Vercel project settings
+#
+# 4. Test the pipeline:
+#    - Create PR → Verify quality checks and preview deploy
+#    - Merge to main → Verify staging deploy
+#    - Push tag v0.1.0 → Approve → Verify production deploy
+#
+# ============================================================================
+

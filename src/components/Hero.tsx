@@ -1,13 +1,31 @@
 /**
  * ADR: Prop-driven copy selected for i18n and extensibility.
  * ADR: Media props require alt text to ensure accessibility compliance.
+ * ADR: Use next/image with priority flag for LCP optimization on hero image only.
  */
 
 import clsx from 'clsx';
+import Image from 'next/image';
 import React, { ReactNode } from 'react';
 
 import { HeroCtaClient } from './HeroCtaClient';
 import { HeadingLevel, WithClassName } from './types';
+
+/**
+ * Configuration for optimized hero background image
+ */
+export interface HeroImage {
+  /** Image source path (relative to public/) */
+  src: string;
+  /** Accessible alt text for the image */
+  alt: string;
+  /** Image width in pixels */
+  width: number;
+  /** Image height in pixels */
+  height: number;
+  /** Responsive sizes attribute for optimal loading */
+  sizes?: string;
+}
 
 /**
  * Props for the Hero component.
@@ -23,14 +41,28 @@ export interface HeroProps extends WithClassName {
   headingLevel?: HeadingLevel;
   /** Optional background or immersive media element rendered beneath text */
   media?: ReactNode;
+  /** Optional optimized hero background image (LCP candidate) */
+  heroImage?: HeroImage;
 }
 
 /**
  * Accessible, responsive hero section.
  *
+ * Performance: If heroImage is provided, it uses next/image with priority flag
+ * for LCP optimization. The image is positioned as a background layer with
+ * content overlaid at z-10.
+ *
  * @component
  */
-export function Hero({ title, subtitle, ctaLabel, headingLevel = 2, media, className }: HeroProps) {
+export function Hero({
+  title,
+  subtitle,
+  ctaLabel,
+  headingLevel = 2,
+  media,
+  heroImage,
+  className,
+}: HeroProps) {
   const HeadingTag = `h${headingLevel}` as keyof JSX.IntrinsicElements;
   const subtitleId = subtitle ? `${title.replace(/\s+/g, '-')}-subtitle` : undefined;
 
@@ -42,9 +74,24 @@ export function Hero({ title, subtitle, ctaLabel, headingLevel = 2, media, class
         'bg-gradient-to-b from-white via-white/70 to-transparent dark:from-black dark:via-black/70',
         className,
       )}
-      role="region"
       aria-labelledby={`hero-title-${title.replace(/\s+/g, '-').toLowerCase()}`}
     >
+      {/* Optimized background image for LCP - priority flag ensures immediate loading */}
+      {heroImage && (
+        <div className="absolute inset-0 z-0 overflow-hidden">
+          <Image
+            src={heroImage.src}
+            alt={heroImage.alt}
+            width={heroImage.width}
+            height={heroImage.height}
+            priority
+            sizes={heroImage.sizes || '100vw'}
+            className="h-full w-full object-cover opacity-20 dark:opacity-10"
+            quality={85}
+          />
+        </div>
+      )}
+
       <div className="z-10 mx-auto max-w-4xl space-y-6">
         <HeadingTag
           id={`hero-title-${title.replace(/\s+/g, '-').toLowerCase()}`}

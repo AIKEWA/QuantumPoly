@@ -1,0 +1,107 @@
+{
+  "title": "Ethik-Governance-Dashboard",
+  "subtitle": "Transparente Messung der technischen Compliance und ethischen Integrität",
+  "eii": "Ethischer Integritätsindex",
+  "eiiShort": "EII",
+  "score": "Punktzahl",
+  "categories": {
+    "seo": "SEO & Sichtbarkeit",
+    "a11y": "Barrierefreiheit",
+    "performance": "Leistung",
+    "bundle": "Bundle-Effizienz"
+  },
+  "categoryDescriptions": {
+    "seo": "Suchmaschinenoptimierung und Content-Auffindbarkeit",
+    "a11y": "Konformität mit Web Content Accessibility Guidelines (WCAG 2.2 AA)",
+    "performance": "Seitenladezeiten, Reaktionsfähigkeit und Ressourceneffizienz",
+    "bundle": "JavaScript-Bundle-Größenoptimierung und Code-Splitting"
+  },
+  "badges": {
+    "gold": "Gold",
+    "silver": "Silber",
+    "bronze": "Bronze",
+    "amber": "Verbesserungsbedarf"
+  },
+  "tags": {
+    "a11yClean": "Barrierefrei",
+    "energyEfficient": "Energieeffizient",
+    "transparencyVerified": "Transparenz verifiziert",
+    "wcag22AA": "WCAG 2.2 AA",
+    "gdprCompliant": "DSGVO-konform",
+    "performanceOptimized": "Leistungsoptimiert",
+    "seoBestPractices": "SEO Best Practices"
+  },
+  "explainability": {
+    "eii": {
+      "what": "Der Ethische Integritätsindex (EII) ist eine zusammengesetzte Kennzahl, die technische Compliance-Metriken zu einem einzigen Transparenzmaß aggregiert. Er reicht von 0 bis 100, wobei höhere Werte auf bessere ethische und technische Praktiken hinweisen.",
+      "how": "Der EII wird mit einer gewichteten Formel berechnet: 30% Barrierefreiheit + 30% Leistung + 20% SEO + 20% Bundle-Effizienz. Jede Kategorie wird von 0-100 bewertet, basierend auf Industriestandards und Best Practices.",
+      "why": "Ein hoher EII zeigt Engagement für inklusives Design, ökologische Nachhaltigkeit und nutzerzentrierte Entwicklung. Er ermöglicht es Stakeholdern, die ethische Reife von Webanwendungen schnell zu bewerten."
+    },
+    "seo": {
+      "what": "SEO-Metriken messen, wie gut die Website den Best Practices für Suchmaschinenoptimierung folgt, einschließlich semantischem HTML, Meta-Tags, strukturierten Daten und Barrierefreiheit von Inhalten.",
+      "how": "Die Bewertungen stammen aus Google Lighthouse SEO-Audits, die auf ordnungsgemäße Metadaten, Mobilfreundlichkeit, Crawlbarkeit und Schema-Markup prüfen.",
+      "why": "Gutes SEO gewährleistet gleichen Zugang zu Informationen und unterstützt die Inhaltsauffindbarkeit für alle Nutzer, einschließlich solcher, die assistive Technologien verwenden."
+    },
+    "a11y": {
+      "what": "Barrierefreiheitsmetriken bewerten die Konformität mit den Web Content Accessibility Guidelines (WCAG 2.2 Level AA) und stellen sicher, dass die Website für Menschen mit Behinderungen nutzbar ist.",
+      "how": "Automatisierte Tests mit axe-core und Lighthouse prüfen Farbkontraste, ARIA-Labels, Tastaturnavigation, Screenreader-Kompatibilität und semantisches HTML.",
+      "why": "Barrierefreiheit ist ein fundamentales Menschenrecht. WCAG-Konformität gewährleistet digitale Inklusion für Nutzer mit visuellen, auditiven, motorischen und kognitiven Beeinträchtigungen."
+    },
+    "performance": {
+      "what": "Leistungsmetriken messen Seitenladezeiten, Interaktivität und visuelle Stabilität anhand von Core Web Vitals und anderen Effizienzindikatoren.",
+      "how": "Lighthouse-Leistungsaudits messen Largest Contentful Paint (LCP), Total Blocking Time (TBT), Cumulative Layout Shift (CLS) und andere Timing-Metriken.",
+      "why": "Schnelle, responsive Websites verbessern die Nutzererfahrung und reduzieren den Energieverbrauch. Leistung wirkt sich direkt auf die Barrierefreiheit für Nutzer mit langsamen Verbindungen oder leistungsschwachen Geräten aus."
+    },
+    "bundle": {
+      "what": "Bundle-Effizienz misst JavaScript-Codegröße und -Optimierung und bewertet, wie viele Daten Nutzer herunterladen müssen, um die Anwendung zu nutzen.",
+      "how": "Build-Zeit-Analyse vergleicht JavaScript-Bundle-Größen mit Budgets (z.B. <250KB pro Route). Bewertungen bevorzugen kleinere Bundles und effektives Code-Splitting.",
+      "why": "Kleinere Bundles reduzieren Bandbreitenkosten, laden schneller in langsameren Netzwerken und minimieren Umweltauswirkungen durch reduzierten Energieverbrauch."
+    }
+  },
+  "trend": {
+    "title": "EII-Trend im Zeitverlauf",
+    "description": "Historischer Verlauf des Ethischen Integritätsindex über CI-Läufe",
+    "xAxis": "Datum",
+    "yAxis": "EII-Punktzahl",
+    "noData": "Noch keine historischen Daten verfügbar. Führen Sie die Ethik-Aggregation mehrfach aus, um Trenddaten aufzubauen."
+  },
+  "ledger": {
+    "title": "Transparenz-Ledger",
+    "description": "Unveränderliche Audit-Trail aller ethischen Messungen mit kryptografischer Verifikation",
+    "viewLedger": "Vollständiges Ledger anzeigen",
+    "entry": "Eintrag",
+    "timestamp": "Zeitstempel",
+    "commit": "Git-Commit",
+    "merkleRoot": "Merkle-Wurzel",
+    "signature": "GPG-Signatur",
+    "signed": "Signiert",
+    "unsigned": "Nicht signiert",
+    "verified": "Verifiziert",
+    "downloadJSON": "Ledger herunterladen (JSON)"
+  },
+  "metadata": {
+    "project": "Projekt",
+    "version": "Version",
+    "commit": "Commit",
+    "timestamp": "Zuletzt aktualisiert",
+    "hash": "Daten-Hash",
+    "verifiedBy": "Verifiziert von",
+    "legalAudit": "Rechtlicher Prüfbericht"
+  },
+  "actions": {
+    "viewDetails": "Details anzeigen",
+    "viewSource": "Quelle anzeigen",
+    "exportReport": "Bericht exportieren",
+    "shareScorecard": "Scorecard teilen"
+  },
+  "footer": {
+    "compliance": "Compliance-Frameworks",
+    "gdpr": "DSGVO Art. 5 & 25",
+    "euAIAct": "EU AI Act 2024",
+    "iso42001": "ISO 42001",
+    "ieee7000": "IEEE 7000",
+    "methodology": "Bewertungsmethodik",
+    "openSource": "Open Source",
+    "auditTrail": "Audit-Trail"
+  }
+}

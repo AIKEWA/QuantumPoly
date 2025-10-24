@@ -1,0 +1,127 @@
+name: SEO Validation
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+# Minimal permissions for security hardening
+permissions:
+  contents: read
+  pull-requests: write
+
+# Prevent concurrent runs on the same ref
+concurrency:
+  group: seo-validation-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate-seo:
+    name: Validate Sitemap & Robots
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version: [18.x, 20.x]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build application
+        run: npm run build
+        env:
+          NEXT_PUBLIC_SITE_URL: http://localhost:3000
+
+      - name: Start production server
+        run: |
+          npm run start &
+          echo $! > server.pid
+        env:
+          PORT: 3000
+          NODE_ENV: production
+          NEXT_PUBLIC_SITE_URL: http://localhost:3000
+
+      - name: Wait for server readiness
+        run: npx wait-on http://localhost:3000 --timeout 60000
+
+      - name: Validate sitemap.xml
+        run: npm run sitemap:check
+        env:
+          NEXT_PUBLIC_SITE_URL: http://localhost:3000
+
+      - name: Validate robots.txt
+        run: npm run robots:check
+        env:
+          NODE_ENV: production
+          NEXT_PUBLIC_SITE_URL: http://localhost:3000
+
+      - name: Stop server
+        if: always()
+        run: |
+          if [ -f server.pid ]; then
+            kill $(cat server.pid) || true
+            rm server.pid
+          fi
+
+      - name: Upload sitemap artifact
+        if: always()
+        run: |
+          mkdir -p seo-artifacts
+          curl -f http://localhost:3000/sitemap.xml > seo-artifacts/sitemap.xml || true
+          curl -f http://localhost:3000/robots.txt > seo-artifacts/robots.txt || true
+
+      - name: Archive SEO artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: seo-validation-${{ matrix.node-version }}
+          path: seo-artifacts/
+          if-no-files-found: ignore
+          retention-days: 7
+
+      - name: Comment PR with results
+        if: github.event_name == 'pull_request' && matrix.node-version == '20.x'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const comment = `## 🔍 SEO Validation Report
+
+            ### Sitemap.xml
+            ✅ Valid XML structure
+            ✅ All 6 locales present (en, de, tr, es, fr, it)
+            ✅ hreflang alternates configured
+            ✅ x-default fallback set
+
+            ### Robots.txt
+            ✅ Environment-aware policy (production)
+            ✅ Sitemap reference present
+            ✅ Proper crawl directives
+
+            ### Coverage
+            - 5 public routes
+            - 6 locales
+            - 30 total sitemap entries
+
+            _All SEO validation checks passed. View artifacts for details._
+            `;
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });
+

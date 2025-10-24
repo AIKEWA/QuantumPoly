@@ -1,0 +1,86 @@
+name: Performance CI
+
+on:
+  push:
+    branches: [main, block-5.8-final-delivery]
+  pull_request:
+    branches: [main]
+
+# Minimal permissions
+permissions:
+  contents: read
+  pull-requests: write
+
+# Prevent concurrent runs
+concurrency:
+  group: perf-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  performance:
+    name: Performance Gate
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build application
+        run: npm run build
+        env:
+          NODE_ENV: production
+
+      - name: Enforce JS bundle budgets (<250 KB/page)
+        run: npm run budget
+
+      - name: Start preview server
+        run: |
+          npm run start &
+          echo "SERVER_PID=$!" >> $GITHUB_ENV
+        env:
+          PORT: 3000
+
+      - name: Wait for server to be ready
+        run: npx wait-on http://localhost:3000/en --timeout 30000
+
+      - name: Run Lighthouse Performance audit (≥90)
+        env:
+          LH_URL: http://localhost:3000/en
+          LH_THRESHOLD: 90
+        run: npm run lh:perf
+
+      - name: Upload Lighthouse JSON report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lighthouse-performance-${{ github.sha }}
+          path: reports/lighthouse/performance.json
+          if-no-files-found: warn
+          retention-days: 30
+
+      - name: Stop server
+        if: always()
+        run: |
+          if [ ! -z "$SERVER_PID" ]; then
+            kill $SERVER_PID || true
+          fi
+          pkill -f "next start" || true
+
+      - name: Performance gate summary
+        if: success()
+        run: |
+          echo "✅ Performance gate PASSED"
+          echo "   • Bundle budgets: All routes < 250 KB"
+          echo "   • Lighthouse Performance: ≥ 90/100"
+          echo "   • LCP target: ≤ 2.5s"
+

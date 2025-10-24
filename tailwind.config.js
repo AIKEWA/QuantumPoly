@@ -2,6 +2,9 @@ module.exports = {
   content: ['./src/app/**/*.{js,ts,jsx,tsx}', './src/components/**/*.{js,ts,jsx,tsx}'],
   theme: {
     extend: {
+      fontFamily: {
+        sans: ['var(--font-inter)', 'system-ui', 'sans-serif'],
+      },
       colors: {
         // Semantic tokens using CSS variables for theming support
         primary: {

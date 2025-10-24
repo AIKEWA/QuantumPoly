@@ -1,0 +1,11 @@
+# Private keys MUST NOT be committed
+*.key
+*.asc
+*-private*
+*.gpg
+*.pgp
+
+# Only public keys should be committed
+!*.pub
+!.gitignore
+

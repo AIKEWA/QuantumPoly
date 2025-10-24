@@ -1,0 +1,16 @@
+# Release Audit Ledger
+
+This directory contains release audit entries synchronized from the Release Review Checklist.
+
+Each file represents a production deployment with complete audit trail including:
+- Sign-off matrix
+- Deployment metadata
+- Checklist hash for integrity verification
+
+Format: `YYYY-MM-DD-vX.Y.Z.json`
+
+For more information, see:
+- `/docs/review-checklist.md` - Release review process
+- `/governance/README.md` - Governance framework
+- `/scripts/audit-sync-ledger.sh` - Sync automation
+

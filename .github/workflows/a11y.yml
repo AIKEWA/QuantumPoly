@@ -1,0 +1,224 @@
+name: Accessibility CI - Ethical Enforcement
+
+on:
+  push:
+    branches: [main, block-5.8-final-delivery]
+  pull_request:
+    branches: [main, block-5.8-final-delivery]
+
+jobs:
+  eslint-a11y:
+    name: ESLint jsx-a11y Checks
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Run ESLint with jsx-a11y rules
+        run: npm run lint
+
+  jest-axe-tests:
+    name: Jest-Axe Unit Tests
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Run jest-axe accessibility tests
+        run: npm run test:a11y
+
+  playwright-axe-e2e:
+    name: Playwright Axe E2E Tests
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+      
+      - name: Build application
+        run: npm run build
+      
+      - name: Start production server
+        run: |
+          npm run start &
+          echo $! > server.pid
+        env:
+          PORT: 3000
+      
+      - name: Wait for server
+        run: npx wait-on http://localhost:3000 --timeout 60000
+      
+      - name: Run Playwright a11y E2E tests
+        run: npm run test:e2e:a11y
+      
+      - name: Stop server
+        if: always()
+        run: |
+          if [ -f server.pid ]; then
+            kill $(cat server.pid) || true
+            rm server.pid
+          fi
+      
+      - name: Upload Playwright report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-a11y-report
+          path: playwright-report/
+          retention-days: 30
+
+  lighthouse-audit:
+    name: Lighthouse A11y & Performance (≥95, ≥90)
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Build application
+        run: npm run build
+      
+      - name: Start production server
+        run: |
+          npm run start &
+          echo $! > server.pid
+        env:
+          PORT: 3000
+      
+      - name: Wait for server
+        run: npx wait-on http://localhost:3000 --timeout 60000
+      
+      - name: Run Lighthouse Audit (A11y ≥95, Perf ≥90)
+        run: npm run lh:a11y
+        env:
+          LH_URL: http://localhost:3000/en
+      
+      - name: Stop server
+        if: always()
+        run: |
+          if [ -f server.pid ]; then
+            kill $(cat server.pid) || true
+            rm server.pid
+          fi
+      
+      - name: Upload Lighthouse Accessibility Evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lighthouse-accessibility-evidence
+          path: reports/lighthouse/
+          retention-days: 90
+      
+      - name: Display Lighthouse Summary
+        if: always()
+        run: |
+          if [ -f reports/lighthouse/summary.json ]; then
+            echo "📊 Lighthouse Audit Summary:"
+            cat reports/lighthouse/summary.json
+          fi
+
+  comment-pr:
+    name: Comment PR with Results
+    runs-on: ubuntu-latest
+    needs: [eslint-a11y, jest-axe-tests, playwright-axe-e2e, lighthouse-audit]
+    if: github.event_name == 'pull_request' && always()
+    
+    steps:
+      - name: Download Lighthouse artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: lighthouse-accessibility-evidence
+          path: reports/lighthouse/
+        continue-on-error: true
+      
+      - name: Comment PR with accessibility results
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            
+            let comment = '## 🌟 Accessibility Compliance Report\n\n';
+            comment += '**Ethical Evidence Chain**: This audit ensures WCAG 2.2 AA compliance and feeds the Public Governance Dashboard (Block 6.5).\n\n';
+            comment += '### ✅ Automated Checks Completed\n\n';
+            comment += '| Check | Status | Threshold |\n';
+            comment += '|-------|--------|----------|\n';
+            comment += '| ESLint jsx-a11y | ${{ needs.eslint-a11y.result }} | Zero violations |\n';
+            comment += '| Jest-Axe Unit Tests | ${{ needs.jest-axe-tests.result }} | Zero violations |\n';
+            comment += '| Playwright Axe E2E | ${{ needs.playwright-axe-e2e.result }} | Zero critical/serious |\n';
+            comment += '| Lighthouse Accessibility | ${{ needs.lighthouse-audit.result }} | ≥ 95 |\n';
+            comment += '| Lighthouse Performance | ${{ needs.lighthouse-audit.result }} | ≥ 90 |\n\n';
+            
+            // Try to read Lighthouse summary
+            try {
+              if (fs.existsSync('reports/lighthouse/summary.json')) {
+                const summary = JSON.parse(fs.readFileSync('reports/lighthouse/summary.json', 'utf8'));
+                comment += '### 📊 Lighthouse Scores\n\n';
+                comment += `- **Accessibility**: ${summary.scores.accessibility}/100\n`;
+                comment += `- **Performance**: ${summary.scores.performance}/100\n\n`;
+                
+                if (summary.violations.length > 0) {
+                  comment += '### ⚠️ Accessibility Issues\n\n';
+                  summary.violations.slice(0, 5).forEach(v => {
+                    comment += `- **${v.title}** (${v.id})\n`;
+                  });
+                  comment += '\n';
+                }
+              }
+            } catch (e) {
+              console.log('Could not read Lighthouse summary');
+            }
+            
+            comment += '### 📦 Artifacts\n\n';
+            comment += '- [Download Lighthouse Evidence](../actions/runs/${{ github.run_id }})\n';
+            comment += '- [Download Playwright Report](../actions/runs/${{ github.run_id }})\n\n';
+            comment += '---\n\n';
+            comment += '_Accessibility is not a feature—it\'s a human right. These checks ensure inclusive access for all users._';
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });
+

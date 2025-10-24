@@ -5,6 +5,9 @@
 // Learn more: https://github.com/testing-library/jest-dom
 import '@testing-library/jest-dom';
 
+// jest-axe for accessibility testing
+import 'jest-axe/extend-expect';
+
 // Polyfill Next.js Web APIs for API route testing (Block 4.4)
 // Next.js uses Web APIs (Request, Response, Headers) that aren't available in JSDOM
 import { TextEncoder, TextDecoder } from 'node:util';

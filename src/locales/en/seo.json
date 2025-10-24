@@ -1,0 +1,76 @@
+{
+  "global": {
+    "siteName": "QuantumPoly",
+    "defaultTitle": "QuantumPoly - The Future, Now",
+    "defaultDescription": "QuantumPoly blends AI, Sustainability, and the Metaverse into a visionary future.",
+    "keywords": "AI, Quantum Computing, Metaverse, Sustainability, Ethics, Technology",
+    "ogImage": "/og-image.jpg",
+    "twitterHandle": "@quantumpoly"
+  },
+  "section:about": {
+    "titleSuffix": "About Us",
+    "description": "Learn about QuantumPoly's mission to build a responsible and innovative future.",
+    "keywords": "About QuantumPoly, Mission, Team, Innovation"
+  },
+  "section:vision": {
+    "titleSuffix": "Our Vision",
+    "description": "Discover QuantumPoly's vision for a future built on safety, scale, and openness.",
+    "keywords": "Vision, Future, Innovation, Technology Pillars"
+  },
+  "page:/": {
+    "title": "QuantumPoly - The Future, Now",
+    "description": "QuantumPoly blends AI, Sustainability, and the Metaverse into a visionary future.",
+    "ogTitle": "Welcome to QuantumPoly",
+    "ogDescription": "Building the future responsibly with AI, Quantum Computing, and the Metaverse.",
+    "keywords": "AI, Quantum Computing, Metaverse, Sustainability, Innovation",
+    "robots": "index, follow"
+  },
+  "page:/ethics": {
+    "title": "Ethics & Transparency | QuantumPoly",
+    "description": "Our commitment to ethical AI development, transparency, and responsible innovation.",
+    "ogTitle": "Our Ethics Framework",
+    "ogDescription": "QuantumPoly's comprehensive approach to ethical technology development and transparency.",
+    "keywords": "Ethics, Transparency, Responsible AI, Trust, Governance",
+    "robots": "index, follow"
+  },
+  "page:/privacy": {
+    "title": "Privacy Policy | QuantumPoly",
+    "description": "How QuantumPoly protects your data and respects your privacy rights.",
+    "ogTitle": "Privacy Policy",
+    "ogDescription": "Learn about our data protection practices and your privacy rights.",
+    "keywords": "Privacy Policy, Data Protection, GDPR, User Rights",
+    "robots": "index, follow"
+  },
+  "page:/imprint": {
+    "title": "Imprint | QuantumPoly",
+    "description": "Legal information and contact details for QuantumPoly.",
+    "ogTitle": "Legal Imprint",
+    "ogDescription": "Company information and legal details for QuantumPoly.",
+    "keywords": "Imprint, Legal Information, Contact, Company Details",
+    "robots": "index, follow"
+  },
+  "page:/gep": {
+    "title": "Good Engineering Practices | QuantumPoly",
+    "description": "Our technical standards, development practices, and engineering principles.",
+    "ogTitle": "Engineering Excellence",
+    "ogDescription": "QuantumPoly's commitment to technical excellence and engineering best practices.",
+    "keywords": "Engineering, Best Practices, Standards, Development, Quality",
+    "robots": "index, follow"
+  },
+  "page:/about": {
+    "title": "About QuantumPoly",
+    "description": "Learn about QuantumPoly's mission to build a responsible and innovative future.",
+    "ogTitle": "About QuantumPoly",
+    "ogDescription": "Discover our mission, values, and commitment to building the future responsibly.",
+    "keywords": "About, Mission, Values, Team, Company",
+    "robots": "index, follow"
+  },
+  "page:/vision": {
+    "title": "Our Vision | QuantumPoly",
+    "description": "Discover QuantumPoly's vision for a future built on safety, scale, and openness.",
+    "ogTitle": "Our Vision for the Future",
+    "ogDescription": "Three pillars driving our vision: Safety, Scale, and Openness.",
+    "keywords": "Vision, Future, Safety, Scale, Openness, Innovation",
+    "robots": "index, follow"
+  }
+}

@@ -1,0 +1,107 @@
+{
+  "title": "Ethical Governance Dashboard",
+  "subtitle": "Transparent measurement of technical compliance and ethical integrity",
+  "eii": "Ethical Integrity Index",
+  "eiiShort": "EII",
+  "score": "Score",
+  "categories": {
+    "seo": "SEO & Visibility",
+    "a11y": "Accessibility",
+    "performance": "Performance",
+    "bundle": "Bundle Efficiency"
+  },
+  "categoryDescriptions": {
+    "seo": "Search engine optimization and content discoverability metrics",
+    "a11y": "Web Content Accessibility Guidelines (WCAG 2.2 AA) compliance",
+    "performance": "Page load times, responsiveness, and resource efficiency",
+    "bundle": "JavaScript bundle size optimization and code splitting"
+  },
+  "badges": {
+    "gold": "Gold",
+    "silver": "Silver",
+    "bronze": "Bronze",
+    "amber": "Needs Improvement"
+  },
+  "tags": {
+    "a11yClean": "A11y Clean",
+    "energyEfficient": "Energy Efficient",
+    "transparencyVerified": "Transparency Verified",
+    "wcag22AA": "WCAG 2.2 AA",
+    "gdprCompliant": "GDPR Compliant",
+    "performanceOptimized": "Performance Optimized",
+    "seoBestPractices": "SEO Best Practices"
+  },
+  "explainability": {
+    "eii": {
+      "what": "The Ethical Integrity Index (EII) is a composite score that aggregates technical compliance metrics into a single transparency measure. It ranges from 0 to 100, where higher scores indicate better ethical and technical practices.",
+      "how": "EII is calculated using a weighted formula: 30% Accessibility + 30% Performance + 20% SEO + 20% Bundle Efficiency. Each category is scored from 0-100 based on industry standards and best practices.",
+      "why": "A high EII demonstrates commitment to inclusive design, environmental sustainability, and user-centered development. It enables stakeholders to quickly assess the ethical maturity of web applications."
+    },
+    "seo": {
+      "what": "SEO metrics measure how well the website follows search engine optimization best practices, including semantic HTML, meta tags, structured data, and content accessibility.",
+      "how": "Scores are derived from Google Lighthouse SEO audits, which check for proper metadata, mobile-friendliness, crawlability, and schema markup.",
+      "why": "Good SEO ensures equal access to information and supports content discovery for all users, including those using assistive technologies."
+    },
+    "a11y": {
+      "what": "Accessibility metrics evaluate compliance with Web Content Accessibility Guidelines (WCAG 2.2 Level AA), ensuring the site is usable by people with disabilities.",
+      "how": "Automated testing with axe-core and Lighthouse checks for color contrast, ARIA labels, keyboard navigation, screen reader compatibility, and semantic HTML.",
+      "why": "Accessibility is a fundamental human right. WCAG compliance ensures digital inclusion for users with visual, auditory, motor, and cognitive disabilities."
+    },
+    "performance": {
+      "what": "Performance metrics measure page load times, interactivity, and visual stability using Core Web Vitals and other efficiency indicators.",
+      "how": "Lighthouse performance audits measure Largest Contentful Paint (LCP), Total Blocking Time (TBT), Cumulative Layout Shift (CLS), and other timing metrics.",
+      "why": "Fast, responsive websites improve user experience and reduce energy consumption. Performance directly impacts accessibility for users on slow connections or low-powered devices."
+    },
+    "bundle": {
+      "what": "Bundle efficiency measures JavaScript code size and optimization, assessing how much data users must download to use the application.",
+      "how": "Build-time analysis compares JavaScript bundle sizes against budgets (e.g., <250KB per route). Scores favor smaller bundles and effective code splitting.",
+      "why": "Smaller bundles reduce bandwidth costs, load faster on slower networks, and minimize environmental impact through reduced energy consumption."
+    }
+  },
+  "trend": {
+    "title": "EII Trend Over Time",
+    "description": "Historical progression of Ethical Integrity Index across CI runs",
+    "xAxis": "Date",
+    "yAxis": "EII Score",
+    "noData": "No historical data available yet. Run ethics aggregation multiple times to build trend data."
+  },
+  "ledger": {
+    "title": "Transparency Ledger",
+    "description": "Immutable audit trail of all ethical measurements with cryptographic verification",
+    "viewLedger": "View Full Ledger",
+    "entry": "Entry",
+    "timestamp": "Timestamp",
+    "commit": "Git Commit",
+    "merkleRoot": "Merkle Root",
+    "signature": "GPG Signature",
+    "signed": "Signed",
+    "unsigned": "Unsigned",
+    "verified": "Verified",
+    "downloadJSON": "Download Ledger (JSON)"
+  },
+  "metadata": {
+    "project": "Project",
+    "version": "Version",
+    "commit": "Commit",
+    "timestamp": "Last Updated",
+    "hash": "Data Hash",
+    "verifiedBy": "Verified By",
+    "legalAudit": "Legal Audit Report"
+  },
+  "actions": {
+    "viewDetails": "View Details",
+    "viewSource": "View Source",
+    "exportReport": "Export Report",
+    "shareScorecard": "Share Scorecard"
+  },
+  "footer": {
+    "compliance": "Compliance Frameworks",
+    "gdpr": "GDPR Art. 5 & 25",
+    "euAIAct": "EU AI Act 2024",
+    "iso42001": "ISO 42001",
+    "ieee7000": "IEEE 7000",
+    "methodology": "Scoring Methodology",
+    "openSource": "Open Source",
+    "auditTrail": "Audit Trail"
+  }
+}

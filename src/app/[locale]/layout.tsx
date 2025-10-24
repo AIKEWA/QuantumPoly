@@ -1,3 +1,4 @@
+import { Inter } from 'next/font/google';
 import { notFound } from 'next/navigation';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
@@ -5,6 +6,14 @@ import { ReactNode } from 'react';
 
 import { isValidLocale, getLocaleDirection, type Locale } from '@/i18n';
 import '../../styles/globals.css';
+
+// Optimize font loading with next/font
+// display: 'swap' prevents FOIT (Flash of Invisible Text)
+const inter = Inter({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-inter',
+});
 
 type Props = {
   children: ReactNode;
@@ -73,7 +82,7 @@ export default async function RootLayout({ children, params }: Props) {
   const direction = getLocaleDirection(locale as Locale);
 
   return (
-    <html lang={locale} dir={direction}>
+    <html lang={locale} dir={direction} className={inter.variable}>
       <body className="min-h-screen font-sans antialiased">
         <NextIntlClientProvider locale={locale} messages={messages}>
           {children}
@@ -82,4 +91,3 @@ export default async function RootLayout({ children, params }: Props) {
     </html>
   );
 }
-

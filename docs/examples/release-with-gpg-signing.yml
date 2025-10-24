@@ -1,0 +1,396 @@
+# Example: Release Workflow with GPG Ledger Signing
+#
+# This example demonstrates how to integrate the GPG signing workflow
+# snippet into a production release workflow.
+#
+# Key Features:
+# - Manual workflow trigger with SIGN_LEDGER toggle (EWA-HIL-02 compliance)
+# - Tag-based automatic production deployment
+# - Governance ledger update after deployment
+# - Optional GPG signing with human approval pattern
+# - Post-deployment verification and notification
+#
+# Usage:
+#   1. Push tag: git push origin v1.0.0
+#   2. Create GitHub Release via UI
+#   3. Approve production deployment
+#   4. Toggle SIGN_LEDGER on/off as needed
+#
+# Prerequisites:
+#   - GitHub Secrets: VERCEL_TOKEN, VERCEL_ORG_ID, VERCEL_PROJECT_ID
+#   - GitHub Secrets (optional): GPG_PRIVATE_KEY, GPG_KEY_ID
+#   - GitHub Environment: production (with required reviewers)
+
+name: Release
+
+on:
+  # Automatic trigger on version tags
+  push:
+    tags:
+      - 'v*.*.*'
+  
+  # Manual trigger with GPG signing toggle
+  workflow_dispatch:
+    inputs:
+      SIGN_LEDGER:
+        description: 'Enable GPG signing of governance ledger'
+        required: true
+        type: boolean
+        default: false
+      version_tag:
+        description: 'Version tag to deploy (e.g., v1.0.0)'
+        required: true
+        type: string
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: write       # For ledger commits
+  deployments: write    # For GitHub deployments
+  pull-requests: write  # For release notifications
+
+jobs:
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  # JOB 1: Validate Release
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  
+  validate-release:
+    name: Validate Release
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.extract.outputs.version }}
+      is_prerelease: ${{ steps.extract.outputs.is_prerelease }}
+    
+    steps:
+      - name: Extract Version Information
+        id: extract
+        run: |
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            VERSION="${{ inputs.version_tag }}"
+          else
+            VERSION="${{ github.ref_name }}"
+          fi
+          
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          
+          # Check if pre-release (alpha, beta, rc)
+          if echo "$VERSION" | grep -qE "(alpha|beta|rc)"; then
+            echo "is_prerelease=true" >> $GITHUB_OUTPUT
+          else
+            echo "is_prerelease=false" >> $GITHUB_OUTPUT
+          fi
+      
+      - name: Verify Tag Format
+        run: |
+          VERSION="${{ steps.extract.outputs.version }}"
+          if ! echo "$VERSION" | grep -qE "^v[0-9]+\.[0-9]+\.[0-9]+"; then
+            echo "❌ ERROR: Invalid version tag format: $VERSION"
+            echo "Expected: v{major}.{minor}.{patch} (e.g., v1.0.0)"
+            exit 1
+          fi
+          echo "✅ Valid version tag: $VERSION"
+      
+      - name: Verify GitHub Release Exists
+        if: github.event_name == 'push'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if ! gh release view "${{ steps.extract.outputs.version }}" --repo "${{ github.repository }}"; then
+            echo "❌ ERROR: GitHub Release not found for ${{ steps.extract.outputs.version }}"
+            echo "Create a release before deployment"
+            exit 1
+          fi
+          echo "✅ GitHub Release found"
+
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  # JOB 2: Deploy to Production
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  
+  deploy-production:
+    name: Deploy to Production
+    needs: validate-release
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: https://www.quantumpoly.ai
+    outputs:
+      deployment_url: ${{ steps.deploy.outputs.url }}
+    
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+      
+      - name: Install Dependencies
+        run: npm ci --legacy-peer-deps
+      
+      - name: Install Vercel CLI
+        run: npm install -g vercel@latest
+      
+      - name: Pull Vercel Environment
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        run: vercel pull --yes --environment=production --token="$VERCEL_TOKEN"
+      
+      - name: Build Application
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        run: vercel build --prod --token="$VERCEL_TOKEN"
+      
+      - name: Deploy to Vercel
+        id: deploy
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        run: |
+          DEPLOYMENT_URL=$(vercel deploy --prebuilt --prod --token="$VERCEL_TOKEN")
+          echo "url=$DEPLOYMENT_URL" >> $GITHUB_OUTPUT
+          echo "✅ Deployed to: $DEPLOYMENT_URL"
+      
+      - name: Create GitHub Deployment
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.repos.createDeployment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: '${{ needs.validate-release.outputs.version }}',
+              environment: 'production',
+              auto_merge: false,
+              required_contexts: [],
+              production_environment: true
+            });
+
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  # JOB 3: Update Governance Ledger
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  
+  update-ledger:
+    name: Update Governance Ledger
+    needs: [validate-release, deploy-production]
+    runs-on: ubuntu-latest
+    outputs:
+      ledger_file: ${{ steps.generate.outputs.file_path }}
+    
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+      
+      - name: Install Dependencies
+        run: npm ci --legacy-peer-deps
+      
+      - name: Generate Ledger Entry
+        id: generate
+        run: |
+          # Generate ledger file with deployment metadata
+          LEDGER_DATE=$(date +%Y-%m-%d)
+          LEDGER_FILE="governance/ledger/releases/${LEDGER_DATE}-${{ needs.validate-release.outputs.version }}.json"
+          
+          mkdir -p governance/ledger/releases
+          
+          # Create ledger entry JSON
+          cat > "$LEDGER_FILE" << EOF
+          {
+            "version": "${{ needs.validate-release.outputs.version }}",
+            "tag": "${{ needs.validate-release.outputs.version }}",
+            "timestamp": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
+            "commit": "${{ github.sha }}",
+            "deploymentUrl": "${{ needs.deploy-production.outputs.deployment_url }}",
+            "productionUrl": "https://www.quantumpoly.ai",
+            "approver": "${{ github.actor }}",
+            "environment": "production",
+            "isPrerelease": ${{ needs.validate-release.outputs.is_prerelease }},
+            "workflowRun": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          }
+          EOF
+          
+          echo "file_path=$LEDGER_FILE" >> $GITHUB_OUTPUT
+          echo "✅ Generated ledger entry: $LEDGER_FILE"
+      
+      - name: Commit Ledger Entry
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          
+          git add governance/ledger/releases/*.json
+          git commit -m "chore(governance): add ledger entry for ${{ needs.validate-release.outputs.version }}"
+          git push
+      
+      - name: Upload Ledger Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: governance-ledger
+          path: ${{ steps.generate.outputs.file_path }}
+          retention-days: 90
+
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  # JOB 4: Sign Governance Ledger (OPTIONAL)
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  
+  sign-ledger:
+    name: Sign Governance Ledger
+    needs: [validate-release, update-ledger]
+    # Only run if:
+    # - Manual workflow with SIGN_LEDGER=true, OR
+    # - Automatic tag push (default to enabled for production releases)
+    if: |
+      (github.event_name == 'workflow_dispatch' && inputs.SIGN_LEDGER == true) ||
+      (github.event_name == 'push')
+    
+    # Call the reusable GPG signing workflow
+    uses: ./.github/workflows/snippets/gpg-sign-ledger.yml
+    with:
+      ledger_file_path: ${{ needs.update-ledger.outputs.ledger_file }}
+      sign_enabled: true
+    secrets:
+      GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+      GPG_KEY_ID: ${{ secrets.GPG_KEY_ID }}
+
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  # JOB 5: Commit Signature (if signing succeeded)
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  
+  commit-signature:
+    name: Commit Signature File
+    needs: [validate-release, update-ledger, sign-ledger]
+    if: success() && needs.sign-ledger.result == 'success'
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Download Signature Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: ledger-signatures
+          path: governance/ledger/releases/
+      
+      - name: Commit Signature
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          
+          git add governance/ledger/releases/*.asc
+          
+          if git diff --staged --quiet; then
+            echo "No signature changes to commit"
+          else
+            git commit -m "chore(governance): add GPG signature for ${{ needs.validate-release.outputs.version }}"
+            git push
+            echo "✅ Signature committed"
+          fi
+
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  # JOB 6: Notify Release
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  
+  notify-release:
+    name: Notify Release
+    needs: [validate-release, deploy-production, update-ledger, sign-ledger]
+    if: always()
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Generate Release Summary
+        id: summary
+        run: |
+          cat >> $GITHUB_STEP_SUMMARY << EOF
+          # 🚀 Release Summary
+          
+          ## Deployment Details
+          
+          | Property | Value |
+          |----------|-------|
+          | **Version** | \`${{ needs.validate-release.outputs.version }}\` |
+          | **Environment** | Production |
+          | **URL** | https://www.quantumpoly.ai |
+          | **Deployment URL** | ${{ needs.deploy-production.outputs.deployment_url }} |
+          | **Approver** | @${{ github.actor }} |
+          | **Timestamp** | $(date -u +"%Y-%m-%d %H:%M:%S UTC") |
+          
+          ## Job Status
+          
+          | Job | Status |
+          |-----|--------|
+          | Validate Release | ${{ needs.validate-release.result == 'success' && '✅' || '❌' }} |
+          | Deploy Production | ${{ needs.deploy-production.result == 'success' && '✅' || '❌' }} |
+          | Update Ledger | ${{ needs.update-ledger.result == 'success' && '✅' || '❌' }} |
+          | Sign Ledger | ${{ needs.sign-ledger.result == 'success' && '✅' || needs.sign-ledger.result == 'skipped' && '⏭️' || '❌' }} |
+          
+          ## Governance
+          
+          - **Ledger Entry:** \`${{ needs.update-ledger.outputs.ledger_file }}\`
+          - **GPG Signed:** ${{ needs.sign-ledger.result == 'success' && 'Yes ✅' || 'No ⏭️' }}
+          
+          ## Post-Deployment Checklist
+          
+          - [ ] Verify production URL is accessible
+          - [ ] Check DNS resolution: \`dig www.quantumpoly.ai\`
+          - [ ] Verify SSL certificate is valid
+          - [ ] Test critical user flows
+          - [ ] Review governance ledger entry
+          - [ ] Verify signature (if enabled): \`gpg --verify ${{ needs.update-ledger.outputs.ledger_file }}.asc\`
+          EOF
+      
+      - name: Comment on Release
+        if: github.event_name == 'push'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const version = '${{ needs.validate-release.outputs.version }}';
+            const deploymentUrl = '${{ needs.deploy-production.outputs.deployment_url }}';
+            const ledgerFile = '${{ needs.update-ledger.outputs.ledger_file }}';
+            const signed = '${{ needs.sign-ledger.result }}' === 'success';
+            
+            const body = `## 🚀 Deployment Complete
+            
+            **Version:** \`${version}\`
+            **Production URL:** https://www.quantumpoly.ai
+            **Deployment URL:** ${deploymentUrl}
+            
+            ### Governance
+            - **Ledger Entry:** \`${ledgerFile}\`
+            - **GPG Signed:** ${signed ? '✅ Yes' : '⏭️ No'}
+            
+            ### Verification
+            \`\`\`bash
+            # Verify deployment
+            curl -I https://www.quantumpoly.ai
+            
+            ${signed ? `# Verify GPG signature
+            gpg --verify ${ledgerFile}.asc` : '# GPG signing was skipped'}
+            \`\`\`
+            
+            **Workflow Run:** ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+            `;
+            
+            await github.rest.repos.createReleaseDiscussion({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              tag: version,
+              body: body
+            });
+

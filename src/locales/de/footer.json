@@ -5,6 +5,11 @@
   "socialLinks": {
     "github": "GitHub",
     "twitter": "Twitter"
-  }
+  },
+  "trust": "Vertrauen & Rechtliches",
+  "trustNav": "Vertrauens- und Rechtsinformationen",
+  "ethics": "Ethik & Transparenz",
+  "privacy": "Datenschutzerklärung",
+  "imprint": "Impressum",
+  "gep": "Gleichstellungsplan"
 }
-

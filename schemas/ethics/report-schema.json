@@ -1,0 +1,75 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://quantumpoly.org/schemas/ethics/report-schema.json",
+  "title": "Ethical Metrics Report Schema",
+  "description": "Schema for individual ethical metrics in the QuantumPoly governance system",
+  "type": "object",
+  "required": ["metric", "category", "score", "timestamp", "source", "commit", "hash"],
+  "properties": {
+    "metric": {
+      "type": "string",
+      "description": "Name of the metric being reported",
+      "examples": ["lighthouse-performance", "wcag-compliance", "bundle-size"]
+    },
+    "category": {
+      "type": "string",
+      "enum": ["seo", "a11y", "performance", "bundle"],
+      "description": "Category of ethical compliance"
+    },
+    "score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 100,
+      "description": "Normalized score from 0-100"
+    },
+    "rawScore": {
+      "type": "number",
+      "description": "Original score before normalization (optional)"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp of when the metric was collected"
+    },
+    "source": {
+      "type": "string",
+      "description": "Source file or system that generated this metric",
+      "examples": ["lighthouse-ci", "jest-axe", "bundle-analyzer"]
+    },
+    "commit": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{7,40}$",
+      "description": "Git commit hash associated with this measurement"
+    },
+    "hash": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$",
+      "description": "SHA256 hash of the source artifact for verification"
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Additional metric-specific metadata",
+      "additionalProperties": true
+    },
+    "subMetrics": {
+      "type": "array",
+      "description": "Breakdown of sub-metrics contributing to this score",
+      "items": {
+        "type": "object",
+        "required": ["name", "value"],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "value": {
+            "type": "number"
+          },
+          "unit": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  },
+  "additionalProperties": false
+}

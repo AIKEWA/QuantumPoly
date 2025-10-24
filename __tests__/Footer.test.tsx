@@ -158,4 +158,122 @@ describe('Footer Component', () => {
     expect(twitterLink).toHaveClass('focus:ring-cyan-400');
     expect(twitterLink).toHaveClass('transition-colors');
   });
+
+  describe('Policy Links', () => {
+    const propsWithPolicyLinks = {
+      ...defaultProps,
+      policyLinks: [
+        { label: 'Ethics & Transparency', href: '/en/ethics' },
+        { label: 'Privacy Policy', href: '/en/privacy' },
+        { label: 'Imprint', href: '/en/imprint' },
+        { label: 'Gender Equality Plan', href: '/en/gep' },
+      ],
+      policyNavLabel: 'Trust and legal information',
+    };
+
+    it('renders all policy links with correct href', () => {
+      render(<Footer {...propsWithPolicyLinks} />);
+
+      propsWithPolicyLinks.policyLinks.forEach((link) => {
+        const linkElement = screen.getByRole('link', { name: link.label });
+        expect(linkElement).toBeInTheDocument();
+        expect(linkElement).toHaveAttribute('href', link.href);
+      });
+    });
+
+    it('policy links are within semantic nav with proper aria-label', () => {
+      render(<Footer {...propsWithPolicyLinks} />);
+
+      const policyNav = screen.getByRole('navigation', {
+        name: propsWithPolicyLinks.policyNavLabel,
+      });
+      expect(policyNav).toBeInTheDocument();
+      expect(policyNav.tagName).toBe('NAV');
+    });
+
+    it('uses default aria-label when policyNavLabel is not provided', () => {
+      const propsWithoutNavLabel = {
+        ...defaultProps,
+        policyLinks: propsWithPolicyLinks.policyLinks,
+      };
+
+      render(<Footer {...propsWithoutNavLabel} />);
+
+      const policyNav = screen.getByRole('navigation', { name: 'Trust and legal' });
+      expect(policyNav).toBeInTheDocument();
+    });
+
+    it('handles missing policyLinks gracefully', () => {
+      render(<Footer {...defaultProps} />);
+
+      expect(
+        screen.queryByRole('navigation', { name: /Trust and legal/ })
+      ).not.toBeInTheDocument();
+      expect(screen.getByRole('heading', { name: defaultProps.brand })).toBeInTheDocument();
+    });
+
+    it('handles empty policyLinks array', () => {
+      const propsWithEmptyPolicyLinks = {
+        ...defaultProps,
+        policyLinks: [],
+      };
+
+      render(<Footer {...propsWithEmptyPolicyLinks} />);
+
+      expect(
+        screen.queryByRole('navigation', { name: /Trust and legal/ })
+      ).not.toBeInTheDocument();
+    });
+
+    it('policy links are keyboard accessible', () => {
+      render(<Footer {...propsWithPolicyLinks} />);
+
+      const policyNav = screen.getByRole('navigation', {
+        name: propsWithPolicyLinks.policyNavLabel,
+      });
+      const policyLinks = policyNav.querySelectorAll('a');
+
+      policyLinks.forEach((link) => {
+        expect(link).not.toHaveAttribute('tabindex', '-1');
+        expect(link).toHaveClass('focus:outline-none');
+        expect(link).toHaveClass('focus:ring-2');
+      });
+    });
+
+    it('policy links have proper hover and focus styles', () => {
+      render(<Footer {...propsWithPolicyLinks} />);
+
+      const ethicsLink = screen.getByRole('link', { name: 'Ethics & Transparency' });
+      expect(ethicsLink).toHaveClass('hover:text-cyan-400');
+      expect(ethicsLink).toHaveClass('focus:ring-cyan-400');
+      expect(ethicsLink).toHaveClass('transition-colors');
+    });
+
+    it('policy links use internal routing (Next.js Link)', () => {
+      render(<Footer {...propsWithPolicyLinks} />);
+
+      const ethicsLink = screen.getByRole('link', { name: 'Ethics & Transparency' });
+      // Next.js Link components don't have target="_blank" for internal routes
+      expect(ethicsLink).not.toHaveAttribute('target', '_blank');
+      expect(ethicsLink).not.toHaveAttribute('rel', 'noopener noreferrer');
+    });
+
+    it('renders both social and policy links together', () => {
+      render(<Footer {...propsWithPolicyLinks} />);
+
+      // Social links should be present
+      const socialNav = screen.getByRole('navigation', { name: 'Social links' });
+      expect(socialNav).toBeInTheDocument();
+
+      // Policy links should be present
+      const policyNav = screen.getByRole('navigation', {
+        name: propsWithPolicyLinks.policyNavLabel,
+      });
+      expect(policyNav).toBeInTheDocument();
+
+      // Verify specific links from both categories
+      expect(screen.getByRole('link', { name: /Twitter/ })).toBeInTheDocument();
+      expect(screen.getByRole('link', { name: 'Privacy Policy' })).toBeInTheDocument();
+    });
+  });
 });

@@ -1,0 +1,107 @@
+{
+  "title": "Tableau de Bord de Gouvernance Éthique",
+  "subtitle": "Mesure transparente de la conformité technique et de l'intégrité éthique",
+  "eii": "Indice d'Intégrité Éthique",
+  "eiiShort": "IIE",
+  "score": "Score",
+  "categories": {
+    "seo": "SEO & Visibilité",
+    "a11y": "Accessibilité",
+    "performance": "Performance",
+    "bundle": "Efficacité du Bundle"
+  },
+  "categoryDescriptions": {
+    "seo": "Optimisation pour les moteurs de recherche et découvrabilité du contenu",
+    "a11y": "Conformité aux Web Content Accessibility Guidelines (WCAG 2.2 AA)",
+    "performance": "Temps de chargement, réactivité et efficacité des ressources",
+    "bundle": "Optimisation de la taille du bundle JavaScript et fractionnement du code"
+  },
+  "badges": {
+    "gold": "Or",
+    "silver": "Argent",
+    "bronze": "Bronze",
+    "amber": "À améliorer"
+  },
+  "tags": {
+    "a11yClean": "Accessible",
+    "energyEfficient": "Économe en énergie",
+    "transparencyVerified": "Transparence vérifiée",
+    "wcag22AA": "WCAG 2.2 AA",
+    "gdprCompliant": "Conforme RGPD",
+    "performanceOptimized": "Performance optimisée",
+    "seoBestPractices": "Meilleures pratiques SEO"
+  },
+  "explainability": {
+    "eii": {
+      "what": "L'Indice d'Intégrité Éthique (IIE) est un score composite qui agrège les métriques de conformité technique en une seule mesure de transparence. Il varie de 0 à 100, où des scores plus élevés indiquent de meilleures pratiques éthiques et techniques.",
+      "how": "L'IIE est calculé à l'aide d'une formule pondérée : 30% Accessibilité + 30% Performance + 20% SEO + 20% Efficacité du Bundle. Chaque catégorie est notée de 0 à 100 selon les normes industrielles et les meilleures pratiques.",
+      "why": "Un IIE élevé démontre un engagement envers la conception inclusive, la durabilité environnementale et le développement centré sur l'utilisateur. Il permet aux parties prenantes d'évaluer rapidement la maturité éthique des applications web."
+    },
+    "seo": {
+      "what": "Les métriques SEO mesurent dans quelle mesure le site web suit les meilleures pratiques d'optimisation pour les moteurs de recherche, y compris le HTML sémantique, les balises méta, les données structurées et l'accessibilité du contenu.",
+      "how": "Les scores proviennent des audits SEO de Google Lighthouse, qui vérifient les métadonnées appropriées, la compatibilité mobile, la crawlabilité et le balisage de schéma.",
+      "why": "Un bon SEO garantit un accès égal à l'information et soutient la découverte de contenu pour tous les utilisateurs, y compris ceux utilisant des technologies d'assistance."
+    },
+    "a11y": {
+      "what": "Les métriques d'accessibilité évaluent la conformité aux Web Content Accessibility Guidelines (WCAG 2.2 Niveau AA), garantissant que le site est utilisable par les personnes handicapées.",
+      "how": "Les tests automatisés avec axe-core et Lighthouse vérifient le contraste des couleurs, les étiquettes ARIA, la navigation au clavier, la compatibilité avec les lecteurs d'écran et le HTML sémantique.",
+      "why": "L'accessibilité est un droit humain fondamental. La conformité WCAG garantit l'inclusion numérique pour les utilisateurs ayant des handicaps visuels, auditifs, moteurs et cognitifs."
+    },
+    "performance": {
+      "what": "Les métriques de performance mesurent les temps de chargement des pages, l'interactivité et la stabilité visuelle à l'aide des Core Web Vitals et d'autres indicateurs d'efficacité.",
+      "how": "Les audits de performance Lighthouse mesurent le Largest Contentful Paint (LCP), le Total Blocking Time (TBT), le Cumulative Layout Shift (CLS) et d'autres métriques de timing.",
+      "why": "Les sites web rapides et réactifs améliorent l'expérience utilisateur et réduisent la consommation d'énergie. La performance impacte directement l'accessibilité pour les utilisateurs sur des connexions lentes ou des appareils peu puissants."
+    },
+    "bundle": {
+      "what": "L'efficacité du bundle mesure la taille du code JavaScript et l'optimisation, évaluant la quantité de données que les utilisateurs doivent télécharger pour utiliser l'application.",
+      "how": "L'analyse au moment de la construction compare les tailles de bundle JavaScript par rapport aux budgets (par exemple, <250 Ko par route). Les scores favorisent les bundles plus petits et le fractionnement efficace du code.",
+      "why": "Des bundles plus petits réduisent les coûts de bande passante, se chargent plus rapidement sur les réseaux plus lents et minimisent l'impact environnemental grâce à une consommation d'énergie réduite."
+    }
+  },
+  "trend": {
+    "title": "Tendance de l'IIE dans le temps",
+    "description": "Progression historique de l'Indice d'Intégrité Éthique à travers les exécutions CI",
+    "xAxis": "Date",
+    "yAxis": "Score IIE",
+    "noData": "Aucune donnée historique disponible pour le moment. Exécutez l'agrégation éthique plusieurs fois pour construire les données de tendance."
+  },
+  "ledger": {
+    "title": "Registre de Transparence",
+    "description": "Piste d'audit immuable de toutes les mesures éthiques avec vérification cryptographique",
+    "viewLedger": "Voir le registre complet",
+    "entry": "Entrée",
+    "timestamp": "Horodatage",
+    "commit": "Commit Git",
+    "merkleRoot": "Racine de Merkle",
+    "signature": "Signature GPG",
+    "signed": "Signé",
+    "unsigned": "Non signé",
+    "verified": "Vérifié",
+    "downloadJSON": "Télécharger le registre (JSON)"
+  },
+  "metadata": {
+    "project": "Projet",
+    "version": "Version",
+    "commit": "Commit",
+    "timestamp": "Dernière mise à jour",
+    "hash": "Hash des données",
+    "verifiedBy": "Vérifié par",
+    "legalAudit": "Rapport d'audit légal"
+  },
+  "actions": {
+    "viewDetails": "Voir les détails",
+    "viewSource": "Voir la source",
+    "exportReport": "Exporter le rapport",
+    "shareScorecard": "Partager le tableau de bord"
+  },
+  "footer": {
+    "compliance": "Cadres de conformité",
+    "gdpr": "RGPD Art. 5 & 25",
+    "euAIAct": "Loi européenne sur l'IA 2024",
+    "iso42001": "ISO 42001",
+    "ieee7000": "IEEE 7000",
+    "methodology": "Méthodologie de notation",
+    "openSource": "Open Source",
+    "auditTrail": "Piste d'audit"
+  }
+}

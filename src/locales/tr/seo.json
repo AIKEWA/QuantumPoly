@@ -1,0 +1,76 @@
+{
+  "global": {
+    "siteName": "QuantumPoly",
+    "defaultTitle": "QuantumPoly - Gelecek, Şimdi",
+    "defaultDescription": "QuantumPoly, yapay zeka, sürdürülebilirlik ve metaverse'ü vizyoner bir geleceğe dönüştürüyor.",
+    "keywords": "Yapay Zeka, Kuantum Hesaplama, Metaverse, Sürdürülebilirlik, Etik, Teknoloji",
+    "ogImage": "/og-image.jpg",
+    "twitterHandle": "@quantumpoly"
+  },
+  "section:about": {
+    "titleSuffix": "Hakkımızda",
+    "description": "QuantumPoly'nin sorumlu ve yenilikçi bir gelecek inşa etme misyonu hakkında bilgi edinin.",
+    "keywords": "QuantumPoly Hakkında, Misyon, Ekip, Yenilik"
+  },
+  "section:vision": {
+    "titleSuffix": "Vizyonumuz",
+    "description": "QuantumPoly'nin güvenlik, ölçek ve açıklık üzerine inşa edilmiş gelecek vizyonunu keşfedin.",
+    "keywords": "Vizyon, Gelecek, Yenilik, Teknoloji Sütunları"
+  },
+  "page:/": {
+    "title": "QuantumPoly - Gelecek, Şimdi",
+    "description": "QuantumPoly, yapay zeka, sürdürülebilirlik ve metaverse'ü vizyoner bir geleceğe dönüştürüyor.",
+    "ogTitle": "QuantumPoly'ye Hoş Geldiniz",
+    "ogDescription": "Yapay zeka, kuantum hesaplama ve metaverse ile geleceği sorumlu bir şekilde inşa ediyoruz.",
+    "keywords": "Yapay Zeka, Kuantum Hesaplama, Metaverse, Sürdürülebilirlik, Yenilik",
+    "robots": "index, follow"
+  },
+  "page:/ethics": {
+    "title": "Etik ve Şeffaflık | QuantumPoly",
+    "description": "Etik yapay zeka geliştirme, şeffaflık ve sorumlu yeniliğe olan bağlılığımız.",
+    "ogTitle": "Etik Çerçevemiz",
+    "ogDescription": "QuantumPoly'nin etik teknoloji geliştirme ve şeffaflık konusundaki kapsamlı yaklaşımı.",
+    "keywords": "Etik, Şeffaflık, Sorumlu Yapay Zeka, Güven, Yönetişim",
+    "robots": "index, follow"
+  },
+  "page:/privacy": {
+    "title": "Gizlilik Politikası | QuantumPoly",
+    "description": "QuantumPoly verilerinizi nasıl korur ve gizlilik haklarınıza nasıl saygı gösterir.",
+    "ogTitle": "Gizlilik Politikası",
+    "ogDescription": "Veri koruma uygulamalarımız ve gizlilik haklarınız hakkında bilgi edinin.",
+    "keywords": "Gizlilik Politikası, Veri Koruma, GDPR, Kullanıcı Hakları",
+    "robots": "index, follow"
+  },
+  "page:/imprint": {
+    "title": "Künye | QuantumPoly",
+    "description": "QuantumPoly için yasal bilgiler ve iletişim detayları.",
+    "ogTitle": "Yasal Künye",
+    "ogDescription": "QuantumPoly için şirket bilgileri ve yasal detaylar.",
+    "keywords": "Künye, Yasal Bilgiler, İletişim, Şirket Detayları",
+    "robots": "index, follow"
+  },
+  "page:/gep": {
+    "title": "İyi Mühendislik Uygulamaları | QuantumPoly",
+    "description": "Teknik standartlarımız, geliştirme uygulamalarımız ve mühendislik ilkelerimiz.",
+    "ogTitle": "Mühendislik Mükemmelliği",
+    "ogDescription": "QuantumPoly'nin teknik mükemmellik ve en iyi mühendislik uygulamalarına olan bağlılığı.",
+    "keywords": "Mühendislik, En İyi Uygulamalar, Standartlar, Geliştirme, Kalite",
+    "robots": "index, follow"
+  },
+  "page:/about": {
+    "title": "QuantumPoly Hakkında",
+    "description": "QuantumPoly'nin sorumlu ve yenilikçi bir gelecek inşa etme misyonu hakkında bilgi edinin.",
+    "ogTitle": "QuantumPoly Hakkında",
+    "ogDescription": "Misyonumuzu, değerlerimizi ve geleceği sorumlu bir şekilde inşa etme taahhüdümüzü keşfedin.",
+    "keywords": "Hakkında, Misyon, Değerler, Ekip, Şirket",
+    "robots": "index, follow"
+  },
+  "page:/vision": {
+    "title": "Vizyonumuz | QuantumPoly",
+    "description": "QuantumPoly'nin güvenlik, ölçek ve açıklık üzerine inşa edilmiş gelecek vizyonunu keşfedin.",
+    "ogTitle": "Geleceğe Dair Vizyonumuz",
+    "ogDescription": "Vizyonumuzu yönlendiren üç sütun: Güvenlik, Ölçek ve Açıklık.",
+    "keywords": "Vizyon, Gelecek, Güvenlik, Ölçek, Açıklık, Yenilik",
+    "robots": "index, follow"
+  }
+}

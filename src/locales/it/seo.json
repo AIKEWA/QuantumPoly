@@ -1,0 +1,76 @@
+{
+  "global": {
+    "siteName": "QuantumPoly",
+    "defaultTitle": "QuantumPoly - Il Futuro, Ora",
+    "defaultDescription": "QuantumPoly combina IA, Sostenibilità e il Metaverso in un futuro visionario.",
+    "keywords": "IA, Calcolo Quantistico, Metaverso, Sostenibilità, Etica, Tecnologia",
+    "ogImage": "/og-image.jpg",
+    "twitterHandle": "@quantumpoly"
+  },
+  "section:about": {
+    "titleSuffix": "Chi Siamo",
+    "description": "Scopri la missione di QuantumPoly di costruire un futuro responsabile e innovativo.",
+    "keywords": "Chi Siamo QuantumPoly, Missione, Team, Innovazione"
+  },
+  "section:vision": {
+    "titleSuffix": "La Nostra Visione",
+    "description": "Scopri la visione di QuantumPoly per un futuro basato su sicurezza, scala e apertura.",
+    "keywords": "Visione, Futuro, Innovazione, Pilastri Tecnologici"
+  },
+  "page:/": {
+    "title": "QuantumPoly - Il Futuro, Ora",
+    "description": "QuantumPoly combina IA, Sostenibilità e il Metaverso in un futuro visionario.",
+    "ogTitle": "Benvenuti su QuantumPoly",
+    "ogDescription": "Costruire il futuro responsabilmente con IA, Calcolo Quantistico e il Metaverso.",
+    "keywords": "IA, Calcolo Quantistico, Metaverso, Sostenibilità, Innovazione",
+    "robots": "index, follow"
+  },
+  "page:/ethics": {
+    "title": "Etica e Trasparenza | QuantumPoly",
+    "description": "Il nostro impegno per lo sviluppo etico dell'IA, la trasparenza e l'innovazione responsabile.",
+    "ogTitle": "Il Nostro Quadro Etico",
+    "ogDescription": "L'approccio completo di QuantumPoly allo sviluppo tecnologico etico e alla trasparenza.",
+    "keywords": "Etica, Trasparenza, IA Responsabile, Fiducia, Governance",
+    "robots": "index, follow"
+  },
+  "page:/privacy": {
+    "title": "Informativa sulla Privacy | QuantumPoly",
+    "description": "Come QuantumPoly protegge i tuoi dati e rispetta i tuoi diritti alla privacy.",
+    "ogTitle": "Informativa sulla Privacy",
+    "ogDescription": "Scopri le nostre pratiche di protezione dei dati e i tuoi diritti alla privacy.",
+    "keywords": "Informativa sulla Privacy, Protezione dei Dati, GDPR, Diritti degli Utenti",
+    "robots": "index, follow"
+  },
+  "page:/imprint": {
+    "title": "Note Legali | QuantumPoly",
+    "description": "Informazioni legali e dettagli di contatto per QuantumPoly.",
+    "ogTitle": "Note Legali",
+    "ogDescription": "Informazioni aziendali e dettagli legali per QuantumPoly.",
+    "keywords": "Note Legali, Informazioni Legali, Contatto, Dettagli Aziendali",
+    "robots": "index, follow"
+  },
+  "page:/gep": {
+    "title": "Buone Pratiche Ingegneristiche | QuantumPoly",
+    "description": "I nostri standard tecnici, pratiche di sviluppo e principi ingegneristici.",
+    "ogTitle": "Eccellenza Ingegneristica",
+    "ogDescription": "L'impegno di QuantumPoly per l'eccellenza tecnica e le migliori pratiche ingegneristiche.",
+    "keywords": "Ingegneria, Migliori Pratiche, Standard, Sviluppo, Qualità",
+    "robots": "index, follow"
+  },
+  "page:/about": {
+    "title": "Chi Siamo | QuantumPoly",
+    "description": "Scopri la missione di QuantumPoly di costruire un futuro responsabile e innovativo.",
+    "ogTitle": "Chi Siamo",
+    "ogDescription": "Scopri la nostra missione, i nostri valori e il nostro impegno per costruire il futuro responsabilmente.",
+    "keywords": "Chi Siamo, Missione, Valori, Team, Azienda",
+    "robots": "index, follow"
+  },
+  "page:/vision": {
+    "title": "La Nostra Visione | QuantumPoly",
+    "description": "Scopri la visione di QuantumPoly per un futuro basato su sicurezza, scala e apertura.",
+    "ogTitle": "La Nostra Visione del Futuro",
+    "ogDescription": "Tre pilastri che guidano la nostra visione: Sicurezza, Scala e Apertura.",
+    "keywords": "Visione, Futuro, Sicurezza, Scala, Apertura, Innovazione",
+    "robots": "index, follow"
+  }
+}

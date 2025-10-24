@@ -1,0 +1,107 @@
+{
+  "title": "Dashboard di Governance Etica",
+  "subtitle": "Misurazione trasparente della conformità tecnica e dell'integrità etica",
+  "eii": "Indice di Integrità Etica",
+  "eiiShort": "IIE",
+  "score": "Punteggio",
+  "categories": {
+    "seo": "SEO e Visibilità",
+    "a11y": "Accessibilità",
+    "performance": "Prestazioni",
+    "bundle": "Efficienza del Bundle"
+  },
+  "categoryDescriptions": {
+    "seo": "Ottimizzazione per i motori di ricerca e rilevabilità dei contenuti",
+    "a11y": "Conformità alle Linee Guida per l'Accessibilità dei Contenuti Web (WCAG 2.2 AA)",
+    "performance": "Tempi di caricamento delle pagine, reattività ed efficienza delle risorse",
+    "bundle": "Ottimizzazione delle dimensioni del bundle JavaScript e suddivisione del codice"
+  },
+  "badges": {
+    "gold": "Oro",
+    "silver": "Argento",
+    "bronze": "Bronzo",
+    "amber": "Da migliorare"
+  },
+  "tags": {
+    "a11yClean": "Accessibile",
+    "energyEfficient": "Efficiente dal punto di vista energetico",
+    "transparencyVerified": "Trasparenza verificata",
+    "wcag22AA": "WCAG 2.2 AA",
+    "gdprCompliant": "Conforme GDPR",
+    "performanceOptimized": "Prestazioni ottimizzate",
+    "seoBestPractices": "Migliori pratiche SEO"
+  },
+  "explainability": {
+    "eii": {
+      "what": "L'Indice di Integrità Etica (IIE) è un punteggio composito che aggrega le metriche di conformità tecnica in un'unica misura di trasparenza. Va da 0 a 100, dove punteggi più alti indicano migliori pratiche etiche e tecniche.",
+      "how": "L'IIE è calcolato utilizzando una formula ponderata: 30% Accessibilità + 30% Prestazioni + 20% SEO + 20% Efficienza del Bundle. Ogni categoria è valutata da 0 a 100 in base agli standard del settore e alle migliori pratiche.",
+      "why": "Un IIE elevato dimostra l'impegno verso il design inclusivo, la sostenibilità ambientale e lo sviluppo incentrato sull'utente. Consente alle parti interessate di valutare rapidamente la maturità etica delle applicazioni web."
+    },
+    "seo": {
+      "what": "Le metriche SEO misurano quanto bene il sito web segue le migliori pratiche di ottimizzazione per i motori di ricerca, inclusi HTML semantico, meta tag, dati strutturati e accessibilità dei contenuti.",
+      "how": "I punteggi derivano dagli audit SEO di Google Lighthouse, che verificano metadati appropriati, compatibilità mobile, indicizzabilità e markup dello schema.",
+      "why": "Un buon SEO garantisce un accesso equo alle informazioni e supporta la scoperta dei contenuti per tutti gli utenti, compresi quelli che utilizzano tecnologie assistive."
+    },
+    "a11y": {
+      "what": "Le metriche di accessibilità valutano la conformità alle Linee Guida per l'Accessibilità dei Contenuti Web (WCAG 2.2 Livello AA), garantendo che il sito sia utilizzabile da persone con disabilità.",
+      "how": "I test automatizzati con axe-core e Lighthouse verificano il contrasto dei colori, le etichette ARIA, la navigazione da tastiera, la compatibilità con i lettori di schermo e l'HTML semantico.",
+      "why": "L'accessibilità è un diritto umano fondamentale. La conformità WCAG garantisce l'inclusione digitale per gli utenti con disabilità visive, uditive, motorie e cognitive."
+    },
+    "performance": {
+      "what": "Le metriche delle prestazioni misurano i tempi di caricamento delle pagine, l'interattività e la stabilità visiva utilizzando i Core Web Vitals e altri indicatori di efficienza.",
+      "how": "Gli audit delle prestazioni di Lighthouse misurano Largest Contentful Paint (LCP), Total Blocking Time (TBT), Cumulative Layout Shift (CLS) e altre metriche temporali.",
+      "why": "I siti web veloci e reattivi migliorano l'esperienza utente e riducono il consumo energetico. Le prestazioni influiscono direttamente sull'accessibilità per gli utenti su connessioni lente o dispositivi a bassa potenza."
+    },
+    "bundle": {
+      "what": "L'efficienza del bundle misura le dimensioni del codice JavaScript e l'ottimizzazione, valutando quanti dati gli utenti devono scaricare per utilizzare l'applicazione.",
+      "how": "L'analisi in fase di build confronta le dimensioni del bundle JavaScript rispetto ai budget (ad es. <250KB per route). I punteggi favoriscono bundle più piccoli e una suddivisione efficace del codice.",
+      "why": "Bundle più piccoli riducono i costi della larghezza di banda, si caricano più velocemente su reti più lente e minimizzano l'impatto ambientale attraverso un consumo energetico ridotto."
+    }
+  },
+  "trend": {
+    "title": "Tendenza dell'IIE nel tempo",
+    "description": "Progressione storica dell'Indice di Integrità Etica attraverso le esecuzioni CI",
+    "xAxis": "Data",
+    "yAxis": "Punteggio IIE",
+    "noData": "Nessun dato storico disponibile ancora. Esegui l'aggregazione etica più volte per costruire dati di tendenza."
+  },
+  "ledger": {
+    "title": "Registro della Trasparenza",
+    "description": "Traccia di audit immutabile di tutte le misurazioni etiche con verifica crittografica",
+    "viewLedger": "Visualizza registro completo",
+    "entry": "Voce",
+    "timestamp": "Timestamp",
+    "commit": "Commit Git",
+    "merkleRoot": "Radice di Merkle",
+    "signature": "Firma GPG",
+    "signed": "Firmato",
+    "unsigned": "Non firmato",
+    "verified": "Verificato",
+    "downloadJSON": "Scarica registro (JSON)"
+  },
+  "metadata": {
+    "project": "Progetto",
+    "version": "Versione",
+    "commit": "Commit",
+    "timestamp": "Ultimo aggiornamento",
+    "hash": "Hash dei dati",
+    "verifiedBy": "Verificato da",
+    "legalAudit": "Rapporto di audit legale"
+  },
+  "actions": {
+    "viewDetails": "Visualizza dettagli",
+    "viewSource": "Visualizza sorgente",
+    "exportReport": "Esporta rapporto",
+    "shareScorecard": "Condividi scorecard"
+  },
+  "footer": {
+    "compliance": "Framework di conformità",
+    "gdpr": "GDPR Art. 5 e 25",
+    "euAIAct": "Legge europea sull'IA 2024",
+    "iso42001": "ISO 42001",
+    "ieee7000": "IEEE 7000",
+    "methodology": "Metodologia di punteggio",
+    "openSource": "Open Source",
+    "auditTrail": "Traccia di audit"
+  }
+}

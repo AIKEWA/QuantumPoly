@@ -1,0 +1,129 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://quantumpoly.org/schemas/ethics/ethical-scorecard-schema.json",
+  "title": "Ethical Scorecard Schema",
+  "description": "Composite schema for the complete ethical governance scorecard",
+  "type": "object",
+  "required": ["project", "version", "timestamp", "commit", "eii", "metrics", "hash"],
+  "properties": {
+    "project": {
+      "type": "string",
+      "const": "QuantumPoly",
+      "description": "Project identifier"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+(\\.\\d+)?$",
+      "description": "Semantic version of the project"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp of scorecard generation"
+    },
+    "commit": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{7,40}$",
+      "description": "Git commit hash for this scorecard"
+    },
+    "eii": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 100,
+      "description": "Ethical Integrity Index (composite score)"
+    },
+    "metrics": {
+      "type": "object",
+      "required": ["seo", "a11y", "performance", "bundle"],
+      "properties": {
+        "seo": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "SEO & Visibility score"
+        },
+        "a11y": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Accessibility (WCAG) score"
+        },
+        "performance": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Performance & efficiency score"
+        },
+        "bundle": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Bundle size & optimization score"
+        }
+      },
+      "additionalProperties": false
+    },
+    "hash": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$",
+      "description": "SHA256 hash of all source artifacts combined"
+    },
+    "tags": {
+      "type": "array",
+      "description": "Qualitative ethical compliance tags",
+      "items": {
+        "type": "string",
+        "enum": [
+          "A11y Clean",
+          "Energy Efficient",
+          "Transparency Verified",
+          "WCAG 2.2 AA",
+          "GDPR Compliant",
+          "Performance Optimized",
+          "SEO Best Practices"
+        ]
+      }
+    },
+    "verifiedBy": {
+      "type": "string",
+      "description": "Reviewer or system that verified this scorecard"
+    },
+    "ledgerEntry": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}-\\d{3}$",
+      "description": "Reference to transparency ledger entry ID"
+    },
+    "legalLink": {
+      "type": "string",
+      "format": "uri-reference",
+      "description": "Link to legal audit endpoint for this scorecard"
+    },
+    "reports": {
+      "type": "array",
+      "description": "Detailed metric reports",
+      "items": {
+        "$ref": "report-schema.json"
+      }
+    },
+    "eiCalculation": {
+      "type": "object",
+      "description": "Metadata about EII calculation methodology",
+      "properties": {
+        "formula": {
+          "type": "string",
+          "const": "EII = 0.3(A11y) + 0.3(Performance) + 0.2(SEO) + 0.2(Bundle)"
+        },
+        "weights": {
+          "type": "object",
+          "properties": {
+            "a11y": { "type": "number", "const": 0.3 },
+            "performance": { "type": "number", "const": 0.3 },
+            "seo": { "type": "number", "const": 0.2 },
+            "bundle": { "type": "number", "const": 0.2 }
+          }
+        }
+      }
+    }
+  },
+  "additionalProperties": false
+}

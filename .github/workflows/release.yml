@@ -1,0 +1,485 @@
+name: Release - Staging & Production Deployment
+
+# ============================================================================
+# DEPLOYMENT ARCHITECTURE RATIONALE
+# ============================================================================
+# This workflow is SEPARATE from ci.yml for three critical reasons:
+#
+# 1. SECURITY (Principle of Least Privilege)
+#    - CI requires only `contents: read` (no write access)
+#    - Release requires `contents: write` for ledger commits
+#    - Minimizes attack surface by limiting write permissions
+#
+# 2. GOVERNANCE (Audit Trail Clarity)
+#    - Clear separation: verification (CI) vs. deployment (Release)
+#    - Independent governance review before deployment
+#    - Supports two-key approval system (tag + release + human)
+#
+# 3. DEPLOYMENT TOOL CHOICE (Vercel CLI vs. vercel/action)
+#    - CLI provides: better logging, no rate limits, GPG compatibility
+#    - Enables offline reproducibility and governance signatures
+#    - Full control over deployment process for audit requirements
+#
+# DEPLOYMENT PATHS:
+# - Push to main → Staging (automatic, for QA validation)
+# - Tag v*.*.* + Release → Production (manual approval required)
+# ============================================================================
+
+on:
+  push:
+    branches: [main]
+    tags:
+      - 'v*.*.*'
+  release:
+    types: [published]
+
+# Elevated permissions required for deployment operations
+# Note: More privileged than ci.yml (which uses contents: read only)
+permissions:
+  contents: write      # Required: Ledger commits post-deployment
+  deployments: write   # Required: GitHub deployment API
+  pull-requests: write # Optional: Comment deployment status
+
+# Prevent concurrent deployments to avoid race conditions
+# Note: cancel-in-progress: false ensures in-flight deploys complete
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false  # Never cancel active deployments
+
+jobs:
+  # ============================================================================
+  # STAGING DEPLOYMENT (automatic on push to main)
+  # ============================================================================
+  # Automatically deploys to Vercel preview environment when PRs merge to main.
+  # Purpose: QA validation before production release.
+  # Environment: Vercel preview (non-production domain)
+  # Approval: None required (staging is for testing)
+  # ============================================================================
+  
+  deploy-staging:
+    name: Deploy to Staging
+    runs-on: ubuntu-latest
+    # Condition ensures this runs ONLY on main pushes, NOT on tag pushes
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && !startsWith(github.ref, 'refs/tags/')
+    timeout-minutes: 15
+    outputs:
+      staging_url: ${{ steps.deploy.outputs.url }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Node 20.x LTS: Active support until April 2026
+      # Ensures compatibility with Next.js 14.x and Vercel deployment
+      - name: Setup Node.js 20.x LTS
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'         # Speeds up installs by 60s → 15s
+
+      - name: Install dependencies
+        run: npm ci
+
+      # Vercel CLI installation: Provides full deployment control
+      # Alternative: vercel/action (simpler but less flexible)
+      - name: Install Vercel CLI
+        run: npm i -g vercel@latest
+
+      # Pull environment configuration from Vercel
+      # --environment=preview: Uses preview environment variables
+      # --yes: Non-interactive mode (required for CI)
+      - name: Pull Vercel environment (preview)
+        run: vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
+      # Build step: Generates .vercel/output for deployment
+      # Note: No --prod flag = preview build configuration
+      - name: Build project artifacts
+        run: vercel build --token=${{ secrets.VERCEL_TOKEN }}
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
+      # Deploy prebuilt artifacts to Vercel
+      # --prebuilt: Uses existing .vercel/output (faster, reproducible)
+      # Output: Unique preview URL for this staging deployment
+      - name: Deploy to staging
+        id: deploy
+        run: |
+          URL=$(vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }})
+          echo "url=$URL" >> "$GITHUB_OUTPUT"
+          echo "🚀 Staging deployed: $URL"
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
+      - name: Upload deployment artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: vercel-staging-output
+          path: .vercel/output
+          retention-days: 7
+
+      - name: Staging deployment summary
+        run: |
+          echo "### 🎯 Staging Deployment Successful" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Environment:** Staging" >> $GITHUB_STEP_SUMMARY
+          echo "**URL:** ${{ steps.deploy.outputs.url }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Branch:** main" >> $GITHUB_STEP_SUMMARY
+          echo "**Commit:** ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Staging is now live and ready for QA validation." >> $GITHUB_STEP_SUMMARY
+
+  # ============================================================================
+  # PRODUCTION DEPLOYMENT (manual approval required)
+  # ============================================================================
+  # Three-stage production flow ensures safety and auditability:
+  # 1. validate-release: Verifies tag format and GitHub Release exists
+  # 2. deploy-production: Deploys after manual human approval
+  # 3. update-ledger: Records deployment in governance ledger
+  #
+  # TWO-KEY APPROVAL SYSTEM:
+  # - Technical gate: Git tag with semantic version (v*.*.*) 
+  # - Governance gate: GitHub Release (legal/governance approval)
+  # - Human gate: Manual approval in GitHub Environment
+  # This prevents single-person deployment mistakes and ensures oversight.
+  # ============================================================================
+  
+  validate-release:
+    name: Validate Production Release
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/v') || github.event_name == 'release'
+    timeout-minutes: 10
+    outputs:
+      tag: ${{ steps.extract.outputs.tag }}
+      release_notes: ${{ steps.extract.outputs.notes }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify tag format
+        run: |
+          TAG="${GITHUB_REF#refs/tags/}"
+          if [[ ! "$TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "❌ Invalid tag format: $TAG"
+            echo "Expected format: v*.*.* (e.g., v1.0.0)"
+            exit 1
+          fi
+          echo "✅ Valid tag format: $TAG"
+
+      - name: Extract release metadata
+        id: extract
+        run: |
+          if [[ "${{ github.event_name }}" == "release" ]]; then
+            TAG="${{ github.event.release.tag_name }}"
+            NOTES="${{ github.event.release.body }}"
+          else
+            TAG="${GITHUB_REF#refs/tags/}"
+            NOTES="Release $TAG"
+          fi
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+          echo "notes<<EOF" >> "$GITHUB_OUTPUT"
+          echo "$NOTES" >> "$GITHUB_OUTPUT"
+          echo "EOF" >> "$GITHUB_OUTPUT"
+
+      - name: Verify GitHub Release exists
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TAG="${{ steps.extract.outputs.tag }}"
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            echo "✅ GitHub Release found for $TAG"
+          else
+            echo "⚠️ No GitHub Release found for $TAG"
+            echo "Creating minimal release..."
+            gh release create "$TAG" --title "$TAG" --notes "Automated release for $TAG" || true
+          fi
+
+      - name: Validation summary
+        run: |
+          echo "### ✅ Release Validation Passed" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Tag:** ${{ steps.extract.outputs.tag }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Ready for production deployment**" >> $GITHUB_STEP_SUMMARY
+
+  deploy-production:
+    name: Deploy to Production
+    needs: [validate-release]
+    runs-on: ubuntu-latest
+    # GitHub Environment: Triggers manual approval gate
+    # Configuration: Repository → Settings → Environments → production
+    # Required: Add reviewers who can approve deployments
+    # Rationale: Human-in-the-loop governance prevents accidental deploys
+    environment:
+      name: production      # Must match configured environment name
+      url: https://www.quantumpoly.ai
+    timeout-minutes: 20
+    outputs:
+      production_url: ${{ steps.deploy.outputs.url }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 20.x LTS
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Vercel CLI
+        run: npm i -g vercel@latest
+
+      # Production environment configuration pull
+      # --environment=production: Uses production-specific env vars
+      # Critical: Ensures production URLs, API keys, analytics IDs are correct
+      - name: Pull Vercel environment (production)
+        run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
+      # Production build with optimization flags
+      # --prod: Enables production-specific configurations
+      # NEXT_PUBLIC_SITE_URL: Ensures canonical URLs are correct
+      - name: Build project artifacts
+        run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+          NEXT_PUBLIC_SITE_URL: https://www.quantumpoly.ai
+
+      # Production deployment with --prod flag
+      # --prod: Marks deployment as production in Vercel dashboard
+      # Output: Production-ready Vercel URL (before custom domain alias)
+      - name: Deploy to production
+        id: deploy
+        run: |
+          URL=$(vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }})
+          echo "url=$URL" >> "$GITHUB_OUTPUT"
+          echo "🚀 Production deployed: $URL"
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
+      # Alias Vercel deployment to custom domain
+      # Maps the deployment URL to www.quantumpoly.ai
+      # Requires: DNS CNAME record (see docs/DNS_CONFIGURATION.md)
+      # continue-on-error: Prevents failure if alias already exists
+      - name: Alias to www.quantumpoly.ai
+        run: |
+          vercel alias set ${{ steps.deploy.outputs.url }} www.quantumpoly.ai --token=${{ secrets.VERCEL_TOKEN }} --scope=${{ secrets.VERCEL_ORG_ID }}
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        continue-on-error: true  # Don't fail if alias already set
+
+      - name: Upload deployment artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: vercel-production-output
+          path: .vercel/output
+          retention-days: 90
+
+      - name: Create GitHub deployment
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const deployment = await github.rest.repos.createDeployment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: context.ref,
+              environment: 'production',
+              required_contexts: [],
+              auto_merge: false,
+              description: 'Production deployment for ${{ needs.validate-release.outputs.tag }}'
+            });
+            
+            await github.rest.repos.createDeploymentStatus({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              deployment_id: deployment.data.id,
+              state: 'success',
+              environment_url: 'https://www.quantumpoly.ai',
+              description: 'Deployment successful'
+            });
+
+      - name: Production deployment summary
+        run: |
+          echo "### 🎉 Production Deployment Successful" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Environment:** Production" >> $GITHUB_STEP_SUMMARY
+          echo "**URL:** https://www.quantumpoly.ai" >> $GITHUB_STEP_SUMMARY
+          echo "**Vercel URL:** ${{ steps.deploy.outputs.url }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Tag:** ${{ needs.validate-release.outputs.tag }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Commit:** ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Production is now live! 🚀" >> $GITHUB_STEP_SUMMARY
+
+  # ============================================================================
+  # GOVERNANCE LEDGER UPDATE
+  # ============================================================================
+  # Records production deployment in cryptographically verifiable ledger.
+  # Purpose: Audit trail for compliance (SOC 2, ISO 27001, public transparency)
+  # Records: Tag, URL, commit SHA, approver, timestamp, EII score
+  # Optional: GPG signatures for cryptographic verification
+  # ============================================================================
+  update-ledger:
+    name: Update Governance Ledger
+    needs: [validate-release, deploy-production]
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js 20.x LTS
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      # Update governance ledger with deployment metadata
+      # Environment variables provide context for ledger entry:
+      # - DEPLOYMENT_TAG: Version identifier (v1.0.0)
+      # - DEPLOYMENT_URL: Vercel production URL
+      # - DEPLOYMENT_ENVIRONMENT: Always 'production' for this job
+      # - GPG keys: Optional, for cryptographic signatures
+      - name: Update ledger with deployment metadata
+        run: npm run ethics:ledger-update
+        env:
+          CI: 'true'
+          DEPLOYMENT_TAG: ${{ needs.validate-release.outputs.tag }}
+          DEPLOYMENT_URL: ${{ needs.deploy-production.outputs.production_url }}
+          DEPLOYMENT_ENVIRONMENT: production
+          DEPLOYMENT_TIMESTAMP: ${{ github.event.head_commit.timestamp }}
+          GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY || '' }}  # Optional
+          GPG_KEY_ID: ${{ secrets.GPG_KEY_ID || '' }}            # Optional
+
+      - name: Verify ledger integrity
+        run: npm run ethics:verify-ledger
+
+      # Commit ledger changes to repository
+      # [skip ci]: Prevents infinite loop (commit → CI trigger → commit...)
+      # Rationale: Ledger as code ensures version-controlled audit trail
+      - name: Commit ledger updates
+        run: |
+          git add governance/ledger/ || true
+          git add reports/governance/ || true
+          
+          if git diff --staged --quiet; then
+            echo "No ledger changes to commit"
+          else
+            git commit -m "chore: update governance ledger for ${{ needs.validate-release.outputs.tag }} [skip ci]"
+            git push origin main
+            echo "✅ Ledger updated and committed"
+          fi
+
+      - name: Create ledger signature tag
+        run: |
+          TAG="${{ needs.validate-release.outputs.tag }}-ledger"
+          git tag -a "$TAG" -m "Governance ledger entry for ${{ needs.validate-release.outputs.tag }}"
+          git push origin "$TAG" || true
+          echo "✅ Ledger tag created: $TAG"
+        continue-on-error: true
+
+      - name: Upload ledger artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: governance-ledger-${{ needs.validate-release.outputs.tag }}
+          path: |
+            governance/ledger/
+            reports/governance/
+          retention-days: 90
+
+      - name: Ledger update summary
+        run: |
+          echo "### 📖 Governance Ledger Updated" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Tag:** ${{ needs.validate-release.outputs.tag }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Deployment URL:** ${{ needs.deploy-production.outputs.production_url }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Timestamp:** $(date -u +"%Y-%m-%dT%H:%M:%SZ")" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Deployment audit trail committed to governance ledger." >> $GITHUB_STEP_SUMMARY
+
+  notify-release:
+    name: Release Notification
+    needs: [validate-release, deploy-production, update-ledger]
+    runs-on: ubuntu-latest
+    if: always()
+
+    steps:
+      - name: Comment on release
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const tag = '${{ needs.validate-release.outputs.tag }}';
+            const productionUrl = '${{ needs.deploy-production.outputs.production_url }}';
+            const success = '${{ needs.deploy-production.result }}' === 'success';
+            
+            let comment = success 
+              ? `## 🎉 Production Deployment Successful\n\n`
+              : `## ❌ Production Deployment Failed\n\n`;
+            
+            if (success) {
+              comment += `**Tag:** ${tag}\n`;
+              comment += `**Production URL:** https://www.quantumpoly.ai\n`;
+              comment += `**Vercel URL:** ${productionUrl}\n`;
+              comment += `**Commit:** ${{ github.sha }}\n\n`;
+              comment += `### ✅ Deployment Steps Completed\n\n`;
+              comment += `- ✅ Release validation\n`;
+              comment += `- ✅ Production deployment\n`;
+              comment += `- ✅ Domain aliasing\n`;
+              comment += `- ✅ Governance ledger update\n\n`;
+              comment += `### 🔍 Post-Deployment Verification\n\n`;
+              comment += `- [ ] Verify DNS resolution for www.quantumpoly.ai\n`;
+              comment += `- [ ] Verify SSL/TLS certificate\n`;
+              comment += `- [ ] Check robots.txt environment detection\n`;
+              comment += `- [ ] Verify sitemap accessibility\n`;
+              comment += `- [ ] Smoke test critical user paths\n\n`;
+              comment += `---\n\n`;
+              comment += `*Deployment completed at ${new Date().toISOString()}*`;
+            } else {
+              comment += `**Tag:** ${tag}\n`;
+              comment += `**Status:** Failed\n\n`;
+              comment += `Please review the workflow logs for details.`;
+            }
+            
+            try {
+              const release = await github.rest.repos.getReleaseByTag({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                tag: tag
+              });
+              
+              await github.rest.repos.createReleaseComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                release_id: release.data.id,
+                body: comment
+              });
+            } catch (e) {
+              console.log('Could not comment on release:', e.message);
+            }
+

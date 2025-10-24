@@ -11,6 +11,7 @@
  */
 
 import clsx from 'clsx';
+import Link from 'next/link';
 import React from 'react';
 
 import { LanguageSwitcher } from './LanguageSwitcher';
@@ -19,6 +20,13 @@ export type SocialLink = {
   /** Accessible label (visually hidden) & link text */
   label: string;
   /** Destination */
+  href: string;
+};
+
+export type PolicyLink = {
+  /** Accessible label for policy link */
+  label: string;
+  /** Destination (internal route) */
   href: string;
 };
 
@@ -31,6 +39,10 @@ export interface FooterProps {
   copyright: string;
   /** Optional array of social links */
   socialLinks?: SocialLink[];
+  /** Optional array of policy/trust links */
+  policyLinks?: PolicyLink[];
+  /** ARIA label for policy navigation (localised) */
+  policyNavLabel?: string;
   /** Heading level for the brand element (defaults to 2) */
   headingLevel?: 2 | 3 | 4 | 5 | 6;
   /** Tailwind utility class extension */
@@ -55,6 +67,8 @@ export function Footer({
   tagline,
   copyright,
   socialLinks,
+  policyLinks,
+  policyNavLabel,
   headingLevel = 2,
   className,
   socialSlot,
@@ -84,6 +98,27 @@ export function Footer({
     );
   };
 
+  const renderPolicyLinks = () => {
+    if (!policyLinks?.length) return null;
+
+    return (
+      <nav aria-label={policyNavLabel || 'Trust and legal'} className="mb-6">
+        <ul className="flex flex-wrap justify-center gap-x-6 gap-y-2">
+          {policyLinks.map(({ href, label }) => (
+            <li key={href}>
+              <Link
+                href={href}
+                className="rounded-sm text-sm text-gray-600 transition-colors hover:text-cyan-400 focus:outline-none focus:ring-2 focus:ring-cyan-400 dark:text-gray-400 dark:hover:text-cyan-300 dark:focus:ring-cyan-300"
+              >
+                {label}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </nav>
+    );
+  };
+
   return (
     <footer
       role="contentinfo"
@@ -101,6 +136,8 @@ export function Footer({
         {tagline && <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">{tagline}</p>}
 
         {renderSocialLinks()}
+
+        {renderPolicyLinks()}
 
         <div className="mb-4 flex justify-center">
           <LanguageSwitcher />

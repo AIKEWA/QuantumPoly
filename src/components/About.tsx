@@ -20,7 +20,6 @@ export function About({ title, body, headingLevel = 2, className }: AboutProps) 
   return (
     <section
       className={clsx('bg-white px-4 py-20 md:px-6 dark:bg-black/80', className)}
-      role="region"
       aria-labelledby={`about-title-${title.replace(/\s+/g, '-').toLowerCase()}`}
     >
       <div className="mx-auto max-w-6xl space-y-8">

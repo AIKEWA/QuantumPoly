@@ -201,7 +201,6 @@ export function NewsletterForm({
     <section
       className={clsx('mx-auto w-full max-w-xl', className)}
       aria-labelledby="newsletter-title"
-      role="region"
     >
       <h2
         id="newsletter-title"
@@ -217,7 +216,6 @@ export function NewsletterForm({
         onSubmit={handleSubmit}
         className="space-y-4"
         noValidate
-        role="form"
         aria-label="Newsletter subscription"
       >
         <div className="flex flex-col">

@@ -1,0 +1,4 @@
+# This file ensures the ledger directory is tracked by Git
+# The ledger.jsonl file will be created automatically when you run:
+# npm run ethics:ledger-update
+

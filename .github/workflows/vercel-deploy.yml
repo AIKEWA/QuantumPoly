@@ -1,0 +1,572 @@
+name: Vercel Deployment (vercel/action)
+
+# ============================================================================
+# ALTERNATIVE DEPLOYMENT WORKFLOW
+# ============================================================================
+# This workflow uses the official vercel/action GitHub Action as an
+# alternative to the Vercel CLI-based approach in release.yml.
+#
+# COMPARISON WITH EXISTING WORKFLOWS:
+# - Existing (release.yml): Uses Vercel CLI + governance ledger integration
+# - This workflow: Uses vercel/action for simplified deployment management
+#
+# You can choose which approach to use by disabling one workflow or using
+# workflow_dispatch triggers to manually control execution.
+#
+# DEPLOYMENT FLOWS:
+# - Preview: PR opened/updated → preview environment
+# - Staging: Push to main → staging environment (automatic)
+# - Production: Release published OR tag v*.*.* → production (manual approval)
+# ============================================================================
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  push:
+    branches:
+      - main
+    tags:
+      - 'v*'
+  release:
+    types: [published]
+
+# Minimal permissions following principle of least privilege
+# Note: More restrictive than release.yml (no contents: write needed)
+permissions:
+  contents: read        # Required: Checkout repository
+  deployments: write    # Required: Create GitHub deployments
+  pull-requests: write  # Required: Comment on PRs with preview URLs
+  statuses: write       # Optional: Update commit statuses
+
+# Prevent concurrent deployments per branch/tag to avoid conflicts
+# cancel-in-progress: true allows newer runs to cancel stale ones
+concurrency:
+  group: vercel-deploy-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # ============================================================================
+  # PREVIEW DEPLOYMENT (PR)
+  # ============================================================================
+  # Deploys preview builds for pull requests to enable QA and stakeholder review.
+  # Each PR gets a unique Vercel preview URL that updates on new commits.
+  #
+  # Environment: preview (no approval required)
+  # Trigger: pull_request events (opened, synchronize, reopened)
+  # URL Format: https://quantumpoly-<hash>-<team>.vercel.app
+  # ============================================================================
+
+  preview:
+    name: Deploy Preview
+    runs-on: ubuntu-latest
+    # Only run on pull request events
+    if: github.event_name == 'pull_request'
+    timeout-minutes: 15
+    # GitHub Environment: preview (configure in Settings → Environments)
+    # No protection rules needed for preview deployments
+    environment:
+      name: preview
+      url: ${{ steps.deploy.outputs.preview-url }}
+    outputs:
+      preview_url: ${{ steps.deploy.outputs.preview-url }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Validate required secrets early to provide clear error messages
+      # Fails fast if any secret is missing, preventing wasted CI time
+      - name: Validate required secrets
+        run: |
+          MISSING_SECRETS=()
+          
+          if [[ -z "${{ secrets.VERCEL_TOKEN }}" ]]; then
+            MISSING_SECRETS+=("VERCEL_TOKEN")
+          fi
+          
+          if [[ -z "${{ secrets.VERCEL_ORG_ID }}" ]]; then
+            MISSING_SECRETS+=("VERCEL_ORG_ID")
+          fi
+          
+          if [[ -z "${{ secrets.VERCEL_PROJECT_ID }}" ]]; then
+            MISSING_SECRETS+=("VERCEL_PROJECT_ID")
+          fi
+          
+          if [[ ${#MISSING_SECRETS[@]} -gt 0 ]]; then
+            echo "❌ ERROR: Missing required secrets!"
+            echo ""
+            echo "The following secrets are not configured:"
+            for secret in "${MISSING_SECRETS[@]}"; do
+              echo "  - $secret"
+            done
+            echo ""
+            echo "📝 To fix this:"
+            echo "1. Go to: Settings → Secrets and variables → Actions"
+            echo "2. Click 'New repository secret'"
+            echo "3. Add each missing secret with the correct value from Vercel"
+            echo ""
+            echo "🔗 Documentation: https://vercel.com/docs/concepts/projects/overview#project-id"
+            exit 1
+          fi
+          
+          echo "✅ All required secrets are configured"
+
+      # Vercel GitHub Action deployment (community-maintained)
+      # Documentation: https://github.com/amondnet/vercel-action
+      # This step builds and deploys to Vercel in one action
+      - name: Deploy to Vercel Preview
+        id: deploy
+        uses: amondnet/vercel-action@v25
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          # No --prod flag = preview deployment
+          # GitHub deployment will be created automatically
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          # Optional: Uncomment for monorepo support
+          # working-directory: ./apps/web
+
+      # Save deployment URL to file for artifact upload
+      # Provides discoverable URL even if PR comments are missed
+      - name: Save deployment URL to artifact
+        run: |
+          echo "${{ steps.deploy.outputs.preview-url }}" > deployment-url.txt
+          echo "📦 Deployment URL saved to artifact"
+
+      - name: Upload deployment URL artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: preview-deployment-url
+          path: deployment-url.txt
+          retention-days: 7
+
+      # Comment preview URL on PR for easy stakeholder access
+      # Provides direct link to deployed preview in PR discussion
+      - name: Comment preview URL on PR
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const previewUrl = '${{ steps.deploy.outputs.preview-url }}';
+            const body = `## 🚀 Preview Deployment Ready
+            
+            **Preview URL:** ${previewUrl}
+            
+            ### Quick Links
+            - 🌐 [Preview Deployment](${previewUrl})
+            - 📊 [Vercel Dashboard](https://vercel.com/${{ secrets.VERCEL_ORG_ID }}/${{ github.event.repository.name }})
+            
+            ### What to Check
+            - [ ] Visual regression testing
+            - [ ] Accessibility audit
+            - [ ] Performance metrics
+            - [ ] Cross-browser compatibility
+            
+            ---
+            *Deployment powered by vercel/action • Updates automatically on new commits*
+            `;
+            
+            github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: body
+            });
+
+      - name: Preview deployment summary
+        run: |
+          echo "### 🎯 Preview Deployment Successful" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Environment:** Preview" >> $GITHUB_STEP_SUMMARY
+          echo "**URL:** ${{ steps.deploy.outputs.preview-url }}" >> $GITHUB_STEP_SUMMARY
+          echo "**PR:** #${{ github.event.pull_request.number }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Commit:** ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Preview is now live and ready for review! 🎉" >> $GITHUB_STEP_SUMMARY
+
+  # ============================================================================
+  # STAGING DEPLOYMENT (main branch)
+  # ============================================================================
+  # Deploys to staging environment when PRs merge to main.
+  # Purpose: QA validation and stakeholder approval before production release.
+  #
+  # Environment: staging (optional approval rules)
+  # Trigger: Push to main branch (excluding tag pushes)
+  # URL Format: https://quantumpoly-staging-<team>.vercel.app
+  # ============================================================================
+
+  staging:
+    name: Deploy to Staging
+    runs-on: ubuntu-latest
+    # Only run on main branch pushes that are NOT tag pushes
+    # This prevents duplicate deployments when tags are pushed
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && !startsWith(github.ref, 'refs/tags/')
+    timeout-minutes: 15
+    # GitHub Environment: staging (MUST be configured in Settings → Environments)
+    # To create the staging environment:
+    # 1. Go to: Repository Settings → Environments → New environment
+    # 2. Name: staging
+    # 3. Optional: Add reviewers if you want approval gates for staging
+    # Note: Without this configuration, workflow will fail at this step
+    environment:
+      name: staging
+      url: ${{ steps.deploy.outputs.url }}
+    outputs:
+      staging_url: ${{ steps.deploy.outputs.url }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Validate required secrets
+        run: |
+          MISSING_SECRETS=()
+          
+          if [[ -z "${{ secrets.VERCEL_TOKEN }}" ]]; then
+            MISSING_SECRETS+=("VERCEL_TOKEN")
+          fi
+          
+          if [[ -z "${{ secrets.VERCEL_ORG_ID }}" ]]; then
+            MISSING_SECRETS+=("VERCEL_ORG_ID")
+          fi
+          
+          if [[ -z "${{ secrets.VERCEL_PROJECT_ID }}" ]]; then
+            MISSING_SECRETS+=("VERCEL_PROJECT_ID")
+          fi
+          
+          if [[ ${#MISSING_SECRETS[@]} -gt 0 ]]; then
+            echo "❌ ERROR: Missing required secrets!"
+            echo ""
+            echo "The following secrets are not configured:"
+            for secret in "${MISSING_SECRETS[@]}"; do
+              echo "  - $secret"
+            done
+            echo ""
+            echo "📝 To fix this:"
+            echo "1. Go to: Settings → Secrets and variables → Actions"
+            echo "2. Click 'New repository secret'"
+            echo "3. Add each missing secret with the correct value from Vercel"
+            exit 1
+          fi
+          
+          echo "✅ All required secrets are configured"
+
+      # Deploy to staging (preview deployment without --prod flag)
+      # Vercel will assign a unique staging URL
+      - name: Deploy to Vercel Staging
+        id: deploy
+        uses: amondnet/vercel-action@v25
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          # Optional: Uncomment for monorepo support
+          # working-directory: ./apps/web
+
+      - name: Save deployment URL to artifact
+        run: |
+          echo "${{ steps.deploy.outputs.url }}" > deployment-url.txt
+          echo "📦 Staging URL saved to artifact"
+
+      - name: Upload deployment URL artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: staging-deployment-url
+          path: deployment-url.txt
+          retention-days: 30
+
+      - name: Staging deployment summary
+        run: |
+          echo "### 🎯 Staging Deployment Successful" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Environment:** Staging" >> $GITHUB_STEP_SUMMARY
+          echo "**URL:** ${{ steps.deploy.outputs.url }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Branch:** main" >> $GITHUB_STEP_SUMMARY
+          echo "**Commit:** ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Staging is now live and ready for QA validation! ✅" >> $GITHUB_STEP_SUMMARY
+
+  # ============================================================================
+  # AUDIT CHECK (pre-deployment gate)
+  # ============================================================================
+  # Validates the Release Review Checklist before production deployment.
+  # Blocks deployment if checklist is incomplete or requirements not met.
+  #
+  # Validation includes:
+  # - Stage A (Pre-merge): 14 mandatory checks
+  # - Stage B (Pre-release): 13 mandatory checks
+  # - Stage C (Post-deployment): 12 mandatory checks
+  # - Sign-off matrix: Minimum 2 signatures
+  # - Blockers: No active blockers
+  #
+  # See: docs/review-checklist.md
+  # ============================================================================
+
+  audit-check:
+    name: Validate Release Review Checklist
+    runs-on: ubuntu-latest
+    needs: staging  # Run after staging deployment succeeds
+    if: github.event_name == 'release' || startsWith(github.ref, 'refs/tags/v')
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Validate Review Checklist
+        id: validate
+        run: |
+          echo "Running checklist validation..."
+          bash scripts/validate-checklist.sh
+
+      - name: Upload validation report
+        uses: actions/upload-artifact@v4
+        if: always()  # Upload even if validation fails
+        with:
+          name: audit-validation-report-${{ github.run_id }}
+          path: audit-report.txt
+          retention-days: 90
+
+      - name: Validation summary
+        if: success()
+        run: |
+          echo "### ✅ Audit Gate Validation Passed" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "All release review checklist requirements met." >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Next Step:** Production deployment approved" >> $GITHUB_STEP_SUMMARY
+
+      - name: Validation failure summary
+        if: failure()
+        run: |
+          echo "### ❌ Audit Gate Validation Failed" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Release review checklist validation failed. Production deployment blocked." >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Action Required:** Complete checklist at \`docs/review-checklist.md\`" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          cat audit-report.txt >> $GITHUB_STEP_SUMMARY
+
+  # ============================================================================
+  # PRODUCTION DEPLOYMENT (release/tag with manual approval)
+  # ============================================================================
+  # Deploys to production with REQUIRED MANUAL APPROVAL via GitHub Environments.
+  # This is the final deployment step for public-facing releases.
+  #
+  # APPROVAL FLOW:
+  # 1. Tag pushed (v*.*.* format) OR GitHub Release published
+  # 2. Audit checklist validated (audit-check job passes)
+  # 3. Workflow pauses at production environment gate
+  # 4. Designated reviewers receive notification
+  # 5. Manual approval required to proceed
+  # 6. Deployment executes with --prod flag to production domain
+  #
+  # Environment: production (REQUIRES manual approval)
+  # Trigger: Release published OR tags matching v*
+  # URL Format: https://www.quantumpoly.ai (custom production domain)
+  # ============================================================================
+
+  production:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    needs: [staging, audit-check]  # Require both staging success and audit validation
+    # Only run on release events or tag pushes matching v*
+    if: github.event_name == 'release' || startsWith(github.ref, 'refs/tags/v')
+    timeout-minutes: 20
+    # GitHub Environment: production (configure in Settings → Environments)
+    # CRITICAL: Set up required reviewers for manual approval gate
+    # Settings → Environments → production → Required reviewers
+    environment:
+      name: production
+      url: https://www.quantumpoly.ai
+    outputs:
+      production_url: ${{ steps.deploy.outputs.url }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Validate required secrets
+        run: |
+          MISSING_SECRETS=()
+          
+          if [[ -z "${{ secrets.VERCEL_TOKEN }}" ]]; then
+            MISSING_SECRETS+=("VERCEL_TOKEN")
+          fi
+          
+          if [[ -z "${{ secrets.VERCEL_ORG_ID }}" ]]; then
+            MISSING_SECRETS+=("VERCEL_ORG_ID")
+          fi
+          
+          if [[ -z "${{ secrets.VERCEL_PROJECT_ID }}" ]]; then
+            MISSING_SECRETS+=("VERCEL_PROJECT_ID")
+          fi
+          
+          if [[ ${#MISSING_SECRETS[@]} -gt 0 ]]; then
+            echo "❌ ERROR: Missing required secrets!"
+            echo ""
+            echo "The following secrets are not configured:"
+            for secret in "${MISSING_SECRETS[@]}"; do
+              echo "  - $secret"
+            done
+            echo ""
+            echo "📝 To fix this:"
+            echo "1. Go to: Settings → Secrets and variables → Actions"
+            echo "2. Click 'New repository secret'"
+            echo "3. Add each missing secret with the correct value from Vercel"
+            exit 1
+          fi
+          
+          echo "✅ All required secrets are configured"
+
+      # Extract tag/release version for deployment metadata
+      - name: Extract release version
+        id: version
+        run: |
+          if [[ "${{ github.event_name }}" == "release" ]]; then
+            VERSION="${{ github.event.release.tag_name }}"
+          else
+            VERSION="${GITHUB_REF#refs/tags/}"
+          fi
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "📦 Deploying version: $VERSION"
+
+      # Production deployment with --prod flag
+      # This marks the deployment as production in Vercel and assigns to custom domain
+      - name: Deploy to Vercel Production
+        id: deploy
+        uses: amondnet/vercel-action@v25
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          vercel-args: '--prod'  # Critical: Marks as production deployment
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          # Optional: Uncomment for monorepo support
+          # working-directory: ./apps/web
+
+      - name: Save deployment URL to artifact
+        run: |
+          echo "${{ steps.deploy.outputs.url }}" > deployment-url.txt
+          echo "Version: ${{ steps.version.outputs.version }}" >> deployment-url.txt
+          echo "Deployed at: $(date -u +"%Y-%m-%dT%H:%M:%SZ")" >> deployment-url.txt
+          echo "📦 Production URL saved to artifact"
+
+      - name: Upload deployment URL artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: production-deployment-url-${{ steps.version.outputs.version }}
+          path: deployment-url.txt
+          retention-days: 90
+
+      # Create GitHub deployment for tracking and API integration
+      # Provides programmatic access to deployment history
+      - name: Create GitHub deployment record
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const deployment = await github.rest.repos.createDeployment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: context.ref,
+              environment: 'production',
+              required_contexts: [],
+              auto_merge: false,
+              description: 'Production deployment ${{ steps.version.outputs.version }}'
+            });
+            
+            await github.rest.repos.createDeploymentStatus({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              deployment_id: deployment.data.id,
+              state: 'success',
+              environment_url: 'https://www.quantumpoly.ai',
+              description: 'Deployed successfully via vercel/action'
+            });
+            
+            console.log('✅ GitHub deployment record created');
+
+      - name: Production deployment summary
+        run: |
+          echo "### 🎉 Production Deployment Successful" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Environment:** Production" >> $GITHUB_STEP_SUMMARY
+          echo "**URL:** https://www.quantumpoly.ai" >> $GITHUB_STEP_SUMMARY
+          echo "**Vercel URL:** ${{ steps.deploy.outputs.url }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Version:** ${{ steps.version.outputs.version }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Commit:** ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### 🔍 Post-Deployment Checklist" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- [ ] Verify DNS resolution for www.quantumpoly.ai" >> $GITHUB_STEP_SUMMARY
+          echo "- [ ] Check SSL/TLS certificate validity" >> $GITHUB_STEP_SUMMARY
+          echo "- [ ] Validate production environment variables" >> $GITHUB_STEP_SUMMARY
+          echo "- [ ] Test critical user journeys" >> $GITHUB_STEP_SUMMARY
+          echo "- [ ] Monitor error tracking (Sentry/LogRocket)" >> $GITHUB_STEP_SUMMARY
+          echo "- [ ] Review performance metrics (Vercel Analytics)" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Production is now live! 🚀" >> $GITHUB_STEP_SUMMARY
+
+  # ============================================================================
+  # GOVERNANCE LEDGER SYNC (post-deployment)
+  # ============================================================================
+  # Synchronizes the release audit (sign-off matrix) to the governance ledger
+  # after successful production deployment. Creates an immutable audit trail.
+  #
+  # Output: governance/ledger/releases/YYYY-MM-DD-vX.Y.Z.json
+  # See: docs/review-checklist.md, governance/README.md
+  # ============================================================================
+
+  governance-ledger:
+    name: Sync Governance Ledger
+    runs-on: ubuntu-latest
+    needs: production  # Run after production deployment succeeds
+    if: success()
+    timeout-minutes: 5
+    # Permissions needed to commit ledger updates back to repository
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          # Fetch full history for commit tracking
+          fetch-depth: 0
+
+      - name: Sync audit to governance ledger
+        env:
+          DEPLOYMENT_URL: ${{ needs.production.outputs.production_url }}
+          GITHUB_SHA: ${{ github.sha }}
+          GITHUB_REF: ${{ github.ref }}
+        run: |
+          echo "Synchronizing release audit to governance ledger..."
+          bash scripts/audit-sync-ledger.sh
+
+      - name: Commit ledger update
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          
+          # Check if there are changes to commit
+          if [[ -n $(git status --porcelain governance/ledger/) ]]; then
+            git add governance/ledger/
+            git commit -m "chore(governance): Update release audit ledger [skip ci]"
+            git push
+            echo "✅ Ledger updated and committed"
+          else
+            echo "ℹ️ No ledger changes to commit (entry may already exist)"
+          fi
+
+      - name: Governance sync summary
+        run: |
+          echo "### 🔒 Governance Ledger Synchronized" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Release audit trail has been synchronized to the governance ledger." >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Location:** \`governance/ledger/releases/\`" >> $GITHUB_STEP_SUMMARY
+          echo "**Timestamp:** $(date -u +"%Y-%m-%d %H:%M:%S UTC")" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "View ledger: [Governance Dashboard](/governance/README.md)" >> $GITHUB_STEP_SUMMARY
+
