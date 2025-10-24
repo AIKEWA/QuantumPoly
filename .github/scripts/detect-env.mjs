@@ -7,15 +7,20 @@
  * and other project dependencies to enable conditional workflow logic.
  * 
  * Usage:
- *   node .github/scripts/detect-env.js
+ *   node .github/scripts/detect-env.mjs
  * 
  * Outputs GitHub Actions environment variables via $GITHUB_OUTPUT
  * 
  * @module detect-env
  */
 
-const fs = require('fs');
-const path = require('path');
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const __dirname = path.dirname(__filename);
 
 /**
  * @typedef {Object} DetectionResult
@@ -31,7 +36,7 @@ const path = require('path');
  * @property {string} vercelNodeVersion - Vercel runtime version if detectable
  */
 
-class EnvironmentDetector {
+export class EnvironmentDetector {
   constructor(rootDir = process.cwd()) {
     this.rootDir = rootDir;
     this.packageJsonPath = path.join(rootDir, 'package.json');
@@ -247,11 +252,9 @@ class EnvironmentDetector {
 }
 
 // Main execution
-if (require.main === module) {
+if (import.meta.url === `file://${process.argv[1]}`) {
   const detector = new EnvironmentDetector();
   const results = detector.detect();
   detector.outputToGitHubActions(results);
 }
-
-module.exports = { EnvironmentDetector };
 

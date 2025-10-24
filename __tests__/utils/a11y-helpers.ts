@@ -5,7 +5,6 @@
  * Uses jest-axe for automated WCAG 2.2 AA compliance checks.
  */
 
-import type { RenderResult } from '@testing-library/react';
 import { render } from '@testing-library/react';
 import { axe, toHaveNoViolations } from 'jest-axe';
 import type { ReactElement } from 'react';
@@ -139,7 +138,7 @@ function getImplicitSelector(role: string): string {
 export function assertRegionsHaveLabels(container: HTMLElement): void {
   const regions = container.querySelectorAll('[role="region"], section[role="region"]');
   
-  regions.forEach((region, index) => {
+  regions.forEach((region) => {
     const hasLabel = 
       region.hasAttribute('aria-label') || 
       region.hasAttribute('aria-labelledby');

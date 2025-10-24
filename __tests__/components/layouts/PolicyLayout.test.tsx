@@ -5,8 +5,6 @@ import { PolicyLayout } from '@/components/layouts/PolicyLayout';
 import type { TocItem } from '@/lib/policies/extract-toc';
 import type { PolicyMetadata } from '@/lib/policies/policy-schema';
 
-import { assertHeadingOrder } from '@/__tests__/utils/assert-heading-order';
-
 describe('PolicyLayout', () => {
   const mockMetadata: PolicyMetadata = {
     title: 'Test Policy',

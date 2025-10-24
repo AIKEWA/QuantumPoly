@@ -12,7 +12,7 @@
  */
 export function createControlledAsyncSubmission() {
   let resolveSubmission: (value?: void | PromiseLike<void>) => void;
-  let rejectSubmission: (reason?: any) => void;
+  let rejectSubmission: (reason?: unknown) => void;
   
   const controlledOnSubscribe = jest.fn(
     () =>

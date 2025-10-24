@@ -1,4 +1,6 @@
 /** @type {import('next').NextConfig} */
+import createNextIntlPlugin from 'next-intl/plugin';
+
 const isProd = process.env.NODE_ENV === 'production';
 const isPreview = process.env.VERCEL_ENV === 'preview';
 
@@ -14,7 +16,7 @@ const csp = [
   "object-src 'none'",
 ].join('; ');
 
-const withNextIntl = require('next-intl/plugin')('./src/i18n.ts');
+const withNextIntl = createNextIntlPlugin('./src/i18n.ts');
 
 const nextConfig = {
   reactStrictMode: true,
@@ -89,4 +91,5 @@ const nextConfig = {
   },
 };
 
-module.exports = withNextIntl(nextConfig);
+export default withNextIntl(nextConfig);
+

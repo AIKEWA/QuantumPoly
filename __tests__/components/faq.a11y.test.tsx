@@ -12,11 +12,10 @@
 import { describe, expect, it } from '@jest/globals';
 import { render, screen, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { axe } from 'jest-axe';
-
-import { FAQ, type FAQItem } from '@/components/FAQ';
 
 import { assertNoViolations } from '../utils/a11y-helpers';
+
+import { FAQ, type FAQItem } from '@/components/FAQ';
 
 describe('FAQ - Accessibility', () => {
   const mockItems: FAQItem[] = [

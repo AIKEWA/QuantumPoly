@@ -1,11 +1,18 @@
 import { describe, expect, it } from '@jest/globals';
 
+interface MockNode {
+  type: string;
+  depth?: number;
+  children?: MockNode[];
+  value?: string;
+}
+
 // Mock remark and related ESM modules
 jest.mock('remark', () => ({
   remark: () => ({
     parse: (markdown: string) => {
       const lines = markdown.split('\n');
-      const children: any[] = [];
+      const children: MockNode[] = [];
       lines.forEach((line) => {
         const match = line.match(/^(#{2,6})\s+(.+)$/);
         if (match) {
@@ -20,8 +27,8 @@ jest.mock('remark', () => ({
 }));
 
 jest.mock('unist-util-visit', () => ({
-  visit: (tree: any, type: string, callback: (node: any) => void) => {
-    const visitNode = (node: any) => {
+  visit: (tree: MockNode, type: string, callback: (node: MockNode) => void) => {
+    const visitNode = (node: MockNode): void => {
       if (node.type === type) callback(node);
       if (node.children) node.children.forEach(visitNode);
     };

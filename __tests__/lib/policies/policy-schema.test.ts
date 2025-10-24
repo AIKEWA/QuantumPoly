@@ -58,6 +58,7 @@ describe('policySchema', () => {
     });
 
     it('should reject missing required fields', () => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { title, ...incomplete } = validMetadata;
       const result = policyMetadataSchema.safeParse(incomplete);
       expect(result.success).toBe(false);
@@ -145,6 +146,7 @@ describe('policySchema', () => {
     });
 
     it('should handle missing fields', () => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { title, ...incomplete } = validFrontmatter;
 
       expect(() => {

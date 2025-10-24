@@ -11,7 +11,6 @@
 
 import { describe, expect, it } from '@jest/globals';
 import { render, screen } from '@testing-library/react';
-import { axe } from 'jest-axe';
 
 import { PolicyLayout } from '@/components/layouts/PolicyLayout';
 import type { TocItem } from '@/lib/policies/extract-toc';
@@ -19,7 +18,6 @@ import type { PolicyMetadata } from '@/lib/policies/policy-schema';
 
 import {
   assertNoViolations,
-  assertRegionsHaveLabels,
   getLandmarks,
 } from '../../utils/a11y-helpers';
 import { assertHeadingOrder } from '../../utils/assert-heading-order';

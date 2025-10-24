@@ -127,6 +127,31 @@ export default [
     }
   },
   {
+    files: ['**/*.mjs', 'scripts/**/*.mjs', '.github/scripts/**/*.mjs'],
+    languageOptions: {
+      globals: {
+        process: 'readonly',
+        console: 'readonly',
+        global: 'readonly',
+        Buffer: 'readonly',
+        URL: 'readonly',
+        fetch: 'readonly',
+        __dirname: 'readonly',
+        __filename: 'readonly'
+      }
+    }
+  },
+  // Relaxed rules for governance/audit scripts
+  {
+    files: ['scripts/**/*.js', 'scripts/**/*.mjs', 'scripts/**/*.ts'],
+    rules: {
+      '@typescript-eslint/no-var-requires': 'off',
+      '@typescript-eslint/no-explicit-any': 'warn',
+      '@typescript-eslint/no-unused-vars': 'warn',
+      'no-undef': 'off'
+    }
+  },
+  {
     ignores: [
       '.next/**/*',
       'out/**/*',
@@ -135,6 +160,9 @@ export default [
       'build/**/*',
       'coverage/**/*',
       'storybook-static/**/*',
+      'e2e/**/*',
+      'docs/**/*',
+      'content/**/*',
       '.env*',
       '*.log',
       '.vscode/',

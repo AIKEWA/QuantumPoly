@@ -292,12 +292,10 @@ describe('NewsletterForm API Integration (Block 4.3)', () => {
     });
 
     it('prevents double submission with inFlight guard', async () => {
-      let resolveCount = 0;
       global.fetch = jest.fn(
         () =>
           new Promise((resolve) => {
             setTimeout(() => {
-              resolveCount++;
               resolve({
                 ok: true,
                 status: 201,

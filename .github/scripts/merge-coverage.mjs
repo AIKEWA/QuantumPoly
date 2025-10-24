@@ -7,7 +7,7 @@
  * coverage-summary.json suitable for Governance Dashboard ingestion.
  * 
  * Usage:
- *   node .github/scripts/merge-coverage.js [artifact-dir]
+ *   node .github/scripts/merge-coverage.mjs [artifact-dir]
  * 
  * Expected Input Structure (from GitHub Actions artifacts):
  *   artifacts/
@@ -24,10 +24,15 @@
  * @module merge-coverage
  */
 
-const fs = require('fs');
-const path = require('path');
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
-class CoverageMerger {
+const __filename = fileURLToPath(import.meta.url);
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const __dirname = path.dirname(__filename);
+
+export class CoverageMerger {
   constructor(artifactDir = './artifacts') {
     this.artifactDir = artifactDir;
     this.outputFile = 'coverage-summary.json';
@@ -262,7 +267,7 @@ class CoverageMerger {
 }
 
 // Main execution
-if (require.main === module) {
+if (import.meta.url === `file://${process.argv[1]}`) {
   const artifactDir = process.argv[2] || './artifacts';
   const merger = new CoverageMerger(artifactDir);
   
@@ -273,6 +278,4 @@ if (require.main === module) {
     process.exit(1);
   }
 }
-
-module.exports = { CoverageMerger };
 

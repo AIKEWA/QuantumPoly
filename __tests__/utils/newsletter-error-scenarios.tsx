@@ -229,7 +229,8 @@ export const errorPerformanceUtils = {
     setupFn: () => void,
     cleanupFn: () => void
   ): Promise<void> {
-    const initialHeap = (performance as any).memory?.usedJSHeapSize || 0;
+    const perfWithMemory = performance as { memory?: { usedJSHeapSize?: number } };
+    const initialHeap = perfWithMemory.memory?.usedJSHeapSize || 0;
     
     // Run setup and cleanup multiple times
     for (let i = 0; i < 10; i++) {
@@ -238,11 +239,12 @@ export const errorPerformanceUtils = {
     }
     
     // Force garbage collection if available
-    if ((window as any).gc) {
-      (window as any).gc();
+    const windowWithGC = window as { gc?: () => void };
+    if (windowWithGC.gc) {
+      windowWithGC.gc();
     }
     
-    const finalHeap = (performance as any).memory?.usedJSHeapSize || 0;
+    const finalHeap = perfWithMemory.memory?.usedJSHeapSize || 0;
     const heapGrowth = finalHeap - initialHeap;
     
     // Allow for some growth but flag significant increases

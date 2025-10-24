@@ -106,7 +106,7 @@ describe('FAQ', () => {
 
   it('should toggle expansion icon', async () => {
     const user = userEvent.setup();
-    const { container } = render(<FAQ items={mockItems} />);
+    render(<FAQ items={mockItems} />);
 
     const button = screen.getByText('What is QuantumPoly?').closest('button');
     const icon = button?.querySelector('svg');

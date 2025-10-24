@@ -40,6 +40,7 @@ const NewsletterSchema = z.object({
 /**
  * Type inference from Zod schema for type safety
  */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 type NewsletterRequest = z.infer<typeof NewsletterSchema>;
 
 /**
@@ -213,7 +214,7 @@ function getClientIp(request: NextRequest): string {
 function checkRateLimit(
   keyMap: Map<string, number>,
   key: string,
-  now: number = Date.now()
+  now: number = Date.now(),
 ): { limited: boolean; retryAfterSeconds: number } {
   const lastSeen = keyMap.get(key);
 
@@ -571,6 +572,7 @@ export async function PATCH(): Promise<NextResponse> {
 // Next.js Route handlers only allow specific exports (GET, POST, etc.)
 // Conditional exports prevent build-time type validation errors
 if (process.env.NODE_ENV !== 'production') {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   (exports as any).__test__ = {
     /**
      * Resets all in-memory storage maps
@@ -615,4 +617,3 @@ if (process.env.NODE_ENV !== 'production') {
     isSubscribed: (email: string) => subscribers.has(normalizeEmail(email)),
   };
 }
-
