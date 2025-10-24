@@ -18,10 +18,10 @@ export function generateStaticParams() {
 }
 
 /**
- * Force static generation and prevent runtime data fetching.
- * Throws error if route attempts dynamic rendering.
+ * Force static generation at build time.
+ * Allows middleware header access for i18n while maintaining static optimization.
  */
-export const dynamic = 'error';
+export const dynamic = 'force-static';
 
 /**
  * Generate metadata for the GEP page.
