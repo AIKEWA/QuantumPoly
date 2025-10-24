@@ -199,7 +199,7 @@ export function NewsletterForm({
 
   return (
     <section
-      className={clsx('mx-auto w-full max-w-xl', className)}
+      className={clsx('mx-auto w-full max-w-xl px-4 py-20', className)}
       aria-labelledby="newsletter-title"
     >
       <h2

@@ -1,0 +1,10 @@
+session:
+  name: "Verify Lint & Build for QuantumPoly"
+  goals:
+    - Run lint and type checks
+    - Ensure build passes without warnings
+    - Confirm that all Next.js pages render statically
+  verify:
+    - npm run lint
+    - npm run build
+

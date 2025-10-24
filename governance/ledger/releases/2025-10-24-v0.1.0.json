@@ -1,0 +1,29 @@
+{
+  "id": "2025-10-24-release-v0.1.0",
+  "timestamp": "2025-10-24T18:14:47Z",
+  "type": "release_audit",
+  "action": "completed",
+  "version": "v0.1.0",
+  "commit": "2b939cf856b5",
+  "deployment_url": "https://www.quantumpoly.ai",
+  "checklist_hash": "sha256:16314770f109852c4c86104eae962cfa6bbbaf1fe80f1e9271d3228ae64ba66f",
+  "sign_off_matrix": [
+    { "role": "", "name": "Role", "signed": false, "date": "Signature", "notes": "Date | Notes |" },
+    {
+      "role": "",
+      "name": "-----------",
+      "signed": false,
+      "date": "---------",
+      "notes": "---- | ----- |"
+    },
+    { "role": "", "name": "Product", "signed": false, "date": "[ ]", "notes": "| |" },
+    { "role": "", "name": "Engineering", "signed": false, "date": "[ ]", "notes": "| |" },
+    { "role": "", "name": "Security", "signed": false, "date": "[ ]", "notes": "| |" },
+    { "role": "", "name": "Compliance", "signed": false, "date": "[ ]", "notes": "| |" }
+  ],
+  "metadata": {
+    "workflow": "vercel-deploy.yml",
+    "environment": "production",
+    "ref": "unknown"
+  }
+}

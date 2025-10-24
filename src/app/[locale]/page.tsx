@@ -14,7 +14,7 @@ const NewsletterForm = dynamic(
   {
     ssr: false,
     loading: () => (
-      <section className="mx-auto w-full max-w-xl px-4 py-12">
+      <section className="mx-auto w-full max-w-xl px-4 py-20">
         <div className="mx-auto mb-6 h-8 w-48 animate-pulse rounded bg-gray-200 dark:bg-gray-700" />
         <div className="mb-4 h-12 animate-pulse rounded bg-gray-200 dark:bg-gray-700" />
         <div className="h-12 animate-pulse rounded bg-gray-200 dark:bg-gray-700" />

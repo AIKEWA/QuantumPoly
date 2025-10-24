@@ -1,0 +1,32 @@
+session:
+  name: "Fix ESLint Config & Port Conflicts for Next.js 14"
+  description: |
+    This session will automatically:
+      • Detect and fix missing ESLint dependencies for Next.js 14+
+      • Validate and normalize `.eslintrc.json`
+      • Install missing @typescript-eslint plugins and parsers
+      • Detect if port 3000 is occupied and free it
+      • Verify that linting and build pass successfully
+  goals:
+    - Install eslint, eslint-config-next, @typescript-eslint/parser, and @typescript-eslint/eslint-plugin if missing
+    - Validate `.eslintrc.json` structure and ensure it extends ["next", "next/core-web-vitals"]
+    - Ensure parser and plugins are properly configured for TypeScript
+    - Detect active process on port 3000 and terminate it
+    - Re-run build and start server on port 3000
+  steps:
+    - Check for existing ESLint config and missing packages
+    - Update or create `.eslintrc.json` with correct structure
+    - Install missing ESLint dependencies
+    - Run `npm run lint` to validate configuration
+    - Detect active process on port 3000
+    - Kill the process if found (lsof + kill)
+    - Run `npm run build`
+    - Start server on port 3000 and confirm successful launch
+  exclude:
+    - docs/
+    - e2e/
+    - __tests__/
+  verify:
+    - npm run lint
+    - npm run build
+
