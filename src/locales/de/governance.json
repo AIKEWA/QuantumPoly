@@ -1,0 +1,130 @@
+{
+  "title": "Ethische Governance & Transparenz",
+  "summary": "Unser Engagement für transparente, ethische und verantwortungsvolle KI-Entwicklung durch umfassende Governance-Systeme.",
+  "intro": "QuantumPoly arbeitet unter einem umfassenden ethischen Governance-Rahmen, der Transparenz, Rechenschaftspflicht und verantwortungsvolle KI-Entwicklung gewährleistet. Diese Seite bietet einen Überblick über unsere Governance-Systeme und wie wir ethische Integrität aufrechterhalten.",
+  "eii": {
+    "heading": "Ethical Integrity Index (EII)",
+    "description": "Der Ethical Integrity Index ist unsere zusammengesetzte Metrik zur Messung und Verfolgung der ethischen Reife unserer Systeme. Er aggregiert technische Compliance-Metriken über vier Schlüsseldimensionen:",
+    "dimensions": {
+      "seo": "SEO & Auffindbarkeit — Sicherstellung, dass unsere ethischen Verpflichtungen öffentlich sichtbar sind",
+      "accessibility": "Barrierefreiheit — WCAG 2.2 AA Konformität für inklusives Design",
+      "performance": "Leistung — Effiziente, nachhaltige Systeme, die Benutzerressourcen respektieren",
+      "bundle": "Bundle-Effizienz — Optimierte Code-Bereitstellung für reduzierten Umwelteinfluss"
+    },
+    "current": "Aktueller EII-Score",
+    "viewDashboard": "Live-Dashboard anzeigen"
+  },
+  "ledger": {
+    "heading": "Transparenz-Ledger",
+    "description": "Unser Transparenz-Ledger ist ein unveränderlicher, kryptographisch verifizierter Datensatz aller Governance-Aktivitäten, Compliance-Meilensteine und ethischen Audits. Jeder Eintrag ist:",
+    "features": {
+      "timestamped": "Mit Git-Commit-Referenzen zeitgestempelt",
+      "hashed": "SHA256-gehasht zur Datenintegritätsprüfung",
+      "merkle": "Merkle-Tree-verifiziert zur Manipulationserkennung",
+      "signed": "GPG-signiert für Authentizität (Implementierung läuft)",
+      "public": "Öffentlich zugänglich für unabhängige Überprüfung"
+    },
+    "viewLedger": "Transparenz-Ledger anzeigen"
+  },
+  "framework": {
+    "heading": "Compliance-Rahmen",
+    "description": "Unser Governance-System entspricht internationalen Standards und Vorschriften:",
+    "standards": {
+      "gdpr": "DSGVO (EU-Datenschutz-Grundverordnung) — Privacy by Design",
+      "dsg": "Schweizer DSG 2023 — Schweizer Datenschutz-Compliance",
+      "aiact": "EU AI Act 2024 — Transparenz und Rechenschaftspflicht für KI-Systeme",
+      "iso": "ISO 42001 — KI-Managementsystem-Standards",
+      "ieee": "IEEE 7000 — Wertbasiertes Engineering für ethische Systeme",
+      "wcag": "WCAG 2.2 AA — Web-Barrierefreiheitsstandards"
+    }
+  },
+  "principles": {
+    "heading": "Governance-Prinzipien",
+    "intro": "Unser Governance-Rahmen basiert auf folgenden Kernprinzipien:",
+    "items": {
+      "transparency": "Transparenz — Alle Governance-Aktivitäten sind öffentlich dokumentiert",
+      "accountability": "Rechenschaftspflicht — Klare Verantwortlichkeit für ethische Entscheidungen",
+      "verifiability": "Verifizierbarkeit — Kryptographischer Nachweis aller Compliance-Ansprüche",
+      "inclusivity": "Inklusivität — Zugänglich für alle Stakeholder, einschließlich Menschen mit Behinderungen",
+      "continuous": "Kontinuierliche Verbesserung — Regelmäßige Audits und iterative Verfeinerung",
+      "feedback": "Stakeholder-Feedback — Offene Kanäle für ethische Bedenken und Vorschläge"
+    }
+  },
+  "feedback": {
+    "heading": "Feedback & Ethische Bedenken",
+    "description": "Wir freuen uns über Feedback zu unseren Governance-Praktiken und ethischen Verpflichtungen. Wenn Sie Bedenken, Vorschläge oder Fragen haben:",
+    "email": "E-Mail",
+    "emailAddress": "trust@quantumpoly.ai",
+    "github": "Öffnen Sie ein GitHub-Issue mit dem",
+    "githubLabel": "governance",
+    "githubLabelText": "Label",
+    "anonymous": "Anonyme Feedback-Optionen sind verfügbar — siehe unseren",
+    "feedbackGuide": "Feedback-Einreichungsleitfaden"
+  },
+  "documentation": {
+    "heading": "Dokumentation & Ressourcen",
+    "intro": "Erkunden Sie unsere umfassende Governance-Dokumentation:",
+    "items": {
+      "readme": "Governance-System-Übersicht (governance/README.md)",
+      "methodology": "Ethische Bewertungsmethodik",
+      "compliance": "Compliance-Framework-Dokumentation",
+      "feedback": "Feedback-Einreichungsleitfaden",
+      "onboarding": "Mitwirkenden-Onboarding-Leitfaden"
+    }
+  },
+  "status": {
+    "heading": "Aktueller Status",
+    "stage": "Systemphase",
+    "stageValue": "Interner Pilot",
+    "baseline": "Compliance-Baseline",
+    "baselineValue": "Genehmigt mit Bedingungen (Block 9.0)",
+    "lastAudit": "Letztes Audit",
+    "lastAuditValue": "26. Oktober 2025",
+    "nextReview": "Nächste Überprüfung",
+    "nextReviewValue": "26. April 2026"
+  },
+  "cta": {
+    "dashboard": "Dashboard erkunden",
+    "ledger": "Ledger anzeigen",
+    "policies": "Richtlinien lesen",
+    "contact": "Kontakt"
+  },
+  "timeline": {
+    "title": "Interaktive Ledger-Zeitleiste",
+    "description": "Interaktive Visualisierung des Governance-Ledgers mit Hash-Ketten-Verifizierung und Kontinuitätsanalyse",
+    "overview": {
+      "totalBlocks": "Gesamte Blöcke",
+      "latestBlock": "Neuester Block",
+      "merkleRoot": "Merkle-Wurzel",
+      "verificationStatus": "Verifizierungsstatus"
+    },
+    "controls": {
+      "zoom": "Zoom",
+      "pan": "Schwenken",
+      "reset": "Ansicht zurücksetzen",
+      "filter": "Filter",
+      "ledgerType": "Ledger-Typ"
+    },
+    "legend": {
+      "verified": "Verifiziert — Hash-Kette intakt, Elternbeziehung bestätigt",
+      "warning": "Warnung — Kontinuitätslücke erkannt, manuelle Überprüfung empfohlen",
+      "unknown": "Unbekannt — Verifizierung unvollständig, Daten nicht verfügbar",
+      "error": "Fehler — Hash-Format ungültig oder Verifizierung fehlgeschlagen"
+    },
+    "states": {
+      "loading": "Ledger-Daten werden geladen...",
+      "empty": "Keine Ledger-Einträge verfügbar",
+      "error": "Ledger konnte nicht geladen werden",
+      "offline": "Offline — Zeige zwischengespeicherte Daten",
+      "stale": "Daten sind möglicherweise veraltet"
+    },
+    "accessibility": {
+      "keyboardShortcuts": "Tastaturkürzel",
+      "arrowKeys": "Pfeiltasten: Blöcke navigieren",
+      "plusMinus": "+/- Tasten: Zoom ein/aus",
+      "homeEnd": "Pos1/Ende: Zu Grenzen springen",
+      "enter": "Enter: Blockdetails öffnen"
+    }
+  }
+}
+

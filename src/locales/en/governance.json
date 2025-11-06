@@ -1,0 +1,130 @@
+{
+  "title": "Ethical Governance & Transparency",
+  "summary": "Our commitment to transparent, ethical, and accountable AI development through comprehensive governance systems.",
+  "intro": "QuantumPoly operates under a comprehensive ethical governance framework designed to ensure transparency, accountability, and responsible AI development. This page provides an overview of our governance systems and how we maintain ethical integrity.",
+  "eii": {
+    "heading": "Ethical Integrity Index (EII)",
+    "description": "The Ethical Integrity Index is our composite metric for measuring and tracking the ethical maturity of our systems. It aggregates technical compliance metrics across four key dimensions:",
+    "dimensions": {
+      "seo": "SEO & Discoverability — Ensuring our ethical commitments are publicly visible",
+      "accessibility": "Accessibility — WCAG 2.2 AA compliance for inclusive design",
+      "performance": "Performance — Efficient, sustainable systems that respect user resources",
+      "bundle": "Bundle Efficiency — Optimized code delivery for reduced environmental impact"
+    },
+    "current": "Current EII Score",
+    "viewDashboard": "View Live Dashboard"
+  },
+  "ledger": {
+    "heading": "Transparency Ledger",
+    "description": "Our transparency ledger is an immutable, cryptographically-verified record of all governance activities, compliance milestones, and ethical audits. Each entry is:",
+    "features": {
+      "timestamped": "Timestamped with Git commit references",
+      "hashed": "SHA256 hashed for data integrity verification",
+      "merkle": "Merkle tree verified for tamper detection",
+      "signed": "GPG signed for authenticity (implementation in progress)",
+      "public": "Publicly accessible for independent verification"
+    },
+    "viewLedger": "View Transparency Ledger"
+  },
+  "framework": {
+    "heading": "Compliance Framework",
+    "description": "Our governance system aligns with international standards and regulations:",
+    "standards": {
+      "gdpr": "GDPR (EU General Data Protection Regulation) — Privacy by design",
+      "dsg": "Swiss DSG 2023 — Swiss data protection compliance",
+      "aiact": "EU AI Act 2024 — Transparency and accountability for AI systems",
+      "iso": "ISO 42001 — AI management system standards",
+      "ieee": "IEEE 7000 — Value-based engineering for ethical systems",
+      "wcag": "WCAG 2.2 AA — Web accessibility standards"
+    }
+  },
+  "principles": {
+    "heading": "Governance Principles",
+    "intro": "Our governance framework is built on the following core principles:",
+    "items": {
+      "transparency": "Transparency — All governance activities are publicly documented",
+      "accountability": "Accountability — Clear ownership and responsibility for ethical decisions",
+      "verifiability": "Verifiability — Cryptographic proof of all compliance claims",
+      "inclusivity": "Inclusivity — Accessible to all stakeholders, including people with disabilities",
+      "continuous": "Continuous Improvement — Regular audits and iterative refinement",
+      "feedback": "Stakeholder Feedback — Open channels for ethical concerns and suggestions"
+    }
+  },
+  "feedback": {
+    "heading": "Feedback & Ethical Concerns",
+    "description": "We welcome feedback on our governance practices and ethical commitments. If you have concerns, suggestions, or questions:",
+    "email": "Email",
+    "emailAddress": "trust@quantumpoly.ai",
+    "github": "Open a GitHub issue with the",
+    "githubLabel": "governance",
+    "githubLabelText": "label",
+    "anonymous": "Anonymous feedback options are available — see our",
+    "feedbackGuide": "Feedback Submission Guide"
+  },
+  "documentation": {
+    "heading": "Documentation & Resources",
+    "intro": "Explore our comprehensive governance documentation:",
+    "items": {
+      "readme": "Governance System Overview (governance/README.md)",
+      "methodology": "Ethical Scoring Methodology",
+      "compliance": "Compliance Framework Documentation",
+      "feedback": "Feedback Submission Guide",
+      "onboarding": "Contributor Onboarding Guide"
+    }
+  },
+  "status": {
+    "heading": "Current Status",
+    "stage": "System Stage",
+    "stageValue": "Internal Pilot",
+    "baseline": "Compliance Baseline",
+    "baselineValue": "Approved with Conditions (Block 9.0)",
+    "lastAudit": "Last Audit",
+    "lastAuditValue": "October 26, 2025",
+    "nextReview": "Next Review",
+    "nextReviewValue": "April 26, 2026"
+  },
+  "cta": {
+    "dashboard": "Explore Dashboard",
+    "ledger": "View Ledger",
+    "policies": "Read Policies",
+    "contact": "Contact Us"
+  },
+  "timeline": {
+    "title": "Interactive Ledger Timeline",
+    "description": "Interactive visualization of governance ledger with hash chain verification and continuity analysis",
+    "overview": {
+      "totalBlocks": "Total Blocks",
+      "latestBlock": "Latest Block",
+      "merkleRoot": "Merkle Root",
+      "verificationStatus": "Verification Status"
+    },
+    "controls": {
+      "zoom": "Zoom",
+      "pan": "Pan",
+      "reset": "Reset View",
+      "filter": "Filter",
+      "ledgerType": "Ledger Type"
+    },
+    "legend": {
+      "verified": "Verified — Hash chain intact, parent relationship confirmed",
+      "warning": "Warning — Continuity gap detected, manual review recommended",
+      "unknown": "Unknown — Verification incomplete, data not available",
+      "error": "Error — Hash format invalid or verification failed"
+    },
+    "states": {
+      "loading": "Loading ledger data...",
+      "empty": "No ledger entries available",
+      "error": "Failed to load ledger",
+      "offline": "Offline — Showing cached data",
+      "stale": "Data may be outdated"
+    },
+    "accessibility": {
+      "keyboardShortcuts": "Keyboard Shortcuts",
+      "arrowKeys": "Arrow keys: Navigate blocks",
+      "plusMinus": "+/- keys: Zoom in/out",
+      "homeEnd": "Home/End: Jump to boundaries",
+      "enter": "Enter: Open block details"
+    }
+  }
+}
+

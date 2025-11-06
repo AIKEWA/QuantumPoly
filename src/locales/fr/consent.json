@@ -1,0 +1,63 @@
+{
+  "banner": {
+    "title": "Votre Vie Privée Compte",
+    "description": "Nous utilisons des cookies et des outils d'analyse pour améliorer votre expérience. Vous pouvez personnaliser vos préférences ou tout accepter.",
+    "privacyLink": "Politique de Confidentialité",
+    "acceptButton": "Tout Accepter",
+    "customizeButton": "Personnaliser les Paramètres",
+    "acceptAriaLabel": "Accepter tous les cookies et analyses",
+    "customizeAriaLabel": "Ouvrir les paramètres des cookies pour personnaliser les préférences",
+    "screenReaderAnnouncement": "La bannière de consentement aux cookies est affichée. Veuillez faire un choix pour continuer."
+  },
+  "modal": {
+    "title": "Paramètres de Confidentialité",
+    "description": "Gérez vos préférences de consentement. Vos choix sont enregistrés et peuvent être modifiés à tout moment. Version de la politique :",
+    "closeAriaLabel": "Fermer la boîte de dialogue des paramètres de confidentialité",
+    "alwaysActive": "Toujours Actif",
+    "categories": {
+      "essential": {
+        "title": "Essentiel",
+        "description": "Nécessaires au bon fonctionnement du site web. Ils ne peuvent pas être désactivés car ils sont nécessaires aux fonctionnalités de base comme la navigation et la sécurité."
+      },
+      "analytics": {
+        "title": "Analyse",
+        "description": "Nous aide à comprendre comment les visiteurs interagissent avec notre site web. Nous utilisons Vercel Analytics, sans cookies et conforme au RGPD. Aucune donnée personnelle n'est collectée."
+      },
+      "performance": {
+        "title": "Performance",
+        "description": "Nous permet de surveiller et d'améliorer les performances du site web, les temps de chargement et l'expérience utilisateur grâce à des métriques agrégées."
+      }
+    },
+    "privacyPolicyText": "Pour plus d'informations, consultez notre",
+    "privacyPolicyLink": "Politique de Confidentialité",
+    "acceptAllButton": "Tout Accepter",
+    "rejectAllButton": "Tout Rejeter",
+    "saveButton": "Enregistrer les Préférences"
+  },
+  "settings": {
+    "title": "Paramètres de Consentement",
+    "description": "Gérez vos préférences de confidentialité et de cookies. Vous avez un contrôle total sur les données que nous collectons.",
+    "currentPreferences": "Préférences Actuelles",
+    "noConsentYet": "Vous n'avez pas encore pris de décision de consentement. Veuillez configurer vos préférences ci-dessous.",
+    "enabled": "Activé",
+    "disabled": "Désactivé",
+    "lastUpdated": "Dernière Mise à Jour",
+    "policyVersion": "Version de la Politique",
+    "userId": "ID Utilisateur",
+    "changePreferences": "Modifier les Préférences",
+    "exportData": "Exporter Mes Données",
+    "legalTitle": "Vos Droits en Vertu du RGPD",
+    "gdprRights": {
+      "title": "Vous disposez des droits suivants",
+      "access": "Droit d'accès à vos données personnelles (Art. 15 RGPD)",
+      "rectification": "Droit de rectification des données inexactes (Art. 16 RGPD)",
+      "erasure": "Droit à l'effacement ('droit à l'oubli', Art. 17 RGPD)",
+      "restriction": "Droit à la limitation du traitement (Art. 18 RGPD)",
+      "portability": "Droit à la portabilité des données (Art. 20 RGPD)",
+      "objection": "Droit d'opposition au traitement (Art. 21 RGPD)"
+    },
+    "contactText": "Pour exercer vos droits, contactez-nous à :",
+    "backToHome": "Retour à l'Accueil"
+  }
+}
+

@@ -1,0 +1,542 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "QuantumPoly Ethics API",
+    "version": "1.0.0",
+    "description": "Public API for accessing QuantumPoly's ethical governance state and generating transparency reports",
+    "contact": {
+      "name": "QuantumPoly Governance Team",
+      "email": "governance@quantumpoly.ai",
+      "url": "https://www.quantumpoly.ai/governance"
+    },
+    "license": {
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://www.quantumpoly.ai",
+      "description": "Production server"
+    },
+    {
+      "url": "http://localhost:3000",
+      "description": "Development server"
+    }
+  ],
+  "paths": {
+    "/api/ethics/public": {
+      "get": {
+        "summary": "Get public ethics state",
+        "description": "Returns unified view of platform's ethical state including EII scores, consent statistics, and governance ledger summary. All data is aggregated and anonymized.",
+        "operationId": "getPublicEthics",
+        "tags": ["Ethics", "Public"],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PublicEthicsResponse"
+                },
+                "example": {
+                  "timestamp": "2025-10-28T12:00:00Z",
+                  "ledger_summary": [
+                    {
+                      "id": "transparency-framework-block9.3",
+                      "timestamp": "2025-10-27T20:00:00Z",
+                      "type": "transparency_extension",
+                      "block": "9.3",
+                      "title": "Transparency & Multi-Analytics Framework"
+                    }
+                  ],
+                  "consent_stats": {
+                    "analytics": 0.82,
+                    "performance": 0.76,
+                    "essential": 1
+                  },
+                  "eii_score": {
+                    "current": 86,
+                    "avg90d": 84.5,
+                    "trend": "improving"
+                  },
+                  "hash_proof": "f2d9a0859136abf362a568c273a0a9a7f2412d2cd5a46e5ec311d226f3f1a45f",
+                  "last_verification": "2025-10-27T20:00:00Z",
+                  "version": "Transparency Framework v0.1.0",
+                  "compliance_baseline": {
+                    "blocks": ["8.8", "9.0", "9.1", "9.2", "9.3", "9.4"],
+                    "regulations": ["GDPR 2016/679", "DSG 2023", "ePrivacy Directive"],
+                    "status": "operational"
+                  },
+                  "privacy_notice": "All data is aggregated and anonymized. No personal information is exposed.",
+                  "verification_url": "/api/governance/verify",
+                  "documentation_url": "/governance/dashboard"
+                }
+              }
+            },
+            "headers": {
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Cache control header (5 minutes)"
+              },
+              "X-RateLimit-Limit": {
+                "schema": {
+                  "type": "integer"
+                },
+                "description": "Rate limit maximum (60)"
+              },
+              "X-RateLimit-Remaining": {
+                "schema": {
+                  "type": "integer"
+                },
+                "description": "Remaining requests in current window"
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit exceeded",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RateLimitError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "security": []
+      },
+      "options": {
+        "summary": "CORS preflight",
+        "description": "Handle CORS preflight requests",
+        "operationId": "optionsPublicEthics",
+        "tags": ["Ethics", "Public"],
+        "responses": {
+          "200": {
+            "description": "CORS headers",
+            "headers": {
+              "Access-Control-Allow-Origin": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Access-Control-Allow-Methods": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/ethics/report/generate": {
+      "get": {
+        "summary": "Get endpoint information",
+        "description": "Returns information about the report generation endpoint",
+        "operationId": "getReportInfo",
+        "tags": ["Ethics", "Reporting"],
+        "responses": {
+          "200": {
+            "description": "Endpoint information",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "endpoint": {
+                      "type": "string"
+                    },
+                    "method": {
+                      "type": "string"
+                    },
+                    "description": {
+                      "type": "string"
+                    },
+                    "rate_limit": {
+                      "type": "string"
+                    },
+                    "authentication": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Generate ethics report",
+        "description": "Manually trigger ethics report generation. Rate limited to 1 request per hour per IP. Optional API key authentication.",
+        "operationId": "generateReport",
+        "tags": ["Ethics", "Reporting"],
+        "requestBody": {
+          "description": "Report generation options",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReportGenerationRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Report generated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReportGenerationResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized (invalid API key)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit exceeded",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RateLimitError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Report generation failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {},
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "PublicEthicsResponse": {
+        "type": "object",
+        "required": [
+          "timestamp",
+          "ledger_summary",
+          "consent_stats",
+          "eii_score",
+          "hash_proof",
+          "version"
+        ],
+        "properties": {
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "description": "ISO 8601 timestamp of response generation"
+          },
+          "ledger_summary": {
+            "type": "array",
+            "description": "Last 5 governance ledger entries",
+            "items": {
+              "$ref": "#/components/schemas/LedgerEntry"
+            }
+          },
+          "consent_stats": {
+            "type": "object",
+            "description": "Aggregated consent statistics (privacy-preserving)",
+            "properties": {
+              "analytics": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1,
+                "description": "Analytics opt-in rate (0-1)"
+              },
+              "performance": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1,
+                "description": "Performance opt-in rate (0-1)"
+              },
+              "essential": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1,
+                "description": "Essential cookies (always 1)"
+              }
+            }
+          },
+          "eii_score": {
+            "type": "object",
+            "description": "Ethics Integrity Index scores",
+            "properties": {
+              "current": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 100,
+                "description": "Current EII score"
+              },
+              "avg90d": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 100,
+                "description": "90-day rolling average"
+              },
+              "trend": {
+                "type": "string",
+                "enum": ["stable", "improving", "declining"],
+                "description": "Trend indicator"
+              }
+            }
+          },
+          "hash_proof": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$",
+            "description": "Global Merkle root (SHA-256)"
+          },
+          "last_verification": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Last ledger verification timestamp"
+          },
+          "version": {
+            "type": "string",
+            "description": "System version string"
+          },
+          "compliance_baseline": {
+            "type": "object",
+            "properties": {
+              "blocks": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Implemented governance blocks"
+              },
+              "regulations": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Applicable regulations"
+              },
+              "status": {
+                "type": "string",
+                "description": "Operational status"
+              }
+            }
+          },
+          "privacy_notice": {
+            "type": "string",
+            "description": "Privacy guarantee statement"
+          },
+          "verification_url": {
+            "type": "string",
+            "description": "Link to verification API"
+          },
+          "documentation_url": {
+            "type": "string",
+            "description": "Link to governance dashboard"
+          }
+        }
+      },
+      "LedgerEntry": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Ledger entry ID"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Entry timestamp"
+          },
+          "type": {
+            "type": "string",
+            "description": "Entry type"
+          },
+          "block": {
+            "type": "string",
+            "nullable": true,
+            "description": "Block ID"
+          },
+          "title": {
+            "type": "string",
+            "nullable": true,
+            "description": "Entry title"
+          }
+        }
+      },
+      "ReportGenerationRequest": {
+        "type": "object",
+        "properties": {
+          "sign": {
+            "type": "boolean",
+            "default": false,
+            "description": "Enable GPG signing"
+          },
+          "dryRun": {
+            "type": "boolean",
+            "default": false,
+            "description": "Dry run mode (no files saved)"
+          }
+        }
+      },
+      "ReportGenerationResponse": {
+        "type": "object",
+        "required": ["status", "message", "report"],
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": ["success", "error"],
+            "description": "Generation status"
+          },
+          "message": {
+            "type": "string",
+            "description": "Status message"
+          },
+          "report": {
+            "type": "object",
+            "properties": {
+              "date": {
+                "type": "string",
+                "format": "date",
+                "description": "Report date (YYYY-MM-DD)"
+              },
+              "json_url": {
+                "type": "string",
+                "description": "URL to JSON report"
+              },
+              "pdf_url": {
+                "type": "string",
+                "description": "URL to PDF report"
+              },
+              "signature_url": {
+                "type": "string",
+                "nullable": true,
+                "description": "URL to GPG signature (if signed)"
+              },
+              "json_hash": {
+                "type": "string",
+                "nullable": true,
+                "pattern": "^[a-f0-9]{64}$",
+                "description": "SHA-256 hash of JSON report"
+              },
+              "pdf_hash": {
+                "type": "string",
+                "nullable": true,
+                "pattern": "^[a-f0-9]{64}$",
+                "description": "SHA-256 hash of PDF report"
+              }
+            }
+          },
+          "execution": {
+            "type": "object",
+            "properties": {
+              "dry_run": {
+                "type": "boolean",
+                "description": "Whether dry run was enabled"
+              },
+              "signed": {
+                "type": "boolean",
+                "description": "Whether report was signed"
+              },
+              "timestamp": {
+                "type": "string",
+                "format": "date-time",
+                "description": "Execution timestamp"
+              }
+            }
+          },
+          "output": {
+            "type": "string",
+            "description": "Last 10 lines of script output"
+          }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "required": ["error", "message"],
+        "properties": {
+          "error": {
+            "type": "string",
+            "description": "Error type"
+          },
+          "message": {
+            "type": "string",
+            "description": "Error message"
+          }
+        }
+      },
+      "RateLimitError": {
+        "type": "object",
+        "required": ["error", "message", "retry_after"],
+        "properties": {
+          "error": {
+            "type": "string",
+            "description": "Error type"
+          },
+          "message": {
+            "type": "string",
+            "description": "Error message"
+          },
+          "retry_after": {
+            "type": "integer",
+            "description": "Seconds until rate limit resets"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "ApiKeyAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-API-Key",
+        "description": "Optional API key for report generation endpoint"
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Ethics",
+      "description": "Ethics and governance transparency endpoints"
+    },
+    {
+      "name": "Public",
+      "description": "Publicly accessible endpoints"
+    },
+    {
+      "name": "Reporting",
+      "description": "Report generation and management"
+    }
+  ]
+}
+

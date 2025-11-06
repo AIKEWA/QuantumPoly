@@ -20,7 +20,16 @@
  * 2. Create corresponding page in src/app/[locale]/
  * 3. Add SEO metadata to src/locales/{locale}/seo.json
  */
-export const PUBLIC_ROUTES = ['/', '/ethics', '/privacy', '/imprint', '/gep'] as const;
+export const PUBLIC_ROUTES = [
+  '/',
+  '/ethics',
+  '/privacy',
+  '/imprint',
+  '/gep',
+  '/accessibility',
+  '/contact',
+  '/governance',
+] as const;
 
 /**
  * Type-safe representation of all public routes

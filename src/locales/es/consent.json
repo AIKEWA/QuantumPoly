@@ -1,0 +1,63 @@
+{
+  "banner": {
+    "title": "Su Privacidad es Importante",
+    "description": "Utilizamos cookies y herramientas de análisis para mejorar su experiencia. Puede personalizar sus preferencias o aceptar todas.",
+    "privacyLink": "Política de Privacidad",
+    "acceptButton": "Aceptar Todas",
+    "customizeButton": "Personalizar Configuración",
+    "acceptAriaLabel": "Aceptar todas las cookies y análisis",
+    "customizeAriaLabel": "Abrir configuración de cookies para personalizar preferencias",
+    "screenReaderAnnouncement": "Se muestra el banner de consentimiento de cookies. Por favor, haga una elección para continuar."
+  },
+  "modal": {
+    "title": "Configuración de Privacidad",
+    "description": "Gestione sus preferencias de consentimiento. Sus elecciones se guardan y pueden cambiarse en cualquier momento. Versión de la política:",
+    "closeAriaLabel": "Cerrar diálogo de configuración de privacidad",
+    "alwaysActive": "Siempre Activo",
+    "categories": {
+      "essential": {
+        "title": "Esencial",
+        "description": "Necesarias para que el sitio web funcione correctamente. No se pueden desactivar ya que son necesarias para funciones básicas como navegación y seguridad."
+      },
+      "analytics": {
+        "title": "Análisis",
+        "description": "Nos ayuda a entender cómo los visitantes interactúan con nuestro sitio web. Utilizamos Vercel Analytics, que no usa cookies y cumple con GDPR. No se recopilan datos personales."
+      },
+      "performance": {
+        "title": "Rendimiento",
+        "description": "Nos permite monitorear y mejorar el rendimiento del sitio web, tiempos de carga y experiencia del usuario mediante métricas agregadas."
+      }
+    },
+    "privacyPolicyText": "Para más información, lea nuestra",
+    "privacyPolicyLink": "Política de Privacidad",
+    "acceptAllButton": "Aceptar Todas",
+    "rejectAllButton": "Rechazar Todas",
+    "saveButton": "Guardar Preferencias"
+  },
+  "settings": {
+    "title": "Configuración de Consentimiento",
+    "description": "Gestione sus preferencias de privacidad y cookies. Tiene control total sobre qué datos recopilamos.",
+    "currentPreferences": "Preferencias Actuales",
+    "noConsentYet": "Aún no ha tomado ninguna decisión de consentimiento. Por favor, configure sus preferencias a continuación.",
+    "enabled": "Habilitado",
+    "disabled": "Deshabilitado",
+    "lastUpdated": "Última Actualización",
+    "policyVersion": "Versión de la Política",
+    "userId": "ID de Usuario",
+    "changePreferences": "Cambiar Preferencias",
+    "exportData": "Exportar Mis Datos",
+    "legalTitle": "Sus Derechos Bajo GDPR",
+    "gdprRights": {
+      "title": "Tiene los siguientes derechos",
+      "access": "Derecho de acceso a sus datos personales (Art. 15 GDPR)",
+      "rectification": "Derecho de rectificación de datos inexactos (Art. 16 GDPR)",
+      "erasure": "Derecho de supresión ('derecho al olvido', Art. 17 GDPR)",
+      "restriction": "Derecho de limitación del tratamiento (Art. 18 GDPR)",
+      "portability": "Derecho a la portabilidad de datos (Art. 20 GDPR)",
+      "objection": "Derecho de oposición al tratamiento (Art. 21 GDPR)"
+    },
+    "contactText": "Para ejercer sus derechos, contáctenos en:",
+    "backToHome": "Volver al Inicio"
+  }
+}
+

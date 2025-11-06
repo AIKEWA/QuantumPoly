@@ -1,9 +1,11 @@
+import { NextRequest, NextResponse } from 'next/server';
 import createMiddleware from 'next-intl/middleware';
 
 import { defaultLocale, locales } from './i18n';
+import { reviewAuthMiddleware } from './middleware/review-auth';
 
-// eslint-disable-next-line import/no-default-export -- Required by Next.js middleware
-export default createMiddleware({
+// Create i18n middleware
+const i18nMiddleware = createMiddleware({
   // A list of all locales that are supported
   locales,
 
@@ -17,13 +19,27 @@ export default createMiddleware({
   localeDetection: true,
 });
 
+// Combined middleware: auth check + i18n
+// eslint-disable-next-line import/no-default-export -- Required by Next.js middleware
+export default function middleware(request: NextRequest): NextResponse {
+  // Check review authentication first
+  const authResponse = reviewAuthMiddleware(request);
+  if (authResponse) {
+    return authResponse;
+  }
+
+  // Continue with i18n middleware
+  return i18nMiddleware(request);
+}
+
 export const config = {
   // Match all routes except Next.js internals and static files
-  // Explicitly include root path and all locale paths
+  // Explicitly include root path, all locale paths, and API routes
   matcher: [
     '/',
     '/(de|en|tr|es|fr|it)/:path*',
-    '/((?!_next|_vercel|api|.*\\..*).*)',
+    '/api/:path*',
+    '/((?!_next|_vercel|.*\\..*).*)',
   ],
 };
 

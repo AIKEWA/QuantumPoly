@@ -1,0 +1,63 @@
+{
+  "banner": {
+    "title": "Gizliliğiniz Önemlidir",
+    "description": "Deneyiminizi iyileştirmek için çerezler ve analiz araçları kullanıyoruz. Tercihlerinizi özelleştirebilir veya tümünü kabul edebilirsiniz.",
+    "privacyLink": "Gizlilik Politikası",
+    "acceptButton": "Tümünü Kabul Et",
+    "customizeButton": "Ayarları Özelleştir",
+    "acceptAriaLabel": "Tüm çerezleri ve analizleri kabul et",
+    "customizeAriaLabel": "Tercihleri özelleştirmek için çerez ayarlarını aç",
+    "screenReaderAnnouncement": "Çerez onay banner'ı görüntüleniyor. Devam etmek için lütfen bir seçim yapın."
+  },
+  "modal": {
+    "title": "Gizlilik Ayarları",
+    "description": "Onay tercihlerinizi yönetin. Seçimleriniz kaydedilir ve istediğiniz zaman değiştirilebilir. Politika sürümü:",
+    "closeAriaLabel": "Gizlilik ayarları diyaloğunu kapat",
+    "alwaysActive": "Her Zaman Aktif",
+    "categories": {
+      "essential": {
+        "title": "Temel",
+        "description": "Web sitesinin düzgün çalışması için gereklidir. Navigasyon ve güvenlik gibi temel işlevler için gerekli olduklarından devre dışı bırakılamazlar."
+      },
+      "analytics": {
+        "title": "Analitik",
+        "description": "Ziyaretçilerin web sitemizle nasıl etkileşimde bulunduğunu anlamamıza yardımcı olur. Çerez içermeyen ve GDPR uyumlu Vercel Analytics kullanıyoruz. Kişisel veri toplanmaz."
+      },
+      "performance": {
+        "title": "Performans",
+        "description": "Toplu metrikler aracılığıyla web sitesi performansını, yükleme sürelerini ve kullanıcı deneyimini izlememize ve iyileştirmemize olanak tanır."
+      }
+    },
+    "privacyPolicyText": "Daha fazla bilgi için",
+    "privacyPolicyLink": "Gizlilik Politikamızı",
+    "acceptAllButton": "Tümünü Kabul Et",
+    "rejectAllButton": "Tümünü Reddet",
+    "saveButton": "Tercihleri Kaydet"
+  },
+  "settings": {
+    "title": "Onay Ayarları",
+    "description": "Gizlilik ve çerez tercihlerinizi yönetin. Hangi verileri topladığımız üzerinde tam kontrole sahipsiniz.",
+    "currentPreferences": "Mevcut Tercihler",
+    "noConsentYet": "Henüz herhangi bir onay kararı vermediniz. Lütfen tercihlerinizi aşağıda yapılandırın.",
+    "enabled": "Etkin",
+    "disabled": "Devre Dışı",
+    "lastUpdated": "Son Güncelleme",
+    "policyVersion": "Politika Sürümü",
+    "userId": "Kullanıcı Kimliği",
+    "changePreferences": "Tercihleri Değiştir",
+    "exportData": "Verilerimi Dışa Aktar",
+    "legalTitle": "GDPR Kapsamındaki Haklarınız",
+    "gdprRights": {
+      "title": "Aşağıdaki haklara sahipsiniz",
+      "access": "Kişisel verilerinize erişim hakkı (GDPR Madde 15)",
+      "rectification": "Yanlış verilerin düzeltilmesi hakkı (GDPR Madde 16)",
+      "erasure": "Silinme hakkı ('unutulma hakkı', GDPR Madde 17)",
+      "restriction": "İşlemenin kısıtlanması hakkı (GDPR Madde 18)",
+      "portability": "Veri taşınabilirliği hakkı (GDPR Madde 20)",
+      "objection": "İşlemeye itiraz etme hakkı (GDPR Madde 21)"
+    },
+    "contactText": "Haklarınızı kullanmak için bizimle iletişime geçin:",
+    "backToHome": "Ana Sayfaya Dön"
+  }
+}
+

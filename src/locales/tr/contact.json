@@ -1,0 +1,66 @@
+{
+  "title": "İletişim",
+  "summary": "Sorularınız, destek veya işbirliği fırsatları için QuantumPoly ile iletişime geçin.",
+  "intro": "Sorularınızı, geri bildirimlerinizi ve işbirliği taleplerinizi memnuniyetle karşılıyoruz. Uygun ekibe ulaşmak için lütfen aşağıdaki iletişim bilgilerini kullanın.",
+  "company": {
+    "heading": "Şirket Bilgileri",
+    "name": "QuantumPoly",
+    "owner": "Sahibi: Aykut Aydin",
+    "legalForm": "Hukuki Şekli: Einzelfirma (İsviçre şahıs şirketi)",
+    "registry": "Sicil Numarası: CHE-260.913.916",
+    "address": {
+      "heading": "İş Adresi",
+      "street": "Eimeldingerweg 23",
+      "city": "4057 Basel",
+      "country": "İsviçre"
+    }
+  },
+  "contacts": {
+    "heading": "İletişim Bilgileri",
+    "general": {
+      "label": "Genel Sorular",
+      "email": "info@quantumpoly.ai",
+      "description": "QuantumPoly, hizmetlerimiz veya ortaklık fırsatları hakkında genel sorular için."
+    },
+    "legal": {
+      "label": "Hukuki & Uyumluluk",
+      "email": "legal@quantumpoly.ai",
+      "description": "Hukuki konular, uyumluluk soruları veya resmi yazışmalar için."
+    },
+    "privacy": {
+      "label": "Gizlilik & Veri Koruma",
+      "email": "privacy@quantumpoly.ai",
+      "description": "Veri koruma soruları, gizlilik endişeleri veya GDPR ile ilgili talepler için."
+    },
+    "trust": {
+      "label": "Etik & Yönetişim",
+      "email": "trust@quantumpoly.ai",
+      "description": "Etik endişeler, yönetişim soruları veya güvenlik açığı raporları için."
+    },
+    "accessibility": {
+      "label": "Erişilebilirlik",
+      "email": "accessibility@quantumpoly.ai",
+      "description": "Erişilebilirlik geri bildirimi, engel raporları veya yardımcı teknoloji desteği için."
+    }
+  },
+  "response": {
+    "heading": "Yanıt Süreleri",
+    "general": "Genel sorular: 2-3 iş günü",
+    "legal": "Hukuki konular: 2-3 iş günü",
+    "privacy": "Gizlilik endişeleri: 1 hafta içinde",
+    "security": "Güvenlik sorunları: 24 saat içinde",
+    "accessibility": "Erişilebilirlik geri bildirimi: 3 iş günü",
+    "note": "Acil güvenlik açıkları için lütfen doğrudan trust@quantumpoly.ai adresine e-posta gönderin. Güvenlik endişeleri için genel GitHub sorunları açmayın."
+  },
+  "links": {
+    "heading": "Ek Bilgiler",
+    "imprint": "Tam yasal bilgi için lütfen",
+    "imprintLink": "Künye sayfamıza bakın",
+    "privacy": "Veri işleme ayrıntıları için lütfen",
+    "privacyLink": "Gizlilik Politikamıza bakın",
+    "governance": "Etik yönetişim bilgileri için lütfen",
+    "governanceLink": "Yönetişim sayfamıza bakın"
+  },
+  "disclaimer": "Bu iletişim bilgileri yalnızca iletişim amaçlı sağlanmıştır ve hukuki tavsiye teşkil etmez veya herhangi bir sözleşmesel ilişki oluşturmaz."
+}
+

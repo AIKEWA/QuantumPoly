@@ -1,0 +1,133 @@
+name: EWA v2 Autonomous Analysis
+
+on:
+  # Daily schedule at 00:00 UTC
+  schedule:
+    - cron: '0 0 * * *'
+  
+  # Manual trigger
+  workflow_dispatch:
+    inputs:
+      enable_ml:
+        description: 'Enable ML layer'
+        required: false
+        type: boolean
+        default: false
+      dry_run:
+        description: 'Dry run (no ledger writes)'
+        required: false
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+jobs:
+  analyze:
+    name: Run EWA v2 Analysis
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+      
+      - name: Run EWA v2 analysis
+        env:
+          EWA_ML: ${{ github.event.inputs.enable_ml || 'false' }}
+        run: |
+          if [ "${{ github.event.inputs.dry_run }}" = "true" ]; then
+            npm run ewa:analyze -- --dry-run
+          else
+            npm run ewa:analyze
+          fi
+      
+      - name: Check for review queue
+        id: check_queue
+        run: |
+          if [ -f "governance/ewa/review-queue.jsonl" ]; then
+            PENDING=$(grep -c '"status":"pending"' governance/ewa/review-queue.jsonl || echo "0")
+            echo "pending_count=$PENDING" >> $GITHUB_OUTPUT
+          else
+            echo "pending_count=0" >> $GITHUB_OUTPUT
+          fi
+      
+      - name: Commit analysis results
+        if: github.event.inputs.dry_run != 'true'
+        run: |
+          git config --local user.email "ewa-bot@quantumpoly.ai"
+          git config --local user.name "EWA v2 Bot"
+          
+          if [ -n "$(git status --porcelain)" ]; then
+            git add governance/ledger/ledger.jsonl governance/ewa/review-queue.jsonl
+            git commit -m "chore(governance): EWA v2 autonomous analysis $(date -u +%Y-%m-%d)"
+            git push
+          else
+            echo "No changes to commit"
+          fi
+      
+      - name: Upload analysis artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ewa-analysis-${{ github.run_number }}
+          path: |
+            governance/ledger/ledger.jsonl
+            governance/ewa/review-queue.jsonl
+          retention-days: 365
+      
+      - name: Notify on critical insights
+        if: steps.check_queue.outputs.pending_count > 0
+        run: |
+          echo "⚠️ ${{ steps.check_queue.outputs.pending_count }} critical insight(s) require human review"
+          echo "Run: npm run ewa:review"
+      
+      - name: Verify ledger integrity
+        run: npm run ethics:verify-ledger
+  
+  verify:
+    name: Verify Analysis Integrity
+    needs: analyze
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+      
+      - name: Verify autonomous analysis entries
+        run: |
+          echo "🔍 Verifying autonomous analysis entries..."
+          npm run ethics:verify-ledger -- --scope=all
+      
+      - name: Generate verification report
+        run: |
+          echo "📊 Generating verification report..."
+          node -e "
+            const fs = require('fs');
+            const { parseLedger } = require('./src/lib/governance/ledger-parser.ts');
+            
+            const entries = parseLedger('governance/ledger/ledger.jsonl');
+            const autonomousEntries = entries.filter(e => e.entryType === 'autonomous_analysis');
+            
+            console.log('Autonomous Analysis Entries:', autonomousEntries.length);
+            console.log('Latest Entry:', autonomousEntries[autonomousEntries.length - 1]?.id || 'None');
+          "
+

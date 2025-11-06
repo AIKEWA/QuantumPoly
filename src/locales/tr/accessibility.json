@@ -1,0 +1,95 @@
+{
+  "title": "Erişilebilirlik Beyanı",
+  "summary": "QuantumPoly'yi engelli kişiler de dahil olmak üzere herkes için erişilebilir kılma taahhüdümüz.",
+  "intro": "QuantumPoly, engelli kişiler için dijital erişilebilirliği sağlamaya kararlıdır. Herkes için kullanıcı deneyimini sürekli olarak iyileştiriyor ve ilgili erişilebilirlik standartlarını uyguluyoruz.",
+  "standards": {
+    "heading": "Uyumluluk Standartları",
+    "content": "Bu web sitesi, Web İçeriği Erişilebilirlik Kılavuzları (WCAG) 2.2 Seviye AA'ya uygun olmaya çalışmaktadır. Bu kılavuzlar, web içeriğinin engelli kişiler için nasıl daha erişilebilir ve herkes için daha kullanıcı dostu hale getirileceğini açıklar."
+  },
+  "measures": {
+    "heading": "Erişilebilirlik Önlemleri",
+    "intro": "QuantumPoly, erişilebilirliği sağlamak için aşağıdaki önlemleri alır:",
+    "items": {
+      "commitment": "Erişilebilirlik, kurumsal misyon ve değerlerimizin bir parçasıdır",
+      "standards": "WCAG 2.2 Seviye AA kılavuzlarını takip ediyoruz",
+      "testing": "Otomatik ve manuel erişilebilirlik testleri geliştirme iş akışımıza entegre edilmiştir",
+      "training": "Ekibimiz sürekli erişilebilirlik eğitimi ve rehberlik alır",
+      "feedback": "Kullanıcılarımızdan gelen erişilebilirlik geri bildirimlerini memnuniyetle karşılıyor ve bunlara göre hareket ediyoruz"
+    }
+  },
+  "technical": {
+    "heading": "Teknik Özellikler",
+    "intro": "QuantumPoly'nin erişilebilirliği aşağıdaki teknolojilere dayanmaktadır:",
+    "items": {
+      "html": "Uygun belge yapısı için semantik HTML5",
+      "aria": "Gelişmiş ekran okuyucu desteği için ARIA (Erişilebilir Zengin İnternet Uygulamaları) özellikleri",
+      "css": "Erişilebilirlikten ödün vermeden görsel sunum için CSS",
+      "javascript": "JavaScript olmadan temel işlevselliği sağlayan aşamalı geliştirme"
+    }
+  },
+  "testing": {
+    "heading": "Test & Doğrulama",
+    "intro": "Kapsamlı erişilebilirlik test prosedürleri uyguluyoruz:",
+    "items": {
+      "automated": "axe-core ve jest-axe ile otomatik test (WCAG 2.2 kural seti)",
+      "e2e": "Playwright ve @axe-core/playwright ile uçtan uca test",
+      "lighthouse": "Erişilebilirlik puanı eşiği ≥95 olan Lighthouse CI",
+      "manual": "Klavye navigasyonu ve ekran okuyucularla manuel test",
+      "continuous": "Her kod değişikliğinde sürekli entegrasyon kontrolleri"
+    }
+  },
+  "features": {
+    "heading": "Erişilebilirlik Özellikleri",
+    "intro": "Web sitemiz aşağıdaki erişilebilirlik özelliklerini içerir:",
+    "items": {
+      "keyboard": "Tam klavye navigasyon desteği (Tab, Enter, Boşluk, Ok tuşları)",
+      "screenreader": "Ekran okuyucu uyumluluğu (NVDA, JAWS, VoiceOver ile test edilmiştir)",
+      "contrast": "Yüksek kontrast oranları (normal metin için minimum 4,5:1, büyük metin için 3:1)",
+      "resize": "Metin, işlevsellik kaybı olmadan %200'e kadar yeniden boyutlandırılabilir",
+      "focus": "Tüm etkileşimli öğeler için net odak göstergeleri",
+      "headings": "Kolay gezinme için mantıksal başlık hiyerarşisi",
+      "landmarks": "Ekran okuyucu navigasyonu için semantik işaretler (header, nav, main, footer)",
+      "alt": "Tüm anlamlı görseller için alternatif metin",
+      "captions": "Multimedya içeriği için altyazılar ve transkriptler (uygun olduğunda)",
+      "motion": "Kullanıcı prefers-reduced-motion tercihlerine saygı"
+    }
+  },
+  "limitations": {
+    "heading": "Bilinen Sınırlamalar",
+    "intro": "En iyi çabalarımıza rağmen bazı sınırlamalar mevcut olabilir:",
+    "content": "Herhangi bir erişilebilirlik engelini belirlemek ve çözmek için aktif olarak çalışıyoruz. Herhangi bir sorunla karşılaşırsanız, lütfen aşağıdaki bilgileri kullanarak bizimle iletişime geçin."
+  },
+  "feedback": {
+    "heading": "Geri Bildirim & İletişim",
+    "intro": "QuantumPoly'nin erişilebilirliği hakkındaki geri bildirimlerinizi memnuniyetle karşılıyoruz. Erişilebilirlik engeliyle karşılaşırsanız lütfen bize bildirin:",
+    "email": "E-posta",
+    "emailAddress": "accessibility@quantumpoly.ai",
+    "response": "Erişilebilirlik geri bildirimlerine 3 iş günü içinde yanıt vermeyi hedefliyoruz.",
+    "alternative": "Genel sorularınız için lütfen",
+    "contactPage": "iletişim sayfamızı ziyaret edin"
+  },
+  "assessment": {
+    "heading": "Değerlendirme Yaklaşımı",
+    "content": "QuantumPoly, bu web sitesinin erişilebilirliğini aşağıdaki yaklaşımı kullanarak değerlendirdi:",
+    "items": {
+      "selfEvaluation": "Otomatik ve manuel test araçları kullanarak öz değerlendirme",
+      "external": "Harici erişilebilirlik denetimleri (2026 Q1 için planlanmıştır)",
+      "userTesting": "Yardımcı teknoloji kullanıcılarıyla kullanıcı testi (devam ediyor)"
+    }
+  },
+  "date": {
+    "heading": "Beyan Bilgileri",
+    "approved": "Bu beyan onaylanma tarihi",
+    "approvedDate": "26 Ekim 2025",
+    "lastReviewed": "Son inceleme tarihi",
+    "lastReviewedDate": "26 Ekim 2025",
+    "nextReview": "Bir sonraki inceleme planlanma tarihi",
+    "nextReviewDate": "26 Nisan 2026"
+  },
+  "compliance": {
+    "heading": "Uyumluluk Durumu",
+    "status": "Kısmen uyumlu",
+    "explanation": "Kısmen uyumlu, içeriğin bazı bölümlerinin WCAG 2.2 Seviye AA standardına tam olarak uymadığı anlamına gelir. Tam uyumluluk için aktif olarak çalışıyoruz."
+  }
+}
+

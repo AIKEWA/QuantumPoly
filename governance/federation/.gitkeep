@@ -1,0 +1,14 @@
+# Federation Governance Directory
+
+This directory contains federation-related governance artifacts for Block 9.6 — Collective Ethics Graph.
+
+## Contents
+
+- `ledger.jsonl` - Federation verification events and partner registrations
+- `trust-reports/` - Historical trust report snapshots
+- `README.md` - Documentation for federation governance
+
+## Purpose
+
+The Collective Ethics Graph enables cryptographic verification of ethical posture across multiple organizations through mutual Merkle root verification and immutable ledger integration.
+

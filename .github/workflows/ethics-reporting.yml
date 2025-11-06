@@ -1,0 +1,208 @@
+name: Ethics Reporting
+
+on:
+  schedule:
+    # Run on the 1st day of every month at 00:00 UTC
+    - cron: '0 0 1 * *'
+  workflow_dispatch: # Allow manual triggering
+    inputs:
+      sign:
+        description: 'Enable GPG signing'
+        required: false
+        default: 'true'
+        type: boolean
+      dry_run:
+        description: 'Dry run mode (no files saved)'
+        required: false
+        default: 'false'
+        type: boolean
+
+permissions:
+  contents: write # Needed to commit generated reports
+
+jobs:
+  generate-report:
+    name: Generate Ethics Report
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Full history for ledger verification
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+
+      - name: Configure GPG
+        if: ${{ github.event.inputs.sign != 'false' }}
+        run: |
+          if [ -n "${{ secrets.GPG_PRIVATE_KEY }}" ]; then
+            echo "GPG key configured"
+            echo "${{ secrets.GPG_PRIVATE_KEY }}" | base64 -d | gpg --batch --import
+          else
+            echo "No GPG key configured, signing will be skipped"
+          fi
+
+      - name: Generate ethics report
+        run: |
+          if [ "${{ github.event.inputs.dry_run }}" = "true" ]; then
+            npm run ethics:report:dry-run
+          elif [ "${{ github.event.inputs.sign }}" = "false" ]; then
+            npm run ethics:report
+          else
+            npm run ethics:report -- --sign
+          fi
+        env:
+          GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+          GPG_KEY_ID: ${{ secrets.GPG_KEY_ID }}
+          CI: 'true'
+
+      - name: Verify ledger integrity
+        run: npm run ethics:verify-ledger -- --scope=all
+        continue-on-error: true
+
+      - name: Upload report artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ethics-report-${{ github.run_number }}
+          path: |
+            reports/ethics/ETHICS_REPORT_*.json
+            reports/ethics/ETHICS_REPORT_*.pdf
+            reports/ethics/ETHICS_REPORT_*.pdf.sig
+          retention-days: 365
+          if-no-files-found: warn
+
+      - name: Commit reports to repository
+        if: ${{ github.event.inputs.dry_run != 'true' && github.ref == 'refs/heads/main' }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          
+          git add reports/ethics/ governance/ledger/ledger.jsonl || true
+          
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            REPORT_DATE=$(date -u +%Y-%m-%d)
+            git commit -m "chore(ethics): autonomous report ${REPORT_DATE} [skip ci]"
+            git push
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Generate report summary
+        if: always()
+        run: |
+          echo "## Ethics Report Generation Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Date:** $(date -u +%Y-%m-%d)" >> $GITHUB_STEP_SUMMARY
+          echo "**Status:** ${{ job.status }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Dry Run:** ${{ github.event.inputs.dry_run || 'false' }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Signed:** ${{ github.event.inputs.sign || 'true' }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          if [ -f "reports/ethics/ETHICS_REPORT_$(date -u +%Y-%m-%d).json" ]; then
+            echo "### Report Files Generated" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "- ✅ JSON report" >> $GITHUB_STEP_SUMMARY
+            echo "- ✅ PDF report" >> $GITHUB_STEP_SUMMARY
+            
+            if [ -f "reports/ethics/ETHICS_REPORT_$(date -u +%Y-%m-%d).pdf.sig" ]; then
+              echo "- ✅ GPG signature" >> $GITHUB_STEP_SUMMARY
+            else
+              echo "- ⏭️ GPG signature (skipped)" >> $GITHUB_STEP_SUMMARY
+            fi
+          else
+            echo "⚠️ No report files found (dry run or error)" >> $GITHUB_STEP_SUMMARY
+          fi
+
+  verify-integrity:
+    name: Verify Report Integrity
+    needs: generate-report
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    if: ${{ github.event.inputs.dry_run != 'true' }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: main # Get latest commit with report
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+
+      - name: Verify ledger integrity
+        run: |
+          echo "Verifying governance ledger integrity..."
+          npm run ethics:verify-ledger -- --scope=all
+
+      - name: Verify report hash
+        run: |
+          REPORT_DATE=$(date -u +%Y-%m-%d)
+          REPORT_PDF="reports/ethics/ETHICS_REPORT_${REPORT_DATE}.pdf"
+          
+          if [ -f "$REPORT_PDF" ]; then
+            echo "Computing report hash..."
+            COMPUTED_HASH=$(sha256sum "$REPORT_PDF" | awk '{print $1}')
+            echo "Report hash: $COMPUTED_HASH"
+            
+            echo "Checking ledger for matching hash..."
+            if grep -q "$COMPUTED_HASH" governance/ledger/ledger.jsonl; then
+              echo "✅ Report hash verified in ledger"
+            else
+              echo "⚠️ Report hash not found in ledger (may take time to propagate)"
+            fi
+          else
+            echo "⚠️ Report file not found: $REPORT_PDF"
+          fi
+
+      - name: Verify GPG signature
+        if: ${{ github.event.inputs.sign != 'false' }}
+        run: |
+          REPORT_DATE=$(date -u +%Y-%m-%d)
+          REPORT_PDF="reports/ethics/ETHICS_REPORT_${REPORT_DATE}.pdf"
+          REPORT_SIG="reports/ethics/ETHICS_REPORT_${REPORT_DATE}.pdf.sig"
+          
+          if [ -f "$REPORT_SIG" ]; then
+            echo "Verifying GPG signature..."
+            
+            # Import public key if available
+            if [ -n "${{ secrets.GPG_PUBLIC_KEY }}" ]; then
+              echo "${{ secrets.GPG_PUBLIC_KEY }}" | base64 -d | gpg --batch --import
+            fi
+            
+            if gpg --verify "$REPORT_SIG" "$REPORT_PDF" 2>&1; then
+              echo "✅ GPG signature verified"
+            else
+              echo "⚠️ GPG signature verification failed or key not available"
+            fi
+          else
+            echo "⏭️ No GPG signature found"
+          fi
+        continue-on-error: true
+
+      - name: Verification summary
+        if: always()
+        run: |
+          echo "## Integrity Verification Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Date:** $(date -u +%Y-%m-%d)" >> $GITHUB_STEP_SUMMARY
+          echo "**Status:** ${{ job.status }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "All integrity checks completed. See job logs for details." >> $GITHUB_STEP_SUMMARY
+

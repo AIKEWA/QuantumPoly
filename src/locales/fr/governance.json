@@ -1,0 +1,130 @@
+{
+  "title": "Gouvernance Éthique et Transparence",
+  "summary": "Notre engagement envers le développement d'IA transparent, éthique et responsable grâce à des systèmes de gouvernance complets.",
+  "intro": "QuantumPoly opère sous un cadre de gouvernance éthique complet conçu pour garantir la transparence, la responsabilité et le développement responsable de l'IA. Cette page fournit un aperçu de nos systèmes de gouvernance et de la manière dont nous maintenons l'intégrité éthique.",
+  "eii": {
+    "heading": "Indice d'Intégrité Éthique (EII)",
+    "description": "L'Indice d'Intégrité Éthique est notre métrique composite pour mesurer et suivre la maturité éthique de nos systèmes. Il agrège des métriques de conformité technique sur quatre dimensions clés :",
+    "dimensions": {
+      "seo": "SEO et Découvrabilité — Assurer que nos engagements éthiques sont publiquement visibles",
+      "accessibility": "Accessibilité — Conformité WCAG 2.2 AA pour une conception inclusive",
+      "performance": "Performance — Systèmes efficaces et durables qui respectent les ressources des utilisateurs",
+      "bundle": "Efficacité du Bundle — Livraison de code optimisée pour un impact environnemental réduit"
+    },
+    "current": "Score EII Actuel",
+    "viewDashboard": "Voir le Tableau de Bord en Direct"
+  },
+  "ledger": {
+    "heading": "Registre de Transparence",
+    "description": "Notre registre de transparence est un enregistrement immuable et vérifié cryptographiquement de toutes les activités de gouvernance, des jalons de conformité et des audits éthiques. Chaque entrée est :",
+    "features": {
+      "timestamped": "Horodatée avec des références de commit Git",
+      "hashed": "Hashée SHA256 pour la vérification de l'intégrité des données",
+      "merkle": "Vérifiée par arbre de Merkle pour la détection de falsification",
+      "signed": "Signée GPG pour l'authenticité (implémentation en cours)",
+      "public": "Accessible publiquement pour une vérification indépendante"
+    },
+    "viewLedger": "Voir le Registre de Transparence"
+  },
+  "framework": {
+    "heading": "Cadre de Conformité",
+    "description": "Notre système de gouvernance s'aligne sur les normes et réglementations internationales :",
+    "standards": {
+      "gdpr": "RGPD (Règlement Général sur la Protection des Données de l'UE) — Confidentialité dès la conception",
+      "dsg": "DSG Suisse 2023 — Conformité à la protection des données suisse",
+      "aiact": "Loi sur l'IA de l'UE 2024 — Transparence et responsabilité pour les systèmes d'IA",
+      "iso": "ISO 42001 — Normes de système de gestion de l'IA",
+      "ieee": "IEEE 7000 — Ingénierie basée sur les valeurs pour les systèmes éthiques",
+      "wcag": "WCAG 2.2 AA — Normes d'accessibilité web"
+    }
+  },
+  "principles": {
+    "heading": "Principes de Gouvernance",
+    "intro": "Notre cadre de gouvernance repose sur les principes fondamentaux suivants :",
+    "items": {
+      "transparency": "Transparence — Toutes les activités de gouvernance sont documentées publiquement",
+      "accountability": "Responsabilité — Propriété et responsabilité claires pour les décisions éthiques",
+      "verifiability": "Vérifiabilité — Preuve cryptographique de toutes les revendications de conformité",
+      "inclusivity": "Inclusivité — Accessible à toutes les parties prenantes, y compris les personnes handicapées",
+      "continuous": "Amélioration Continue — Audits réguliers et raffinement itératif",
+      "feedback": "Retour des Parties Prenantes — Canaux ouverts pour les préoccupations éthiques et les suggestions"
+    }
+  },
+  "feedback": {
+    "heading": "Retours et Préoccupations Éthiques",
+    "description": "Nous accueillons les retours sur nos pratiques de gouvernance et nos engagements éthiques. Si vous avez des préoccupations, des suggestions ou des questions :",
+    "email": "E-mail",
+    "emailAddress": "trust@quantumpoly.ai",
+    "github": "Ouvrez un problème GitHub avec l'étiquette",
+    "githubLabel": "governance",
+    "githubLabelText": "",
+    "anonymous": "Des options de retour anonyme sont disponibles — consultez notre",
+    "feedbackGuide": "Guide de Soumission de Retours"
+  },
+  "documentation": {
+    "heading": "Documentation et Ressources",
+    "intro": "Explorez notre documentation complète sur la gouvernance :",
+    "items": {
+      "readme": "Aperçu du Système de Gouvernance (governance/README.md)",
+      "methodology": "Méthodologie de Notation Éthique",
+      "compliance": "Documentation du Cadre de Conformité",
+      "feedback": "Guide de Soumission de Retours",
+      "onboarding": "Guide d'Intégration des Contributeurs"
+    }
+  },
+  "status": {
+    "heading": "État Actuel",
+    "stage": "Étape du Système",
+    "stageValue": "Pilote Interne",
+    "baseline": "Référence de Conformité",
+    "baselineValue": "Approuvé avec Conditions (Bloc 9.0)",
+    "lastAudit": "Dernier Audit",
+    "lastAuditValue": "26 octobre 2025",
+    "nextReview": "Prochaine Révision",
+    "nextReviewValue": "26 avril 2026"
+  },
+  "cta": {
+    "dashboard": "Explorer le Tableau de Bord",
+    "ledger": "Voir le Registre",
+    "policies": "Lire les Politiques",
+    "contact": "Nous Contacter"
+  },
+  "timeline": {
+    "title": "Chronologie Interactive du Registre",
+    "description": "Visualisation interactive du registre de gouvernance avec vérification de la chaîne de hachage et analyse de continuité",
+    "overview": {
+      "totalBlocks": "Blocs Totaux",
+      "latestBlock": "Dernier Bloc",
+      "merkleRoot": "Racine Merkle",
+      "verificationStatus": "État de Vérification"
+    },
+    "controls": {
+      "zoom": "Zoom",
+      "pan": "Panoramique",
+      "reset": "Réinitialiser la Vue",
+      "filter": "Filtre",
+      "ledgerType": "Type de Registre"
+    },
+    "legend": {
+      "verified": "Vérifié — Chaîne de hachage intacte, relation parent confirmée",
+      "warning": "Avertissement — Écart de continuité détecté, révision manuelle recommandée",
+      "unknown": "Inconnu — Vérification incomplète, données non disponibles",
+      "error": "Erreur — Format de hachage invalide ou vérification échouée"
+    },
+    "states": {
+      "loading": "Chargement des données du registre...",
+      "empty": "Aucune entrée de registre disponible",
+      "error": "Échec du chargement du registre",
+      "offline": "Hors ligne — Affichage des données en cache",
+      "stale": "Les données peuvent être obsolètes"
+    },
+    "accessibility": {
+      "keyboardShortcuts": "Raccourcis Clavier",
+      "arrowKeys": "Touches fléchées : Naviguer dans les blocs",
+      "plusMinus": "Touches +/- : Zoomer/dézoomer",
+      "homeEnd": "Début/Fin : Aller aux limites",
+      "enter": "Entrée : Ouvrir les détails du bloc"
+    }
+  }
+}
+

@@ -1,0 +1,164 @@
+{
+  "stage": "VI",
+  "blocks": [
+    "10.2",
+    "10.3",
+    "10.4",
+    "10.5",
+    "10.6",
+    "10.7",
+    "10.8",
+    "10.9"
+  ],
+  "timestamp": "2025-11-06T19:31:37.717Z",
+  "environment": {
+    "os": "darwin",
+    "node_version": "v22.15.1",
+    "crypto_algorithm": "SHA-256",
+    "git_commit": "d0fd06fa156e768679a1d95dafb2e75c67a61ecc"
+  },
+  "summary": {
+    "total_artifacts": 19,
+    "total_blocks": 8,
+    "missing_artifacts": 0,
+    "chain_checksum_source": "Concatenation of 19 hashes in block order"
+  },
+  "artifacts": [
+    {
+      "block": "10.2",
+      "path": "BLOCK10.2_TRANSPARENCY_API_AND_PORTAL.md",
+      "type": "documentation",
+      "sha256": "7ebe1dc87e1dc0a803497e8007a55387e26568b8183f604227feaf404b1eda95",
+      "size": 26704
+    },
+    {
+      "block": "10.2",
+      "path": "BLOCK10.2_IMPLEMENTATION_SUMMARY.md",
+      "type": "summary",
+      "sha256": "12a0b7fd48b378537d4a8f90c733a68dc4e994fdde494ef1dc039d70f66dc528",
+      "size": 8826
+    },
+    {
+      "block": "10.3",
+      "path": "BLOCK10.3_COMPLETION_SUMMARY.md",
+      "type": "documentation",
+      "sha256": "55977c60f04861afe33e565dee8ea476df78a1fce02c05ecb6bbf4fb6b0d7713",
+      "size": 11579
+    },
+    {
+      "block": "10.3",
+      "path": "BLOCK10.3_ETHICAL_REFLECTION.md",
+      "type": "documentation",
+      "sha256": "a99fba255bb881b6ee2178d8c35572fe20c2a43515da719d10efad427da65764",
+      "size": 16015
+    },
+    {
+      "block": "10.3",
+      "path": "BLOCK10.3_IMPLEMENTATION_SUMMARY.md",
+      "type": "summary",
+      "sha256": "a55a6f06bc38e6584c4c56ca259e622d73b7d92e9ae6e15b4a0cdda456f1d979",
+      "size": 27069
+    },
+    {
+      "block": "10.4",
+      "path": "BLOCK10.4_DASHBOARD_REFINEMENT.md",
+      "type": "documentation",
+      "sha256": "960457561e69f8ab2b58e32aa1cd719d5f1df85c87cf441946b70453b925af0b",
+      "size": 13674
+    },
+    {
+      "block": "10.5",
+      "path": "BLOCK10.5_LEGAL_AND_ACCESSIBILITY.md",
+      "type": "documentation",
+      "sha256": "9e73b57da0c2ed5b5fd6281ba89096dad4d3d09e4ff5fc5b33fe8d45d90bf1ca",
+      "size": 21108
+    },
+    {
+      "block": "10.5",
+      "path": "governance/ledger/entry-block10.5-legal-accessibility.jsonl",
+      "type": "ledger",
+      "sha256": "a895bc9b8cadad583b5186521832440681bbf6d8225d26939cc23993241c9e6d",
+      "size": 1214
+    },
+    {
+      "block": "10.6",
+      "path": "BLOCK10.6_FEEDBACK_AND_TRUST.md",
+      "type": "documentation",
+      "sha256": "ee6f64450dd7e44c7cd3325eed943c9f4b801eeadf25824cd443fc6c502eede9",
+      "size": 27843
+    },
+    {
+      "block": "10.6",
+      "path": "BLOCK10.6.1_BUGFIX_DIVISION_BY_ZERO.md",
+      "type": "bugfix",
+      "sha256": "40c26b814050cc5d89380c32eb9471e8dc65fc6fccddf2e5b7fae80e11bd193b",
+      "size": 6399
+    },
+    {
+      "block": "10.6",
+      "path": "governance/ledger/entry-block10.6-feedback-system.jsonl",
+      "type": "ledger",
+      "sha256": "dd07838eb1e2d2da46aa58bead6f457e6b65d1f9e84927c58dc65c3b3093e3bc",
+      "size": 2270
+    },
+    {
+      "block": "10.7",
+      "path": "BLOCK10.7_DAILY_GOVERNANCE_REPORTS.md",
+      "type": "documentation",
+      "sha256": "ada622f8b893aeea6da9049eb898a4c08a975cbbe979f55056677b72c8ad4a03",
+      "size": 62219
+    },
+    {
+      "block": "10.7",
+      "path": "BLOCK10.7_IMPLEMENTATION_SUMMARY.md",
+      "type": "summary",
+      "sha256": "c33d9bd298fcc8b1044520ac8d625f219c0177a0ae3eda6c57f66871833221c6",
+      "size": 11899
+    },
+    {
+      "block": "10.8",
+      "path": "BLOCK10.8_ACCESSIBILITY_AUDIT.md",
+      "type": "documentation",
+      "sha256": "1ba1e2a839bdce2c30e89e555b768f8a92004d14ce9f720c1b1e04f6cb928c1f",
+      "size": 35560
+    },
+    {
+      "block": "10.8",
+      "path": "reports/accessibility-audit.json",
+      "type": "data",
+      "sha256": "574b21c5cba7c7aeb0922d5cd27924dca22fb1b7b745451409adcbcb532c2258",
+      "size": 20324
+    },
+    {
+      "block": "10.8",
+      "path": "public/certificates/wcag-2.2aa.pdf",
+      "type": "certificate",
+      "sha256": "a8f66928e79d941bafe246e640a2cc193c11fbdae31d5fdf2923195806f1a788",
+      "size": 5420
+    },
+    {
+      "block": "10.9",
+      "path": "BLOCK10.9_CLOSURE.md",
+      "type": "documentation",
+      "sha256": "16a92c9dc96dca8fa44b9c3c23b5d6d5189b4e55be0de6b7f1ab482d8e116bcf",
+      "size": 14239
+    },
+    {
+      "block": "10.9",
+      "path": "BLOCK10.9_IMPLEMENTATION_SUMMARY.md",
+      "type": "summary",
+      "sha256": "d095a368ca646ef35392b5277c2f9cbed7acb2e51381ff33f0e8d97aa10ff0c2",
+      "size": 15294
+    },
+    {
+      "block": "10.9",
+      "path": "governance/ledger/entry-block10.9.jsonl",
+      "type": "ledger",
+      "sha256": "154bcd43d3ec5742231c04aeda7274adeee0fcd99753ecead80fb127400ce320",
+      "size": 3434
+    }
+  ],
+  "chain_checksum": "983eb29c2a75cb7ac51eb6b8524bde78554a755f45618c2329711b5db2b06b8e",
+  "canonical_checksum": "983eb29c2a75cb7ac51eb6b8524bde78554a755f45618c2329711b5db2b06b8e",
+  "notes": "Stage VI closure manifest covering Blocks 10.2-10.9"
+}

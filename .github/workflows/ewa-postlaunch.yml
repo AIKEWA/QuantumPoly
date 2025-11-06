@@ -1,0 +1,222 @@
+name: Block 10.1 Post-Launch Monitoring
+
+on:
+  # Daily schedule at 02:00 UTC
+  schedule:
+    - cron: '0 2 * * *'
+  
+  # Manual trigger
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Dry run (no ledger writes)'
+        required: false
+        type: boolean
+        default: false
+      base_url:
+        description: 'Base URL to monitor'
+        required: false
+        type: string
+        default: 'https://quantumpoly.ai'
+      check_ledger:
+        description: 'Verify ledger integrity'
+        required: false
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+jobs:
+  monitor:
+    name: Post-Launch System Monitoring
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+      
+      - name: Run post-launch monitoring
+        env:
+          MONITOR_BASE_URL: ${{ github.event.inputs.base_url || 'https://quantumpoly.ai' }}
+          CHECK_LEDGER: ${{ github.event.inputs.check_ledger || 'false' }}
+        run: |
+          if [ "${{ github.event.inputs.dry_run }}" = "true" ]; then
+            node scripts/ewa-postlaunch.mjs --dry-run
+          else
+            node scripts/ewa-postlaunch.mjs
+          fi
+      
+      - name: Check monitoring status
+        id: check_status
+        if: always()
+        run: |
+          REPORT_FILE="reports/postlaunch-status-$(date -u +%Y-%m-%d).json"
+          
+          if [ -f "$REPORT_FILE" ]; then
+            STATUS=$(jq -r '.overall_status' "$REPORT_FILE")
+            FAILED=$(jq -r '.summary.failed_endpoints' "$REPORT_FILE")
+            SUCCESSFUL=$(jq -r '.summary.successful_endpoints' "$REPORT_FILE")
+            AVG_TIME=$(jq -r '.summary.avg_response_time' "$REPORT_FILE")
+            
+            echo "status=$STATUS" >> $GITHUB_OUTPUT
+            echo "failed_count=$FAILED" >> $GITHUB_OUTPUT
+            echo "successful_count=$SUCCESSFUL" >> $GITHUB_OUTPUT
+            echo "avg_response_time=$AVG_TIME" >> $GITHUB_OUTPUT
+            
+            echo "📊 Monitoring Status: $STATUS"
+            echo "✅ Successful endpoints: $SUCCESSFUL"
+            echo "❌ Failed endpoints: $FAILED"
+            echo "⏱️  Average response time: ${AVG_TIME}ms"
+          else
+            echo "status=unknown" >> $GITHUB_OUTPUT
+            echo "failed_count=0" >> $GITHUB_OUTPUT
+            echo "⚠️ Report file not found"
+          fi
+      
+      - name: Commit monitoring results
+        if: github.event.inputs.dry_run != 'true' && success()
+        run: |
+          git config --local user.email "postlaunch-monitor@quantumpoly.ai"
+          git config --local user.name "Post-Launch Monitor Bot"
+          
+          if [ -n "$(git status --porcelain)" ]; then
+            git add reports/postlaunch-status-*.json
+            git add governance/ledger/ledger.jsonl
+            git commit -m "chore(monitoring): Block 10.1 post-launch monitoring $(date -u +%Y-%m-%d)" \
+                       -m "Status: ${{ steps.check_status.outputs.status }}" \
+                       -m "Successful: ${{ steps.check_status.outputs.successful_count }}" \
+                       -m "Failed: ${{ steps.check_status.outputs.failed_count }}" \
+                       -m "Avg Response: ${{ steps.check_status.outputs.avg_response_time }}ms" \
+                       -m "[skip ci]"
+            git push
+          else
+            echo "No changes to commit"
+          fi
+      
+      - name: Upload monitoring report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: postlaunch-monitoring-report-${{ github.run_number }}
+          path: |
+            reports/postlaunch-status-*.json
+          retention-days: 365
+      
+      - name: Notify on warning or degraded status
+        if: steps.check_status.outputs.status != 'valid' && steps.check_status.outputs.status != 'unknown'
+        run: |
+          echo "⚠️ System Status: ${{ steps.check_status.outputs.status }}"
+          echo "Failed endpoints: ${{ steps.check_status.outputs.failed_count }}"
+          echo ""
+          echo "Action Required:"
+          echo "1. Review the monitoring report artifact"
+          echo "2. Check endpoint availability manually"
+          echo "3. Investigate TLS certificate status"
+          echo "4. Contact: governance@quantumpoly.ai"
+          echo ""
+          echo "Report: reports/postlaunch-status-$(date -u +%Y-%m-%d).json"
+      
+      - name: Verify ledger integrity
+        if: github.event.inputs.check_ledger == 'true' || github.event.inputs.check_ledger == true
+        run: npm run ethics:verify-ledger
+      
+      - name: Summary
+        if: always()
+        run: |
+          echo "## Block 10.1 Post-Launch Monitoring Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Date:** $(date -u +%Y-%m-%d)" >> $GITHUB_STEP_SUMMARY
+          echo "**Time:** $(date -u +%H:%M:%S) UTC" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          REPORT_FILE="reports/postlaunch-status-$(date -u +%Y-%m-%d).json"
+          
+          if [ -f "$REPORT_FILE" ]; then
+            STATUS=$(jq -r '.overall_status' "$REPORT_FILE")
+            TOTAL=$(jq -r '.summary.total_endpoints' "$REPORT_FILE")
+            SUCCESSFUL=$(jq -r '.summary.successful_endpoints' "$REPORT_FILE")
+            FAILED=$(jq -r '.summary.failed_endpoints' "$REPORT_FILE")
+            AVG_TIME=$(jq -r '.summary.avg_response_time' "$REPORT_FILE")
+            MAX_TIME=$(jq -r '.summary.max_response_time' "$REPORT_FILE")
+            TLS_VALID=$(jq -r '.checks.tls.valid' "$REPORT_FILE")
+            
+            if [ "$STATUS" = "valid" ]; then
+              echo "### ✅ Status: VALID" >> $GITHUB_STEP_SUMMARY
+            elif [ "$STATUS" = "warning" ]; then
+              echo "### ⚠️ Status: WARNING" >> $GITHUB_STEP_SUMMARY
+            elif [ "$STATUS" = "degraded" ]; then
+              echo "### ❌ Status: DEGRADED" >> $GITHUB_STEP_SUMMARY
+            else
+              echo "### ❓ Status: UNKNOWN" >> $GITHUB_STEP_SUMMARY
+            fi
+            
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "| Metric | Value |" >> $GITHUB_STEP_SUMMARY
+            echo "|--------|-------|" >> $GITHUB_STEP_SUMMARY
+            echo "| Total Endpoints | $TOTAL |" >> $GITHUB_STEP_SUMMARY
+            echo "| Successful | $SUCCESSFUL ✅ |" >> $GITHUB_STEP_SUMMARY
+            echo "| Failed | $FAILED ❌ |" >> $GITHUB_STEP_SUMMARY
+            echo "| Avg Response Time | ${AVG_TIME}ms |" >> $GITHUB_STEP_SUMMARY
+            echo "| Max Response Time | ${MAX_TIME}ms |" >> $GITHUB_STEP_SUMMARY
+            echo "| TLS/SSL Valid | $TLS_VALID |" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            
+            if [ "$FAILED" -gt 0 ]; then
+              echo "### ⚠️ Failed Endpoints" >> $GITHUB_STEP_SUMMARY
+              echo "" >> $GITHUB_STEP_SUMMARY
+              jq -r '.checks.endpoints[] | select(.ok == false) | "- `\(.endpoint)` — \(.statusText) (\(.responseTime)ms)"' "$REPORT_FILE" >> $GITHUB_STEP_SUMMARY
+              echo "" >> $GITHUB_STEP_SUMMARY
+            fi
+            
+            echo "### 📄 Report" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "Full report available in artifacts: \`postlaunch-monitoring-report-${{ github.run_number }}\`" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "Ledger entry: \`postlaunch-monitoring-$(date -u +%Y-%m-%d)\`" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "⚠️ Monitoring report not found" >> $GITHUB_STEP_SUMMARY
+          fi
+      
+      - name: Create issue on degraded status
+        if: failure() && steps.check_status.outputs.status == 'degraded'
+        run: |
+          gh issue create \
+            --title "🚨 Post-Launch Monitoring: System Degraded ($(date +%Y-%m-%d))" \
+            --label "monitoring,governance,critical,block-10.1" \
+            --body "## Post-Launch Monitoring Alert
+
+          **Date:** $(date +%Y-%m-%d)
+          **Status:** ${{ steps.check_status.outputs.status }}
+          **Failed Endpoints:** ${{ steps.check_status.outputs.failed_count }}
+
+          ### Summary
+
+          System monitoring detected ${{ steps.check_status.outputs.failed_count }} failed endpoint(s). System is in degraded state.
+
+          ### Action Required
+
+          1. Review the monitoring report artifact
+          2. Check endpoint availability manually
+          3. Verify TLS/SSL certificate status
+          4. Contact: governance@quantumpoly.ai
+
+          ### Resources
+
+          - [Workflow Run](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
+          - [Governance Dashboard](https://quantumpoly.ai/governance)
+          - [Block 10.1 Documentation](BLOCK10.1_POSTLAUNCH_FEEDBACK.md)"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+

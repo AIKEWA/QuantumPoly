@@ -4,7 +4,12 @@ import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
 import { ReactNode } from 'react';
 
+import { PlausibleAnalytics } from '@/components/analytics/PlausibleAnalytics';
+import { VercelAnalytics } from '@/components/analytics/VercelAnalytics';
+import { ConsentManager } from '@/components/consent/ConsentManager';
 import { isValidLocale, getLocaleDirection, type Locale } from '@/i18n';
+
+import { ANALYTICS_CONFIG } from '../../../config/analytics.mjs';
 import '../../styles/globals.css';
 
 // Optimize font loading with next/font
@@ -81,11 +86,24 @@ export default async function RootLayout({ children, params }: Props) {
 
   const direction = getLocaleDirection(locale as Locale);
 
+  // Determine which analytics providers to load
+  const loadVercel = ANALYTICS_CONFIG.provider === 'vercel' || ANALYTICS_CONFIG.provider === 'both';
+  const loadPlausible = ANALYTICS_CONFIG.provider === 'plausible' || ANALYTICS_CONFIG.provider === 'both';
+
   return (
     <html lang={locale} dir={direction} className={inter.variable}>
       <body className="min-h-screen font-sans antialiased">
         <NextIntlClientProvider locale={locale} messages={messages}>
           {children}
+          <ConsentManager locale={locale} />
+          {loadVercel && <VercelAnalytics />}
+          {loadPlausible && (
+            <PlausibleAnalytics
+              domain={ANALYTICS_CONFIG.plausible.domain}
+              apiHost={ANALYTICS_CONFIG.plausible.apiHost}
+              trackLocalhost={ANALYTICS_CONFIG.plausible.trackLocalhost}
+            />
+          )}
         </NextIntlClientProvider>
       </body>
     </html>

@@ -1,71 +1,62 @@
 ---
 title: 'Imprint (Legal Notice)'
 summary: 'Legal information about QuantumPoly, including company details, contact information, and responsible parties.'
-status: 'in-progress'
-owner: 'Legal Team <legal@quantumpoly.ai>'
-lastReviewed: '2025-10-13'
-nextReviewDue: '2026-01-13'
-version: 'v0.2.0'
+status: 'approved'
+owner: 'Compliance Steward <legal@quantumpoly.ai>'
+lastReviewed: '2025-10-26'
+nextReviewDue: '2026-04-26'
+version: 'v1.0.0'
 ---
 
 ## Legal Information
 
-This imprint provides legally required information about QuantumPoly and the parties responsible for this website's content.
+This imprint provides legally required information about QuantumPoly and the parties responsible for this website's content in accordance with German Telemedia Act (TMG § 5), Media State Treaty (MStV § 18 Abs. 2), and Swiss Unfair Competition Act (UWG Art. 3).
 
-**Important:** This document is provided for informational purposes only and does not constitute legal advice. The information provided here is subject to change. For binding legal information, please contact us directly.
+**Important:** This document is provided for informational purposes only and does not constitute legal advice.
 
 ## Company Information
 
-**Legal Name:** QuantumPoly AI Research & Development  
-**Business Form:** [INSERT: Legal Form - e.g., GmbH, LLC, Corporation, Ltd]  
-**Registration Number:** [INSERT: Registration Number - e.g., HRB 123456]  
-**Registration Authority:** [INSERT: Registry Court/Office - e.g., Amtsgericht Berlin]  
-**VAT ID:** [INSERT: VAT Identification Number - if applicable]
+**Company Name:** QuantumPoly  
+**Owner:** Aykut Aydin  
+**Legal Form:** Einzelfirma (Swiss sole proprietorship)  
+**Registration Number:** CHE-260.913.916  
+**Commercial Registry:** Commercial Registry Office Basel-Stadt  
+**Registered Office:** Basel, Switzerland
 
-**Headquarters Address:**  
-[INSERT: Street and Number]  
-[INSERT: Postal Code]  
-[INSERT: City]  
-[INSERT: Country]
+**Business Address:**  
+Eimeldingerweg 23  
+4057 Basel  
+Switzerland
+
+**Business Purpose:** Research and development in quantum computing, polymers, and AI-driven materials science
+
+**VAT Identification Number:** Currently not subject to VAT (N/A)
 
 ## Contact Information
 
 **General Inquiries:**  
-Email: contact@quantumpoly.ai  
-Website: https://quantumpoly.ai
+Email: info@quantumpoly.ai  
+Website: https://www.quantumpoly.ai
 
-**Specific Departments:**
+**Legal and Data Protection Inquiries:**  
+Email: legal@quantumpoly.ai
 
-- Trust & Ethics: trust@quantumpoly.ai
-- Engineering: engineering@quantumpoly.ai
-- Privacy: privacy@quantumpoly.ai
-- Legal: legal@quantumpoly.ai
+**Phone:** Not available (contact via email only)
 
 ## Responsible for Content
 
-**Content Responsibility (§ 55 Abs. 2 RStV):**  
-[INSERT: Full Name - must be a natural person]  
-[INSERT: Street and Number]  
-[INSERT: Postal Code, City, Country]  
-Email: content@quantumpoly.ai
+**Responsible according to § 18 Abs. 2 MStV and Art. 14 UWG (Switzerland):**  
+Aykut Aydin  
+Eimeldingerweg 23  
+4057 Basel  
+Switzerland  
+Email: legal@quantumpoly.ai
 
-The responsible party for content is the person or entity responsible for the editorial content of this website.
-
-## Authorized Representatives
-
-**Managing Directors / Partners:**  
-[INSERT: Names and Roles - e.g., "Jane Doe, CEO" and "John Smith, CTO"]
+The owner is personally responsible for the editorial content of this website.
 
 ## Supervisory Authority
 
-[INSERT: Supervisory Authority Name and Address - if required by business type]  
-[NOTE: Only required for regulated industries such as financial services, legal, medical]
-
-## Professional Regulations
-
-[INSERT: Applicable Professional Regulations - if applicable]  
-[INSERT: Professional Title and Country of Origin - if applicable]  
-[NOTE: Only required if providing professional services (legal, medical, financial advisory)]
+As a Swiss sole proprietorship without regulated activities (e.g., financial services, medical advice), QuantumPoly is not subject to specific industry supervisory authorities.
 
 ## Dispute Resolution
 
@@ -113,9 +104,15 @@ Information about data collection and processing can be found in our separate [P
 ## Technical Service Provider
 
 **Hosting Provider:**  
-[INSERT: Hosting Provider Name - e.g., Vercel Inc., AWS, Google Cloud]  
-[INSERT: Provider Address]  
-[INSERT: Contact Information or Website]
+Vercel Inc.  
+440 N Barranca Ave #4133  
+Covina, CA 91723  
+USA
+
+Website: https://vercel.com  
+Privacy Policy: https://vercel.com/legal/privacy-policy
+
+Vercel Inc. hosts the technical infrastructure of this website and processes technical data (server logs, IP addresses) in the course of operations. Vercel is GDPR-compliant and uses Standard Contractual Clauses for data transfers to the USA.
 
 ## Disclaimer
 
@@ -133,25 +130,37 @@ We reserve the right to modify this imprint at any time without prior notice. Th
 
 ## Applicable Law and Jurisdiction
 
-[INSERT: Applicable Law - e.g., "German Law", "Laws of the State of Delaware, USA"]  
-[INSERT: Jurisdiction - e.g., "Courts of Berlin, Germany"]
+**Applicable Law:** Swiss Law  
+**Jurisdiction:** Courts of Basel-Stadt, Switzerland
+
+To the extent permitted by law, this website and all related legal relationships are governed exclusively by Swiss law. The place of jurisdiction is Basel, Switzerland.
 
 ## Contact for Legal Matters
 
-For legal inquiries, notices, or formal communications, please contact:
+For legal inquiries, formal notices, or data protection requests, please contact:
 
-**Legal Department**  
-Email: legal@quantumpoly.ai  
-[INSERT: Postal Address for Legal Notices]  
-[INSERT: Phone Number - if required by jurisdiction]
+**Legal Inquiries:**  
+Aykut Aydin  
+QuantumPoly  
+Eimeldingerweg 23  
+4057 Basel  
+Switzerland  
+Email: legal@quantumpoly.ai
 
-We aim to respond to legal inquiries within a reasonable timeframe.
+We aim to respond to legal inquiries within a reasonable timeframe (typically within 14 days).
 
-## Acknowledgments
+## Additional Notes
 
-This imprint was created with consideration of legal requirements in various jurisdictions, including but not limited to the German Telemedia Act (TMG) and Interstate Broadcasting Treaty (RStV).
+### Changes to This Imprint
+
+We reserve the right to modify this imprint at any time without prior notice. The current version is always available on our website.
+
+### Acknowledgments
+
+This imprint was created with consideration of legal requirements in various jurisdictions, including the German Telemedia Act (TMG), the Media State Treaty (MStV), and the Swiss Unfair Competition Act (UWG).
 
 ---
 
-**Last Updated:** October 13, 2025  
-**Version:** v0.2.0
+**Last Updated:** October 26, 2025  
+**Version:** v1.0.0  
+**Status:** Legally reviewed and approved

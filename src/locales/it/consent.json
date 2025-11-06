@@ -1,0 +1,63 @@
+{
+  "banner": {
+    "title": "La Tua Privacy è Importante",
+    "description": "Utilizziamo cookie e strumenti di analisi per migliorare la tua esperienza. Puoi personalizzare le tue preferenze o accettare tutto.",
+    "privacyLink": "Informativa sulla Privacy",
+    "acceptButton": "Accetta Tutto",
+    "customizeButton": "Personalizza Impostazioni",
+    "acceptAriaLabel": "Accetta tutti i cookie e le analisi",
+    "customizeAriaLabel": "Apri le impostazioni dei cookie per personalizzare le preferenze",
+    "screenReaderAnnouncement": "Il banner di consenso ai cookie è visualizzato. Si prega di fare una scelta per continuare."
+  },
+  "modal": {
+    "title": "Impostazioni Privacy",
+    "description": "Gestisci le tue preferenze di consenso. Le tue scelte vengono salvate e possono essere modificate in qualsiasi momento. Versione della politica:",
+    "closeAriaLabel": "Chiudi la finestra delle impostazioni sulla privacy",
+    "alwaysActive": "Sempre Attivo",
+    "categories": {
+      "essential": {
+        "title": "Essenziale",
+        "description": "Necessari per il corretto funzionamento del sito web. Non possono essere disabilitati in quanto sono necessari per funzionalità di base come navigazione e sicurezza."
+      },
+      "analytics": {
+        "title": "Analisi",
+        "description": "Ci aiuta a capire come i visitatori interagiscono con il nostro sito web. Utilizziamo Vercel Analytics, senza cookie e conforme al GDPR. Non vengono raccolti dati personali."
+      },
+      "performance": {
+        "title": "Prestazioni",
+        "description": "Ci consente di monitorare e migliorare le prestazioni del sito web, i tempi di caricamento e l'esperienza utente attraverso metriche aggregate."
+      }
+    },
+    "privacyPolicyText": "Per maggiori informazioni, leggi la nostra",
+    "privacyPolicyLink": "Informativa sulla Privacy",
+    "acceptAllButton": "Accetta Tutto",
+    "rejectAllButton": "Rifiuta Tutto",
+    "saveButton": "Salva Preferenze"
+  },
+  "settings": {
+    "title": "Impostazioni di Consenso",
+    "description": "Gestisci le tue preferenze di privacy e cookie. Hai il pieno controllo sui dati che raccogliamo.",
+    "currentPreferences": "Preferenze Attuali",
+    "noConsentYet": "Non hai ancora preso alcuna decisione sul consenso. Configura le tue preferenze qui sotto.",
+    "enabled": "Abilitato",
+    "disabled": "Disabilitato",
+    "lastUpdated": "Ultimo Aggiornamento",
+    "policyVersion": "Versione della Politica",
+    "userId": "ID Utente",
+    "changePreferences": "Modifica Preferenze",
+    "exportData": "Esporta i Miei Dati",
+    "legalTitle": "I Tuoi Diritti ai Sensi del GDPR",
+    "gdprRights": {
+      "title": "Hai i seguenti diritti",
+      "access": "Diritto di accesso ai tuoi dati personali (Art. 15 GDPR)",
+      "rectification": "Diritto di rettifica dei dati inesatti (Art. 16 GDPR)",
+      "erasure": "Diritto alla cancellazione ('diritto all'oblio', Art. 17 GDPR)",
+      "restriction": "Diritto di limitazione del trattamento (Art. 18 GDPR)",
+      "portability": "Diritto alla portabilità dei dati (Art. 20 GDPR)",
+      "objection": "Diritto di opposizione al trattamento (Art. 21 GDPR)"
+    },
+    "contactText": "Per esercitare i tuoi diritti, contattaci a:",
+    "backToHome": "Torna alla Home"
+  }
+}
+

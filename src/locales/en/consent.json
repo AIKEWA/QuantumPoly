@@ -1,0 +1,63 @@
+{
+  "banner": {
+    "title": "Your Privacy Matters",
+    "description": "We use cookies and analytics tools to improve your experience. You can customize your preferences or accept all.",
+    "privacyLink": "Privacy Policy",
+    "acceptButton": "Accept All",
+    "customizeButton": "Customize Settings",
+    "acceptAriaLabel": "Accept all cookies and analytics",
+    "customizeAriaLabel": "Open cookie settings to customize preferences",
+    "screenReaderAnnouncement": "Cookie consent banner is displayed. Please make a choice to continue."
+  },
+  "modal": {
+    "title": "Privacy Settings",
+    "description": "Manage your consent preferences. Your choices are saved and can be changed at any time. Policy version:",
+    "closeAriaLabel": "Close privacy settings dialog",
+    "alwaysActive": "Always Active",
+    "categories": {
+      "essential": {
+        "title": "Essential",
+        "description": "Required for the website to function properly. These cannot be disabled as they are necessary for core functionality like navigation and security."
+      },
+      "analytics": {
+        "title": "Analytics",
+        "description": "Helps us understand how visitors interact with our website. We use Vercel Analytics, which is cookie-free and GDPR-compliant. No personal data is collected."
+      },
+      "performance": {
+        "title": "Performance",
+        "description": "Allows us to monitor and improve website performance, loading times, and user experience through aggregated metrics."
+      }
+    },
+    "privacyPolicyText": "For more information, read our",
+    "privacyPolicyLink": "Privacy Policy",
+    "acceptAllButton": "Accept All",
+    "rejectAllButton": "Reject All",
+    "saveButton": "Save Preferences"
+  },
+  "settings": {
+    "title": "Consent Settings",
+    "description": "Manage your privacy and cookie preferences. You have full control over what data we collect.",
+    "currentPreferences": "Current Preferences",
+    "noConsentYet": "You have not made any consent decisions yet. Please configure your preferences below.",
+    "enabled": "Enabled",
+    "disabled": "Disabled",
+    "lastUpdated": "Last Updated",
+    "policyVersion": "Policy Version",
+    "userId": "User ID",
+    "changePreferences": "Change Preferences",
+    "exportData": "Export My Data",
+    "legalTitle": "Your Rights Under GDPR",
+    "gdprRights": {
+      "title": "You have the following rights",
+      "access": "Right to access your personal data (Art. 15 GDPR)",
+      "rectification": "Right to rectification of inaccurate data (Art. 16 GDPR)",
+      "erasure": "Right to erasure ('right to be forgotten', Art. 17 GDPR)",
+      "restriction": "Right to restriction of processing (Art. 18 GDPR)",
+      "portability": "Right to data portability (Art. 20 GDPR)",
+      "objection": "Right to object to processing (Art. 21 GDPR)"
+    },
+    "contactText": "To exercise your rights, contact us at:",
+    "backToHome": "Back to Home"
+  }
+}
+

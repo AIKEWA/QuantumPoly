@@ -1,0 +1,66 @@
+{
+  "title": "Contatto",
+  "summary": "Contatta QuantumPoly per richieste, supporto o opportunità di collaborazione.",
+  "intro": "Accogliamo le tue domande, feedback e richieste di collaborazione. Utilizza le informazioni di contatto qui sotto per raggiungere il team appropriato.",
+  "company": {
+    "heading": "Informazioni sull'Azienda",
+    "name": "QuantumPoly",
+    "owner": "Proprietario: Aykut Aydin",
+    "legalForm": "Forma Giuridica: Einzelfirma (ditta individuale svizzera)",
+    "registry": "Numero di Registro: CHE-260.913.916",
+    "address": {
+      "heading": "Indirizzo Commerciale",
+      "street": "Eimeldingerweg 23",
+      "city": "4057 Basilea",
+      "country": "Svizzera"
+    }
+  },
+  "contacts": {
+    "heading": "Informazioni di Contatto",
+    "general": {
+      "label": "Richieste Generali",
+      "email": "info@quantumpoly.ai",
+      "description": "Per domande generali su QuantumPoly, i nostri servizi o opportunità di partnership."
+    },
+    "legal": {
+      "label": "Legale e Conformità",
+      "email": "legal@quantumpoly.ai",
+      "description": "Per questioni legali, domande sulla conformità o corrispondenza ufficiale."
+    },
+    "privacy": {
+      "label": "Privacy e Protezione dei Dati",
+      "email": "privacy@quantumpoly.ai",
+      "description": "Per richieste di protezione dei dati, preoccupazioni sulla privacy o richieste relative al GDPR."
+    },
+    "trust": {
+      "label": "Etica e Governance",
+      "email": "trust@quantumpoly.ai",
+      "description": "Per preoccupazioni etiche, domande sulla governance o segnalazioni di vulnerabilità di sicurezza."
+    },
+    "accessibility": {
+      "label": "Accessibilità",
+      "email": "accessibility@quantumpoly.ai",
+      "description": "Per feedback sull'accessibilità, segnalazioni di barriere o supporto per tecnologie assistive."
+    }
+  },
+  "response": {
+    "heading": "Tempi di Risposta",
+    "general": "Richieste generali: 2-3 giorni lavorativi",
+    "legal": "Questioni legali: 2-3 giorni lavorativi",
+    "privacy": "Preoccupazioni sulla privacy: Entro 1 settimana",
+    "security": "Problemi di sicurezza: Entro 24 ore",
+    "accessibility": "Feedback sull'accessibilità: 3 giorni lavorativi",
+    "note": "Per vulnerabilità di sicurezza urgenti, invia un'e-mail direttamente a trust@quantumpoly.ai. Non aprire problemi GitHub pubblici per preoccupazioni di sicurezza."
+  },
+  "links": {
+    "heading": "Informazioni Aggiuntive",
+    "imprint": "Per informazioni legali complete, consulta il nostro",
+    "imprintLink": "Imprint",
+    "privacy": "Per dettagli sulla gestione dei dati, consulta la nostra",
+    "privacyLink": "Informativa sulla Privacy",
+    "governance": "Per informazioni sulla governance etica, consulta la nostra",
+    "governanceLink": "pagina di Governance"
+  },
+  "disclaimer": "Queste informazioni di contatto sono fornite solo a scopo di comunicazione e non costituiscono consulenza legale né creano alcuna relazione contrattuale."
+}
+

@@ -1,0 +1,95 @@
+{
+  "title": "Barrierefreiheitserklärung",
+  "summary": "Unser Engagement, QuantumPoly für alle zugänglich zu machen, einschließlich Menschen mit Behinderungen.",
+  "intro": "QuantumPoly verpflichtet sich, die digitale Barrierefreiheit für Menschen mit Behinderungen sicherzustellen. Wir verbessern kontinuierlich die Benutzererfahrung für alle und wenden die relevanten Barrierefreiheitsstandards an.",
+  "standards": {
+    "heading": "Konformitätsstandards",
+    "content": "Diese Website strebt die Konformität mit den Web Content Accessibility Guidelines (WCAG) 2.2 auf Level AA an. Diese Richtlinien erklären, wie Webinhalte für Menschen mit Behinderungen zugänglicher und für alle benutzerfreundlicher gemacht werden können."
+  },
+  "measures": {
+    "heading": "Barrierefreiheitsmaßnahmen",
+    "intro": "QuantumPoly ergreift folgende Maßnahmen zur Gewährleistung der Barrierefreiheit:",
+    "items": {
+      "commitment": "Barrierefreiheit ist Teil unserer organisatorischen Mission und Werte",
+      "standards": "Wir folgen den WCAG 2.2 Level AA Richtlinien",
+      "testing": "Automatisierte und manuelle Barrierefreiheitstests sind in unseren Entwicklungsworkflow integriert",
+      "training": "Unser Team erhält fortlaufende Schulungen und Anleitungen zur Barrierefreiheit",
+      "feedback": "Wir begrüßen und reagieren auf Barrierefreiheits-Feedback unserer Nutzer"
+    }
+  },
+  "technical": {
+    "heading": "Technische Spezifikationen",
+    "intro": "Die Barrierefreiheit von QuantumPoly basiert auf folgenden Technologien:",
+    "items": {
+      "html": "Semantisches HTML5 für eine korrekte Dokumentstruktur",
+      "aria": "ARIA (Accessible Rich Internet Applications) Attribute für verbesserte Screenreader-Unterstützung",
+      "css": "CSS für visuelle Darstellung ohne Beeinträchtigung der Barrierefreiheit",
+      "javascript": "Progressive Enhancement zur Gewährleistung der Kernfunktionalität ohne JavaScript"
+    }
+  },
+  "testing": {
+    "heading": "Tests & Validierung",
+    "intro": "Wir setzen umfassende Barrierefreiheitstestverfahren ein:",
+    "items": {
+      "automated": "Automatisierte Tests mit axe-core und jest-axe (WCAG 2.2 Regelwerk)",
+      "e2e": "End-to-End-Tests mit Playwright und @axe-core/playwright",
+      "lighthouse": "Lighthouse CI mit Barrierefreiheits-Score-Schwellenwert ≥95",
+      "manual": "Manuelle Tests mit Tastaturnavigation und Screenreadern",
+      "continuous": "Continuous Integration Prüfungen bei jeder Code-Änderung"
+    }
+  },
+  "features": {
+    "heading": "Barrierefreiheitsfunktionen",
+    "intro": "Unsere Website umfasst folgende Barrierefreiheitsfunktionen:",
+    "items": {
+      "keyboard": "Vollständige Tastaturnavigationsunterstützung (Tab, Enter, Leertaste, Pfeiltasten)",
+      "screenreader": "Screenreader-Kompatibilität (getestet mit NVDA, JAWS, VoiceOver)",
+      "contrast": "Hohe Kontrastverhältnisse (mindestens 4,5:1 für normalen Text, 3:1 für großen Text)",
+      "resize": "Text kann bis zu 200% vergrößert werden ohne Funktionsverlust",
+      "focus": "Klare Fokusindikatoren für alle interaktiven Elemente",
+      "headings": "Logische Überschriftenhierarchie für einfache Navigation",
+      "landmarks": "Semantische Landmarks (header, nav, main, footer) für Screenreader-Navigation",
+      "alt": "Alternativtext für alle bedeutungsvollen Bilder",
+      "captions": "Untertitel und Transkripte für Multimedia-Inhalte (falls zutreffend)",
+      "motion": "Berücksichtigung der prefers-reduced-motion Benutzerpräferenzen"
+    }
+  },
+  "limitations": {
+    "heading": "Bekannte Einschränkungen",
+    "intro": "Trotz unserer Bemühungen können einige Einschränkungen bestehen:",
+    "content": "Wir arbeiten aktiv daran, Barrierefreiheitsbarrieren zu identifizieren und zu beheben. Wenn Sie auf Probleme stoßen, kontaktieren Sie uns bitte über die unten angegebenen Informationen."
+  },
+  "feedback": {
+    "heading": "Feedback & Kontakt",
+    "intro": "Wir freuen uns über Ihr Feedback zur Barrierefreiheit von QuantumPoly. Bitte informieren Sie uns, wenn Sie auf Barrierefreiheitsbarrieren stoßen:",
+    "email": "E-Mail",
+    "emailAddress": "accessibility@quantumpoly.ai",
+    "response": "Wir bemühen uns, auf Barrierefreiheits-Feedback innerhalb von 3 Werktagen zu antworten.",
+    "alternative": "Für allgemeine Anfragen besuchen Sie bitte unsere",
+    "contactPage": "Kontaktseite"
+  },
+  "assessment": {
+    "heading": "Bewertungsansatz",
+    "content": "QuantumPoly hat die Barrierefreiheit dieser Website mit folgendem Ansatz bewertet:",
+    "items": {
+      "selfEvaluation": "Selbstbewertung mit automatisierten und manuellen Testwerkzeugen",
+      "external": "Externe Barrierefreiheits-Audits (geplant für Q1 2026)",
+      "userTesting": "Benutzertests mit Nutzern von Hilfstechnologien (laufend)"
+    }
+  },
+  "date": {
+    "heading": "Erklärungsinformationen",
+    "approved": "Diese Erklärung wurde genehmigt am",
+    "approvedDate": "26. Oktober 2025",
+    "lastReviewed": "Zuletzt überprüft am",
+    "lastReviewedDate": "26. Oktober 2025",
+    "nextReview": "Nächste Überprüfung geplant für",
+    "nextReviewDate": "26. April 2026"
+  },
+  "compliance": {
+    "heading": "Konformitätsstatus",
+    "status": "Teilweise konform",
+    "explanation": "Teilweise konform bedeutet, dass einige Teile des Inhalts nicht vollständig dem WCAG 2.2 Level AA Standard entsprechen. Wir arbeiten aktiv an der vollständigen Konformität."
+  }
+}
+

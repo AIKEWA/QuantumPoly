@@ -1,0 +1,79 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://quantumpoly.ai/schemas/federation-record.schema.json",
+  "title": "FederationRecord",
+  "description": "Canonical JSON schema for Federation Record in the Collective Ethics Graph (Block 9.6)",
+  "type": "object",
+  "required": [
+    "partner_id",
+    "partner_display_name",
+    "merkle_root",
+    "timestamp",
+    "compliance_stage",
+    "hash_algorithm",
+    "governance_endpoint"
+  ],
+  "properties": {
+    "partner_id": {
+      "type": "string",
+      "description": "Stable identifier for the partner instance (domain-like, org slug, or legal entity handle)",
+      "pattern": "^[a-zA-Z0-9._-]+$",
+      "minLength": 3,
+      "maxLength": 100,
+      "examples": ["quantumpoly.ai", "ETH-ZH", "AI4Gov-EU"]
+    },
+    "partner_display_name": {
+      "type": "string",
+      "description": "Human-readable display name",
+      "minLength": 3,
+      "maxLength": 200,
+      "examples": ["QuantumPoly", "ETH Zurich Ethics Lab", "AI4Gov European Transparency Hub"]
+    },
+    "merkle_root": {
+      "type": "string",
+      "description": "Cryptographic root summarizing partner's latest governance ledger (SHA-256 hex)",
+      "pattern": "^[a-f0-9]{64}$",
+      "examples": ["a7c9e4d3f2b1a0c5e6d7b8a9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9"]
+    },
+    "timestamp": {
+      "type": "string",
+      "description": "When this snapshot was last checked or consumed (ISO-8601)",
+      "format": "date-time",
+      "examples": ["2025-11-01T12:00:00Z"]
+    },
+    "compliance_stage": {
+      "type": "string",
+      "description": "Partner's declared governance maturity",
+      "minLength": 5,
+      "maxLength": 200,
+      "examples": [
+        "Stage IV — Autonomous Accountability",
+        "Stage V — Cognitive Governance",
+        "Stage VI — Federated Transparency"
+      ]
+    },
+    "signature": {
+      "type": ["string", "null"],
+      "description": "Optional cryptographic signature from the partner (PGP/ed25519)",
+      "examples": [null, "-----BEGIN PGP SIGNATURE-----\n...\n-----END PGP SIGNATURE-----"]
+    },
+    "hash_algorithm": {
+      "type": "string",
+      "description": "Hash algorithm used (default: SHA-256)",
+      "enum": ["SHA-256", "SHA-512"],
+      "default": "SHA-256"
+    },
+    "governance_endpoint": {
+      "type": "string",
+      "description": "Where auditors can retrieve partner's public ethics data",
+      "format": "uri",
+      "pattern": "^https?://",
+      "examples": [
+        "https://quantumpoly.ai/api/ethics/public",
+        "https://ethicslab.ethz.ch/api/federation/record"
+      ]
+    }
+  },
+  "additionalProperties": false
+}
+

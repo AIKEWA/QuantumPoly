@@ -1,0 +1,25 @@
+{
+  "version": "1.0.0",
+  "description": "Trust Trajectory Indicator (TTI) configuration for EWA v2",
+  "weights": {
+    "eii": 0.4,
+    "consent": 0.3,
+    "security": 0.3
+  },
+  "optional_factors": {
+    "eii_velocity": 0.0,
+    "eii_volatility": 0.0
+  },
+  "thresholds": {
+    "excellent": 90,
+    "good": 80,
+    "fair": 70,
+    "needs_improvement": 0
+  },
+  "notes": [
+    "Weights must sum to 1.0 (excluding optional factors)",
+    "Optional factors are additive adjustments to base TTI",
+    "Thresholds define qualitative labels for TTI scores"
+  ]
+}
+

@@ -166,6 +166,104 @@ This checks:
 - Chronological ordering
 - Hash format consistency
 - GPG signatures (if available)
+- Entry type validation (EII baseline, feedback synthesis)
+
+---
+
+## Feedback Synthesis System
+
+**Introduced:** 2025-10-25 (Block 8.7)  
+**Framework Documentation:** `governance/feedback/README.md`
+
+### Overview
+
+The Ethical Feedback Synthesis System transforms stakeholder reviews into structured, traceable governance entries. This enables continuous improvement across technical, ethical, and communication dimensions while preserving anonymity and maintaining constructive professional discourse.
+
+### Key Features
+
+- **Structured Collection:** Standardized templates for evidence-based feedback
+- **Ethical Categorization:** Technical, Ethical, and Communication findings
+- **Governance Integration:** Full ledger traceability with machine-readable exports
+- **Quarterly Cycles:** Regular review cadence with ad-hoc emergency reviews
+- **Anonymity Protection:** Reviewers choose attribution level (public, anonymized, restricted)
+
+### Feedback Entry Types
+
+Feedback synthesis creates ledger entries with type `feedback-synthesis`:
+
+```json
+{
+  "id": "feedback-2025-Q4-validation",
+  "timestamp": "2025-10-25T12:00:00Z",
+  "commit": "...",
+  "entryType": "feedback-synthesis",
+  "cycleId": "2025-Q4-validation",
+  "metrics": {
+    "totalFindings": 9,
+    "criticalFindings": 1,
+    "resolvedFindings": 0
+  },
+  "artifactLinks": [
+    "governance/feedback/cycles/2025-Q4-validation/synthesis-report.md",
+    "governance/feedback/cycles/2025-Q4-validation/raw-findings.json"
+  ],
+  "hash": "...",
+  "merkleRoot": "...",
+  "signature": null
+}
+```
+
+### Submit Feedback
+
+**Templates:** `governance/feedback/templates/feedback-collection-form.md`  
+**Email:** trust@quantumpoly.ai or governance@quantumpoly.ai  
+**GitHub:** Open issue with labels `feedback` and `governance`
+
+**Anonymity Options:**
+- Public (name visible)
+- Anonymized (role only)
+- Restricted (governance team only)
+
+### Review Cycle Schedule
+
+- **Q4 2025:** Initial validation cycle (demonstration)
+- **Q1 2026:** Post-launch feedback synthesis
+- **Q2 2026+:** Ongoing quarterly cycles
+- **Ad-hoc:** Emergency cycles for critical findings (P0)
+
+### Aggregate Feedback
+
+Process feedback synthesis reports and integrate into ledger:
+
+```bash
+npm run feedback:aggregate -- --cycle 2025-Q4-validation
+```
+
+This script:
+- Validates raw-findings.json against schema
+- Computes artifact hashes (SHA256)
+- Generates ledger entry
+- Appends to ledger.jsonl
+- Verifies integrity
+
+### Documentation
+
+- **Framework Guide:** `governance/feedback/README.md`
+- **Submission Guide:** `docs/governance/FEEDBACK_SUBMISSION_GUIDE.md`
+- **Templates:** `governance/feedback/templates/`
+- **Schema:** `governance/feedback/schema/feedback-entry.schema.json`
+- **Onboarding:** `ONBOARDING.md` § "Providing Feedback and Reviews"
+
+### Ledger Entry Types
+
+The ledger supports multiple entry types:
+
+- **`eii-baseline`** — Ethical Integrity Index baseline measurements
+- **`feedback-synthesis`** — Quarterly feedback synthesis reports  
+- **`audit_closure`** — Audit closure and compliance baselines
+- **`legal_compliance`** — Legal and regulatory compliance milestones
+
+Each entry type has specific required fields validated by the verification script.
 
 ### Export Ledger
 
@@ -186,6 +284,33 @@ cat governance/ledger/ledger.jsonl | jq -s '.' > ledger-array.json
 ```bash
 curl https://your-domain.com/api/legal/export?format=json
 ```
+
+---
+
+## Legal Compliance
+
+**Block 9.0 — Legal Compliance Baseline**  
+**Date:** October 26, 2025  
+**Status:** ✅ Approved
+
+QuantumPoly has established a comprehensive legal compliance baseline for public website launch:
+
+- **Imprint (Impressum):** Fully compliant with German TMG § 5, Swiss UWG Art. 3, and MStV § 18 Abs. 2
+- **Privacy Policy:** GDPR/DSG-compliant with transparent data processing disclosures
+- **Languages:** German (primary) and English (complete)
+- **Hosting Provider:** Vercel Inc. (USA) with GDPR safeguards (Standard Contractual Clauses)
+- **Tracking Status:** Zero tracking tools currently active (consent banner planned for future)
+
+**Documentation:**
+- Master Summary: `BLOCK9.0_LEGAL_COMPLIANCE_BASELINE.md`
+- Imprint (DE): `content/policies/imprint/de.md` (v1.0.0)
+- Imprint (EN): `content/policies/imprint/en.md` (v1.0.0)
+- Privacy Policy (DE): `content/policies/privacy/de.md` (v1.0.0)
+- Privacy Policy (EN): `content/policies/privacy/en.md` (v1.0.0)
+
+**Ledger Entry:** `legal-compliance-block9.0` (October 26, 2025)
+
+**Next Review:** April 26, 2026 (6 months)
 
 ---
 

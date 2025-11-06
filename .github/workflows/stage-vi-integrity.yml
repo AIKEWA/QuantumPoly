@@ -1,0 +1,258 @@
+name: Stage VI Integrity Verification
+
+on:
+  schedule:
+    - cron: '0 0 * * *'  # Daily at 00:00 UTC
+  workflow_dispatch:
+    inputs:
+      verify_only:
+        description: 'Verify existing manifest only (no regeneration)'
+        required: false
+        default: 'false'
+        type: choice
+        options:
+          - 'true'
+          - 'false'
+
+jobs:
+  verify-stage-vi:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Full history for git commit tracking
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.17.25'
+          cache: 'npm'
+          
+      - name: Display environment info
+        run: |
+          echo "## Environment Details" >> $GITHUB_STEP_SUMMARY
+          echo "- **Node:** $(node -v)" >> $GITHUB_STEP_SUMMARY
+          echo "- **npm:** $(npm -v)" >> $GITHUB_STEP_SUMMARY
+          echo "- **OS:** $(uname -a)" >> $GITHUB_STEP_SUMMARY
+          echo "- **Git Commit:** $(git rev-parse HEAD)" >> $GITHUB_STEP_SUMMARY
+          echo "- **Date:** $(date -u +%Y-%m-%dT%H:%M:%SZ)" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Run linting
+        run: npm run lint
+        continue-on-error: false
+        
+      - name: Run type checking
+        run: npm run typecheck
+        continue-on-error: false
+        
+      - name: Run tests
+        run: npm run test
+        continue-on-error: false
+        
+      - name: Build project
+        run: npm run build
+        continue-on-error: false
+        
+      - name: Normalize formatting
+        run: npm run format:write
+        
+      - name: Generate Stage VI hash manifest
+        if: github.event.inputs.verify_only != 'true'
+        run: node scripts/hash-stage-vi-artifacts.mjs
+        
+      - name: Verify Stage VI chain checksum
+        id: verify_checksum
+        run: |
+          echo "🔍 Verifying Stage VI chain checksum..."
+          node scripts/hash-stage-vi-artifacts.mjs --compare > verification_output.txt 2>&1
+          EXIT_CODE=$?
+          
+          cat verification_output.txt
+          
+          if [ $EXIT_CODE -eq 0 ]; then
+            echo "✅ Chain checksum verification PASSED"
+            echo "verification_status=passed" >> $GITHUB_OUTPUT
+            echo "checksum_match=true" >> $GITHUB_OUTPUT
+          else
+            echo "❌ Chain checksum verification FAILED"
+            echo "verification_status=failed" >> $GITHUB_OUTPUT
+            echo "checksum_match=false" >> $GITHUB_OUTPUT
+          fi
+          
+          # Extract checksums for reporting
+          COMPUTED=$(grep "Computed:" verification_output.txt | awk '{print $2}' || echo "unknown")
+          CANONICAL=$(grep "Canonical:" verification_output.txt | awk '{print $2}' || echo "unknown")
+          
+          echo "computed_checksum=$COMPUTED" >> $GITHUB_OUTPUT
+          echo "canonical_checksum=$CANONICAL" >> $GITHUB_OUTPUT
+          
+          # Exit with the original exit code
+          exit $EXIT_CODE
+        
+      - name: Upload verification report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: stage-vi-verification-${{ github.run_number }}
+          path: |
+            governance/ledger/stageVI-hashes.json
+            verification_output.txt
+          retention-days: 365
+          if-no-files-found: warn
+          
+      - name: Post verification comment
+        if: github.event_name == 'workflow_dispatch' && github.event.inputs.verify_only == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const verificationOutput = fs.readFileSync('verification_output.txt', 'utf8');
+            const status = '${{ steps.verify_checksum.outputs.verification_status }}';
+            const computed = '${{ steps.verify_checksum.outputs.computed_checksum }}';
+            const canonical = '${{ steps.verify_checksum.outputs.canonical_checksum }}';
+            
+            const emoji = status === 'passed' ? '✅' : '❌';
+            
+            const comment = `## ${emoji} Stage VI Integrity Verification
+            
+**Status:** ${status.toUpperCase()}
+**Date:** ${new Date().toISOString()}
+**Run:** [#${context.runNumber}](${context.payload.repository.html_url}/actions/runs/${context.runId})
+
+### Chain Checksum Comparison
+
+| Type | Value |
+|------|-------|
+| **Computed** | \`${computed}\` |
+| **Canonical** | \`${canonical}\` |
+| **Match** | ${computed === canonical ? '✅ YES' : '❌ NO'} |
+
+### Environment
+
+- **Node:** $(node -v)
+- **OS:** $(uname -a | cut -d' ' -f1-3)
+- **Git Commit:** $(git rev-parse HEAD)
+
+<details>
+<summary>Full Verification Output</summary>
+
+\`\`\`
+${verificationOutput}
+\`\`\`
+
+</details>
+
+---
+*Automated verification by Stage VI Integrity workflow*`;
+            
+            // Note: Commenting is disabled for scheduled runs to avoid spam
+            // Enable for workflow_dispatch runs only
+            console.log(comment);
+          
+      - name: Create issue on checksum mismatch
+        if: failure() && steps.verify_checksum.outputs.checksum_match == 'false'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const computed = '${{ steps.verify_checksum.outputs.computed_checksum }}';
+            const canonical = '${{ steps.verify_checksum.outputs.canonical_checksum }}';
+            
+            github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: '🚨 Stage VI Chain Checksum Mismatch Detected',
+              body: `## Stage VI Integrity Alert
+
+**Date:** ${new Date().toISOString()}
+**Workflow:** ${context.workflow}
+**Run:** [#${context.runNumber}](${context.payload.repository.html_url}/actions/runs/${context.runId})
+
+### Issue
+
+The Stage VI chain checksum does **NOT** match the canonical governance-verified value.
+
+| Type | Value |
+|------|-------|
+| **Computed** | \`${computed}\` |
+| **Canonical** | \`${canonical}\` |
+
+### Potential Causes
+
+- Local modifications to Stage VI artifacts (Blocks 10.2-10.9)
+- Missing or extra files in the artifact set
+- Different formatting or line endings
+- Dependency version mismatch affecting build outputs
+- Non-deterministic build process
+
+### Action Required
+
+1. Review the [verification report artifact](${context.payload.repository.html_url}/actions/runs/${context.runId})
+2. Run locally: \`npm run integrity:full\`
+3. Follow remediation steps in \`docs/LOCAL_INTEGRITY_VERIFICATION.md\`
+4. Investigate any discrepancies immediately
+5. **Do not merge or deploy** until checksum parity is achieved
+
+### Resources
+
+- [Local Integrity Verification Guide](docs/LOCAL_INTEGRITY_VERIFICATION.md)
+- [Hash Script](scripts/hash-stage-vi-artifacts.mjs)
+- [Stage VI Artifacts Manifest](governance/ledger/stageVI-hashes.json)
+
+---
+*This issue was automatically created by the Stage VI Integrity Verification workflow.*
+
+**Priority:** 🔴 CRITICAL - Requires immediate governance review`,
+              labels: ['governance', 'integrity', 'critical', 'stage-vi']
+            });
+          
+      - name: Summary
+        if: always()
+        run: |
+          echo "## Stage VI Integrity Verification Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          STATUS="${{ steps.verify_checksum.outputs.verification_status }}"
+          COMPUTED="${{ steps.verify_checksum.outputs.computed_checksum }}"
+          CANONICAL="${{ steps.verify_checksum.outputs.canonical_checksum }}"
+          MATCH="${{ steps.verify_checksum.outputs.checksum_match }}"
+          
+          if [ "$STATUS" = "passed" ]; then
+            echo "### ✅ Verification PASSED" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "### ❌ Verification FAILED" >> $GITHUB_STEP_SUMMARY
+          fi
+          
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Chain Checksum Comparison:**" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Type | Value |" >> $GITHUB_STEP_SUMMARY
+          echo "|------|-------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Computed | \`$COMPUTED\` |" >> $GITHUB_STEP_SUMMARY
+          echo "| Canonical | \`$CANONICAL\` |" >> $GITHUB_STEP_SUMMARY
+          
+          if [ "$MATCH" = "true" ]; then
+            echo "| Match | ✅ YES |" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "| Match | ❌ NO |" >> $GITHUB_STEP_SUMMARY
+          fi
+          
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          if [ "$MATCH" = "false" ]; then
+            echo "### ⚠️ Action Required" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "Chain checksum mismatch detected. Review the verification report and follow remediation steps." >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "See: \`docs/LOCAL_INTEGRITY_VERIFICATION.md\`" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "### ✅ Status: Integrity Verified" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "The local codebase matches the canonical Stage VI governance state." >> $GITHUB_STEP_SUMMARY
+          fi
+

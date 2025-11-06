@@ -1,0 +1,95 @@
+{
+  "title": "Déclaration d'Accessibilité",
+  "summary": "Notre engagement à rendre QuantumPoly accessible à tous, y compris aux personnes handicapées.",
+  "intro": "QuantumPoly s'engage à garantir l'accessibilité numérique pour les personnes handicapées. Nous améliorons continuellement l'expérience utilisateur pour tous et appliquons les normes d'accessibilité pertinentes.",
+  "standards": {
+    "heading": "Normes de Conformité",
+    "content": "Ce site web s'efforce de se conformer aux Directives pour l'accessibilité du contenu Web (WCAG) 2.2 au niveau AA. Ces directives expliquent comment rendre le contenu web plus accessible aux personnes handicapées et plus convivial pour tous."
+  },
+  "measures": {
+    "heading": "Mesures d'Accessibilité",
+    "intro": "QuantumPoly prend les mesures suivantes pour garantir l'accessibilité :",
+    "items": {
+      "commitment": "L'accessibilité fait partie de notre mission et de nos valeurs organisationnelles",
+      "standards": "Nous suivons les directives WCAG 2.2 niveau AA",
+      "testing": "Les tests d'accessibilité automatisés et manuels sont intégrés dans notre flux de travail de développement",
+      "training": "Notre équipe reçoit une formation et des conseils continus sur l'accessibilité",
+      "feedback": "Nous accueillons et agissons sur les retours d'accessibilité de nos utilisateurs"
+    }
+  },
+  "technical": {
+    "heading": "Spécifications Techniques",
+    "intro": "L'accessibilité de QuantumPoly repose sur les technologies suivantes :",
+    "items": {
+      "html": "HTML5 sémantique pour une structure de document appropriée",
+      "aria": "Attributs ARIA (Applications Internet Riches Accessibles) pour un meilleur support des lecteurs d'écran",
+      "css": "CSS pour la présentation visuelle sans compromettre l'accessibilité",
+      "javascript": "Amélioration progressive garantissant les fonctionnalités de base sans JavaScript"
+    }
+  },
+  "testing": {
+    "heading": "Tests et Validation",
+    "intro": "Nous employons des procédures de test d'accessibilité complètes :",
+    "items": {
+      "automated": "Tests automatisés avec axe-core et jest-axe (ensemble de règles WCAG 2.2)",
+      "e2e": "Tests de bout en bout avec Playwright et @axe-core/playwright",
+      "lighthouse": "Lighthouse CI avec seuil de score d'accessibilité ≥95",
+      "manual": "Tests manuels avec navigation au clavier et lecteurs d'écran",
+      "continuous": "Vérifications d'intégration continue à chaque modification de code"
+    }
+  },
+  "features": {
+    "heading": "Fonctionnalités d'Accessibilité",
+    "intro": "Notre site web comprend les fonctionnalités d'accessibilité suivantes :",
+    "items": {
+      "keyboard": "Support complet de la navigation au clavier (Tab, Entrée, Espace, touches fléchées)",
+      "screenreader": "Compatibilité avec les lecteurs d'écran (testé avec NVDA, JAWS, VoiceOver)",
+      "contrast": "Rapports de contraste élevés (minimum 4,5:1 pour le texte normal, 3:1 pour le texte large)",
+      "resize": "Le texte peut être redimensionné jusqu'à 200% sans perte de fonctionnalité",
+      "focus": "Indicateurs de focus clairs pour tous les éléments interactifs",
+      "headings": "Hiérarchie de titres logique pour une navigation facile",
+      "landmarks": "Repères sémantiques (header, nav, main, footer) pour la navigation avec lecteur d'écran",
+      "alt": "Texte alternatif pour toutes les images significatives",
+      "captions": "Sous-titres et transcriptions pour le contenu multimédia (le cas échéant)",
+      "motion": "Respect des préférences prefers-reduced-motion de l'utilisateur"
+    }
+  },
+  "limitations": {
+    "heading": "Limitations Connues",
+    "intro": "Malgré nos meilleurs efforts, certaines limitations peuvent exister :",
+    "content": "Nous travaillons activement pour identifier et résoudre toute barrière d'accessibilité. Si vous rencontrez des problèmes, veuillez nous contacter en utilisant les informations ci-dessous."
+  },
+  "feedback": {
+    "heading": "Commentaires et Contact",
+    "intro": "Nous accueillons vos commentaires sur l'accessibilité de QuantumPoly. Veuillez nous informer si vous rencontrez des barrières d'accessibilité :",
+    "email": "E-mail",
+    "emailAddress": "accessibility@quantumpoly.ai",
+    "response": "Nous visons à répondre aux commentaires sur l'accessibilité dans les 3 jours ouvrables.",
+    "alternative": "Pour les demandes générales, veuillez visiter notre",
+    "contactPage": "page de contact"
+  },
+  "assessment": {
+    "heading": "Approche d'Évaluation",
+    "content": "QuantumPoly a évalué l'accessibilité de ce site web en utilisant l'approche suivante :",
+    "items": {
+      "selfEvaluation": "Auto-évaluation à l'aide d'outils de test automatisés et manuels",
+      "external": "Audits d'accessibilité externes (prévus pour le 1er trimestre 2026)",
+      "userTesting": "Tests utilisateurs avec des utilisateurs de technologies d'assistance (en cours)"
+    }
+  },
+  "date": {
+    "heading": "Informations sur la Déclaration",
+    "approved": "Cette déclaration a été approuvée le",
+    "approvedDate": "26 octobre 2025",
+    "lastReviewed": "Dernière révision le",
+    "lastReviewedDate": "26 octobre 2025",
+    "nextReview": "Prochaine révision prévue pour",
+    "nextReviewDate": "26 avril 2026"
+  },
+  "compliance": {
+    "heading": "État de Conformité",
+    "status": "Partiellement conforme",
+    "explanation": "Partiellement conforme signifie que certaines parties du contenu ne sont pas entièrement conformes à la norme WCAG 2.2 niveau AA. Nous travaillons activement vers une conformité totale."
+  }
+}
+

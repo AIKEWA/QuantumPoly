@@ -1,53 +1,62 @@
 ---
 title: 'Impressum'
 summary: 'Rechtliche Informationen über QuantumPoly, einschließlich Unternehmensdetails, Kontaktinformationen und verantwortlichen Parteien.'
-status: 'in-progress'
-owner: 'Legal Team <legal@quantumpoly.ai>'
-lastReviewed: '2025-10-13'
-nextReviewDue: '2026-01-13'
-version: 'v0.2.0'
+status: 'approved'
+owner: 'Compliance Steward <legal@quantumpoly.ai>'
+lastReviewed: '2025-10-26'
+nextReviewDue: '2026-04-26'
+version: 'v1.0.0'
 ---
 
-## Angaben gemäß § 5 TMG
+## Angaben gemäß § 5 TMG und Art. 14 UWG (Schweiz)
 
-Dieses Impressum enthält die gesetzlich erforderlichen Informationen über QuantumPoly und die für den Inhalt dieser Website verantwortlichen Parteien.
+Dieses Impressum enthält die gesetzlich erforderlichen Informationen über QuantumPoly und die für den Inhalt dieser Website verantwortlichen Parteien gemäß deutschem Telemediengesetz (TMG § 5), Medienstaatsvertrag (MStV § 18 Abs. 2) und schweizerischem Lauterkeitsgesetz (UWG Art. 3).
 
-**Wichtig:** Dieses Dokument dient nur zu Informationszwecken und stellt keine Rechtsberatung dar. Die hier bereitgestellten Informationen können sich ändern.
+**Wichtig:** Dieses Dokument dient ausschließlich zu Informationszwecken und stellt keine Rechtsberatung dar.
 
 ## Unternehmensangaben
 
-**Rechtsform:** QuantumPoly AI Research & Development  
-**Unternehmensform:** [Wird noch spezifiziert]  
-**Registrierung:** [Registrierungsdetails werden hinzugefügt]
+**Unternehmensname:** QuantumPoly  
+**Inhaber:** Aykut Aydin  
+**Rechtsform:** Einzelfirma (nach schweizerischem Recht)  
+**Handelsregister-Nr.:** CHE-260.913.916  
+**Handelsregistereintrag:** Handelsregisteramt Basel-Stadt  
+**Sitz:** Basel, Schweiz
 
-**Anschrift:**  
-[Straße und Hausnummer]  
-[PLZ Stadt]  
-[Land]
+**Geschäftsadresse:**  
+Eimeldingerweg 23  
+4057 Basel  
+Schweiz
+
+**Unternehmensgegenstand:** Forschung und Entwicklung im Bereich Quantencomputing, Polymere und KI-gestützte Materialwissenschaft
+
+**Umsatzsteuer-Identifikationsnummer:** Derzeit nicht umsatzsteuerpflichtig (N/A)
 
 ## Kontaktinformationen
 
 **Allgemeine Anfragen:**  
-E-Mail: contact@quantumpoly.ai  
-Website: https://quantumpoly.ai
+E-Mail: info@quantumpoly.ai  
+Website: https://www.quantumpoly.ai
 
-**Spezifische Abteilungen:**
+**Rechtliche und datenschutzrechtliche Anfragen:**  
+E-Mail: legal@quantumpoly.ai
 
-- Trust & Ethics: trust@quantumpoly.ai
-- Engineering: engineering@quantumpoly.ai
-- Datenschutz: privacy@quantumpoly.ai
-- Recht: legal@quantumpoly.ai
+**Telefon:** Nicht vorhanden (Kontakt ausschließlich per E-Mail)
 
 ## Verantwortlich für den Inhalt
 
-**Verantwortlich für den Inhalt nach § 55 Abs. 2 RStV:**  
-[Name]  
-[Anschrift]  
-E-Mail: content@quantumpoly.ai
+**Verantwortlich gemäß § 18 Abs. 2 MStV und Art. 14 UWG (Schweiz):**  
+Aykut Aydin  
+Eimeldingerweg 23  
+4057 Basel  
+Schweiz  
+E-Mail: legal@quantumpoly.ai
+
+Der Inhaber ist persönlich verantwortlich für die redaktionellen Inhalte dieser Website.
 
 ## Aufsichtsbehörde
 
-[Wird je nach Zuständigkeit und Unternehmensform spezifiziert]
+Als Einzelfirma in der Schweiz ohne regulierte Tätigkeit (z. B. Finanzdienstleistungen, medizinische Beratung) unterliegt QuantumPoly keiner besonderen branchenspezifischen Aufsichtsbehörde.
 
 ## Streitschlichtung
 
@@ -84,27 +93,54 @@ Informationen zur Datenerhebung und -verarbeitung finden Sie in unserer separate
 
 ## Technischer Dienstleister
 
-**Hosting:**  
-[Name des Hosting-Anbieters]  
-[Anschrift]  
-[Kontaktinformationen]
+**Hosting-Provider:**  
+Vercel Inc.  
+440 N Barranca Ave #4133  
+Covina, CA 91723  
+USA
+
+Website: https://vercel.com  
+Datenschutz: https://vercel.com/legal/privacy-policy
+
+Vercel Inc. hostet die technische Infrastruktur dieser Website und verarbeitet dabei technische Daten (Server-Logs, IP-Adressen). Vercel ist GDPR-konform und nutzt Standardvertragsklauseln für Datenübermittlungen in die USA.
 
 ## Haftungsausschluss
 
-Dieses Impressum und alle darin enthaltenen Informationen dienen nur zu Informationszwecken und stellen keine Rechts-, Finanz- oder professionelle Beratung dar.
+Dieses Impressum und alle darin enthaltenen Informationen dienen ausschließlich zu Informationszwecken und stellen keine Rechts-, Finanz- oder professionelle Beratung dar. Für spezifische Anliegen konsultieren Sie bitte entsprechende Fachberater.
 
-## Anwendbares Recht
+## Anwendbares Recht und Gerichtsstand
 
-[Wird basierend auf der Unternehmenszuständigkeit spezifiziert]
+**Anwendbares Recht:** Schweizerisches Recht  
+**Gerichtsstand:** Gerichte des Kantons Basel-Stadt, Schweiz
+
+Soweit gesetzlich zulässig, unterliegt diese Website und alle damit verbundenen rechtlichen Beziehungen ausschließlich schweizerischem Recht. Gerichtsstand ist Basel, Schweiz.
 
 ## Kontakt für rechtliche Angelegenheiten
 
-Für rechtliche Anfragen kontaktieren Sie bitte:
+Für rechtliche Anfragen, förmliche Mitteilungen oder datenschutzrechtliche Anliegen kontaktieren Sie bitte:
 
-**Legal Department**  
+**Rechtliche Anfragen:**  
+Aykut Aydin  
+QuantumPoly  
+Eimeldingerweg 23  
+4057 Basel  
+Schweiz  
 E-Mail: legal@quantumpoly.ai
+
+Wir bemühen uns, rechtliche Anfragen innerhalb einer angemessenen Frist zu beantworten (in der Regel innerhalb von 14 Tagen).
+
+## Weitere Hinweise
+
+### Änderungen des Impressums
+
+Wir behalten uns das Recht vor, dieses Impressum jederzeit ohne vorherige Ankündigung zu ändern. Die aktuelle Version ist stets auf unserer Website verfügbar.
+
+### Danksagung
+
+Dieses Impressum wurde unter Berücksichtigung der rechtlichen Anforderungen verschiedener Rechtsordnungen erstellt, insbesondere des deutschen Telemediengesetzes (TMG), des Medienstaatsvertrags (MStV) und des schweizerischen Lauterkeitsgesetzes (UWG).
 
 ---
 
-**Letzte Aktualisierung:** 13. Oktober 2025  
-**Version:** v0.2.0
+**Letzte Aktualisierung:** 26. Oktober 2025  
+**Version:** v1.0.0  
+**Status:** Rechtlich geprüft und freigegeben

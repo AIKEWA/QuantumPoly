@@ -1,0 +1,95 @@
+{
+  "title": "Accessibility Statement",
+  "summary": "Our commitment to making QuantumPoly accessible to everyone, including people with disabilities.",
+  "intro": "QuantumPoly is committed to ensuring digital accessibility for people with disabilities. We are continually improving the user experience for everyone and applying the relevant accessibility standards.",
+  "standards": {
+    "heading": "Conformance Standards",
+    "content": "This website strives to conform to the Web Content Accessibility Guidelines (WCAG) 2.2 at Level AA. These guidelines explain how to make web content more accessible for people with disabilities and more user-friendly for everyone."
+  },
+  "measures": {
+    "heading": "Accessibility Measures",
+    "intro": "QuantumPoly takes the following measures to ensure accessibility:",
+    "items": {
+      "commitment": "Accessibility is part of our organizational mission and values",
+      "standards": "We follow WCAG 2.2 Level AA guidelines",
+      "testing": "Automated and manual accessibility testing is integrated into our development workflow",
+      "training": "Our team receives ongoing accessibility training and guidance",
+      "feedback": "We welcome and act on accessibility feedback from our users"
+    }
+  },
+  "technical": {
+    "heading": "Technical Specifications",
+    "intro": "The accessibility of QuantumPoly relies on the following technologies:",
+    "items": {
+      "html": "Semantic HTML5 for proper document structure",
+      "aria": "ARIA (Accessible Rich Internet Applications) attributes for enhanced screen reader support",
+      "css": "CSS for visual presentation without compromising accessibility",
+      "javascript": "Progressive enhancement ensuring core functionality without JavaScript"
+    }
+  },
+  "testing": {
+    "heading": "Testing & Validation",
+    "intro": "We employ comprehensive accessibility testing procedures:",
+    "items": {
+      "automated": "Automated testing with axe-core and jest-axe (WCAG 2.2 rule set)",
+      "e2e": "End-to-end testing with Playwright and @axe-core/playwright",
+      "lighthouse": "Lighthouse CI with accessibility score threshold ≥95",
+      "manual": "Manual testing with keyboard navigation and screen readers",
+      "continuous": "Continuous integration checks on every code change"
+    }
+  },
+  "features": {
+    "heading": "Accessibility Features",
+    "intro": "Our website includes the following accessibility features:",
+    "items": {
+      "keyboard": "Full keyboard navigation support (Tab, Enter, Space, Arrow keys)",
+      "screenreader": "Screen reader compatibility (tested with NVDA, JAWS, VoiceOver)",
+      "contrast": "High contrast ratios (minimum 4.5:1 for normal text, 3:1 for large text)",
+      "resize": "Text can be resized up to 200% without loss of functionality",
+      "focus": "Clear focus indicators for all interactive elements",
+      "headings": "Logical heading hierarchy for easy navigation",
+      "landmarks": "Semantic landmarks (header, nav, main, footer) for screen reader navigation",
+      "alt": "Alternative text for all meaningful images",
+      "captions": "Captions and transcripts for multimedia content (when applicable)",
+      "motion": "Respect for prefers-reduced-motion user preferences"
+    }
+  },
+  "limitations": {
+    "heading": "Known Limitations",
+    "intro": "Despite our best efforts, some limitations may exist:",
+    "content": "We are actively working to identify and resolve any accessibility barriers. If you encounter any issues, please contact us using the information below."
+  },
+  "feedback": {
+    "heading": "Feedback & Contact",
+    "intro": "We welcome your feedback on the accessibility of QuantumPoly. Please let us know if you encounter accessibility barriers:",
+    "email": "Email",
+    "emailAddress": "accessibility@quantumpoly.ai",
+    "response": "We aim to respond to accessibility feedback within 3 business days.",
+    "alternative": "For general inquiries, please visit our",
+    "contactPage": "contact page"
+  },
+  "assessment": {
+    "heading": "Assessment Approach",
+    "content": "QuantumPoly assessed the accessibility of this website using the following approach:",
+    "items": {
+      "selfEvaluation": "Self-evaluation using automated and manual testing tools",
+      "external": "External accessibility audits (planned for Q1 2026)",
+      "userTesting": "User testing with assistive technology users (ongoing)"
+    }
+  },
+  "date": {
+    "heading": "Statement Information",
+    "approved": "This statement was approved on",
+    "approvedDate": "October 26, 2025",
+    "lastReviewed": "Last reviewed on",
+    "lastReviewedDate": "October 26, 2025",
+    "nextReview": "Next review scheduled for",
+    "nextReviewDate": "April 26, 2026"
+  },
+  "compliance": {
+    "heading": "Compliance Status",
+    "status": "Partially conformant",
+    "explanation": "Partially conformant means that some parts of the content do not fully conform to the WCAG 2.2 Level AA standard. We are actively working toward full conformance."
+  }
+}
+

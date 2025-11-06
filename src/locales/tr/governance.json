@@ -1,0 +1,130 @@
+{
+  "title": "Etik Yönetişim & Şeffaflık",
+  "summary": "Kapsamlı yönetişim sistemleri aracılığıyla şeffaf, etik ve sorumlu yapay zeka geliştirme taahhüdümüz.",
+  "intro": "QuantumPoly, şeffaflığı, hesap verebilirliği ve sorumlu yapay zeka geliştirmesini sağlamak için tasarlanmış kapsamlı bir etik yönetişim çerçevesi altında faaliyet göstermektedir. Bu sayfa, yönetişim sistemlerimize ve etik bütünlüğü nasıl koruduğumuza genel bir bakış sunar.",
+  "eii": {
+    "heading": "Etik Bütünlük Endeksi (EII)",
+    "description": "Etik Bütünlük Endeksi, sistemlerimizin etik olgunluğunu ölçmek ve izlemek için kullandığımız bileşik metriktir. Dört temel boyutta teknik uyumluluk metriklerini toplar:",
+    "dimensions": {
+      "seo": "SEO & Bulunabilirlik — Etik taahhütlerimizin kamuya açık olmasını sağlama",
+      "accessibility": "Erişilebilirlik — Kapsayıcı tasarım için WCAG 2.2 AA uyumluluğu",
+      "performance": "Performans — Kullanıcı kaynaklarına saygı gösteren verimli, sürdürülebilir sistemler",
+      "bundle": "Paket Verimliliği — Azaltılmış çevresel etki için optimize edilmiş kod dağıtımı"
+    },
+    "current": "Mevcut EII Puanı",
+    "viewDashboard": "Canlı Gösterge Panosunu Görüntüle"
+  },
+  "ledger": {
+    "heading": "Şeffaflık Defteri",
+    "description": "Şeffaflık defterimiz, tüm yönetişim faaliyetlerinin, uyumluluk kilometre taşlarının ve etik denetimlerin değiştirilemez, kriptografik olarak doğrulanmış bir kaydıdır. Her giriş:",
+    "features": {
+      "timestamped": "Git commit referanslarıyla zaman damgalı",
+      "hashed": "Veri bütünlüğü doğrulaması için SHA256 hash'lenmiş",
+      "merkle": "Tahrifat tespiti için Merkle ağacı doğrulanmış",
+      "signed": "Özgünlük için GPG imzalı (uygulama devam ediyor)",
+      "public": "Bağımsız doğrulama için kamuya açık"
+    },
+    "viewLedger": "Şeffaflık Defterini Görüntüle"
+  },
+  "framework": {
+    "heading": "Uyumluluk Çerçevesi",
+    "description": "Yönetişim sistemimiz uluslararası standartlar ve düzenlemelerle uyumludur:",
+    "standards": {
+      "gdpr": "GDPR (AB Genel Veri Koruma Yönetmeliği) — Tasarım gereği gizlilik",
+      "dsg": "İsviçre DSG 2023 — İsviçre veri koruma uyumluluğu",
+      "aiact": "AB AI Act 2024 — Yapay zeka sistemleri için şeffaflık ve hesap verebilirlik",
+      "iso": "ISO 42001 — Yapay zeka yönetim sistemi standartları",
+      "ieee": "IEEE 7000 — Etik sistemler için değer tabanlı mühendislik",
+      "wcag": "WCAG 2.2 AA — Web erişilebilirlik standartları"
+    }
+  },
+  "principles": {
+    "heading": "Yönetişim İlkeleri",
+    "intro": "Yönetişim çerçevemiz aşağıdaki temel ilkeler üzerine inşa edilmiştir:",
+    "items": {
+      "transparency": "Şeffaflık — Tüm yönetişim faaliyetleri kamuya açık olarak belgelenir",
+      "accountability": "Hesap Verebilirlik — Etik kararlar için net sahiplik ve sorumluluk",
+      "verifiability": "Doğrulanabilirlik — Tüm uyumluluk iddialarının kriptografik kanıtı",
+      "inclusivity": "Kapsayıcılık — Engelli kişiler dahil tüm paydaşlar için erişilebilir",
+      "continuous": "Sürekli İyileştirme — Düzenli denetimler ve yinelemeli iyileştirme",
+      "feedback": "Paydaş Geri Bildirimi — Etik endişeler ve öneriler için açık kanallar"
+    }
+  },
+  "feedback": {
+    "heading": "Geri Bildirim & Etik Endişeler",
+    "description": "Yönetişim uygulamalarımız ve etik taahhütlerimiz hakkında geri bildirimlerinizi memnuniyetle karşılıyoruz. Endişeleriniz, önerileriniz veya sorularınız varsa:",
+    "email": "E-posta",
+    "emailAddress": "trust@quantumpoly.ai",
+    "github": "GitHub'da",
+    "githubLabel": "governance",
+    "githubLabelText": "etiketi ile bir sorun açın",
+    "anonymous": "Anonim geri bildirim seçenekleri mevcuttur —",
+    "feedbackGuide": "Geri Bildirim Gönderme Kılavuzumuza bakın"
+  },
+  "documentation": {
+    "heading": "Dokümantasyon & Kaynaklar",
+    "intro": "Kapsamlı yönetişim dokümantasyonumuzu keşfedin:",
+    "items": {
+      "readme": "Yönetişim Sistemi Genel Bakış (governance/README.md)",
+      "methodology": "Etik Puanlama Metodolojisi",
+      "compliance": "Uyumluluk Çerçevesi Dokümantasyonu",
+      "feedback": "Geri Bildirim Gönderme Kılavuzu",
+      "onboarding": "Katkıda Bulunan Katılım Kılavuzu"
+    }
+  },
+  "status": {
+    "heading": "Mevcut Durum",
+    "stage": "Sistem Aşaması",
+    "stageValue": "Dahili Pilot",
+    "baseline": "Uyumluluk Temeli",
+    "baselineValue": "Koşullarla Onaylandı (Blok 9.0)",
+    "lastAudit": "Son Denetim",
+    "lastAuditValue": "26 Ekim 2025",
+    "nextReview": "Sonraki İnceleme",
+    "nextReviewValue": "26 Nisan 2026"
+  },
+  "cta": {
+    "dashboard": "Gösterge Panosunu Keşfet",
+    "ledger": "Defteri Görüntüle",
+    "policies": "Politikaları Oku",
+    "contact": "Bize Ulaşın"
+  },
+  "timeline": {
+    "title": "Etkileşimli Defter Zaman Çizelgesi",
+    "description": "Hash zinciri doğrulama ve süreklilik analizi ile yönetişim defterinin etkileşimli görselleştirmesi",
+    "overview": {
+      "totalBlocks": "Toplam Bloklar",
+      "latestBlock": "En Son Blok",
+      "merkleRoot": "Merkle Kökü",
+      "verificationStatus": "Doğrulama Durumu"
+    },
+    "controls": {
+      "zoom": "Yakınlaştır",
+      "pan": "Kaydır",
+      "reset": "Görünümü Sıfırla",
+      "filter": "Filtrele",
+      "ledgerType": "Defter Türü"
+    },
+    "legend": {
+      "verified": "Doğrulandı — Hash zinciri sağlam, ebeveyn ilişkisi onaylandı",
+      "warning": "Uyarı — Süreklilik boşluğu tespit edildi, manuel inceleme önerilir",
+      "unknown": "Bilinmiyor — Doğrulama tamamlanmadı, veri mevcut değil",
+      "error": "Hata — Hash formatı geçersiz veya doğrulama başarısız oldu"
+    },
+    "states": {
+      "loading": "Defter verileri yükleniyor...",
+      "empty": "Defter girişi mevcut değil",
+      "error": "Defter yüklenemedi",
+      "offline": "Çevrimdışı — Önbelleğe alınmış veriler gösteriliyor",
+      "stale": "Veriler güncel olmayabilir"
+    },
+    "accessibility": {
+      "keyboardShortcuts": "Klavye Kısayolları",
+      "arrowKeys": "Ok tuşları: Bloklar arasında gezin",
+      "plusMinus": "+/- tuşları: Yakınlaştır/uzaklaştır",
+      "homeEnd": "Home/End: Sınırlara atla",
+      "enter": "Enter: Blok detaylarını aç"
+    }
+  }
+}
+

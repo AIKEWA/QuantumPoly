@@ -1,0 +1,130 @@
+{
+  "title": "Governance Etica e Trasparenza",
+  "summary": "Il nostro impegno per lo sviluppo di IA trasparente, etico e responsabile attraverso sistemi di governance completi.",
+  "intro": "QuantumPoly opera sotto un quadro completo di governance etica progettato per garantire trasparenza, responsabilità e sviluppo responsabile dell'IA. Questa pagina fornisce una panoramica dei nostri sistemi di governance e di come manteniamo l'integrità etica.",
+  "eii": {
+    "heading": "Indice di Integrità Etica (EII)",
+    "description": "L'Indice di Integrità Etica è la nostra metrica composita per misurare e monitorare la maturità etica dei nostri sistemi. Aggrega metriche di conformità tecnica su quattro dimensioni chiave:",
+    "dimensions": {
+      "seo": "SEO e Scopribilità — Garantire che i nostri impegni etici siano pubblicamente visibili",
+      "accessibility": "Accessibilità — Conformità WCAG 2.2 AA per un design inclusivo",
+      "performance": "Prestazioni — Sistemi efficienti e sostenibili che rispettano le risorse degli utenti",
+      "bundle": "Efficienza del Bundle — Consegna del codice ottimizzata per un impatto ambientale ridotto"
+    },
+    "current": "Punteggio EII Attuale",
+    "viewDashboard": "Visualizza Dashboard in Tempo Reale"
+  },
+  "ledger": {
+    "heading": "Registro di Trasparenza",
+    "description": "Il nostro registro di trasparenza è un record immutabile e verificato crittograficamente di tutte le attività di governance, traguardi di conformità e audit etici. Ogni voce è:",
+    "features": {
+      "timestamped": "Con timestamp con riferimenti di commit Git",
+      "hashed": "Hash SHA256 per la verifica dell'integrità dei dati",
+      "merkle": "Verificato con albero di Merkle per il rilevamento di manomissioni",
+      "signed": "Firmato GPG per l'autenticità (implementazione in corso)",
+      "public": "Accessibile pubblicamente per la verifica indipendente"
+    },
+    "viewLedger": "Visualizza Registro di Trasparenza"
+  },
+  "framework": {
+    "heading": "Quadro di Conformità",
+    "description": "Il nostro sistema di governance si allinea con standard e regolamenti internazionali:",
+    "standards": {
+      "gdpr": "GDPR (Regolamento Generale sulla Protezione dei Dati dell'UE) — Privacy by design",
+      "dsg": "DSG Svizzero 2023 — Conformità alla protezione dei dati svizzera",
+      "aiact": "Legge sull'IA dell'UE 2024 — Trasparenza e responsabilità per i sistemi di IA",
+      "iso": "ISO 42001 — Standard di sistema di gestione dell'IA",
+      "ieee": "IEEE 7000 — Ingegneria basata sui valori per sistemi etici",
+      "wcag": "WCAG 2.2 AA — Standard di accessibilità web"
+    }
+  },
+  "principles": {
+    "heading": "Principi di Governance",
+    "intro": "Il nostro quadro di governance si basa sui seguenti principi fondamentali:",
+    "items": {
+      "transparency": "Trasparenza — Tutte le attività di governance sono documentate pubblicamente",
+      "accountability": "Responsabilità — Proprietà e responsabilità chiare per le decisioni etiche",
+      "verifiability": "Verificabilità — Prova crittografica di tutte le affermazioni di conformità",
+      "inclusivity": "Inclusività — Accessibile a tutte le parti interessate, comprese le persone con disabilità",
+      "continuous": "Miglioramento Continuo — Audit regolari e perfezionamento iterativo",
+      "feedback": "Feedback delle Parti Interessate — Canali aperti per preoccupazioni etiche e suggerimenti"
+    }
+  },
+  "feedback": {
+    "heading": "Feedback e Preoccupazioni Etiche",
+    "description": "Accogliamo feedback sulle nostre pratiche di governance e impegni etici. Se hai preoccupazioni, suggerimenti o domande:",
+    "email": "E-mail",
+    "emailAddress": "trust@quantumpoly.ai",
+    "github": "Apri un problema GitHub con l'etichetta",
+    "githubLabel": "governance",
+    "githubLabelText": "",
+    "anonymous": "Sono disponibili opzioni di feedback anonimo — consulta la nostra",
+    "feedbackGuide": "Guida alla Presentazione del Feedback"
+  },
+  "documentation": {
+    "heading": "Documentazione e Risorse",
+    "intro": "Esplora la nostra documentazione completa sulla governance:",
+    "items": {
+      "readme": "Panoramica del Sistema di Governance (governance/README.md)",
+      "methodology": "Metodologia di Valutazione Etica",
+      "compliance": "Documentazione del Quadro di Conformità",
+      "feedback": "Guida alla Presentazione del Feedback",
+      "onboarding": "Guida all'Onboarding dei Contributori"
+    }
+  },
+  "status": {
+    "heading": "Stato Attuale",
+    "stage": "Fase del Sistema",
+    "stageValue": "Pilota Interno",
+    "baseline": "Baseline di Conformità",
+    "baselineValue": "Approvato con Condizioni (Blocco 9.0)",
+    "lastAudit": "Ultimo Audit",
+    "lastAuditValue": "26 ottobre 2025",
+    "nextReview": "Prossima Revisione",
+    "nextReviewValue": "26 aprile 2026"
+  },
+  "cta": {
+    "dashboard": "Esplora Dashboard",
+    "ledger": "Visualizza Registro",
+    "policies": "Leggi Politiche",
+    "contact": "Contattaci"
+  },
+  "timeline": {
+    "title": "Cronologia Interattiva del Registro",
+    "description": "Visualizzazione interattiva del registro di governance con verifica della catena hash e analisi di continuità",
+    "overview": {
+      "totalBlocks": "Blocchi Totali",
+      "latestBlock": "Ultimo Blocco",
+      "merkleRoot": "Radice Merkle",
+      "verificationStatus": "Stato di Verifica"
+    },
+    "controls": {
+      "zoom": "Zoom",
+      "pan": "Panoramica",
+      "reset": "Reimposta Vista",
+      "filter": "Filtro",
+      "ledgerType": "Tipo di Registro"
+    },
+    "legend": {
+      "verified": "Verificato — Catena hash intatta, relazione genitore confermata",
+      "warning": "Avviso — Gap di continuità rilevato, si raccomanda revisione manuale",
+      "unknown": "Sconosciuto — Verifica incompleta, dati non disponibili",
+      "error": "Errore — Formato hash non valido o verifica fallita"
+    },
+    "states": {
+      "loading": "Caricamento dati del registro...",
+      "empty": "Nessuna voce del registro disponibile",
+      "error": "Caricamento del registro fallito",
+      "offline": "Offline — Mostrando dati in cache",
+      "stale": "I dati potrebbero essere obsoleti"
+    },
+    "accessibility": {
+      "keyboardShortcuts": "Scorciatoie da Tastiera",
+      "arrowKeys": "Tasti freccia: Naviga blocchi",
+      "plusMinus": "Tasti +/-: Zoom in/out",
+      "homeEnd": "Home/Fine: Salta ai limiti",
+      "enter": "Invio: Apri dettagli blocco"
+    }
+  }
+}
+

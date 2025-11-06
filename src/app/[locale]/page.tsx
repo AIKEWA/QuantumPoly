@@ -83,6 +83,9 @@ export default async function Home({ params }: Props) {
           { label: tFooter('privacy'), href: `/${locale}/privacy` },
           { label: tFooter('imprint'), href: `/${locale}/imprint` },
           { label: tFooter('gep'), href: `/${locale}/gep` },
+          { label: tFooter('accessibility'), href: `/${locale}/accessibility` },
+          { label: tFooter('contact'), href: `/${locale}/contact` },
+          { label: tFooter('governance'), href: `/${locale}/governance` },
         ]}
         policyNavLabel={tFooter('trustNav')}
         headingLevel={2}

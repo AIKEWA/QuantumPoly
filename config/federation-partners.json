@@ -1,0 +1,41 @@
+{
+  "$schema": "../schemas/federation-record.schema.json",
+  "version": "1.0.0",
+  "description": "Federation partner configuration for Collective Ethics Graph (Block 9.6)",
+  "partners": [
+    {
+      "partner_id": "quantumpoly.ai",
+      "partner_display_name": "QuantumPoly (Self Reference)",
+      "governance_endpoint": "https://quantumpoly.ai/api/federation/record",
+      "webhook_url": null,
+      "webhook_secret": null,
+      "stale_threshold_days": 30,
+      "active": true,
+      "added_at": "2025-10-26T00:00:00Z",
+      "notes": "Self-reference for testing and demonstration. Verifies own Merkle root consistency."
+    },
+    {
+      "partner_id": "ETH-ZH",
+      "partner_display_name": "ETH Zurich Ethics Lab",
+      "governance_endpoint": "https://ethicslab.ethz.ch/api/federation/record",
+      "webhook_url": null,
+      "webhook_secret": null,
+      "stale_threshold_days": 30,
+      "active": true,
+      "added_at": "2025-10-26T00:00:00Z",
+      "notes": "Fictional partner for demonstration. Academic research institution focused on AI ethics."
+    },
+    {
+      "partner_id": "AI4Gov-EU",
+      "partner_display_name": "AI4Gov European Transparency Hub",
+      "governance_endpoint": "https://api.ai4gov.eu/federation/record",
+      "webhook_url": "https://api.ai4gov.eu/federation/notify",
+      "webhook_secret": "example-hmac-secret-change-in-production",
+      "stale_threshold_days": 45,
+      "active": true,
+      "added_at": "2025-10-26T00:00:00Z",
+      "notes": "Fictional partner for demonstration. European governance transparency network with extended staleness threshold."
+    }
+  ]
+}
+

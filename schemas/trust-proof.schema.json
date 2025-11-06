@@ -1,0 +1,154 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://www.quantumpoly.ai/schemas/trust-proof.schema.json",
+  "title": "Trust Proof Schema",
+  "description": "JSON Schema for QuantumPoly Trust Proof & Attestation Layer (Block 9.7)",
+  "type": "object",
+  "required": [
+    "artifact_id",
+    "hash_algorithm",
+    "artifact_hash",
+    "issued_at",
+    "issuer",
+    "governance_block",
+    "ledger_reference",
+    "compliance_stage",
+    "status",
+    "verified_at"
+  ],
+  "properties": {
+    "artifact_id": {
+      "type": "string",
+      "description": "Unique identifier for the artifact (e.g., ETHICS_REPORT_2025-11-05)",
+      "pattern": "^[A-Z_0-9-]+$",
+      "minLength": 1,
+      "maxLength": 255
+    },
+    "hash_algorithm": {
+      "type": "string",
+      "description": "Hash algorithm used for artifact integrity",
+      "enum": ["SHA-256"],
+      "default": "SHA-256"
+    },
+    "artifact_hash": {
+      "type": "string",
+      "description": "SHA-256 hash of the artifact content",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "issued_at": {
+      "type": "string",
+      "description": "ISO 8601 timestamp when the proof was issued",
+      "format": "date-time"
+    },
+    "issuer": {
+      "type": "string",
+      "description": "Identifier of the issuing service",
+      "minLength": 1,
+      "maxLength": 255
+    },
+    "governance_block": {
+      "type": "string",
+      "description": "Governance block that activated this proof system",
+      "pattern": "^[0-9.]+$"
+    },
+    "ledger_reference": {
+      "type": "string",
+      "description": "Reference to the ledger entry that records this proof",
+      "minLength": 1,
+      "maxLength": 255
+    },
+    "compliance_stage": {
+      "type": "string",
+      "description": "Current compliance stage of the system",
+      "minLength": 1,
+      "maxLength": 255
+    },
+    "status": {
+      "type": "string",
+      "description": "Verification status of the proof",
+      "enum": [
+        "valid",
+        "expired",
+        "revoked",
+        "mismatch",
+        "not_found",
+        "invalid_token",
+        "unverified"
+      ]
+    },
+    "notes": {
+      "type": "string",
+      "description": "Human-readable notes about the verification",
+      "minLength": 0,
+      "maxLength": 1000
+    },
+    "verified_at": {
+      "type": "string",
+      "description": "ISO 8601 timestamp when verification was performed",
+      "format": "date-time"
+    },
+    "expires_at": {
+      "type": "string",
+      "description": "ISO 8601 timestamp when the proof expires",
+      "format": "date-time"
+    },
+    "revocation_reason": {
+      "type": "string",
+      "description": "Reason for revocation (if status is 'revoked')",
+      "minLength": 0,
+      "maxLength": 1000
+    },
+    "revoked_at": {
+      "type": "string",
+      "description": "ISO 8601 timestamp when proof was revoked",
+      "format": "date-time"
+    }
+  },
+  "additionalProperties": false,
+  "examples": [
+    {
+      "artifact_id": "ETHICS_REPORT_2025-11-05",
+      "hash_algorithm": "SHA-256",
+      "artifact_hash": "7b3c9e4d3f2b1a0c5e6d7b8a9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7e91a",
+      "issued_at": "2025-11-05T13:20:00Z",
+      "issuer": "trust-attestation-service@quantumpoly",
+      "governance_block": "9.7",
+      "ledger_reference": "trust-proof-block9.7",
+      "compliance_stage": "Stage VII — Trust Proof & Attestation",
+      "status": "valid",
+      "notes": "Signature matches ledger entry and current key material.",
+      "verified_at": "2025-11-05T14:30:00Z",
+      "expires_at": "2026-02-03T13:20:00Z"
+    },
+    {
+      "artifact_id": "ETHICS_REPORT_2025-08-15",
+      "hash_algorithm": "SHA-256",
+      "artifact_hash": "a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2",
+      "issued_at": "2025-08-15T10:00:00Z",
+      "issuer": "trust-attestation-service@quantumpoly",
+      "governance_block": "9.7",
+      "ledger_reference": "trust-proof-block9.7",
+      "compliance_stage": "Stage VII — Trust Proof & Attestation",
+      "status": "expired",
+      "notes": "Proof has expired. The artifact may still be valid, but the attestation is stale.",
+      "verified_at": "2025-11-20T09:00:00Z",
+      "expires_at": "2025-11-13T10:00:00Z"
+    },
+    {
+      "artifact_id": "ETHICS_REPORT_2025-09-01",
+      "hash_algorithm": "SHA-256",
+      "artifact_hash": "f1e2d3c4b5a6f7e8d9c0b1a2f3e4d5c6b7a8f9e0d1c2b3a4f5e6d7c8b9a0f1e2",
+      "issued_at": "2025-09-01T12:00:00Z",
+      "issuer": "trust-attestation-service@quantumpoly",
+      "governance_block": "9.7",
+      "ledger_reference": "trust-proof-block9.7",
+      "compliance_stage": "Stage VII — Trust Proof & Attestation",
+      "status": "revoked",
+      "notes": "Proof has been revoked: Error discovered in report methodology",
+      "verified_at": "2025-11-20T10:00:00Z",
+      "revocation_reason": "Error discovered in report methodology",
+      "revoked_at": "2025-09-15T14:00:00Z"
+    }
+  ]
+}
+

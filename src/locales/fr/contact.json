@@ -1,0 +1,66 @@
+{
+  "title": "Contact",
+  "summary": "Contactez QuantumPoly pour des demandes, un support ou des opportunités de collaboration.",
+  "intro": "Nous accueillons vos questions, commentaires et demandes de collaboration. Veuillez utiliser les informations de contact ci-dessous pour joindre l'équipe appropriée.",
+  "company": {
+    "heading": "Informations sur l'Entreprise",
+    "name": "QuantumPoly",
+    "owner": "Propriétaire : Aykut Aydin",
+    "legalForm": "Forme Juridique : Einzelfirma (entreprise individuelle suisse)",
+    "registry": "Numéro d'Enregistrement : CHE-260.913.916",
+    "address": {
+      "heading": "Adresse Commerciale",
+      "street": "Eimeldingerweg 23",
+      "city": "4057 Bâle",
+      "country": "Suisse"
+    }
+  },
+  "contacts": {
+    "heading": "Informations de Contact",
+    "general": {
+      "label": "Demandes Générales",
+      "email": "info@quantumpoly.ai",
+      "description": "Pour des questions générales sur QuantumPoly, nos services ou des opportunités de partenariat."
+    },
+    "legal": {
+      "label": "Juridique et Conformité",
+      "email": "legal@quantumpoly.ai",
+      "description": "Pour des questions juridiques, des questions de conformité ou de la correspondance officielle."
+    },
+    "privacy": {
+      "label": "Confidentialité et Protection des Données",
+      "email": "privacy@quantumpoly.ai",
+      "description": "Pour des demandes de protection des données, des préoccupations de confidentialité ou des demandes liées au RGPD."
+    },
+    "trust": {
+      "label": "Éthique et Gouvernance",
+      "email": "trust@quantumpoly.ai",
+      "description": "Pour des préoccupations éthiques, des questions de gouvernance ou des rapports de vulnérabilités de sécurité."
+    },
+    "accessibility": {
+      "label": "Accessibilité",
+      "email": "accessibility@quantumpoly.ai",
+      "description": "Pour des commentaires sur l'accessibilité, des rapports de barrières ou un support de technologie d'assistance."
+    }
+  },
+  "response": {
+    "heading": "Délais de Réponse",
+    "general": "Demandes générales : 2-3 jours ouvrables",
+    "legal": "Questions juridiques : 2-3 jours ouvrables",
+    "privacy": "Préoccupations de confidentialité : Dans la semaine",
+    "security": "Problèmes de sécurité : Dans les 24 heures",
+    "accessibility": "Commentaires sur l'accessibilité : 3 jours ouvrables",
+    "note": "Pour les vulnérabilités de sécurité urgentes, veuillez envoyer un e-mail directement à trust@quantumpoly.ai. N'ouvrez pas de problèmes GitHub publics pour des préoccupations de sécurité."
+  },
+  "links": {
+    "heading": "Informations Supplémentaires",
+    "imprint": "Pour des informations juridiques complètes, veuillez consulter nos",
+    "imprintLink": "Mentions Légales",
+    "privacy": "Pour des détails sur le traitement des données, veuillez consulter notre",
+    "privacyLink": "Politique de Confidentialité",
+    "governance": "Pour des informations sur la gouvernance éthique, veuillez consulter notre",
+    "governanceLink": "page de Gouvernance"
+  },
+  "disclaimer": "Ces informations de contact sont fournies à des fins de communication uniquement et ne constituent pas un conseil juridique ni ne créent de relation contractuelle."
+}
+

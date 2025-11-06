@@ -1,0 +1,63 @@
+{
+  "banner": {
+    "title": "Ihre Privatsphäre ist wichtig",
+    "description": "Wir verwenden Cookies und Analysetools, um Ihr Erlebnis zu verbessern. Sie können Ihre Einstellungen anpassen oder alle akzeptieren.",
+    "privacyLink": "Datenschutzerklärung",
+    "acceptButton": "Alle akzeptieren",
+    "customizeButton": "Einstellungen anpassen",
+    "acceptAriaLabel": "Alle Cookies und Analysen akzeptieren",
+    "customizeAriaLabel": "Cookie-Einstellungen öffnen, um Präferenzen anzupassen",
+    "screenReaderAnnouncement": "Cookie-Einwilligungsbanner wird angezeigt. Bitte treffen Sie eine Auswahl, um fortzufahren."
+  },
+  "modal": {
+    "title": "Datenschutzeinstellungen",
+    "description": "Verwalten Sie Ihre Einwilligungspräferenzen. Ihre Auswahl wird gespeichert und kann jederzeit geändert werden. Richtlinienversion:",
+    "closeAriaLabel": "Datenschutzeinstellungen-Dialog schließen",
+    "alwaysActive": "Immer aktiv",
+    "categories": {
+      "essential": {
+        "title": "Essenziell",
+        "description": "Erforderlich für die ordnungsgemäße Funktion der Website. Diese können nicht deaktiviert werden, da sie für Kernfunktionen wie Navigation und Sicherheit notwendig sind."
+      },
+      "analytics": {
+        "title": "Analyse",
+        "description": "Hilft uns zu verstehen, wie Besucher mit unserer Website interagieren. Wir verwenden Vercel Analytics, das cookie-frei und DSGVO-konform ist. Es werden keine personenbezogenen Daten erfasst."
+      },
+      "performance": {
+        "title": "Leistung",
+        "description": "Ermöglicht uns die Überwachung und Verbesserung der Website-Leistung, Ladezeiten und Benutzererfahrung durch aggregierte Metriken."
+      }
+    },
+    "privacyPolicyText": "Weitere Informationen finden Sie in unserer",
+    "privacyPolicyLink": "Datenschutzerklärung",
+    "acceptAllButton": "Alle akzeptieren",
+    "rejectAllButton": "Alle ablehnen",
+    "saveButton": "Einstellungen speichern"
+  },
+  "settings": {
+    "title": "Einwilligungseinstellungen",
+    "description": "Verwalten Sie Ihre Datenschutz- und Cookie-Präferenzen. Sie haben die volle Kontrolle darüber, welche Daten wir erfassen.",
+    "currentPreferences": "Aktuelle Einstellungen",
+    "noConsentYet": "Sie haben noch keine Einwilligungsentscheidungen getroffen. Bitte konfigurieren Sie Ihre Präferenzen unten.",
+    "enabled": "Aktiviert",
+    "disabled": "Deaktiviert",
+    "lastUpdated": "Zuletzt aktualisiert",
+    "policyVersion": "Richtlinienversion",
+    "userId": "Benutzer-ID",
+    "changePreferences": "Einstellungen ändern",
+    "exportData": "Meine Daten exportieren",
+    "legalTitle": "Ihre Rechte gemäß DSGVO",
+    "gdprRights": {
+      "title": "Sie haben folgende Rechte",
+      "access": "Recht auf Auskunft über Ihre personenbezogenen Daten (Art. 15 DSGVO)",
+      "rectification": "Recht auf Berichtigung unrichtiger Daten (Art. 16 DSGVO)",
+      "erasure": "Recht auf Löschung ('Recht auf Vergessenwerden', Art. 17 DSGVO)",
+      "restriction": "Recht auf Einschränkung der Verarbeitung (Art. 18 DSGVO)",
+      "portability": "Recht auf Datenübertragbarkeit (Art. 20 DSGVO)",
+      "objection": "Widerspruchsrecht gegen die Verarbeitung (Art. 21 DSGVO)"
+    },
+    "contactText": "Um Ihre Rechte auszuüben, kontaktieren Sie uns unter:",
+    "backToHome": "Zurück zur Startseite"
+  }
+}
+

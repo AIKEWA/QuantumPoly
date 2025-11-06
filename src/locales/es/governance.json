@@ -1,0 +1,130 @@
+{
+  "title": "Gobernanza Ética y Transparencia",
+  "summary": "Nuestro compromiso con el desarrollo de IA transparente, ético y responsable a través de sistemas de gobernanza integrales.",
+  "intro": "QuantumPoly opera bajo un marco integral de gobernanza ética diseñado para garantizar la transparencia, la responsabilidad y el desarrollo responsable de IA. Esta página proporciona una visión general de nuestros sistemas de gobernanza y cómo mantenemos la integridad ética.",
+  "eii": {
+    "heading": "Índice de Integridad Ética (EII)",
+    "description": "El Índice de Integridad Ética es nuestra métrica compuesta para medir y rastrear la madurez ética de nuestros sistemas. Agrega métricas de cumplimiento técnico en cuatro dimensiones clave:",
+    "dimensions": {
+      "seo": "SEO y Descubribilidad — Asegurar que nuestros compromisos éticos sean públicamente visibles",
+      "accessibility": "Accesibilidad — Cumplimiento WCAG 2.2 AA para diseño inclusivo",
+      "performance": "Rendimiento — Sistemas eficientes y sostenibles que respetan los recursos del usuario",
+      "bundle": "Eficiencia de Paquete — Entrega de código optimizada para reducir el impacto ambiental"
+    },
+    "current": "Puntuación EII Actual",
+    "viewDashboard": "Ver Panel en Vivo"
+  },
+  "ledger": {
+    "heading": "Libro Mayor de Transparencia",
+    "description": "Nuestro libro mayor de transparencia es un registro inmutable y verificado criptográficamente de todas las actividades de gobernanza, hitos de cumplimiento y auditorías éticas. Cada entrada está:",
+    "features": {
+      "timestamped": "Con marca de tiempo con referencias de commit de Git",
+      "hashed": "Hash SHA256 para verificación de integridad de datos",
+      "merkle": "Verificado con árbol de Merkle para detección de manipulación",
+      "signed": "Firmado GPG para autenticidad (implementación en progreso)",
+      "public": "Accesible públicamente para verificación independiente"
+    },
+    "viewLedger": "Ver Libro Mayor de Transparencia"
+  },
+  "framework": {
+    "heading": "Marco de Cumplimiento",
+    "description": "Nuestro sistema de gobernanza se alinea con estándares y regulaciones internacionales:",
+    "standards": {
+      "gdpr": "GDPR (Reglamento General de Protección de Datos de la UE) — Privacidad por diseño",
+      "dsg": "DSG Suizo 2023 — Cumplimiento de protección de datos suizo",
+      "aiact": "Ley de IA de la UE 2024 — Transparencia y responsabilidad para sistemas de IA",
+      "iso": "ISO 42001 — Estándares de sistema de gestión de IA",
+      "ieee": "IEEE 7000 — Ingeniería basada en valores para sistemas éticos",
+      "wcag": "WCAG 2.2 AA — Estándares de accesibilidad web"
+    }
+  },
+  "principles": {
+    "heading": "Principios de Gobernanza",
+    "intro": "Nuestro marco de gobernanza se basa en los siguientes principios fundamentales:",
+    "items": {
+      "transparency": "Transparencia — Todas las actividades de gobernanza están documentadas públicamente",
+      "accountability": "Responsabilidad — Propiedad y responsabilidad claras para decisiones éticas",
+      "verifiability": "Verificabilidad — Prueba criptográfica de todas las afirmaciones de cumplimiento",
+      "inclusivity": "Inclusividad — Accesible para todas las partes interesadas, incluidas personas con discapacidades",
+      "continuous": "Mejora Continua — Auditorías regulares y refinamiento iterativo",
+      "feedback": "Retroalimentación de Partes Interesadas — Canales abiertos para preocupaciones éticas y sugerencias"
+    }
+  },
+  "feedback": {
+    "heading": "Retroalimentación y Preocupaciones Éticas",
+    "description": "Damos la bienvenida a comentarios sobre nuestras prácticas de gobernanza y compromisos éticos. Si tiene preocupaciones, sugerencias o preguntas:",
+    "email": "Correo electrónico",
+    "emailAddress": "trust@quantumpoly.ai",
+    "github": "Abra un problema de GitHub con la etiqueta",
+    "githubLabel": "governance",
+    "githubLabelText": "",
+    "anonymous": "Hay opciones de retroalimentación anónima disponibles — consulte nuestra",
+    "feedbackGuide": "Guía de Envío de Retroalimentación"
+  },
+  "documentation": {
+    "heading": "Documentación y Recursos",
+    "intro": "Explore nuestra documentación integral de gobernanza:",
+    "items": {
+      "readme": "Descripción General del Sistema de Gobernanza (governance/README.md)",
+      "methodology": "Metodología de Puntuación Ética",
+      "compliance": "Documentación del Marco de Cumplimiento",
+      "feedback": "Guía de Envío de Retroalimentación",
+      "onboarding": "Guía de Incorporación de Colaboradores"
+    }
+  },
+  "status": {
+    "heading": "Estado Actual",
+    "stage": "Etapa del Sistema",
+    "stageValue": "Piloto Interno",
+    "baseline": "Línea Base de Cumplimiento",
+    "baselineValue": "Aprobado con Condiciones (Bloque 9.0)",
+    "lastAudit": "Última Auditoría",
+    "lastAuditValue": "26 de octubre de 2025",
+    "nextReview": "Próxima Revisión",
+    "nextReviewValue": "26 de abril de 2026"
+  },
+  "cta": {
+    "dashboard": "Explorar Panel",
+    "ledger": "Ver Libro Mayor",
+    "policies": "Leer Políticas",
+    "contact": "Contáctenos"
+  },
+  "timeline": {
+    "title": "Línea de Tiempo Interactiva del Libro Mayor",
+    "description": "Visualización interactiva del libro mayor de gobernanza con verificación de cadena hash y análisis de continuidad",
+    "overview": {
+      "totalBlocks": "Bloques Totales",
+      "latestBlock": "Bloque Más Reciente",
+      "merkleRoot": "Raíz Merkle",
+      "verificationStatus": "Estado de Verificación"
+    },
+    "controls": {
+      "zoom": "Zoom",
+      "pan": "Desplazar",
+      "reset": "Restablecer Vista",
+      "filter": "Filtro",
+      "ledgerType": "Tipo de Libro Mayor"
+    },
+    "legend": {
+      "verified": "Verificado — Cadena hash intacta, relación padre confirmada",
+      "warning": "Advertencia — Brecha de continuidad detectada, se recomienda revisión manual",
+      "unknown": "Desconocido — Verificación incompleta, datos no disponibles",
+      "error": "Error — Formato hash inválido o verificación fallida"
+    },
+    "states": {
+      "loading": "Cargando datos del libro mayor...",
+      "empty": "No hay entradas del libro mayor disponibles",
+      "error": "Error al cargar el libro mayor",
+      "offline": "Sin conexión — Mostrando datos en caché",
+      "stale": "Los datos pueden estar desactualizados"
+    },
+    "accessibility": {
+      "keyboardShortcuts": "Atajos de Teclado",
+      "arrowKeys": "Teclas de flecha: Navegar bloques",
+      "plusMinus": "Teclas +/-: Ampliar/reducir",
+      "homeEnd": "Inicio/Fin: Saltar a límites",
+      "enter": "Enter: Abrir detalles del bloque"
+    }
+  }
+}
+

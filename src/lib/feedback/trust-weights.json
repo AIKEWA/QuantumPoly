@@ -1,0 +1,45 @@
+{
+  "version": "1.0.0",
+  "updated_at": "2025-11-05T14:00:00Z",
+  "weights": {
+    "signal_quality": 0.35,
+    "account_signals": 0.25,
+    "behavioral": 0.20,
+    "content_features": 0.20
+  },
+  "thresholds": {
+    "min_message_length": 50,
+    "optimal_message_length": 1500,
+    "max_message_length": 2000,
+    "min_account_age_days": 30,
+    "verified_bonus": 0.15
+  },
+  "bias_mitigation": {
+    "notes": [
+      "Account signals deliberately weighted lower (0.25) to avoid discrimination against new users",
+      "Signal quality prioritized (0.35) to emphasize content value over identity",
+      "Behavioral signals (0.20) focus on abuse patterns, not user characteristics",
+      "Content features (0.20) use length and basic toxicity, avoiding subjective judgment"
+    ],
+    "excluded_signals": [
+      "Geographic location (privacy, discrimination risk)",
+      "Device type (economic bias)",
+      "Time of submission (timezone bias)",
+      "Language complexity (education/native speaker bias)"
+    ],
+    "monitoring": [
+      "Monthly review of score distribution by topic",
+      "Quarterly bias audit comparing scores across user segments",
+      "Annual recalibration based on governance feedback"
+    ]
+  },
+  "changelog": [
+    {
+      "version": "1.0.0",
+      "date": "2025-11-05",
+      "changes": "Initial weights based on ethical scoring principles from Block 9.x",
+      "rationale": "Balanced approach prioritizing content quality while remaining accessible to all users"
+    }
+  ]
+}
+

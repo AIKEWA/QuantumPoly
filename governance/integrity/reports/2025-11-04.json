@@ -1,0 +1,105 @@
+{
+  "timestamp": "2025-11-04T19:29:58.230Z",
+  "verification_scope": [
+    "all"
+  ],
+  "total_issues": 8,
+  "auto_repaired": 0,
+  "requires_human_review": 8,
+  "issues": [
+    {
+      "issue_id": "gov-missing-fields-10",
+      "classification": "integrity_break",
+      "severity": "high",
+      "affected_ledger": "governance",
+      "entry_id": "entry-10",
+      "description": "Missing required fields: id",
+      "details": "Entry at index 10 is missing critical fields",
+      "auto_repairable": false,
+      "detected_at": "2025-11-04T19:29:58.232Z"
+    },
+    {
+      "issue_id": "gov-future-approval-undefined",
+      "classification": "integrity_break",
+      "severity": "critical",
+      "affected_ledger": "governance",
+      "description": "Approval date is in the future",
+      "details": "Entry has approved_date: 2025-11-05 which is in the future",
+      "auto_repairable": false,
+      "detected_at": "2025-11-04T19:29:58.232Z"
+    },
+    {
+      "issue_id": "gov-missing-fields-11",
+      "classification": "integrity_break",
+      "severity": "high",
+      "affected_ledger": "governance",
+      "entry_id": "entry-11",
+      "description": "Missing required fields: id",
+      "details": "Entry at index 11 is missing critical fields",
+      "auto_repairable": false,
+      "detected_at": "2025-11-04T19:29:58.232Z"
+    },
+    {
+      "issue_id": "gov-future-approval-undefined",
+      "classification": "integrity_break",
+      "severity": "critical",
+      "affected_ledger": "governance",
+      "description": "Approval date is in the future",
+      "details": "Entry has approved_date: 2025-11-07 which is in the future",
+      "auto_repairable": false,
+      "detected_at": "2025-11-04T19:29:58.232Z"
+    },
+    {
+      "issue_id": "gov-missing-fields-12",
+      "classification": "integrity_break",
+      "severity": "high",
+      "affected_ledger": "governance",
+      "entry_id": "entry-12",
+      "description": "Missing required fields: id",
+      "details": "Entry at index 12 is missing critical fields",
+      "auto_repairable": false,
+      "detected_at": "2025-11-04T19:29:58.232Z"
+    },
+    {
+      "issue_id": "gov-missing-fields-13",
+      "classification": "integrity_break",
+      "severity": "high",
+      "affected_ledger": "governance",
+      "entry_id": "entry-13",
+      "description": "Missing required fields: id",
+      "details": "Entry at index 13 is missing critical fields",
+      "auto_repairable": false,
+      "detected_at": "2025-11-04T19:29:58.232Z"
+    },
+    {
+      "issue_id": "gov-missing-fields-14",
+      "classification": "integrity_break",
+      "severity": "high",
+      "affected_ledger": "governance",
+      "entry_id": "entry-14",
+      "description": "Missing required fields: id, hash, merkleRoot",
+      "details": "Entry at index 14 is missing critical fields",
+      "auto_repairable": false,
+      "detected_at": "2025-11-04T19:29:58.232Z"
+    },
+    {
+      "issue_id": "gov-missing-fields-15",
+      "classification": "integrity_break",
+      "severity": "high",
+      "affected_ledger": "governance",
+      "entry_id": "entry-15",
+      "description": "Missing required fields: id",
+      "details": "Entry at index 15 is missing critical fields",
+      "auto_repairable": false,
+      "detected_at": "2025-11-04T19:29:58.232Z"
+    }
+  ],
+  "ledger_status": {
+    "governance": "critical",
+    "consent": "valid",
+    "federation": "valid",
+    "trust_proofs": "valid"
+  },
+  "global_merkle_root": "ea7314ccb0dd20abce9421318a997a669bd123d4e359828f7304785219652970",
+  "system_state": "attention_required"
+}
