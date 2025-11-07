@@ -1,0 +1,42 @@
+{
+  "timestamp": "2025-11-07T00:24:08.386Z",
+  "total_partners": 3,
+  "valid_partners": 0,
+  "stale_partners": 0,
+  "flagged_partners": 0,
+  "error_partners": 3,
+  "network_merkle_aggregate": "",
+  "compliance_baseline": "Stage VI — Federated Transparency",
+  "partners": [
+    {
+      "partner_id": "quantumpoly.ai",
+      "partner_display_name": "QuantumPoly (Self Reference)",
+      "last_merkle_root": "",
+      "last_verified_at": "2025-11-07T00:24:05.900Z",
+      "trust_status": "error",
+      "notes": "Failed to fetch FederationRecord: HTTP 404: Not Found",
+      "governance_endpoint": "https://quantumpoly.ai/api/federation/record",
+      "error": "HTTP 404: Not Found"
+    },
+    {
+      "partner_id": "ETH-ZH",
+      "partner_display_name": "ETH Zurich Ethics Lab",
+      "last_merkle_root": "",
+      "last_verified_at": "2025-11-07T00:24:07.972Z",
+      "trust_status": "error",
+      "notes": "Failed to fetch FederationRecord: fetch failed",
+      "governance_endpoint": "https://ethicslab.ethz.ch/api/federation/record",
+      "error": "fetch failed"
+    },
+    {
+      "partner_id": "AI4Gov-EU",
+      "partner_display_name": "AI4Gov European Transparency Hub",
+      "last_merkle_root": "",
+      "last_verified_at": "2025-11-07T00:24:08.296Z",
+      "trust_status": "error",
+      "notes": "Failed to fetch FederationRecord: fetch failed",
+      "governance_endpoint": "https://api.ai4gov.eu/federation/record",
+      "error": "fetch failed"
+    }
+  ]
+}
