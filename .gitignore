@@ -160,6 +160,7 @@ dist
 # misc
 .DS_Store
 *.pem
+.mailhook
 
 # debug
 npm-debug.log*

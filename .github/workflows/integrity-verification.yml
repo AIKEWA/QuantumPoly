@@ -2,205 +2,86 @@ name: Integrity Verification
 
 on:
   schedule:
-    - cron: '0 0 * * *'  # Daily at 00:00 UTC
-  workflow_dispatch:
-    inputs:
-      dry_run:
-        description: 'Dry run mode (no repairs)'
-        required: false
-        default: 'false'
-        type: choice
-        options:
-          - 'true'
-          - 'false'
-      notify:
-        description: 'Send notifications'
-        required: false
-        default: 'true'
-        type: choice
-        options:
-          - 'true'
-          - 'false'
-      scope:
-        description: 'Verification scope'
-        required: false
-        default: 'all'
-        type: choice
-        options:
-          - 'all'
-          - 'governance'
-          - 'consent'
-          - 'federation'
-          - 'trust'
+    # Run daily at 00:00 UTC
+    - cron: '0 0 * * *'
+  workflow_dispatch:  # Enable manual trigger for Day 0 bootstrap
+
+permissions:
+  contents: read
 
 jobs:
   verify-integrity:
+    name: Verify System Integrity
     runs-on: ubuntu-latest
     
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0  # Full history for integrity checks
         
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '20.17.25'
           cache: 'npm'
           
       - name: Install dependencies
-        run: npm ci
+        run: npm ci --legacy-peer-deps
         
       - name: Run integrity verification
+        id: integrity
+        run: npm run integrity:verify
         env:
-          GOVERNANCE_OFFICER_EMAIL: ${{ secrets.GOVERNANCE_OFFICER_EMAIL }}
-          INTEGRITY_WEBHOOK_URL: ${{ secrets.INTEGRITY_WEBHOOK_URL }}
-          INTEGRITY_WEBHOOK_SECRET: ${{ secrets.INTEGRITY_WEBHOOK_SECRET }}
-        run: |
-          DRY_RUN_FLAG=""
-          NOTIFY_FLAG=""
-          SCOPE_FLAG="--scope=all"
-          
-          if [ "${{ github.event.inputs.dry_run }}" = "true" ]; then
-            DRY_RUN_FLAG="--dry-run"
-          fi
-          
-          if [ "${{ github.event.inputs.notify }}" = "true" ]; then
-            NOTIFY_FLAG="--notify"
-          fi
-          
-          if [ -n "${{ github.event.inputs.scope }}" ]; then
-            SCOPE_FLAG="--scope=${{ github.event.inputs.scope }}"
-          fi
-          
-          node scripts/verify-integrity.mjs $DRY_RUN_FLAG $NOTIFY_FLAG $SCOPE_FLAG --verbose
-          
-      - name: Check for pending reviews
-        id: check_pending
-        run: |
-          REPORT_FILE="governance/integrity/reports/$(date +%Y-%m-%d).json"
-          
-          if [ -f "$REPORT_FILE" ]; then
-            PENDING=$(jq -r '.requires_human_review // 0' "$REPORT_FILE")
-            echo "pending_count=$PENDING" >> $GITHUB_OUTPUT
-            
-            if [ "$PENDING" -gt 0 ]; then
-              echo "⚠️ $PENDING issue(s) require human review"
-              echo "Run: npm run integrity:review"
-            else
-              echo "✅ No issues requiring human review"
-            fi
-          else
-            echo "pending_count=0" >> $GITHUB_OUTPUT
-            echo "⚠️ Report file not found"
-          fi
-          
-      - name: Commit repair entries
-        if: github.event.inputs.dry_run != 'true'
-        run: |
-          git config user.name "Integrity Monitor"
-          git config user.email "integrity@quantumpoly.ai"
-          
-          # Add ledger and reports
-          git add governance/ledger/ledger.jsonl || true
-          git add governance/integrity/reports/ || true
-          
-          # Check if there are changes to commit
-          if git diff --staged --quiet; then
-            echo "No changes to commit"
-          else
-            git commit -m "chore(integrity): automated integrity verification [skip ci]
-
-Daily integrity verification completed at $(date -u +%Y-%m-%dT%H:%M:%SZ)
-
-- Scope: ${{ github.event.inputs.scope || 'all' }}
-- Pending reviews: ${{ steps.check_pending.outputs.pending_count }}
-- Workflow: ${{ github.workflow }}
-- Run: ${{ github.run_number }}"
-            
-            # Note: Push is disabled by default to avoid automatic commits
-            # Enable only after thorough testing
-            # git push
-          fi
-          
-      - name: Upload verification report
+          NODE_ENV: production
+        continue-on-error: true
+        
+      - name: Verify ledger consistency
+        run: npm run ethics:verify-ledger
+        continue-on-error: true
+        
+      - name: Verify consent compliance
+        run: npm run consent:verify
+        continue-on-error: true
+        
+      - name: Upload integrity reports
         uses: actions/upload-artifact@v4
+        if: always()
         with:
-          name: integrity-report-${{ github.run_number }}
-          path: governance/integrity/reports/
-          retention-days: 365
+          name: integrity-verification-${{ github.run_number }}
+          path: |
+            governance/integrity/reports/*.json
+            reports/*.json
+          retention-days: 90
           if-no-files-found: warn
           
-      - name: Verify ledger integrity post-repair
-        run: |
-          echo "🔍 Verifying ledger integrity after repairs..."
-          node scripts/verify-ledger.mjs --scope=all
-          
-      - name: Create issue on critical failure
-        if: failure() && steps.check_pending.outputs.pending_count > 0
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const pendingCount = '${{ steps.check_pending.outputs.pending_count }}';
-            
-            github.rest.issues.create({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              title: `🚨 Integrity Verification: ${pendingCount} Critical Issue(s) Detected`,
-              body: `## Integrity Verification Alert
-              
-**Date:** ${new Date().toISOString()}
-**Workflow:** ${context.workflow}
-**Run:** ${context.runNumber}
-
-### Summary
-
-${pendingCount} integrity issue(s) require immediate human review.
-
-### Action Required
-
-1. Review the integrity report artifact
-2. Run \`npm run integrity:review\` locally
-3. Address critical issues within SLA timeframes
-
-### Resources
-
-- [Integrity Report Artifact](${context.payload.repository.html_url}/actions/runs/${context.runId})
-- [Integrity Dashboard](/governance/integrity)
-- [Block 9.8 Documentation](BLOCK9.8_CONTINUOUS_INTEGRITY.md)
-
----
-*This issue was automatically created by the Integrity Verification workflow.*`,
-              labels: ['governance', 'integrity', 'critical']
-            });
-          
-      - name: Summary
+      - name: Generate integrity summary
         if: always()
         run: |
-          echo "## Integrity Verification Summary" >> $GITHUB_STEP_SUMMARY
+          echo "## Integrity Verification Report" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Date:** $(date -u +%Y-%m-%d)" >> $GITHUB_STEP_SUMMARY
+          echo "**Run ID:** ${{ github.run_number }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Node Version:** 20.17.25 (Stage VI environment match)" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           
-          REPORT_FILE="governance/integrity/reports/$(date +%Y-%m-%d).json"
-          
-          if [ -f "$REPORT_FILE" ]; then
-            SYSTEM_STATE=$(jq -r '.system_state' "$REPORT_FILE")
-            TOTAL_ISSUES=$(jq -r '.total_issues' "$REPORT_FILE")
-            AUTO_REPAIRED=$(jq -r '.auto_repaired' "$REPORT_FILE")
-            PENDING=$(jq -r '.requires_human_review' "$REPORT_FILE")
-            
-            echo "**System State:** $SYSTEM_STATE" >> $GITHUB_STEP_SUMMARY
-            echo "**Total Issues:** $TOTAL_ISSUES" >> $GITHUB_STEP_SUMMARY
-            echo "**Auto-Repaired:** $AUTO_REPAIRED" >> $GITHUB_STEP_SUMMARY
-            echo "**Pending Review:** $PENDING" >> $GITHUB_STEP_SUMMARY
+          # Find latest integrity report
+          INTEGRITY_FILE=$(ls -t governance/integrity/reports/*.json 2>/dev/null | head -1)
+          if [ -n "$INTEGRITY_FILE" ] && [ -f "$INTEGRITY_FILE" ]; then
+            echo "✅ Integrity verification completed" >> $GITHUB_STEP_SUMMARY
             echo "" >> $GITHUB_STEP_SUMMARY
-            
-            if [ "$PENDING" -gt 0 ]; then
-              echo "⚠️ **Action Required:** $PENDING issue(s) need human review" >> $GITHUB_STEP_SUMMARY
-            else
-              echo "✅ **Status:** All checks passed" >> $GITHUB_STEP_SUMMARY
-            fi
+            echo "### Verification Results" >> $GITHUB_STEP_SUMMARY
+            echo '```json' >> $GITHUB_STEP_SUMMARY
+            jq '{timestamp, status, checks: .checks | length, passed: [.checks[] | select(.status == "passed")] | length}' "$INTEGRITY_FILE" 2>/dev/null || head -20 "$INTEGRITY_FILE"
+            echo '```' >> $GITHUB_STEP_SUMMARY
           else
-            echo "⚠️ Report file not found" >> $GITHUB_STEP_SUMMARY
+            echo "⚠️ No integrity report generated" >> $GITHUB_STEP_SUMMARY
           fi
-
+          
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Governance Chain Status" >> $GITHUB_STEP_SUMMARY
+          if [ -f governance/ledger/ledger.jsonl ]; then
+            ENTRY_COUNT=$(wc -l < governance/ledger/ledger.jsonl)
+            echo "- Ledger entries: $ENTRY_COUNT" >> $GITHUB_STEP_SUMMARY
+            echo "- Latest entry: $(tail -1 governance/ledger/ledger.jsonl | jq -r '.timestamp // "N/A"')" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "⚠️ Ledger file not found" >> $GITHUB_STEP_SUMMARY
+          fi

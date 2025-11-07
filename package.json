@@ -94,6 +94,7 @@
     "report:weekly": "node scripts/weekly-governance-summary.mjs",
     "report:verify": "node scripts/verify-daily-reports.mjs",
     "report:all": "npm run monitor && npm run report:daily",
+    "verify:block-c": "node scripts/verify-block-c-bootstrap.mjs",
     "ci": "npm run validate:translations && npm run validate && npm run build && npm run build-storybook",
     "vercel-build": "npm install --legacy-peer-deps && npm run build"
   },

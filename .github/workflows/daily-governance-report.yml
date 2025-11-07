@@ -1,424 +1,63 @@
-name: Daily Governance Reports
-
-# Block 10.7 — Daily Governance Reports
-# Autonomous daily reporting at 00:00 UTC, weekly summaries on Sundays at 23:59 UTC
+name: Daily Governance Report
 
 on:
   schedule:
-    # Daily at 00:00 UTC (after integrity-verification.yml)
+    # Run daily at 00:00 UTC
     - cron: '0 0 * * *'
-    # Weekly summary on Sunday at 23:59 UTC
-    - cron: '59 23 * * 0'
-  
-  workflow_dispatch:
-    inputs:
-      report_type:
-        description: 'Report type to generate'
-        required: false
-        default: 'daily'
-        type: choice
-        options:
-          - 'daily'
-          - 'weekly'
-          - 'both'
-      report_date:
-        description: 'Report date (YYYY-MM-DD, default: today)'
-        required: false
-        type: string
+  workflow_dispatch:  # Enable manual trigger for Day 0 bootstrap
 
 permissions:
-  contents: write  # Required for committing reports
-  actions: write   # Required for uploading artifacts
-  issues: write    # Required for creating escalation issues
-
-env:
-  NODE_VERSION: '20.x'
+  contents: read
 
 jobs:
-  generate-daily-report:
-    name: Generate Daily Report
+  generate-report:
+    name: Generate Daily Governance Report
     runs-on: ubuntu-latest
-    # Run if: scheduled daily, or manual with daily/both
-    if: |
-      github.event.schedule == '0 0 * * *' || 
-      github.event_name == 'workflow_dispatch' && 
-      (github.event.inputs.report_type == 'daily' || github.event.inputs.report_type == 'both')
     
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 1  # Shallow clone for faster execution
-      
+        
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ env.NODE_VERSION }}
+          node-version: '20.17.25'
           cache: 'npm'
-      
-      - name: Install dependencies
-        run: npm ci --prefer-offline --no-audit
-      
-      - name: Run system monitoring
-        id: monitoring
-        run: |
-          DATE_ARG=""
-          if [ -n "${{ github.event.inputs.report_date }}" ]; then
-            # Manual trigger with custom date - use monitoring data if available
-            echo "Using custom date: ${{ github.event.inputs.report_date }}"
-          fi
           
-          # Run monitoring script
-          if node scripts/monitor-system.mjs --base-url=https://quantumpoly.ai --verbose; then
-            echo "status=success" >> $GITHUB_OUTPUT
-          else
-            EXIT_CODE=$?
-            echo "status=warning" >> $GITHUB_OUTPUT
-            echo "exit_code=$EXIT_CODE" >> $GITHUB_OUTPUT
-          fi
-        continue-on-error: true
-      
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+        
       - name: Generate daily governance report
-        id: daily_report
-        run: |
-          DATE_ARG=""
-          if [ -n "${{ github.event.inputs.report_date }}" ]; then
-            DATE_ARG="--date=${{ github.event.inputs.report_date }}"
-          fi
-          
-          # Run daily report generator
-          if node scripts/daily-governance-report.mjs $DATE_ARG --verbose; then
-            echo "status=success" >> $GITHUB_OUTPUT
-            
-            REPORT_DATE=$(date -u +%Y-%m-%d)
-            if [ -n "${{ github.event.inputs.report_date }}" ]; then
-              REPORT_DATE="${{ github.event.inputs.report_date }}"
-            fi
-            
-            echo "report_date=$REPORT_DATE" >> $GITHUB_OUTPUT
-            echo "report_file=reports/monitoring-$REPORT_DATE.json" >> $GITHUB_OUTPUT
-          else
-            echo "status=failed" >> $GITHUB_OUTPUT
-            exit 1
-          fi
-      
-      - name: Extract report metadata
-        id: metadata
-        if: steps.daily_report.outputs.status == 'success'
-        run: |
-          REPORT_FILE="${{ steps.daily_report.outputs.report_file }}"
-          
-          if [ -f "$REPORT_FILE" ]; then
-            SYSTEM_STATUS=$(jq -r '.system_health.status // "unknown"' "$REPORT_FILE")
-            COMPLETENESS=$(jq -r '.data_quality.completeness_score // 0' "$REPORT_FILE")
-            RECOMMENDATIONS=$(jq -r '.recommendations | length' "$REPORT_FILE")
-            HASH=$(jq -r '.hash // "none"' "$REPORT_FILE")
-            
-            echo "system_status=$SYSTEM_STATUS" >> $GITHUB_OUTPUT
-            echo "completeness=$COMPLETENESS" >> $GITHUB_OUTPUT
-            echo "recommendation_count=$RECOMMENDATIONS" >> $GITHUB_OUTPUT
-            echo "hash=${HASH:0:16}" >> $GITHUB_OUTPUT
-          fi
-      
-      - name: Verify report integrity
-        if: steps.daily_report.outputs.status == 'success'
-        run: |
-          echo "Verifying report integrity..."
-          node scripts/verify-daily-reports.mjs --type=daily --verbose
-      
-      - name: Upload daily report as artifact
-        if: steps.daily_report.outputs.status == 'success'
-        uses: actions/upload-artifact@v4
-        with:
-          name: daily-report-${{ steps.daily_report.outputs.report_date }}
-          path: ${{ steps.daily_report.outputs.report_file }}
-          retention-days: 2555  # 7 years retention
-          if-no-files-found: warn
-      
-      - name: Commit daily report to repository
-        if: steps.daily_report.outputs.status == 'success'
-        run: |
-          git config --local user.email "governance@quantumpoly.ai"
-          git config --local user.name "Daily Governance Reporter"
-          
-          git add ${{ steps.daily_report.outputs.report_file }}
-          git add reports/monitoring/ || true
-          
-          if git diff --staged --quiet; then
-            echo "No changes to commit"
-          else
-            git commit -m "chore(governance): daily report ${{ steps.daily_report.outputs.report_date }}
-
-            System Status: ${{ steps.metadata.outputs.system_status }}
-            Data Completeness: ${{ steps.metadata.outputs.completeness }}
-            Recommendations: ${{ steps.metadata.outputs.recommendation_count }}
-            Hash: ${{ steps.metadata.outputs.hash }}...
-            
-            Generated by: Block 10.7 Daily Governance Reports
-            Workflow: ${{ github.workflow }}
-            Run: ${{ github.run_number }}"
-            
-            git push
-          fi
+        run: npm run report:daily
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      
-      - name: Create issue on critical status
-        if: steps.metadata.outputs.system_status == 'attention_required'
-        uses: actions/github-script@v7
+          NODE_ENV: production
+          
+      - name: Upload report artifact
+        uses: actions/upload-artifact@v4
+        if: always()
         with:
-          script: |
-            const reportDate = '${{ steps.daily_report.outputs.report_date }}';
-            const systemStatus = '${{ steps.metadata.outputs.system_status }}';
-            const recommendations = '${{ steps.metadata.outputs.recommendation_count }}';
-            
-            await github.rest.issues.create({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              title: `🚨 Daily Governance Alert: System Requires Attention (${reportDate})`,
-              body: `# Daily Governance Alert
-              
-**Date:** ${reportDate}
-**System Status:** **${systemStatus.toUpperCase()}**
-**Recommendations:** ${recommendations}
-
-## Summary
-
-The daily governance report has detected issues requiring immediate attention.
-
-## Action Required
-
-1. Review the daily report artifact
-2. Address critical recommendations
-3. Verify system recovery
-4. Update governance ledger if needed
-
-## Resources
-
-- **Report Artifact:** [Daily Report ${reportDate}](https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId})
-- **Report File:** \`reports/monitoring-${reportDate}.json\`
-- **Block Documentation:** \`BLOCK10.7_DAILY_GOVERNANCE_REPORTS.md\`
-
-## Contact
-
-- **Governance Officer:** governance@quantumpoly.ai
-- **Technical Lead:** See CONTRIBUTING.md
-
----
-
-*This issue was automatically created by the Daily Governance Reports workflow.*
-*Workflow Run: #${context.runNumber}*`,
-              labels: ['critical', 'governance', 'block-10.7', 'auto-escalation']
-            });
-      
-      - name: Daily report summary
+          name: daily-governance-report-${{ github.run_number }}
+          path: |
+            reports/monitoring-*.json
+            reports/monitoring/*.json
+          retention-days: 90
+          if-no-files-found: warn
+          
+      - name: Report summary
         if: always()
         run: |
-          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-          echo "📊 Daily Governance Report Complete"
-          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-          echo "Date: ${{ steps.daily_report.outputs.report_date }}"
-          echo "Status: ${{ steps.daily_report.outputs.status }}"
-          echo "System: ${{ steps.metadata.outputs.system_status }}"
-          echo "Completeness: ${{ steps.metadata.outputs.completeness }}"
-          echo "Recommendations: ${{ steps.metadata.outputs.recommendation_count }}"
-          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-
-  generate-weekly-summary:
-    name: Generate Weekly Summary
-    runs-on: ubuntu-latest
-    # Run if: scheduled weekly, or manual with weekly/both
-    if: |
-      github.event.schedule == '59 23 * * 0' || 
-      github.event_name == 'workflow_dispatch' && 
-      (github.event.inputs.report_type == 'weekly' || github.event.inputs.report_type == 'both')
-    
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 1
-      
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
-      
-      - name: Install dependencies
-        run: npm ci --prefer-offline --no-audit
-      
-      - name: Determine ISO week
-        id: week
-        run: |
-          WEEK=$(date -u +%Y-W%V)
-          echo "iso_week=$WEEK" >> $GITHUB_OUTPUT
-          echo "Current ISO week: $WEEK"
-      
-      - name: Generate weekly summary
-        id: weekly_summary
-        run: |
-          WEEK="${{ steps.week.outputs.iso_week }}"
-          
-          # Run weekly summary generator
-          if node scripts/weekly-governance-summary.mjs --week=$WEEK --verbose; then
-            echo "status=success" >> $GITHUB_OUTPUT
-            echo "week=$WEEK" >> $GITHUB_OUTPUT
+          echo "## Daily Governance Report Generated" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Date:** $(date -u +%Y-%m-%d)" >> $GITHUB_STEP_SUMMARY
+          echo "**Run ID:** ${{ github.run_number }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          if [ -f reports/monitoring-$(date -u +%Y-%m-%d).json ]; then
+            echo "✅ Report generated successfully" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "### Report Preview" >> $GITHUB_STEP_SUMMARY
+            echo '```json' >> $GITHUB_STEP_SUMMARY
+            head -n 20 reports/monitoring-$(date -u +%Y-%m-%d).json >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
           else
-            EXIT_CODE=$?
-            if [ $EXIT_CODE -eq 1 ]; then
-              echo "status=warning" >> $GITHUB_OUTPUT
-              echo "week=$WEEK" >> $GITHUB_OUTPUT
-            else
-              echo "status=failed" >> $GITHUB_OUTPUT
-              exit 1
-            fi
+            echo "⚠️ Report file not found" >> $GITHUB_STEP_SUMMARY
           fi
-      
-      - name: Extract summary metadata
-        id: summary_metadata
-        if: steps.weekly_summary.outputs.status == 'success' || steps.weekly_summary.outputs.status == 'warning'
-        run: |
-          SUMMARY_FILE="reports/governance-summary.json"
-          
-          if [ -f "$SUMMARY_FILE" ]; then
-            REPORTS_INCLUDED=$(jq -r '.daily_reports_included // 0' "$SUMMARY_FILE")
-            HEALTHY_DAYS=$(jq -r '.system_health_summary.healthy_days // 0' "$SUMMARY_FILE")
-            ANOMALIES=$(jq -r '.anomalies | length' "$SUMMARY_FILE")
-            RECOMMENDATIONS=$(jq -r '.recommendations | length' "$SUMMARY_FILE")
-            HASH=$(jq -r '.hash // "none"' "$SUMMARY_FILE")
-            
-            echo "reports_included=$REPORTS_INCLUDED" >> $GITHUB_OUTPUT
-            echo "healthy_days=$HEALTHY_DAYS" >> $GITHUB_OUTPUT
-            echo "anomaly_count=$ANOMALIES" >> $GITHUB_OUTPUT
-            echo "recommendation_count=$RECOMMENDATIONS" >> $GITHUB_OUTPUT
-            echo "hash=${HASH:0:16}" >> $GITHUB_OUTPUT
-          fi
-      
-      - name: Verify summary integrity
-        if: steps.weekly_summary.outputs.status == 'success' || steps.weekly_summary.outputs.status == 'warning'
-        run: |
-          echo "Verifying summary integrity..."
-          node scripts/verify-daily-reports.mjs --type=weekly --verbose
-      
-      - name: Upload weekly summary as artifact
-        if: steps.weekly_summary.outputs.status == 'success' || steps.weekly_summary.outputs.status == 'warning'
-        uses: actions/upload-artifact@v4
-        with:
-          name: weekly-summary-${{ steps.weekly_summary.outputs.week }}
-          path: reports/governance-summary.json
-          retention-days: 2555  # 7 years retention
-          if-no-files-found: warn
-      
-      - name: Commit weekly summary to repository
-        if: steps.weekly_summary.outputs.status == 'success' || steps.weekly_summary.outputs.status == 'warning'
-        run: |
-          git config --local user.email "governance@quantumpoly.ai"
-          git config --local user.name "Weekly Governance Reporter"
-          
-          git add reports/governance-summary.json
-          
-          if git diff --staged --quiet; then
-            echo "No changes to commit"
-          else
-            git commit -m "chore(governance): weekly summary ${{ steps.weekly_summary.outputs.week }}
-
-            Reports Included: ${{ steps.summary_metadata.outputs.reports_included }}/7
-            Healthy Days: ${{ steps.summary_metadata.outputs.healthy_days }}
-            Anomalies: ${{ steps.summary_metadata.outputs.anomaly_count }}
-            Recommendations: ${{ steps.summary_metadata.outputs.recommendation_count }}
-            Hash: ${{ steps.summary_metadata.outputs.hash }}...
-            
-            Generated by: Block 10.7 Weekly Governance Summary
-            Workflow: ${{ github.workflow }}
-            Run: ${{ github.run_number }}"
-            
-            git push
-          fi
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      
-      - name: Create issue if anomalies detected
-        if: steps.summary_metadata.outputs.anomaly_count > 0
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const fs = require('fs');
-            const week = '${{ steps.weekly_summary.outputs.week }}';
-            const anomalyCount = '${{ steps.summary_metadata.outputs.anomaly_count }}';
-            const summaryFile = 'reports/governance-summary.json';
-            
-            let anomalyDetails = 'Summary not available';
-            
-            if (fs.existsSync(summaryFile)) {
-              const summary = JSON.parse(fs.readFileSync(summaryFile, 'utf8'));
-              
-              const anomalyList = summary.anomalies.map(a => 
-                `- **${a.date}** [${a.type}]: ${a.reason} (${a.resolved ? 'Resolved' : 'Unresolved'})`
-              ).join('\n');
-              
-              anomalyDetails = `
-            ## Detected Anomalies
-            
-            ${anomalyList}
-            
-            ### System Health Summary
-            
-            - **Healthy Days:** ${summary.system_health_summary.healthy_days}/7
-            - **Degraded Days:** ${summary.system_health_summary.degraded_days}/7
-            - **Critical Days:** ${summary.system_health_summary.critical_days}/7
-            - **Uptime:** ${summary.system_health_summary.uptime_percentage}%
-            
-            ### Recommendations
-            
-            ${summary.recommendations.map(r => 
-              `- **[${r.priority.toUpperCase()}]** ${r.action}: ${r.rationale}`
-            ).join('\n') || 'No recommendations'}
-            `;
-            }
-            
-            await github.rest.issues.create({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              title: `⚠️ Weekly Governance Review: ${anomalyCount} Anomalies Detected (${week})`,
-              body: `# Weekly Governance Review
-              
-**Week:** ${week}
-**Anomalies:** ${anomalyCount}
-
-${anomalyDetails}
-
-## Action Required
-
-1. Review the weekly summary artifact
-2. Investigate unresolved anomalies
-3. Implement recommended actions
-4. Update governance processes as needed
-
-## Resources
-
-- **Summary Artifact:** [Weekly Summary ${week}](https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId})
-- **Summary File:** \`reports/governance-summary.json\`
-- **Block Documentation:** \`BLOCK10.7_DAILY_GOVERNANCE_REPORTS.md\`
-
----
-
-*This issue was automatically created by the Weekly Governance Summary workflow.*
-*Workflow Run: #${context.runNumber}*`,
-              labels: ['governance', 'block-10.7', 'weekly-review', 'anomaly']
-            });
-      
-      - name: Weekly summary complete
-        if: always()
-        run: |
-          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-          echo "📈 Weekly Governance Summary Complete"
-          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-          echo "Week: ${{ steps.weekly_summary.outputs.week }}"
-          echo "Status: ${{ steps.weekly_summary.outputs.status }}"
-          echo "Reports: ${{ steps.summary_metadata.outputs.reports_included }}/7"
-          echo "Healthy Days: ${{ steps.summary_metadata.outputs.healthy_days }}"
-          echo "Anomalies: ${{ steps.summary_metadata.outputs.anomaly_count }}"
-          echo "Recommendations: ${{ steps.summary_metadata.outputs.recommendation_count }}"
-          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-

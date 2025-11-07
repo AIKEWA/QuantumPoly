@@ -148,7 +148,6 @@ ${verificationOutput}
 
 </details>
 
----
 *Automated verification by Stage VI Integrity workflow*`;
             
             // Note: Commenting is disabled for scheduled runs to avoid spam
@@ -204,7 +203,6 @@ The Stage VI chain checksum does **NOT** match the canonical governance-verified
 - [Hash Script](scripts/hash-stage-vi-artifacts.mjs)
 - [Stage VI Artifacts Manifest](governance/ledger/stageVI-hashes.json)
 
----
 *This issue was automatically created by the Stage VI Integrity Verification workflow.*
 
 **Priority:** 🔴 CRITICAL - Requires immediate governance review`,

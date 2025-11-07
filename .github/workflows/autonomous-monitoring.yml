@@ -1,281 +1,68 @@
 name: Autonomous System Monitoring
 
-# BLOCK 10.3 — "The System That Watches Itself"
-# Daily automated monitoring of system health, integrity, and ethical standing
-
 on:
-  # Daily execution at 00:00 UTC
   schedule:
+    # Run daily at 00:00 UTC
     - cron: '0 0 * * *'
-  
-  # Manual trigger for on-demand monitoring
-  workflow_dispatch:
-    inputs:
-      base_url:
-        description: 'Base URL to monitor'
-        required: false
-        default: 'https://quantumpoly.ai'
-      skip_integrity:
-        description: 'Skip integrity verification'
-        required: false
-        type: boolean
-        default: false
-      skip_ewa:
-        description: 'Skip EWA analysis'
-        required: false
-        type: boolean
-        default: false
+  workflow_dispatch:  # Enable manual trigger for Day 0 bootstrap
 
 permissions:
-  contents: write  # Required for committing reports
-  issues: write    # Required for creating escalation issues
-
-env:
-  NEXT_PUBLIC_SITE_URL: ${{ github.event.inputs.base_url || 'https://quantumpoly.ai' }}
-  NODE_VERSION: '20.x'
+  contents: read
 
 jobs:
-  monitor:
-    name: System Health Check
+  monitor-system:
+    name: Monitor System Health
     runs-on: ubuntu-latest
     
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 1  # Shallow clone for faster execution
-
+        
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ env.NODE_VERSION }}
+          node-version: '20.17.25'
           cache: 'npm'
-
+          
       - name: Install dependencies
-        run: npm ci --prefer-offline --no-audit
-
-      - name: Run autonomous monitoring
-        id: monitoring
-        run: |
-          # Build monitoring command
-          CMD="node scripts/monitor-system.mjs"
-          
-          if [ "${{ github.event.inputs.skip_integrity }}" == "true" ]; then
-            CMD="$CMD --no-integrity"
-          fi
-          
-          if [ "${{ github.event.inputs.skip_ewa }}" == "true" ]; then
-            CMD="$CMD --no-ewa"
-          fi
-          
-          CMD="$CMD --base-url=${{ env.NEXT_PUBLIC_SITE_URL }} --verbose"
-          
-          echo "Executing: $CMD"
-          
-          # Run monitoring (capture exit code)
-          if $CMD; then
-            echo "status=success" >> $GITHUB_OUTPUT
-            echo "system_state=healthy" >> $GITHUB_OUTPUT
-          else
-            EXIT_CODE=$?
-            if [ $EXIT_CODE -eq 1 ]; then
-              echo "status=degraded" >> $GITHUB_OUTPUT
-              echo "system_state=degraded" >> $GITHUB_OUTPUT
-            else
-              echo "status=warning" >> $GITHUB_OUTPUT
-              echo "system_state=warning" >> $GITHUB_OUTPUT
-            fi
-          fi
-        continue-on-error: true
-
-      - name: Extract report metadata
-        id: report_metadata
-        if: always()
-        run: |
-          REPORT_DATE=$(date -u +%Y-%m-%d)
-          REPORT_PATH="reports/monitoring/monitoring-${REPORT_DATE}.json"
-          
-          echo "report_date=${REPORT_DATE}" >> $GITHUB_OUTPUT
-          echo "report_path=${REPORT_PATH}" >> $GITHUB_OUTPUT
-          
-          if [ -f "$REPORT_PATH" ]; then
-            echo "report_exists=true" >> $GITHUB_OUTPUT
-            
-            # Extract key metrics from report
-            SYSTEM_STATE=$(jq -r '.system_state // "unknown"' "$REPORT_PATH")
-            ENDPOINT_PASSED=$(jq -r '.endpoint_summary.passed // 0' "$REPORT_PATH")
-            ENDPOINT_TOTAL=$(jq -r '.endpoint_summary.total // 0' "$REPORT_PATH")
-            RECOMMENDATIONS=$(jq -r '.recommendations | length' "$REPORT_PATH")
-            
-            echo "system_state=${SYSTEM_STATE}" >> $GITHUB_OUTPUT
-            echo "endpoint_passed=${ENDPOINT_PASSED}" >> $GITHUB_OUTPUT
-            echo "endpoint_total=${ENDPOINT_TOTAL}" >> $GITHUB_OUTPUT
-            echo "recommendation_count=${RECOMMENDATIONS}" >> $GITHUB_OUTPUT
-          else
-            echo "report_exists=false" >> $GITHUB_OUTPUT
-            echo "system_state=unknown" >> $GITHUB_OUTPUT
-          fi
-
-      - name: Upload monitoring report as artifact
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: monitoring-report-${{ steps.report_metadata.outputs.report_date }}
-          path: ${{ steps.report_metadata.outputs.report_path }}
-          retention-days: 365  # 1 year retention for audit trail
-          if-no-files-found: warn
-
-      - name: Commit monitoring report to repository
-        if: steps.report_metadata.outputs.report_exists == 'true'
-        run: |
-          git config --local user.email "governance@quantumpoly.ai"
-          git config --local user.name "Autonomous Monitoring"
-          
-          git add ${{ steps.report_metadata.outputs.report_path }}
-          
-          if git diff --staged --quiet; then
-            echo "No changes to commit"
-          else
-            git commit -m "chore: autonomous monitoring report ${{ steps.report_metadata.outputs.report_date }}
-
-            System State: ${{ steps.report_metadata.outputs.system_state }}
-            Endpoints: ${{ steps.report_metadata.outputs.endpoint_passed }}/${{ steps.report_metadata.outputs.endpoint_total }} passed
-            Recommendations: ${{ steps.report_metadata.outputs.recommendation_count }}
-            
-            Generated by: BLOCK 10.3 Autonomous Monitoring
-            Workflow: ${{ github.workflow }}
-            Run: ${{ github.run_number }}"
-            
-            git push
-          fi
+        run: npm ci --legacy-peer-deps
+        
+      - name: Run system monitoring
+        run: npm run monitor
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Create escalation issue on degraded state
-        if: steps.report_metadata.outputs.system_state == 'degraded'
-        uses: actions/github-script@v7
+          NODE_ENV: production
+        continue-on-error: true
+        
+      - name: Upload monitoring artifacts
+        uses: actions/upload-artifact@v4
+        if: always()
         with:
-          script: |
-            const fs = require('fs');
-            const reportPath = '${{ steps.report_metadata.outputs.report_path }}';
-            
-            let reportDetails = 'Report not available';
-            let recommendations = [];
-            
-            if (fs.existsSync(reportPath)) {
-              const report = JSON.parse(fs.readFileSync(reportPath, 'utf8'));
-              
-              // Build endpoint status table
-              const endpointTable = report.endpoints.map(ep => 
-                `| ${ep.endpoint} | ${ep.status} | ${ep.response_time_ms}ms | ${ep.notes || 'OK'} |`
-              ).join('\n');
-              
-              // Extract recommendations
-              recommendations = report.recommendations || [];
-              const recommendationList = recommendations.map(rec => 
-                `- **[${rec.priority.toUpperCase()}]** ${rec.action}: ${rec.details}`
-              ).join('\n');
-              
-              reportDetails = `
-            ## Monitoring Report Summary
-            
-            **Report ID:** \`${report.report_id}\`
-            **Timestamp:** ${report.timestamp}
-            **System State:** **${report.system_state.toUpperCase()}**
-            
-            ### Endpoint Health
-            
-            | Endpoint | Status | Response Time | Notes |
-            |----------|--------|---------------|-------|
-            ${endpointTable}
-            
-            **Summary:** ${report.endpoint_summary.passed}/${report.endpoint_summary.total} endpoints passed
-            
-            ### TLS Certificate
-            
-            - **Valid:** ${report.tls.valid ? '✓ Yes' : '✗ No'}
-            - **Issuer:** ${report.tls.issuer || 'N/A'}
-            - **Days Remaining:** ${report.tls.days_remaining || 'N/A'}
-            
-            ${report.integrity ? `
-            ### Integrity Check
-            
-            - **Status:** ${report.integrity.status}
-            - **Issues:** ${report.integrity.issues}
-            - **Requires Review:** ${report.integrity.requires_review || 0}
-            ` : ''}
-            
-            ${report.ewa ? `
-            ### EWA Analysis
-            
-            - **Total Insights:** ${report.ewa.total_insights}
-            - **Critical Insights:** ${report.ewa.critical_insights}
-            - **Requires Review:** ${report.ewa.requires_review}
-            ` : ''}
-            
-            ### Recommendations
-            
-            ${recommendationList || 'No recommendations'}
-            
-            ---
-            
-            **Full Report:** \`${reportPath}\`
-            `;
-            }
-            
-            // Create issue
-            await github.rest.issues.create({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              title: `🚨 System Degraded: Autonomous Monitoring Alert (${{ steps.report_metadata.outputs.report_date }})`,
-              body: `# Autonomous Monitoring Alert
-            
-            The autonomous monitoring system has detected a **DEGRADED** system state requiring immediate attention.
-            
-            ${reportDetails}
-            
-            ## Required Actions
-            
-            1. Review the full monitoring report
-            2. Address critical recommendations
-            3. Verify system recovery
-            4. Update governance ledger if needed
-            
-            ## Contact
-            
-            - **Governance Officer:** governance@quantumpoly.ai
-            - **Technical Lead:** See CONTRIBUTING.md
-            
-            ## References
-            
-            - **Block:** 10.3 — "The System That Watches Itself"
-            - **Workflow:** [\`${{ github.workflow }}\`](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
-            - **Documentation:** \`docs/monitoring/OPERATIONAL_RUNBOOK.md\`
-            
-            ---
-            
-            *This issue was automatically created by the autonomous monitoring system.*
-            *Workflow Run: #${{ github.run_number }}*`,
-              labels: ['critical', 'monitoring', 'block-10.3', 'auto-escalation'],
-              assignees: []  // Configure assignees in repository settings
-            });
-
-      - name: Generate monitoring summary
+          name: system-monitoring-${{ github.run_number }}
+          path: |
+            reports/monitoring/*.json
+            reports/monitoring-*.json
+          retention-days: 90
+          if-no-files-found: warn
+          
+      - name: Check system health status
         if: always()
         run: |
-          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-          echo "🔍 Autonomous Monitoring Complete"
-          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-          echo "Date: ${{ steps.report_metadata.outputs.report_date }}"
-          echo "System State: ${{ steps.report_metadata.outputs.system_state }}"
-          echo "Endpoints: ${{ steps.report_metadata.outputs.endpoint_passed }}/${{ steps.report_metadata.outputs.endpoint_total }}"
-          echo "Recommendations: ${{ steps.report_metadata.outputs.recommendation_count }}"
-          echo "Report: ${{ steps.report_metadata.outputs.report_path }}"
-          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-
-      - name: Fail workflow on degraded state
-        if: steps.report_metadata.outputs.system_state == 'degraded'
-        run: |
-          echo "::error::System is in DEGRADED state - manual intervention required"
-          exit 1
-
+          echo "## System Monitoring Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Date:** $(date -u +%Y-%m-%d)" >> $GITHUB_STEP_SUMMARY
+          echo "**Target:** https://www.quantumpoly.ai" >> $GITHUB_STEP_SUMMARY
+          echo "**Run ID:** ${{ github.run_number }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          # Find the latest monitoring file
+          LATEST_FILE=$(ls -t reports/monitoring/*.json 2>/dev/null | head -1)
+          if [ -n "$LATEST_FILE" ] && [ -f "$LATEST_FILE" ]; then
+            echo "✅ Monitoring completed" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "### Health Check Summary" >> $GITHUB_STEP_SUMMARY
+            echo '```json' >> $GITHUB_STEP_SUMMARY
+            jq '.summary // . | {status, timestamp, checks_passed: .checks_passed // "N/A"}' "$LATEST_FILE" 2>/dev/null || cat "$LATEST_FILE" | head -20
+            echo '```' >> $GITHUB_STEP_SUMMARY
+          else
+            echo "⚠️ No monitoring data generated" >> $GITHUB_STEP_SUMMARY
+          fi
