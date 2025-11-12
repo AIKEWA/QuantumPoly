@@ -152,6 +152,7 @@
     "axe-core": "^4.11.0",
     "chrome-launcher": "^1.1.0",
     "eslint": "^8.57.1",
+    "next": "^14.0.0",
     "eslint-config-next": "14.2.25",
     "eslint-plugin-import": "^2.32.0",
     "eslint-plugin-jsx-a11y": "^6.10.2",
