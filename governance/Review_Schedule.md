@@ -1,0 +1,1 @@
+- [MiniRetro_Template](/docs/research/MiniRetro_Template.md) — added 2025-11-11 by Jules (Process Analyst)
