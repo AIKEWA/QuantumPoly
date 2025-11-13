@@ -1,4 +1,12 @@
-# QuantumPoly - Futuristic Landing Page
+# QuantumPoly
+
+A futuristic landing page for QuantumPoly, a fictional entity.
+
+[![CI Status](https://github.com/AIKEWA/QuantumPoly/actions/workflows/frontend-ci.yml/badge.svg)](https://github.com/AIKEWA/QuantumPoly/actions/workflows/frontend-ci.yml)
+
+## Overview
+
+This repository contains the frontend for the QuantumPoly project. It's a Next.js application with a focus on performance, accessibility, and a modern development workflow.
 
 A modern, cyberpunk-elegant landing page for QuantumPoly, built with Next.js 14+ and Tailwind CSS.
 

@@ -49,11 +49,19 @@ Initialized by Jules — 2025-11-12
 - Security audit ✓
 - No breaking changes detected
 
-## PR #12 — Rebase & Conflict Resolution
+## PR #12 — Initialize QuantumPoly Repo Baseline
 
-- Rebased onto main 2025-11-13
-- Conflicts resolved successfully
-- Build and tests passed ✓
+- **Date:** 2025-11-13
+- **Author:** app/google-labs-jules (Bot)
+- **Branch:** `chore-initialize-repo-baseline`
+- **Files Changed:** Multiple
+  - Created directory structure
+  - Added CI workflow (`.github/workflows/frontend-ci.yml`)
+  - Updated README.md and .gitignore
+  - Created .nvmrc file
+  - Added integration log
+- **Merged into main:** 2025-11-13
+- **Status:** ✓ Merged successfully
 
 ---
 
