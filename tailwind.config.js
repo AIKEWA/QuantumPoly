@@ -24,6 +24,14 @@ module.exports = {
           muted: 'var(--color-text-muted, #6b7280)',
           inverse: 'var(--color-text-inverse, #ffffff)',
         },
+        'gate-viz': {
+          active: 'var(--gate-viz-active, #4CAF50)',
+          inactive: 'var(--gate-viz-inactive, #9E9E9E)',
+          error: 'var(--gate-viz-error, #F44336)',
+          background: 'var(--gate-viz-background, #212121)',
+          text: 'var(--gate-viz-text, #FFFFFF)',
+          'tooltip-bg': 'var(--gate-viz-tooltip-bg, #424242)',
+        },
       },
       spacing: {
         // 4px scale for consistent spacing
