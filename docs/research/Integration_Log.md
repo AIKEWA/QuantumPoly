@@ -23,3 +23,9 @@ Initialized by Jules — 2025-11-12
 - Status: Gate B – Certified
 - Date: 2025-11-12
 - Notes: Dashboard integration successfully validated under design parity and governance traceability.
+
+## PR #12 — Rebase & Conflict Resolution
+
+- Rebased onto main 2025-11-13
+- Conflicts resolved successfully
+- Build and tests passed ✓
