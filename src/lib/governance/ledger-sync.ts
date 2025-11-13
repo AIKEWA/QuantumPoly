@@ -7,9 +7,9 @@
  * Gate D Certification — Governance Ledger Integration
  */
 
-import crypto from 'crypto';
-import fs from 'fs';
-import path from 'path';
+import * as crypto from 'crypto';
+import * as fs from 'fs';
+import * as path from 'path';
 
 const INTEGRATION_LOG_PATH = path.join(process.cwd(), 'docs/research/Integration_Log.md');
 const GOVERNANCE_LEDGER_PATH = path.join(process.cwd(), 'docs/research/Governance_Ledger.md');
