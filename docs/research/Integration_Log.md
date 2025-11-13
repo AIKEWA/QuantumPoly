@@ -77,3 +77,20 @@ Initialized by Jules — 2025-11-12
 - **Accessibility passed:** ✓ (N/A - documentation file)
 - **Merged into main:** 2025-11-13
 - **Notes:** PR #13 adds documentation template for mini retrospectives. No React component included in this PR. Template provides structure for retrospective reviews with checklist items and evidence links.
+
+## PR #14 — Gate Visualization Widget
+
+- **Date:** 2025-11-13
+- **Author:** app/google-labs-jules (Bot)
+- **Branch:** `feat-gate-visualization-widget`
+- **Files Changed:** 6
+  - Component: `src/components/dashboard/GateVisualizationWidget.tsx`
+  - Tests: `__tests__/components/GateVisualizationWidget.test.tsx`
+  - Configuration: `tailwind.config.js`
+  - Dependencies: `package.json`, `package-lock.json`
+  - Documentation: `Integration_Log.md`
+- **Design verified:** ✓ (Design parity with Stitch verified)
+- **Accessibility passed:** ✓ (WCAG AA compliant - keyboard navigation and ARIA labels)
+- **Merged into main:** 2025-11-13
+- **Status:** ✓ Gate Visualization Widget merged
+- **Notes:** PR #14 adds the Gate Visualization Widget to the QuantumPoly Dashboard. The widget displays the status of quantum gates and provides tooltips with additional information. Includes accessibility features such as keyboard navigation and ARIA labels.
