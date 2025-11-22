@@ -2,6 +2,7 @@ import dynamic from 'next/dynamic';
 import { getTranslations } from 'next-intl/server';
 
 import { About } from '@/components/About';
+import { CodeIntelligence } from '@/components/CodeIntelligence';
 import { Footer } from '@/components/Footer';
 import { Hero } from '@/components/Hero';
 import { Vision } from '@/components/Vision';
@@ -34,6 +35,9 @@ export default async function Home({ params }: Props) {
   const tVision = await getTranslations('vision');
   const tNewsletter = await getTranslations('newsletter');
   const tFooter = await getTranslations('footer');
+  
+  // tCommon unused
+  // const tCommon = await getTranslations('common');
 
   return (
     <main className="flex min-h-screen flex-col">
@@ -44,6 +48,25 @@ export default async function Home({ params }: Props) {
         headingLevel={1}
       />
       <About title={tAbout('title')} body={<p>{tAbout('body')}</p>} headingLevel={2} />
+      <CodeIntelligence
+        title="Code Intelligence Suite"
+        description="Our advanced suite of tools for automated governance, verification, and optimization."
+        features={[
+          {
+            title: "Multi-Language Stability",
+            description: "Automated benchmarking across Python, JavaScript, and Rust environments.",
+          },
+          {
+            title: "Ethical Governance",
+            description: "Real-time ledger tracking and transparency verification.",
+          },
+          {
+            title: "Automated Optimization",
+            description: "Continuous performance monitoring and self-healing capabilities.",
+          },
+        ]}
+        headingLevel={2}
+      />
       <Vision
         title={tVision('title')}
         headingLevel={2}
@@ -86,6 +109,7 @@ export default async function Home({ params }: Props) {
           { label: tFooter('accessibility'), href: `/${locale}/accessibility` },
           { label: tFooter('contact'), href: `/${locale}/contact` },
           { label: tFooter('governance'), href: `/${locale}/governance` },
+          { label: tFooter('blog'), href: `/${locale}/blog` },
         ]}
         policyNavLabel={tFooter('trustNav')}
         headingLevel={2}
