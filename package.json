@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "prebuild": "ts-node scripts/fix-missing-dependencies.ts",
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
@@ -102,14 +103,16 @@
     "vercel-build": "npm install --legacy-peer-deps && npm run build"
   },
   "dependencies": {
+    "@heroicons/react": "^2.2.0",
     "@vercel/analytics": "^1.1.1",
-    "clsx": "^2.0.0",
+    "clsx": "^2.1.1",
     "d3": "^7.8.0",
     "gray-matter": "^4.0.3",
-    "pdfkit": "^0.15.0",
+    "mdast": "^2.3.2",
     "next": "^14.2.32",
     "next-intl": "^4.3.12",
     "next-plausible": "^3.12.0",
+    "pdfkit": "^0.15.0",
     "qrcode": "^1.5.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -119,6 +122,7 @@
     "remark": "^15.0.1",
     "remark-html": "^16.0.1",
     "unist-util-visit": "^5.0.0",
+    "uuid": "^13.0.0",
     "zod": "^3.22.4"
   },
   "devDependencies": {
@@ -155,7 +159,6 @@
     "axe-core": "^4.11.0",
     "chrome-launcher": "^1.1.0",
     "eslint": "^8.57.1",
-    "next": "^14.0.0",
     "eslint-config-next": "14.2.25",
     "eslint-plugin-import": "^2.32.0",
     "eslint-plugin-jsx-a11y": "^6.10.2",
@@ -170,6 +173,7 @@
     "lighthouse": "^11.4.0",
     "lint-staged": "^15.2.0",
     "markdown-table": "^3.0.4",
+    "next": "^14.0.0",
     "postcss": "^8.4.31",
     "prettier": "^3.0.0",
     "react-docgen-typescript": "^2.4.0",
