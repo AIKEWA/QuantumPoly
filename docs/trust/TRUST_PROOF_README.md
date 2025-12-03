@@ -16,7 +16,7 @@ import { generateTrustToken } from '@/lib/trust/token-generator';
 const token = generateTrustToken(
   'ETHICS_REPORT_2025-11-05',
   '7b3c9e4d3f2b1a0c5e6d7b8a9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7e91a',
-  { report_type: 'ethics', block_id: '9.4' }
+  { report_type: 'ethics', block_id: '9.4' },
 );
 
 console.log(token);
@@ -46,7 +46,7 @@ import { generateQRCodeForArtifact } from '@/lib/trust/qr-generator';
 
 const qrDataURL = await generateQRCodeForArtifact(
   'ETHICS_REPORT_2025-11-05',
-  '7b3c9e4d3f2b1a0c5e6d7b8a9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7e91a'
+  '7b3c9e4d3f2b1a0c5e6d7b8a9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7e91a',
 );
 
 // qrDataURL is a base64 PNG data URL
@@ -71,9 +71,7 @@ curl "https://www.quantumpoly.ai/api/trust/proof?token=eyJhcnRpZmFjdF9pZCI6..."
 ### Response Handling
 
 ```typescript
-const response = await fetch(
-  '/api/trust/proof?rid=ETHICS_REPORT_2025-11-05&sig=...'
-);
+const response = await fetch('/api/trust/proof?rid=ETHICS_REPORT_2025-11-05&sig=...');
 
 const proof = await response.json();
 
@@ -136,7 +134,7 @@ const proofRecord = {
 
 fs.appendFileSync(
   'governance/trust-proofs/active-proofs.jsonl',
-  JSON.stringify(proofRecord) + '\n'
+  JSON.stringify(proofRecord) + '\n',
 );
 ```
 
@@ -212,11 +210,13 @@ NEXT_PUBLIC_BASE_URL=https://www.quantumpoly.ai
 ### Production Deployment
 
 1. Generate strong secret key:
+
    ```bash
    openssl rand -hex 32
    ```
 
 2. Set environment variable:
+
    ```bash
    export TRUST_PROOF_SECRET=<generated-key>
    ```
@@ -255,6 +255,7 @@ NEXT_PUBLIC_BASE_URL=https://www.quantumpoly.ai
 ## Best Practices
 
 1. **Always verify proofs after generation**
+
    ```bash
    npm run trust:verify
    ```
@@ -282,7 +283,7 @@ NEXT_PUBLIC_BASE_URL=https://www.quantumpoly.ai
 
 ## API Reference
 
-See `BLOCK9.7_TRUST_PROOF_FRAMEWORK.md` for complete API specification.
+See `BLOCK09.7_TRUST_PROOF_FRAMEWORK.md` for complete API specification.
 
 ---
 
@@ -297,4 +298,3 @@ See `BLOCK9.7_TRUST_PROOF_FRAMEWORK.md` for complete API specification.
 **Last Updated:** 2025-11-05  
 **Version:** 1.0.0  
 **Block:** 9.7
-

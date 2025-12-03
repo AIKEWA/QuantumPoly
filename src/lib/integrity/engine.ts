@@ -16,7 +16,7 @@ import fs from 'fs';
 import path from 'path';
 
 // Reserved for future integrity checks
-// import { getRecentEntries, verifyLedgerIntegrity } from '@/lib/governance/ledger-parser';
+// import { getIntegrityRecentEntries, verifyIntegrityLedger } from '@/lib/integrity';
 
 import {
   type IntegrityReport,
@@ -26,7 +26,6 @@ import {
   type LedgerHealth,
   type SystemState,
 } from './types';
-
 
 /**
  * Compute SHA-256 hash
@@ -39,29 +38,31 @@ function sha256(data: string | Record<string, unknown>): string {
 /**
  * Read JSONL ledger file
  */
-function readLedger(ledgerPath: string): any[] {
+function readLedger(ledgerPath: string): Record<string, unknown>[] {
   if (!fs.existsSync(ledgerPath)) {
     return [];
   }
 
   const content = fs.readFileSync(ledgerPath, 'utf8');
   const lines = content.trim().split('\n').filter(Boolean);
-  
-  return lines.map((line, index) => {
-    try {
-      return JSON.parse(line);
-    } catch (error) {
-      console.error(`Invalid JSON at line ${index + 1} in ${ledgerPath}`);
-      return null;
-    }
-  }).filter(Boolean);
+
+  return lines
+    .map((line, index) => {
+      try {
+        return JSON.parse(line);
+      } catch (error) {
+        console.error(`Invalid JSON at line ${index + 1} in ${ledgerPath}`);
+        return null;
+      }
+    })
+    .filter((item): item is Record<string, unknown> => item !== null && typeof item === 'object');
 }
 
 /**
  * Compute global Merkle root across all ledgers
  */
 function computeGlobalMerkleRoot(ledgers: Array<{ name: string; merkleRoot: string }>): string {
-  const combined = ledgers.map(l => l.merkleRoot).join('');
+  const combined = ledgers.map((l) => l.merkleRoot).join('');
   return sha256(combined);
 }
 
@@ -117,15 +118,15 @@ function verifyGovernanceLedger(issues: IntegrityIssue[]): LedgerHealth {
   entries.forEach((entry, index) => {
     // Check required fields
     const requiredFields = ['id', 'timestamp', 'hash', 'merkleRoot'];
-    const missingFields = requiredFields.filter(field => !entry[field]);
-    
+    const missingFields = requiredFields.filter((field) => !entry[field]);
+
     if (missingFields.length > 0) {
       issues.push({
         issue_id: `gov-missing-fields-${index}`,
         classification: IssueClassification.INTEGRITY_BREAK,
         severity: IssueSeverity.HIGH,
         affected_ledger: 'governance',
-        entry_id: entry.id || `entry-${index}`,
+        entry_id: (entry.id as string) || `entry-${index}`,
         description: `Missing required fields: ${missingFields.join(', ')}`,
         details: `Entry at index ${index} is missing critical fields`,
         auto_repairable: false,
@@ -135,17 +136,17 @@ function verifyGovernanceLedger(issues: IntegrityIssue[]): LedgerHealth {
     }
 
     // Check for stale next_review dates
-    if (entry.next_review && isDateInPast(entry.next_review)) {
+    if (entry.next_review && isDateInPast(entry.next_review as string)) {
       const daysPast = Math.floor(
-        (Date.now() - new Date(entry.next_review).getTime()) / (1000 * 60 * 60 * 24)
+        (Date.now() - new Date(entry.next_review as string).getTime()) / (1000 * 60 * 60 * 24),
       );
-      
+
       issues.push({
         issue_id: `gov-stale-review-${entry.id}`,
         classification: IssueClassification.STALE_DATE,
         severity: daysPast > 90 ? IssueSeverity.HIGH : IssueSeverity.MEDIUM,
         affected_ledger: 'governance',
-        entry_id: entry.id,
+        entry_id: entry.id as string,
         description: `Review date is ${daysPast} days overdue`,
         details: `Entry "${entry.title || entry.id}" has next_review: ${entry.next_review}`,
         auto_repairable: true,
@@ -158,13 +159,13 @@ function verifyGovernanceLedger(issues: IntegrityIssue[]): LedgerHealth {
     }
 
     // Check for future approved_date (backdating detection)
-    if (entry.approved_date && isDateInFuture(entry.approved_date)) {
+    if (entry.approved_date && isDateInFuture(entry.approved_date as string)) {
       issues.push({
         issue_id: `gov-future-approval-${entry.id}`,
         classification: IssueClassification.INTEGRITY_BREAK,
         severity: IssueSeverity.CRITICAL,
         affected_ledger: 'governance',
-        entry_id: entry.id,
+        entry_id: entry.id as string,
         description: 'Approval date is in the future',
         details: `Entry has approved_date: ${entry.approved_date} which is in the future`,
         auto_repairable: false,
@@ -183,7 +184,7 @@ function verifyGovernanceLedger(issues: IntegrityIssue[]): LedgerHealth {
             classification: IssueClassification.MISSING_REFERENCE,
             severity: IssueSeverity.HIGH,
             affected_ledger: 'governance',
-            entry_id: entry.id,
+            entry_id: entry.id as string,
             description: `Referenced document not found: ${doc}`,
             details: `Entry references document that does not exist at expected path`,
             auto_repairable: false,
@@ -204,7 +205,7 @@ function verifyGovernanceLedger(issues: IntegrityIssue[]): LedgerHealth {
             classification: IssueClassification.MISSING_REFERENCE,
             severity: IssueSeverity.MEDIUM,
             affected_ledger: 'governance',
-            entry_id: entry.id,
+            entry_id: entry.id as string,
             description: `Referenced artifact not found: ${artifact}`,
             details: `Entry references artifact that does not exist at expected path`,
             auto_repairable: false,
@@ -227,14 +228,14 @@ function verifyGovernanceLedger(issues: IntegrityIssue[]): LedgerHealth {
  */
 function verifyConsentLedger(issues: IntegrityIssue[]): LedgerHealth {
   const ledgerPath = 'governance/consent/ledger.jsonl';
-  
+
   if (!fs.existsSync(ledgerPath)) {
     // Consent ledger is optional if no consent events yet
     return 'valid';
   }
 
   const entries = readLedger(ledgerPath);
-  
+
   if (entries.length === 0) {
     return 'valid'; // Empty is okay for consent ledger
   }
@@ -266,14 +267,14 @@ function verifyConsentLedger(issues: IntegrityIssue[]): LedgerHealth {
  */
 function verifyFederationLedger(issues: IntegrityIssue[]): LedgerHealth {
   const ledgerPath = 'governance/federation/ledger.jsonl';
-  
+
   if (!fs.existsSync(ledgerPath)) {
     // Federation ledger is optional if federation not active
     return 'valid';
   }
 
   const entries = readLedger(ledgerPath);
-  
+
   if (entries.length === 0) {
     return 'valid'; // Empty is okay
   }
@@ -282,14 +283,14 @@ function verifyFederationLedger(issues: IntegrityIssue[]): LedgerHealth {
 
   // Check for stale federation verifications
   const recentVerifications = entries.filter(
-    e => e.ledger_entry_type === 'federation_verification'
+    (e) => e.ledger_entry_type === 'federation_verification',
   );
 
   if (recentVerifications.length > 0) {
     const latestVerification = recentVerifications[recentVerifications.length - 1];
-    const verificationDate = new Date(latestVerification.timestamp);
+    const verificationDate = new Date(latestVerification.timestamp as string);
     const daysSinceVerification = Math.floor(
-      (Date.now() - verificationDate.getTime()) / (1000 * 60 * 60 * 24)
+      (Date.now() - verificationDate.getTime()) / (1000 * 60 * 60 * 24),
     );
 
     if (daysSinceVerification > 2) {
@@ -315,14 +316,14 @@ function verifyFederationLedger(issues: IntegrityIssue[]): LedgerHealth {
  */
 function verifyTrustProofs(issues: IntegrityIssue[]): LedgerHealth {
   const activeProofsPath = 'governance/trust-proofs/active-proofs.jsonl';
-  
+
   if (!fs.existsSync(activeProofsPath)) {
     // Trust proofs are optional if not yet generated
     return 'valid';
   }
 
   const proofs = readLedger(activeProofsPath);
-  
+
   if (proofs.length === 0) {
     return 'valid'; // Empty is okay
   }
@@ -333,7 +334,7 @@ function verifyTrustProofs(issues: IntegrityIssue[]): LedgerHealth {
   // Check for expired proofs
   proofs.forEach((proof, index) => {
     if (proof.expires_at) {
-      const expiryDate = new Date(proof.expires_at);
+      const expiryDate = new Date(proof.expires_at as string);
       if (expiryDate < new Date()) {
         issues.push({
           issue_id: `trust-expired-${proof.artifact_id || index}`,
@@ -351,7 +352,7 @@ function verifyTrustProofs(issues: IntegrityIssue[]): LedgerHealth {
 
     // Check if referenced file exists
     if (proof.file_path) {
-      const filePath = path.join(process.cwd(), proof.file_path);
+      const filePath = path.join(process.cwd(), proof.file_path as string);
       if (!fs.existsSync(filePath)) {
         issues.push({
           issue_id: `trust-missing-file-${proof.artifact_id || index}`,
@@ -381,7 +382,7 @@ function determineSystemState(
   consentHealth: LedgerHealth,
   federationHealth: LedgerHealth,
   trustProofsHealth: LedgerHealth,
-  pendingReviews: number
+  pendingReviews: number,
 ): SystemState {
   // Critical if any ledger is critical
   if (
@@ -433,16 +434,16 @@ export function runIntegrityVerification(scope: string[] = ['all']): IntegrityRe
 
   // Count auto-repairable vs. escalation issues
   // const autoRepairable = issues.filter(i => i.auto_repairable).length;
-  const requiresReview = issues.filter(i => !i.auto_repairable).length;
+  const requiresReview = issues.filter((i) => !i.auto_repairable).length;
 
   // Compute global Merkle root
   const ledgers = [];
-  
+
   if (verifyGovernance) {
     const govEntries = readLedger('governance/ledger/ledger.jsonl');
     const lastEntry = govEntries[govEntries.length - 1];
     if (lastEntry?.merkleRoot) {
-      ledgers.push({ name: 'governance', merkleRoot: lastEntry.merkleRoot });
+      ledgers.push({ name: 'governance', merkleRoot: lastEntry.merkleRoot as string });
     }
   }
 
@@ -450,7 +451,7 @@ export function runIntegrityVerification(scope: string[] = ['all']): IntegrityRe
     const consentEntries = readLedger('governance/consent/ledger.jsonl');
     const lastEntry = consentEntries[consentEntries.length - 1];
     if (lastEntry?.merkleRoot) {
-      ledgers.push({ name: 'consent', merkleRoot: lastEntry.merkleRoot });
+      ledgers.push({ name: 'consent', merkleRoot: lastEntry.merkleRoot as string });
     }
   }
 
@@ -458,7 +459,7 @@ export function runIntegrityVerification(scope: string[] = ['all']): IntegrityRe
     const fedEntries = readLedger('governance/federation/ledger.jsonl');
     const lastEntry = fedEntries[fedEntries.length - 1];
     if (lastEntry?.merkleRoot) {
-      ledgers.push({ name: 'federation', merkleRoot: lastEntry.merkleRoot });
+      ledgers.push({ name: 'federation', merkleRoot: lastEntry.merkleRoot as string });
     }
   }
 
@@ -470,7 +471,7 @@ export function runIntegrityVerification(scope: string[] = ['all']): IntegrityRe
     consentHealth,
     federationHealth,
     trustProofsHealth,
-    requiresReview
+    requiresReview,
   );
 
   return {
@@ -490,4 +491,3 @@ export function runIntegrityVerification(scope: string[] = ['all']): IntegrityRe
     system_state: systemState,
   };
 }
-

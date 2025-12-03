@@ -26,12 +26,20 @@ The QuantumPoly Prompt Library is a **searchable, semantically-organized collect
 
 ## Quick Navigation
 
-| Block   | Title                                                                      | Tags                                    | Dependencies |
-| ------- | -------------------------------------------------------------------------- | --------------------------------------- | ------------ |
-| **7.1** | [CI/CD Architecture](#block-71--cicd-architecture--workflow-orchestration) | architecture, quality-gates, governance | None         |
-| **7.2** | [Testing Strategy](#block-72--cicd-testing-strategy--quality-gates)        | testing, accessibility, performance     | 7.1          |
-| **7.3** | [Deployment Flow](#block-73--cicd-deployment-flow--release-management)     | deployment, vercel, release-management  | 7.1, 7.2     |
-| **7.7** | [GPG Ledger Signing](#block-77--gpg-ledger-signing-optional)               | security, compliance, gpg-signing       | 7.1          |
+| Block    | Title                                                                      | Tags                                    | Dependencies |
+| -------- | -------------------------------------------------------------------------- | --------------------------------------- | ------------ |
+| **7.1**  | [CI/CD Architecture](#block-71--cicd-architecture--workflow-orchestration) | architecture, quality-gates, governance | None         |
+| **7.2**  | [Testing Strategy](#block-72--cicd-testing-strategy--quality-gates)        | testing, accessibility, performance     | 7.1          |
+| **7.3**  | [Deployment Flow](#block-73--cicd-deployment-flow--release-management)     | deployment, vercel, release-management  | 7.1, 7.2     |
+| **7.7**  | [GPG Ledger Signing](#block-77--gpg-ledger-signing-optional)               | security, compliance, gpg-signing       | 7.1          |
+| **B132** | [Ethics Singularity](#ethics-singularity-block-132)                        | ethics, meta-governance, singularity    | None         |
+| **Util** | [Algorithm Design Advisor](#algorithm--logic-design)                       | algorithm, design, pseudocode           | None         |
+| **Util** | [Data Trend Analyzer](#data-analysis--insights)                            | data-analysis, trends, insight          | None         |
+| **Util** | [Visualization Architect](#data-analysis--insights)                        | visualization, design, charting         | None         |
+| **Util** | [Translation Oracle](#language--communication)                             | translation, linguistics, culture       | None         |
+| **Util** | [Executive Summary Composer](#language--communication)                     | summary, communication, executive       | None         |
+| **Util** | [Brainstorming Catalyst](#strategy--innovation)                            | strategy, innovation, brainstorming     | None         |
+| **Util** | [Ethical Assessment Engine](#governance--ethics)                           | ethics, policy, governance              | None         |
 
 ---
 
@@ -76,6 +84,80 @@ The QuantumPoly Prompt Library is a **searchable, semantically-organized collect
 - **Tags:** `security`, `compliance`, `gpg-signing`, `audit-trail`
 - **Key Decisions:** Optional enhancement for regulated industries
 - **Output:** GPG setup guide, verification procedures, compliance use cases
+
+### Algorithm & Logic Design
+
+**Algorithm Design Advisor (Professor Prompto)**
+
+- **File:** [`algorithm_design_advisor.md`](./algorithm_design_advisor.md)
+- **Purpose:** Design efficient algorithms, explain logic, and analyze complexity
+- **Tags:** `algorithm`, `design`, `pseudocode`, `complexity`, `optimization`
+- **Key Decisions:** Persona-based interaction, rigorous complexity analysis
+- **Output:** Algorithm design, pseudocode, complexity analysis
+
+### Data Analysis & Insights
+
+**Data Trend Analyzer (Professor Prompto)**
+
+- **File:** [`data_trend_analyzer.md`](./data_trend_analyzer.md)
+- **Purpose:** Transform dataset summaries into concise, non-technical trend analyses
+- **Tags:** `data-analysis`, `trend-analysis`, `insight`, `reporting`
+- **Key Decisions:** Persona-based interaction, focus on non-technical clarity
+- **Output:** Trends, outliers, causes, and recommendations
+
+**Visualization Strategy Architect (Professor Prompto)**
+
+- **File:** [`visualization_strategy_architect.md`](./visualization_strategy_architect.md)
+- **Purpose:** Recommend effective visualizations and tools for datasets
+- **Tags:** `visualization`, `chart-selection`, `design`, `communication`
+- **Key Decisions:** Cognitive load theory application, tool-agnostic advice
+- **Output:** Chart types, justifications, and library recommendations
+
+### Strategy & Innovation
+
+**Brainstorming Catalyst**
+
+- **File:** [`brainstorming_catalyst.md`](./brainstorming_catalyst.md)
+- **Purpose:** Generate high-quality ideas for strategy, marketing, and R&D
+- **Tags:** `strategy`, `innovation`, `brainstorming`, `ideation`
+- **Key Decisions:** Structured output format, focus on rationale and impact
+- **Output:** List of 2-3 sentence ideas with summary, rationale, and impact
+
+### Governance & Ethics
+
+**B132 — Ethics Singularity (Block 13.2)**
+
+- **B132-OVERVIEW**: [`B132-OVERVIEW_ethics-singularity-theoretical-overview.md`](./B132-OVERVIEW_ethics-singularity-theoretical-overview.md) - Theoretical synthesis
+- **B132-ESSAY**: [`B132-ESSAY_ethics-singularity-paper-draft-generator.md`](./B132-ESSAY_ethics-singularity-paper-draft-generator.md) - Academic paper generation
+- **B132-SIM**: [`B132-SIM_ethics-singularity-simulation-designer.md`](./B132-SIM_ethics-singularity-simulation-designer.md) - Simulation design
+- **B132-SYMPOSIUM**: [`B132-SYMPOSIUM_ethics-singularity-symposium-designer.md`](./B132-SYMPOSIUM_ethics-singularity-symposium-designer.md) - Symposium organization
+- **B132-FRAMEWORK**: [`B132-FRAMEWORK_ethics-singularity-framework-doc.md`](./B132-FRAMEWORK_ethics-singularity-framework-doc.md) - Framework documentation
+
+**Ethical–Policy Assessment Engine (Professor Prompto)**
+
+- **File:** [`ethical_policy_assessment_engine.md`](./ethical_policy_assessment_engine.md)
+- **Purpose:** Evaluate policies/proposals for ethical, social, and environmental implications
+- **Tags:** `ethics`, `policy`, `governance`, `assessment`
+- **Key Decisions:** Persona-based interaction, comprehensive risk analysis
+- **Output:** Ethical analysis, risks & vulnerabilities, recommendations
+
+### Language & Communication
+
+**Multilingual Translation Oracle (Professor Prompto)**
+
+- **File:** [`multilingual_translation_oracle.md`](./multilingual_translation_oracle.md)
+- **Purpose:** Provide tone-aligned, culturally nuanced translations
+- **Tags:** `translation`, `linguistics`, `culture`, `tone`
+- **Key Decisions:** Persona-based interaction, focus on tone preservation and cultural adaptation
+- **Output:** Translated text, tone notes, cultural adaptation notes
+
+**Executive Summary Composer**
+
+- **File:** [`executive_summary_composer.md`](./executive_summary_composer.md)
+- **Purpose:** Distill long reports into concise, actionable executive briefs
+- **Tags:** `summary`, `communication`, `executive`, `reporting`
+- **Key Decisions:** Strict 250-word limit, focus on outcomes/actions
+- **Output:** Executive summary, key insights, next steps
 
 ---
 
@@ -371,6 +453,11 @@ The QuantumPoly Prompt Library is a **searchable, semantically-organized collect
 | **accessibility** | WCAG compliance and a11y testing        | 7.2           |
 | **performance**   | Performance monitoring and budgets      | 7.2           |
 | **security**      | Security best practices and GPG signing | 7.7           |
+| **visualization** | Data visualization and chart selection  | Util          |
+| **translation**   | Language translation and localization   | Util          |
+| **culture**       | Cultural adaptation and nuance          | Util          |
+| **strategy**      | Strategic planning and innovation       | Util          |
+| **innovation**    | Idea generation and R&D                 | Util          |
 
 ### Technology Tags
 
@@ -433,6 +520,11 @@ The QuantumPoly Prompt Library is a **searchable, semantically-organized collect
 
 - Keywords: `ledger`, `gpg`, `audit-trail`, `compliance`, `governance`
 - Relevant: Block 7.1 (ledger), Block 7.7 (GPG signing)
+
+**Data Visualization:**
+
+- Keywords: `chart`, `plot`, `graph`, `dashboard`, `visualization`
+- Relevant: Visualization Strategy Architect
 
 ---
 
@@ -653,7 +745,7 @@ dependencies: ['prerequisite_blocks.md']
 
 ---
 
-**Index Version:** 1.0  
-**Last Updated:** 2025-10-19  
-**Total Prompts:** 3 core blocks + 1 optional + templates  
+**Index Version:** 1.2
+**Last Updated:** 2025-12-02
+**Total Prompts:** 3 core blocks + 1 optional + 5 utility + 5 ethics singularity + templates  
 **Maintained By:** CASP Lead Architect

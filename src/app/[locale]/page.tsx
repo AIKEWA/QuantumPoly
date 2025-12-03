@@ -1,3 +1,4 @@
+import { Metadata } from 'next';
 import dynamic from 'next/dynamic';
 import { getTranslations } from 'next-intl/server';
 
@@ -6,6 +7,7 @@ import { CodeIntelligence } from '@/components/CodeIntelligence';
 import { Footer } from '@/components/Footer';
 import { Hero } from '@/components/Hero';
 import { Vision } from '@/components/Vision';
+import { isValidLocale } from '@/i18n';
 
 // Dynamic imports for client-only interactive components
 // SSR disabled: these components are client-side only and below-the-fold
@@ -28,6 +30,44 @@ type Props = {
   params: Promise<{ locale: string }>;
 };
 
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { locale } = await params;
+
+  if (!isValidLocale(locale)) {
+    return {};
+  }
+
+  const tHero = await getTranslations('hero');
+  const tAbout = await getTranslations('about');
+
+  return {
+    title: `QuantumPoly - ${tHero('subtitle')}`,
+    description: tAbout('body'),
+    openGraph: {
+      title: `QuantumPoly - ${tHero('subtitle')}`,
+      description: tAbout('body'),
+      type: 'website',
+      locale: locale,
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `QuantumPoly - ${tHero('subtitle')}`,
+      description: tAbout('body'),
+    },
+    alternates: {
+      canonical: `/${locale}`,
+      languages: {
+        en: '/en',
+        de: '/de',
+        tr: '/tr',
+        es: '/es',
+        fr: '/fr',
+        it: '/it',
+      },
+    },
+  };
+}
+
 export default async function Home({ params }: Props) {
   const { locale } = await params;
   const tHero = await getTranslations('hero');
@@ -35,7 +75,7 @@ export default async function Home({ params }: Props) {
   const tVision = await getTranslations('vision');
   const tNewsletter = await getTranslations('newsletter');
   const tFooter = await getTranslations('footer');
-  
+
   // tCommon unused
   // const tCommon = await getTranslations('common');
 
@@ -53,16 +93,16 @@ export default async function Home({ params }: Props) {
         description="Our advanced suite of tools for automated governance, verification, and optimization."
         features={[
           {
-            title: "Multi-Language Stability",
-            description: "Automated benchmarking across Python, JavaScript, and Rust environments.",
+            title: 'Multi-Language Stability',
+            description: 'Automated benchmarking across Python, JavaScript, and Rust environments.',
           },
           {
-            title: "Ethical Governance",
-            description: "Real-time ledger tracking and transparency verification.",
+            title: 'Ethical Governance',
+            description: 'Real-time ledger tracking and transparency verification.',
           },
           {
-            title: "Automated Optimization",
-            description: "Continuous performance monitoring and self-healing capabilities.",
+            title: 'Automated Optimization',
+            description: 'Continuous performance monitoring and self-healing capabilities.',
           },
         ]}
         headingLevel={2}

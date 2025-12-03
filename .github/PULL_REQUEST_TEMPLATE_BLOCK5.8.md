@@ -102,12 +102,12 @@ This PR completes Block 5.8 with four major deliverables:
 
 **Report Update**:
 
-- ✅ `BLOCK5_FINAL_DELIVERY_REPORT.md` (+414 lines)
+- ✅ `BLOCK05.8_FINAL_DELIVERY_REPORT.md` (+414 lines)
   - Complete Block 5.8 section with evidence
 
 **Implementation Summary**:
 
-- ✅ `BLOCK5.8_IMPLEMENTATION_SUMMARY.md` (new, 300 lines)
+- ✅ `BLOCK05.8_IMPLEMENTATION_SUMMARY.md` (new, 300 lines)
 
 ### E. Bug Fixes
 
@@ -216,7 +216,7 @@ Time: 0.341 s
 
 - [ ] POLICY_CONTENT_GUIDE.md: Clear, accurate examples
 - [ ] LEGAL_REVIEW_CHECKLIST.md: Comprehensive, jurisdiction-aware
-- [ ] BLOCK5_FINAL_DELIVERY_REPORT.md: Evidence properly documented
+- [ ] BLOCK05.8_FINAL_DELIVERY_REPORT.md: Evidence properly documented
 - [ ] Code comments: Clear and helpful
 
 ### Legal Review

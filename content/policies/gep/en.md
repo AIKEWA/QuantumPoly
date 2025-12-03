@@ -5,7 +5,10 @@ status: 'in-progress'
 owner: 'Engineering Team <engineering@quantumpoly.ai>'
 lastReviewed: '2025-10-13'
 nextReviewDue: '2026-01-13'
-version: 'v0.3.0'
+version: 'v0.3.1'
+license: 'CC-BY-4.0'
+responsibleParty: 'QuantumPoly Legal Team'
+versionHash: 'pending-ci'
 ---
 
 ## Introduction
@@ -240,3 +243,8 @@ For questions about our engineering practices or collaboration opportunities, pl
 ## Document Evolution
 
 This document is regularly reviewed and updated to reflect our evolving practices and learning. Version history and change rationale are maintained in our documentation repository.
+
+---
+
+**Last Updated:** November 25, 2025
+**Version:** v0.3.1

@@ -19,9 +19,13 @@ import path from 'path';
 
 import { NextRequest, NextResponse } from 'next/server';
 
-import { aggregateConsentMetrics } from '@/lib/governance/consent-aggregator';
-import { getCurrentEII, getEIIHistory } from '@/lib/governance/eii-calculator';
-import { getRecentEntries, verifyLedgerIntegrity } from '@/lib/governance/ledger-parser';
+import {
+  getIntegrityConsentMetrics,
+  getIntegrityCurrentEII,
+  getIntegrityEIIHistory,
+  getIntegrityRecentEntries,
+  verifyIntegrityLedger,
+} from '@/lib/integrity';
 
 /**
  * Rate limiting state (in-memory, simple implementation)
@@ -71,7 +75,8 @@ function checkRateLimit(ip: string): boolean {
 export async function GET(request: NextRequest) {
   try {
     // Rate limiting
-    const ip = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown';
+    const ip =
+      request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown';
     if (!checkRateLimit(ip)) {
       return NextResponse.json(
         {
@@ -86,7 +91,7 @@ export async function GET(request: NextRequest) {
             'X-RateLimit-Limit': String(RATE_LIMIT_MAX),
             'X-RateLimit-Remaining': '0',
           },
-        }
+        },
       );
     }
 
@@ -100,14 +105,14 @@ export async function GET(request: NextRequest) {
       status: string | null;
     }> = [];
     try {
-      const entries = getRecentEntries(5);
+      const entries = getIntegrityRecentEntries(5);
       ledgerSummary = entries.map((entry) => ({
         id: entry.id,
         timestamp: entry.timestamp,
-        type: entry.entryType || entry.ledger_entry_type || 'unknown',
-        block: entry.blockId || entry.block_id || null,
-        title: entry.title || null,
-        status: entry.status || null,
+        type: String(entry.entryType || entry.ledger_entry_type || 'unknown'),
+        block: (entry.blockId as string) || (entry.block_id as string) || null,
+        title: (entry.title as string) || null,
+        status: (entry.status as string) || null,
       }));
     } catch (error) {
       console.error('Failed to fetch ledger summary:', error);
@@ -117,7 +122,7 @@ export async function GET(request: NextRequest) {
     // 2. Get consent statistics (aggregated, privacy-preserving)
     let consentStats = { analytics: 0, performance: 0, essential: 1 };
     try {
-      const metrics = aggregateConsentMetrics('governance/consent/ledger.jsonl');
+      const metrics = getIntegrityConsentMetrics('governance/consent/ledger.jsonl');
       consentStats = {
         analytics: metrics.categoryMetrics.analytics?.rate || 0,
         performance: metrics.categoryMetrics.performance?.rate || 0,
@@ -130,8 +135,8 @@ export async function GET(request: NextRequest) {
     // 3. Get EII score (current + 90-day average)
     let eiiScore = { current: 0, avg90d: 0, trend: 'stable' };
     try {
-      const currentEII = getCurrentEII();
-      const history = getEIIHistory('governance/ledger/ledger.jsonl', 90);
+      const currentEII = getIntegrityCurrentEII();
+      const history = getIntegrityEIIHistory('governance/ledger/ledger.jsonl', 90);
       eiiScore = {
         current: currentEII,
         avg90d: history.average || currentEII,
@@ -145,9 +150,9 @@ export async function GET(request: NextRequest) {
     let hashProof = '';
     let lastVerification = new Date().toISOString();
     try {
-      const verification = verifyLedgerIntegrity('governance/ledger/ledger.jsonl');
+      const verification = verifyIntegrityLedger('governance/ledger/ledger.jsonl');
       hashProof = verification.merkleRoot;
-      const entries = getRecentEntries(1);
+      const entries = getIntegrityRecentEntries(1);
       if (entries.length > 0) {
         lastVerification = entries[0].timestamp;
       }
@@ -198,9 +203,7 @@ export async function GET(request: NextRequest) {
         'Access-Control-Allow-Origin': '*', // Public API
         'Access-Control-Allow-Methods': 'GET, OPTIONS',
         'X-RateLimit-Limit': String(RATE_LIMIT_MAX),
-        'X-RateLimit-Remaining': String(
-          RATE_LIMIT_MAX - (rateLimitMap.get(ip)?.count || 0)
-        ),
+        'X-RateLimit-Remaining': String(RATE_LIMIT_MAX - (rateLimitMap.get(ip)?.count || 0)),
       },
     });
   } catch (error) {
@@ -211,7 +214,7 @@ export async function GET(request: NextRequest) {
         message: 'Failed to generate ethics report',
         timestamp: new Date().toISOString(),
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -230,4 +233,3 @@ export async function OPTIONS() {
     },
   });
 }
-

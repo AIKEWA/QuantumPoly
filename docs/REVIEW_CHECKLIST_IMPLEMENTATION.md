@@ -487,17 +487,17 @@ cat governance/ledger/releases/*.json | jq '.sign_off_matrix'
 
 ### Documentation
 
-- [Release Review Checklist](/docs/review-checklist.md) — Primary audit framework
-- [DNS Runbook](/docs/DNS.md) — DNS verification procedures
-- [Governance Framework](/governance/README.md) — Ethical governance system
-- [CI/CD Workflows](/.github/workflows/) — Deployment automation
+- [Release Review Checklist](review-checklist.md) — Primary audit framework
+- [DNS Runbook](DNS.md) — DNS verification procedures
+- [Governance Framework](../governance/README.md) — Ethical governance system
+- [CI/CD Workflows](../.github/workflows) — Deployment automation
 
 ### Automation Scripts
 
-- [validate-checklist.sh](/scripts/validate-checklist.sh) — Checklist validation
-- [audit-sync-ledger.sh](/scripts/audit-sync-ledger.sh) — Ledger synchronization
-- [ledger-update.mjs](/scripts/ledger-update.mjs) — Ethics ledger updates
-- [verify-ledger.mjs](/scripts/verify-ledger.mjs) — Ledger integrity verification
+- [validate-checklist.sh](../scripts/validate-checklist.sh) — Checklist validation
+- [audit-sync-ledger.sh](../scripts/audit-sync-ledger.sh) — Ledger synchronization
+- [ledger-update.mjs](../scripts/ledger-update.mjs) — Ethics ledger updates
+- [verify-ledger.mjs](../scripts/verify-ledger.mjs) — Ledger integrity verification
 
 ### Related Systems
 

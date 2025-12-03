@@ -4,6 +4,7 @@ import common from './common.json';
 import consent from './consent.json';
 import contact from './contact.json';
 import dashboard from './dashboard.json';
+import feedback from './feedback.json';
 import footer from './footer.json';
 import governance from './governance.json';
 import hero from './hero.json';
@@ -25,4 +26,5 @@ export default {
   contact,
   governance,
   consent,
+  feedback,
 };

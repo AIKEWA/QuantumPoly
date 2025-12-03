@@ -91,6 +91,23 @@ export default async function EthicsPage({ params }: Props) {
     return (
       <PolicyLayout metadata={policy.metadata} toc={policy.toc} isFallback={policy.isFallback}>
         <div dangerouslySetInnerHTML={{ __html: policy.html }} />
+
+        {/* Observatory Teaser */}
+        <div className="mt-12 rounded-xl border border-blue-200 bg-blue-50 p-8 dark:border-blue-900 dark:bg-blue-900/20">
+          <h2 className="mb-4 text-2xl font-bold text-slate-900 dark:text-white">
+            See Ethics in Action
+          </h2>
+          <p className="mb-6 text-lg text-slate-700 dark:text-slate-300">
+            Explore real-time data on our global ethical performance, verify ledger proofs, and
+            track long-term integrity trends in the Public Ethics Observatory.
+          </p>
+          <a
+            href={`/${locale}/observatory`}
+            className="inline-flex items-center rounded-lg bg-blue-600 px-6 py-3 font-semibold text-white transition-colors hover:bg-blue-700"
+          >
+            Open the Observatory →
+          </a>
+        </div>
       </PolicyLayout>
     );
   } catch (error) {

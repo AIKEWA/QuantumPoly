@@ -7,6 +7,7 @@ This directory contains governance integrity verification reports and autonomous
 ## Overview
 
 The continuous integrity monitoring system automatically verifies:
+
 - Ledger chain consistency (hashes, timestamps, signatures)
 - Federation partner proof validity
 - Trust proof freshness
@@ -81,6 +82,7 @@ Each daily report (`YYYY-MM-DD.json`) contains:
 All repairs are logged to `governance/ledger/ledger.jsonl` with entry type `autonomous_repair`.
 
 **Applied Repairs:**
+
 ```json
 {
   "entry_id": "autonomous_repair-2025-11-07T13:45Z-abc123",
@@ -94,6 +96,7 @@ All repairs are logged to `governance/ledger/ledger.jsonl` with entry type `auto
 ```
 
 **Pending Human Review:**
+
 ```json
 {
   "entry_id": "autonomous_repair-2025-11-07T14:00Z-def456",
@@ -114,6 +117,7 @@ All repairs are logged to `governance/ledger/ledger.jsonl` with entry type `auto
 ## Notification System
 
 Critical issues trigger:
+
 1. **Ledger Entry**: `autonomous_repair` with `status: pending_human_review`
 2. **Email**: To `GOVERNANCE_OFFICER_EMAIL` (if configured)
 3. **Webhook**: To `INTEGRITY_WEBHOOK_URL` (if configured)
@@ -128,6 +132,7 @@ Critical issues trigger:
 ## Public API
 
 Current integrity status available at:
+
 ```
 GET /api/integrity/status
 ```
@@ -136,7 +141,7 @@ Rate limit: 60 requests/minute per IP
 
 ## Documentation
 
-- [Block 9.8 Implementation](../../BLOCK9.8_CONTINUOUS_INTEGRITY.md)
+- [Block 9.8 Implementation](../../BLOCK09.8_CONTINUOUS_INTEGRITY.md)
 - [Developer Guide](../../docs/integrity/INTEGRITY_README.md)
 - [Integrity Dashboard](/governance/integrity)
 
@@ -145,4 +150,3 @@ Rate limit: 60 requests/minute per IP
 **Compliance:** GDPR Art. 5(2), DSG 2023 Art. 19, 25  
 **Privacy:** Zero personal data in integrity reports  
 **Auditability:** Full audit trail in governance ledger
-

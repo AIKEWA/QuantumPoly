@@ -1,0 +1,24 @@
+{
+  "title": "Public Ethics Observatory",
+  "subtitle": "The Atlas of AI Integrity",
+  "map": {
+    "title": "Global Integrity Map",
+    "nodes": "Active Nodes",
+    "pulse": "Events/Sec"
+  },
+  "drift": {
+    "title": "Ethical Drift (EII)",
+    "yAxis": "Ethical Integrity Index",
+    "xAxis": "Time",
+    "annotations": {
+      "override": "Human Override",
+      "policy": "Policy Update"
+    }
+  },
+  "proof": {
+    "label": "Proof Lens",
+    "verify": "Verify on Ledger",
+    "verified": "Verified",
+    "pending": "Pending Consensus"
+  }
+}

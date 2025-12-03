@@ -39,7 +39,10 @@ export const STATUS_COLORS = {
 /**
  * Get color for verification status
  */
-export function getStatusColor(status: VerificationStatus, theme: 'light' | 'dark' = 'light'): string {
+export function getStatusColor(
+  status: VerificationStatus,
+  theme: 'light' | 'dark' = 'light',
+): string {
   return STATUS_COLORS[status][theme];
 }
 
@@ -73,7 +76,7 @@ export function getStatusShape(status: VerificationStatus): string {
 export function createTimeScale(
   data: Array<{ timestamp: string }>,
   width: number,
-  margin: { left: number; right: number }
+  margin: { left: number; right: number },
 ) {
   const timeExtent = d3.extent(data, (d) => new Date(d.timestamp));
 
@@ -86,7 +89,11 @@ export function createTimeScale(
 /**
  * Create linear scale for Y-axis (for positioning blocks)
  */
-export function createLinearScale(count: number, height: number, margin: { top: number; bottom: number }) {
+export function createLinearScale(
+  count: number,
+  height: number,
+  margin: { top: number; bottom: number },
+) {
   return d3
     .scaleLinear()
     .domain([0, count - 1])
@@ -148,7 +155,7 @@ export function truncateHash(hash: string, length: number = 8): string {
  */
 export function createZoomBehavior(
   scaleExtent: [number, number] = [0.5, 10],
-  translateExtent?: [[number, number], [number, number]]
+  translateExtent?: [[number, number], [number, number]],
 ) {
   const zoom = d3.zoom<SVGSVGElement, unknown>().scaleExtent(scaleExtent);
 
@@ -162,9 +169,9 @@ export function createZoomBehavior(
 /**
  * Debounce function for performance optimization
  */
-export function debounce<T extends (...args: any[]) => any>(
+export function debounce<T extends (...args: unknown[]) => unknown>(
   func: T,
-  wait: number
+  wait: number,
 ): (...args: Parameters<T>) => void {
   let timeout: NodeJS.Timeout | null = null;
 
@@ -222,9 +229,10 @@ export function createShapePath(shape: string, x: number, y: number, size: numbe
     case 'circle':
       return `M ${x},${y} m -${halfSize},0 a ${halfSize},${halfSize} 0 1,0 ${size},0 a ${halfSize},${halfSize} 0 1,0 -${size},0`;
 
-    case 'triangle':
+    case 'triangle': {
       const height = (Math.sqrt(3) / 2) * size;
       return `M ${x},${y - height / 2} L ${x + halfSize},${y + height / 2} L ${x - halfSize},${y + height / 2} Z`;
+    }
 
     case 'square':
       return `M ${x - halfSize},${y - halfSize} L ${x + halfSize},${y - halfSize} L ${x + halfSize},${y + halfSize} L ${x - halfSize},${y + halfSize} Z`;
@@ -241,7 +249,9 @@ export function createShapePath(shape: string, x: number, y: number, size: numbe
  * Calculate integrity sparkline data
  * Returns array of status counts for visualization
  */
-export function calculateSparklineData(entries: Array<{ verified?: boolean; status?: VerificationStatus }>) {
+export function calculateSparklineData(
+  entries: Array<{ verified?: boolean; status?: VerificationStatus }>,
+) {
   const counts = {
     verified: 0,
     warning: 0,
@@ -262,11 +272,7 @@ export function calculateSparklineData(entries: Array<{ verified?: boolean; stat
 /**
  * Generate sparkline SVG path
  */
-export function generateSparklinePath(
-  data: Array<number>,
-  width: number,
-  height: number
-): string {
+export function generateSparklinePath(data: Array<number>, width: number, height: number): string {
   if (data.length === 0) return '';
 
   const xScale = d3
@@ -287,4 +293,3 @@ export function generateSparklinePath(
 
   return line(data) || '';
 }
-

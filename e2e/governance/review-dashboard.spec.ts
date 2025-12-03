@@ -22,24 +22,28 @@ test.describe('Review Dashboard - Block 9.9', () => {
     test('should display all required sections', async ({ page }) => {
       await page.goto('/en/governance/review');
       await page.waitForLoadState('networkidle');
+      
+      // Wait for hydration by checking for a known interactive element
+      await expect(page.locator('h1')).toBeVisible();
 
       // System Overview
-      await expect(page.locator('text=System Overview')).toBeVisible();
-      await expect(page.locator('text=Release Candidate')).toBeVisible();
-      await expect(page.locator('text=Commit Hash')).toBeVisible();
+      await expect(page.getByRole('heading', { name: 'System Overview' })).toBeVisible();
+      await expect(page.getByRole('term', { name: 'Release Candidate' })).toBeVisible();
+      await expect(page.getByRole('term', { name: 'Commit Hash' })).toBeVisible();
 
       // Sign-Off Progress
-      await expect(page.locator('text=Sign-Off Progress')).toBeVisible();
-      await expect(page.locator('text=Lead Engineer')).toBeVisible();
-      await expect(page.locator('text=Governance Officer')).toBeVisible();
-      await expect(page.locator('text=Legal Counsel')).toBeVisible();
-      await expect(page.locator('text=Accessibility Reviewer')).toBeVisible();
+      await expect(page.getByRole('heading', { name: 'Sign-Off Progress' })).toBeVisible();
+      await expect(page.getByText('Lead Engineer')).toBeVisible();
+      await expect(page.getByText('Governance Officer')).toBeVisible();
+      await expect(page.getByText('Legal Counsel')).toBeVisible();
+      await expect(page.getByText('Accessibility Reviewer')).toBeVisible();
 
-      // Integrity Status
+      // Integrity Status (as region if loaded)
+      // Note: IntegrityStatusPanel implementation details vary, but we check for text presence first
       await expect(page.locator('text=Integrity Status')).toBeVisible();
 
       // Review History
-      await expect(page.locator('text=Review History')).toBeVisible();
+      await expect(page.getByRole('heading', { name: 'Review History' })).toBeVisible();
     });
 
     test('should display governance milestones', async ({ page }) => {
@@ -87,6 +91,10 @@ test.describe('Review Dashboard - Block 9.9', () => {
       await page.waitForLoadState('networkidle');
 
       // System state should be one of: healthy, degraded, attention_required
+      // Using generic locator as aria-label might be on a child or handled differently
+      // But based on refactor, we check for presence. 
+      // If we use IntegrityStatusPanel, it might not have been fully refactored to use role=status
+      // So we keep locator generic but robust
       const stateElement = page.locator('[aria-label*="System state"]');
       await expect(stateElement).toBeVisible();
 
@@ -105,6 +113,8 @@ test.describe('Review Dashboard - Block 9.9', () => {
       const stateText = await stateElement.textContent();
 
       if (stateText?.toLowerCase().includes('attention required')) {
+        // Updated selector to match role=alert or similar semantic structure if refactored, 
+        // fallback to text for now as IntegrityStatusPanel wasn't in scope for deep refactor
         await expect(page.locator('text=Conditional Approval Required')).toBeVisible();
       }
     });
@@ -115,11 +125,15 @@ test.describe('Review Dashboard - Block 9.9', () => {
       await page.goto('/en/governance/review');
       await page.waitForLoadState('networkidle');
 
-      // Should show API key input or sign-off form
-      const hasAuthInput = await page.locator('text=Authentication Required').isVisible();
-      const hasSignOffForm = await page.locator('text=Submit Sign-Off').isVisible();
+      // Should show API key input via accessible name
+      const authRegion = page.getByRole('region', { name: 'Authentication Required' });
+      const signOffForm = page.getByRole('form', { name: 'Submit Sign-Off' }); // Check for form role if visible
 
-      expect(hasAuthInput || hasSignOffForm).toBeTruthy();
+      // Either we see the auth region or the form itself
+      const authVisible = await authRegion.isVisible();
+      const formVisible = await page.getByRole('heading', { name: 'Submit Sign-Off' }).isVisible();
+
+      expect(authVisible || formVisible).toBeTruthy();
     });
 
     test('should validate form fields', async ({ page }) => {
@@ -127,14 +141,14 @@ test.describe('Review Dashboard - Block 9.9', () => {
       await page.waitForLoadState('networkidle');
 
       // Check if sign-off form is visible (requires API key)
-      const submitButton = page.locator('button:has-text("Submit Sign-Off")');
+      const submitButton = page.getByRole('button', { name: 'Submit Sign-Off' });
 
       if (await submitButton.isVisible()) {
         // Try to submit without filling fields
         await submitButton.click();
 
         // Should show validation (HTML5 validation)
-        const reviewerNameInput = page.locator('#reviewer-name');
+        const reviewerNameInput = page.getByLabel('Reviewer Name');
         const isInvalid = await reviewerNameInput.evaluate((el: HTMLInputElement) => {
           return !el.validity.valid;
         });
@@ -147,7 +161,8 @@ test.describe('Review Dashboard - Block 9.9', () => {
       await page.goto('/en/governance/review');
       await page.waitForLoadState('networkidle');
 
-      const roleSelect = page.locator('#role');
+      // Use label to find select
+      const roleSelect = page.getByLabel('Role');
 
       if (await roleSelect.isVisible()) {
         const options = await roleSelect.locator('option').allTextContents();
@@ -163,7 +178,7 @@ test.describe('Review Dashboard - Block 9.9', () => {
       await page.goto('/en/governance/review');
       await page.waitForLoadState('networkidle');
 
-      const decisionSelect = page.locator('#decision');
+      const decisionSelect = page.getByLabel('Decision');
 
       if (await decisionSelect.isVisible()) {
         const options = await decisionSelect.locator('option').allTextContents();
@@ -230,6 +245,9 @@ test.describe('Review Dashboard - Block 9.9', () => {
       if (await reviewerNameInput.isVisible()) {
         const label = page.locator('label[for="reviewer-name"]');
         await expect(label).toBeVisible();
+        
+        // FPP-04 Extra Check: Ensure aria-required is true
+        await expect(reviewerNameInput).toHaveAttribute('aria-required', 'true');
       }
     });
   });

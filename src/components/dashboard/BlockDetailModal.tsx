@@ -90,6 +90,7 @@ export function BlockDetailModal({
   if (!isOpen || !entry) return null;
 
   // Temporary: Cast to any to work around LedgerEntry type mismatch — will fix in Stage VII (ticket #QPOLY-TYPE-001)
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const entryData: any = entry;
   const status = getVerificationStatus(entry, allEntries);
   const parentEntry = allEntries.find((e) => (e.block || e.id) === entry.parent);
@@ -104,6 +105,7 @@ export function BlockDetailModal({
   const rawJSON = JSON.stringify(entry, null, 2);
 
   return (
+    // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-noninteractive-element-interactions
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4"
       role="dialog"
@@ -129,7 +131,12 @@ export function BlockDetailModal({
             aria-label="Close modal"
           >
             <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M6 18L18 6M6 6l12 12"
+              />
             </svg>
           </button>
         </div>
@@ -140,7 +147,9 @@ export function BlockDetailModal({
           <div>
             <div className="mb-2 flex items-center justify-between">
               <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Block ID</h3>
-              <span className={`rounded-full px-3 py-1 text-sm font-medium ${statusColors[status]}`}>
+              <span
+                className={`rounded-full px-3 py-1 text-sm font-medium ${statusColors[status]}`}
+              >
                 {status.charAt(0).toUpperCase() + status.slice(1)}
               </span>
             </div>
@@ -160,7 +169,9 @@ export function BlockDetailModal({
 
           {/* Timestamp */}
           <div>
-            <h3 className="mb-2 text-lg font-semibold text-gray-900 dark:text-gray-100">Timestamp</h3>
+            <h3 className="mb-2 text-lg font-semibold text-gray-900 dark:text-gray-100">
+              Timestamp
+            </h3>
             <div className="space-y-1">
               <p className="text-sm text-gray-600 dark:text-gray-400">
                 <strong>UTC:</strong> {formatTimestamp(entry.timestamp)}
@@ -173,7 +184,9 @@ export function BlockDetailModal({
 
           {/* Hash */}
           <div>
-            <h3 className="mb-2 text-lg font-semibold text-gray-900 dark:text-gray-100">Hash (SHA-256)</h3>
+            <h3 className="mb-2 text-lg font-semibold text-gray-900 dark:text-gray-100">
+              Hash (SHA-256)
+            </h3>
             <div className="flex items-center gap-2">
               <code className="flex-1 overflow-x-auto rounded bg-gray-100 px-3 py-2 font-mono text-xs text-gray-900 dark:bg-gray-900 dark:text-gray-100">
                 {entryData.hash}
@@ -191,7 +204,9 @@ export function BlockDetailModal({
           {/* Parent Hash */}
           {entry.parent && (
             <div>
-              <h3 className="mb-2 text-lg font-semibold text-gray-900 dark:text-gray-100">Parent Block</h3>
+              <h3 className="mb-2 text-lg font-semibold text-gray-900 dark:text-gray-100">
+                Parent Block
+              </h3>
               <div className="flex items-center gap-2">
                 <code className="flex-1 rounded bg-gray-100 px-3 py-2 font-mono text-sm text-gray-900 dark:bg-gray-900 dark:text-gray-100">
                   {entry.parent}
@@ -215,7 +230,9 @@ export function BlockDetailModal({
 
           {/* Merkle Root */}
           <div>
-            <h3 className="mb-2 text-lg font-semibold text-gray-900 dark:text-gray-100">Merkle Root</h3>
+            <h3 className="mb-2 text-lg font-semibold text-gray-900 dark:text-gray-100">
+              Merkle Root
+            </h3>
             <code className="block overflow-x-auto rounded bg-gray-100 px-3 py-2 font-mono text-xs text-gray-900 dark:bg-gray-900 dark:text-gray-100">
               {entryData.merkleRoot}
             </code>
@@ -224,7 +241,9 @@ export function BlockDetailModal({
           {/* Entry Type */}
           {entryData.entryType && (
             <div>
-              <h3 className="mb-2 text-lg font-semibold text-gray-900 dark:text-gray-100">Entry Type</h3>
+              <h3 className="mb-2 text-lg font-semibold text-gray-900 dark:text-gray-100">
+                Entry Type
+              </h3>
               <span className="inline-block rounded-full bg-cyan-100 px-3 py-1 text-sm font-medium text-cyan-800 dark:bg-cyan-900/20 dark:text-cyan-400">
                 {entryData.entryType}
               </span>
@@ -264,4 +283,3 @@ export function BlockDetailModal({
     </div>
   );
 }
-

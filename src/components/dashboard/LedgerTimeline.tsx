@@ -12,7 +12,10 @@
 import * as d3 from 'd3';
 import { useEffect, useRef, useState, useCallback, useMemo } from 'react';
 
-import { getVerificationStatus, type LedgerEntry as HashEntry } from '@/lib/governance/hash-continuity';
+import {
+  getVerificationStatus,
+  type LedgerEntry as HashEntry,
+} from '@/lib/governance/hash-continuity';
 import {
   createTimeScale,
   formatTimestamp,
@@ -158,10 +161,13 @@ export function LedgerTimeline({
     svg.call(zoom);
 
     // Draw X-axis
-    const xAxis = d3.axisBottom(xScale).ticks(6).tickFormat((d) => {
-      const date = d as Date;
-      return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-    });
+    const xAxis = d3
+      .axisBottom(xScale)
+      .ticks(6)
+      .tickFormat((d) => {
+        const date = d as Date;
+        return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+      });
 
     g.append('g')
       .attr('class', 'x-axis')
@@ -184,7 +190,9 @@ export function LedgerTimeline({
       .attr('y2', yPos)
       .attr('stroke', (d) => {
         const status = d.status;
-        return status === 'verified' ? getStatusColor('verified', theme) : getStatusColor('warning', theme);
+        return status === 'verified'
+          ? getStatusColor('verified', theme)
+          : getStatusColor('warning', theme);
       })
       .attr('stroke-width', 2)
       .attr('stroke-dasharray', (d) => (d.status === 'verified' ? '0' : '5,5'))
@@ -215,8 +223,8 @@ export function LedgerTimeline({
               timestamp: d.timestamp,
               hash: d.hash,
               status: d.status,
-              entryType: (d as any).entryType,
-            })
+              entryType: (d as HashEntry & { entryType?: string }).entryType,
+            }),
           );
 
         // Highlight block
@@ -267,13 +275,25 @@ export function LedgerTimeline({
     blocks.append('title').text((d) => {
       return `Block ${d.block}, ${formatTimestamp(d.timestamp)}, Status: ${d.status}`;
     });
-  }, [enrichedEntries, dimensions, isDarkMode, selectedIndex, onBlockClick, margin, height, compactMode]);
+  }, [
+    enrichedEntries,
+    dimensions,
+    isDarkMode,
+    selectedIndex,
+    onBlockClick,
+    margin,
+    height,
+    compactMode,
+  ]);
 
   // Reset zoom
   const resetZoom = useCallback(() => {
     if (!svgRef.current) return;
     const svg = d3.select(svgRef.current);
-    svg.transition().duration(750).call(d3.zoom<SVGSVGElement, unknown>().transform, d3.zoomIdentity);
+    svg
+      .transition()
+      .duration(750)
+      .call(d3.zoom<SVGSVGElement, unknown>().transform, d3.zoomIdentity);
   }, []);
 
   if (enrichedEntries.length === 0) {
@@ -324,8 +344,8 @@ export function LedgerTimeline({
         >
           <title>Governance Ledger Timeline</title>
           <desc>
-            Interactive timeline showing {enrichedEntries.length} governance ledger blocks with hash chain
-            continuity verification. Use arrow keys to navigate, +/- to zoom, Enter to select.
+            Interactive timeline showing {enrichedEntries.length} governance ledger blocks with hash
+            chain continuity verification. Use arrow keys to navigate, +/- to zoom, Enter to select.
           </desc>
         </svg>
       </div>
@@ -340,11 +360,10 @@ export function LedgerTimeline({
       {/* Keyboard shortcuts hint */}
       {!compactMode && (
         <div className="mt-4 rounded-lg bg-blue-50 p-3 text-xs text-blue-800 dark:bg-blue-900/20 dark:text-blue-300">
-          <strong>Keyboard shortcuts:</strong> ← → (navigate blocks) • +/- (zoom) • Home/End (boundaries) •
-          Enter (select)
+          <strong>Keyboard shortcuts:</strong> ← → (navigate blocks) • +/- (zoom) • Home/End
+          (boundaries) • Enter (select)
         </div>
       )}
     </div>
   );
 }
-

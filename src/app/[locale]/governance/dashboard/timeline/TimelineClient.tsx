@@ -34,7 +34,7 @@ export function TimelineClient({ locale, ledgerType = 'governance' }: TimelineCl
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Handle block click from timeline
-  const handleBlockClick = (entry: any) => {
+  const handleBlockClick = (entry: LedgerEntry | unknown) => {
     setSelectedEntry(entry as LedgerEntry);
     setIsModalOpen(true);
   };
@@ -68,7 +68,10 @@ export function TimelineClient({ locale, ledgerType = 'governance' }: TimelineCl
 
             {/* Ledger Type Toggle */}
             <div className="flex items-center gap-2">
-              <label htmlFor="ledger-type" className="text-sm font-medium text-gray-700 dark:text-gray-300">
+              <label
+                htmlFor="ledger-type"
+                className="text-sm font-medium text-gray-700 dark:text-gray-300"
+              >
                 Ledger:
               </label>
               <select
@@ -88,16 +91,25 @@ export function TimelineClient({ locale, ledgerType = 'governance' }: TimelineCl
           </div>
 
           {/* Breadcrumb */}
-          <nav className="mt-4 flex items-center text-sm text-gray-500 dark:text-gray-400" aria-label="Breadcrumb">
+          <nav
+            className="mt-4 flex items-center text-sm text-gray-500 dark:text-gray-400"
+            aria-label="Breadcrumb"
+          >
             <Link href={`/${locale}`} className="hover:text-cyan-600 dark:hover:text-cyan-400">
               Home
             </Link>
             <span className="mx-2">→</span>
-            <Link href={`/${locale}/governance`} className="hover:text-cyan-600 dark:hover:text-cyan-400">
+            <Link
+              href={`/${locale}/governance`}
+              className="hover:text-cyan-600 dark:hover:text-cyan-400"
+            >
               Governance
             </Link>
             <span className="mx-2">→</span>
-            <Link href={`/${locale}/governance/dashboard`} className="hover:text-cyan-600 dark:hover:text-cyan-400">
+            <Link
+              href={`/${locale}/governance/dashboard`}
+              className="hover:text-cyan-600 dark:hover:text-cyan-400"
+            >
               Dashboard
             </Link>
             <span className="mx-2">→</span>
@@ -113,7 +125,14 @@ export function TimelineClient({ locale, ledgerType = 'governance' }: TimelineCl
           <div className="mb-8 rounded-lg bg-blue-50 p-4 text-blue-800 dark:bg-blue-900/20 dark:text-blue-300">
             <div className="flex items-center gap-3">
               <svg className="h-5 w-5 animate-spin" viewBox="0 0 24 24" fill="none">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                />
                 <path
                   className="opacity-75"
                   fill="currentColor"
@@ -129,7 +148,9 @@ export function TimelineClient({ locale, ledgerType = 'governance' }: TimelineCl
           <div className="mb-8 rounded-lg border-2 border-red-200 bg-red-50 p-4 dark:border-red-800 dark:bg-red-900/20">
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="font-semibold text-red-800 dark:text-red-400">Failed to load ledger</h3>
+                <h3 className="font-semibold text-red-800 dark:text-red-400">
+                  Failed to load ledger
+                </h3>
                 <p className="mt-1 text-sm text-red-700 dark:text-red-300">
                   {error?.message || 'An unknown error occurred'}
                 </p>
@@ -203,25 +224,37 @@ export function TimelineClient({ locale, ledgerType = 'governance' }: TimelineCl
                 <div className="mt-1 flex items-center gap-2">
                   {data.verified ? (
                     <>
-                      <svg className="h-5 w-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                      <svg
+                        className="h-5 w-5 text-green-500"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                      >
                         <path
                           fillRule="evenodd"
                           d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
                           clipRule="evenodd"
                         />
                       </svg>
-                      <span className="font-semibold text-green-600 dark:text-green-400">Verified</span>
+                      <span className="font-semibold text-green-600 dark:text-green-400">
+                        Verified
+                      </span>
                     </>
                   ) : (
                     <>
-                      <svg className="h-5 w-5 text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
+                      <svg
+                        className="h-5 w-5 text-yellow-500"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                      >
                         <path
                           fillRule="evenodd"
                           d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
                           clipRule="evenodd"
                         />
                       </svg>
-                      <span className="font-semibold text-yellow-600 dark:text-yellow-400">Warning</span>
+                      <span className="font-semibold text-yellow-600 dark:text-yellow-400">
+                        Warning
+                      </span>
                     </>
                   )}
                 </div>
@@ -291,7 +324,9 @@ export function TimelineClient({ locale, ledgerType = 'governance' }: TimelineCl
                       </div>
                       <div className="border-t border-gray-200 pt-3 dark:border-gray-700">
                         <div className="flex justify-between">
-                          <dt className="font-medium text-gray-900 dark:text-gray-100">Verification Rate:</dt>
+                          <dt className="font-medium text-gray-900 dark:text-gray-100">
+                            Verification Rate:
+                          </dt>
                           <dd className="font-bold text-cyan-600 dark:text-cyan-400">
                             {stats.verificationRate.toFixed(1)}%
                           </dd>
@@ -328,7 +363,9 @@ export function TimelineClient({ locale, ledgerType = 'governance' }: TimelineCl
                 d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"
               />
             </svg>
-            <h3 className="mt-4 text-lg font-medium text-gray-900 dark:text-gray-100">No ledger entries found</h3>
+            <h3 className="mt-4 text-lg font-medium text-gray-900 dark:text-gray-100">
+              No ledger entries found
+            </h3>
             <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
               The selected ledger does not contain any entries yet.
             </p>
@@ -347,4 +384,3 @@ export function TimelineClient({ locale, ledgerType = 'governance' }: TimelineCl
     </main>
   );
 }
-

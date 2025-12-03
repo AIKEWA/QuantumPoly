@@ -707,7 +707,7 @@ If you need to disable GPG signing:
 
 ### CI/CD Architecture
 
-- [CI/CD Implementation Summary](../BLOCK7_CICD_IMPLEMENTATION_SUMMARY.md) - Overall architecture
+- [CI/CD Implementation Summary](../BLOCK07.0_CICD_IMPLEMENTATION_SUMMARY.md) - Overall architecture
 - [CI/CD Prompt Compliance Matrix](./CICD_PROMPT_COMPLIANCE_MATRIX.md) - Requirements coverage
 - [CI/CD Testing Guide](./CICD_TESTING_GUIDE.md) - Validation procedures
 - [CICD Review Checklist](../.github/CICD_REVIEW_CHECKLIST.md) - Deployment verification

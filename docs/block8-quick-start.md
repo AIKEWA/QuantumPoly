@@ -346,7 +346,7 @@ gh run view --log
 | File                                     | Purpose               |
 | ---------------------------------------- | --------------------- |
 | `.cursor/block8_governance.session.yaml` | Session configuration |
-| `BLOCK8_TRANSITION_SUMMARY.md`           | Transition report     |
+| `BLOCK08.0_TRANSITION_SUMMARY.md`        | Transition report     |
 | `governance/ledger/ledger.jsonl`         | Main ledger file      |
 | `scripts/verify-ledger.mjs`              | Verification script   |
 | `scripts/audit-sync-ledger.sh`           | Audit sync script     |
@@ -356,7 +356,7 @@ gh run view --log
 - `ETHICAL_GOVERNANCE_IMPLEMENTATION.md` - Governance framework
 - `GPG_LEDGER_SIGNING_IMPLEMENTATION_SUMMARY.md` - GPG guide
 - `TRUST_POLICIES_IMPLEMENTATION_SUMMARY.md` - Trust policies
-- `BLOCK7_CICD_IMPLEMENTATION_SUMMARY.md` - CI/CD reference
+- `BLOCK07.0_CICD_IMPLEMENTATION_SUMMARY.md` - CI/CD reference
 
 ### External Resources
 
@@ -430,7 +430,7 @@ echo "Starting Block 8 - Phase 1: GPG Infrastructure"
 - **Technical Issues:** Review troubleshooting section
 - **Architecture Questions:** See `MASTERPLAN.md`
 - **Governance Framework:** See `ETHICAL_GOVERNANCE_IMPLEMENTATION.md`
-- **CI/CD Questions:** See `BLOCK7_CICD_IMPLEMENTATION_SUMMARY.md`
+- **CI/CD Questions:** See `BLOCK07.0_CICD_IMPLEMENTATION_SUMMARY.md`
 
 ### Key Contacts
 

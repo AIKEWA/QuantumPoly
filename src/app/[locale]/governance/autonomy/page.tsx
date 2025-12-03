@@ -18,8 +18,7 @@ import { TrustTrajectoryGauge } from '@/components/dashboard/TrustTrajectoryGaug
 import { isValidLocale, locales } from '@/i18n';
 import { runAnalysis } from '@/lib/ewa/engine';
 import { generateRecommendations, type Recommendation } from '@/lib/ewa/recommendations';
-import { aggregateConsentMetrics } from '@/lib/governance/consent-aggregator';
-import { getEIIHistory } from '@/lib/governance/eii-calculator';
+import { getIntegrityConsentMetrics, getIntegrityEIIHistory } from '@/lib/integrity';
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -99,13 +98,10 @@ export default async function EthicalAutonomyPage({ params }: Props) {
       consentLedgerPath: 'governance/consent/ledger.jsonl',
     });
 
-    recommendations = generateRecommendations(
-      analysisResult.insights,
-      analysisResult.statistical
-    );
+    recommendations = generateRecommendations(analysisResult.insights, analysisResult.statistical);
 
-    eiiHistory = getEIIHistory('governance/ledger/ledger.jsonl', 90);
-    consentMetrics = aggregateConsentMetrics('governance/consent/ledger.jsonl');
+    eiiHistory = getIntegrityEIIHistory('governance/ledger/ledger.jsonl', 90);
+    consentMetrics = getIntegrityConsentMetrics('governance/consent/ledger.jsonl');
   } catch (error) {
     console.error('Failed to load autonomy dashboard data:', error);
     // Use fallback empty data
@@ -172,11 +168,11 @@ export default async function EthicalAutonomyPage({ params }: Props) {
   }
 
   // Prepare EII chart data
-  const chartData = eiiHistory.dataPoints.map((dp, index) => ({
-    date: dp.date,
-    eii: dp.eii,
-    average: eiiHistory.rollingAverage[index]?.average,
-  }));
+  // const chartData = eiiHistory.dataPoints.map((dp, index) => ({
+  //   date: dp.date,
+  //   eii: dp.eii,
+  //   average: eiiHistory.rollingAverage[index]?.average,
+  // }));
 
   return (
     <main className="min-h-screen bg-gray-50 dark:bg-gray-900">
@@ -224,9 +220,7 @@ export default async function EthicalAutonomyPage({ params }: Props) {
             <div className="space-y-4 lg:col-span-2">
               <div className="grid gap-4 md:grid-cols-2">
                 <div className="rounded-lg border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-gray-800">
-                  <div className="mb-2 text-sm text-gray-600 dark:text-gray-400">
-                    Current EII
-                  </div>
+                  <div className="mb-2 text-sm text-gray-600 dark:text-gray-400">Current EII</div>
                   <div className="mb-1 text-3xl font-bold text-gray-900 dark:text-gray-100">
                     {analysisResult.statistical.eii_analysis.current.toFixed(1)}
                   </div>
@@ -237,13 +231,8 @@ export default async function EthicalAutonomyPage({ params }: Props) {
                         : 'text-red-600 dark:text-red-400'
                     }`}
                   >
-                    {analysisResult.statistical.eii_analysis.delta_30d >= 0
-                      ? '↗'
-                      : '↘'}{' '}
-                    {Math.abs(
-                      analysisResult.statistical.eii_analysis.delta_30d
-                    ).toFixed(1)}
-                    % (30d)
+                    {analysisResult.statistical.eii_analysis.delta_30d >= 0 ? '↗' : '↘'}{' '}
+                    {Math.abs(analysisResult.statistical.eii_analysis.delta_30d).toFixed(1)}% (30d)
                   </div>
                 </div>
 
@@ -254,14 +243,12 @@ export default async function EthicalAutonomyPage({ params }: Props) {
                   <div className="mb-1 text-3xl font-bold text-gray-900 dark:text-gray-100">
                     {(
                       100 -
-                      analysisResult.statistical.consent_analysis.withdrawal_rate *
-                        2
+                      analysisResult.statistical.consent_analysis.withdrawal_rate * 2
                     ).toFixed(1)}
                     %
                   </div>
                   <div className="text-sm text-gray-600 dark:text-gray-400">
-                    {analysisResult.statistical.consent_analysis.total_users}{' '}
-                    users tracked
+                    {analysisResult.statistical.consent_analysis.total_users} users tracked
                   </div>
                 </div>
 
@@ -270,13 +257,11 @@ export default async function EthicalAutonomyPage({ params }: Props) {
                     Security Posture
                   </div>
                   <div className="mb-1 text-3xl font-bold text-gray-900 dark:text-gray-100">
-                    {analysisResult.statistical.security_analysis.current_score.toFixed(
-                      0
-                    )}
+                    {analysisResult.statistical.security_analysis.current_score.toFixed(0)}
                   </div>
                   <div className="text-sm text-gray-600 dark:text-gray-400">
-                    {analysisResult.statistical.security_analysis.anomalies_detected}{' '}
-                    anomalies detected
+                    {analysisResult.statistical.security_analysis.anomalies_detected} anomalies
+                    detected
                   </div>
                 </div>
 
@@ -288,11 +273,7 @@ export default async function EthicalAutonomyPage({ params }: Props) {
                     {analysisResult.insights.length}
                   </div>
                   <div className="text-sm text-gray-600 dark:text-gray-400">
-                    {
-                      analysisResult.insights.filter(
-                        (i) => i.severity === 'critical'
-                      ).length
-                    }{' '}
+                    {analysisResult.insights.filter((i) => i.severity === 'critical').length}{' '}
                     critical
                   </div>
                 </div>
@@ -306,7 +287,7 @@ export default async function EthicalAutonomyPage({ params }: Props) {
           <h2 className="mb-6 text-2xl font-bold text-gray-900 dark:text-gray-100">
             Ethics Integrity Index — 90-Day Trend
           </h2>
-          <EIIChart data={chartData} showAverage={true} height={350} />
+          <EIIChart history={eiiHistory} height={350} />
         </section>
 
         {/* Insights Feed */}
@@ -354,9 +335,7 @@ export default async function EthicalAutonomyPage({ params }: Props) {
                   <h3 className="mb-2 text-lg font-semibold text-gray-900 dark:text-gray-100">
                     {rec.title}
                   </h3>
-                  <p className="mb-4 text-sm text-gray-700 dark:text-gray-300">
-                    {rec.description}
-                  </p>
+                  <p className="mb-4 text-sm text-gray-700 dark:text-gray-300">{rec.description}</p>
                   <div className="mb-3">
                     <div className="mb-2 text-sm font-semibold text-gray-700 dark:text-gray-300">
                       Action Items:
@@ -390,14 +369,12 @@ export default async function EthicalAutonomyPage({ params }: Props) {
             EWA v2 Public APIs
           </h2>
           <p className="mb-4 text-gray-700 dark:text-gray-300">
-            All EWA v2 insights and recommendations are available via public
-            APIs for external verification and research.
+            All EWA v2 insights and recommendations are available via public APIs for external
+            verification and research.
           </p>
           <div className="space-y-2 text-sm">
             <div className="rounded bg-gray-50 p-3 dark:bg-gray-900">
-              <code className="text-purple-600 dark:text-purple-400">
-                GET /api/ewa/insights
-              </code>
+              <code className="text-purple-600 dark:text-purple-400">GET /api/ewa/insights</code>
               <p className="mt-1 text-xs text-gray-600 dark:text-gray-400">
                 Retrieve latest ethical insights with severity scoring
               </p>
@@ -411,17 +388,13 @@ export default async function EthicalAutonomyPage({ params }: Props) {
               </p>
             </div>
             <div className="rounded bg-gray-50 p-3 dark:bg-gray-900">
-              <code className="text-purple-600 dark:text-purple-400">
-                GET /api/ewa/verify
-              </code>
+              <code className="text-purple-600 dark:text-purple-400">GET /api/ewa/verify</code>
               <p className="mt-1 text-xs text-gray-600 dark:text-gray-400">
                 Verify integrity of autonomous analysis ledger entries
               </p>
             </div>
             <div className="rounded bg-gray-50 p-3 dark:bg-gray-900">
-              <code className="text-purple-600 dark:text-purple-400">
-                POST /api/ewa/analyze
-              </code>
+              <code className="text-purple-600 dark:text-purple-400">POST /api/ewa/analyze</code>
               <p className="mt-1 text-xs text-gray-600 dark:text-gray-400">
                 Manually trigger on-demand analysis (rate-limited)
               </p>
@@ -432,8 +405,7 @@ export default async function EthicalAutonomyPage({ params }: Props) {
         {/* Footer */}
         <footer className="border-t border-gray-200 pt-8 text-center dark:border-gray-700">
           <p className="mb-4 text-sm text-gray-600 dark:text-gray-400">
-            This dashboard is part of Block 9.5: Ethical Autonomy &
-            Self-Learning Governance
+            This dashboard is part of Block 9.5: Ethical Autonomy & Self-Learning Governance
           </p>
           <div className="flex flex-wrap justify-center gap-4 text-sm text-gray-600 dark:text-gray-400">
             <Link
@@ -462,4 +434,3 @@ export default async function EthicalAutonomyPage({ params }: Props) {
     </main>
   );
 }
-

@@ -301,7 +301,7 @@ content-security-policy: default-src 'self'; script-src 'self'; style-src 'self'
 
 ## Comparison with Block 7 Audit Assumptions
 
-### Expected State (from BLOCK7_FINALIZATION_AUDIT.md)
+### Expected State (from BLOCK07.0_FINALIZATION_AUDIT.md)
 
 **Section 6.1 DNS Configuration Documentation:**
 

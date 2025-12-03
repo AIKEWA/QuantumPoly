@@ -10,14 +10,24 @@ type Gate = {
 
 // Placeholder data for the gates
 const initialGates: Gate[] = [
-  { id: 'h-01', name: 'H', state: 'active', tooltip: 'Hadamard Gate - Creates a superposition of states.' },
+  {
+    id: 'h-01',
+    name: 'H',
+    state: 'active',
+    tooltip: 'Hadamard Gate - Creates a superposition of states.',
+  },
   { id: 'x-01', name: 'X', state: 'inactive', tooltip: 'Pauli-X Gate - Bit-flip.' },
   { id: 'y-01', name: 'Y', state: 'active', tooltip: 'Pauli-Y Gate - Bit and phase-flip.' },
   { id: 'z-01', name: 'Z', state: 'error', tooltip: 'Pauli-Z Gate - Phase-flip.' },
-  { id: 'cnot-01', name: 'CNOT', state: 'active', tooltip: 'Controlled-NOT Gate - Entangles two qubits.' },
+  {
+    id: 'cnot-01',
+    name: 'CNOT',
+    state: 'active',
+    tooltip: 'Controlled-NOT Gate - Entangles two qubits.',
+  },
 ];
 
-const GateVisualizationWidget = () => {
+export const GateVisualizationWidget = () => {
   const [gates] = useState<Gate[]>(initialGates);
   const [activeTooltip, setActiveTooltip] = useState<string | null>(null);
 
@@ -35,7 +45,6 @@ const GateVisualizationWidget = () => {
     }
   };
 
-
   const getGateColor = (state: Gate['state']) => {
     switch (state) {
       case 'active':
@@ -50,13 +59,13 @@ const GateVisualizationWidget = () => {
   };
 
   return (
-    <div className="bg-gate-viz-background text-gate-viz-text p-4 rounded-lg">
-      <h2 className="text-lg font-bold mb-4">Gate Visualization</h2>
+    <div className="rounded-lg bg-gate-viz-background p-4 text-gate-viz-text">
+      <h2 className="mb-4 text-lg font-bold">Gate Visualization</h2>
       <div className="flex space-x-2">
         {gates.map((gate) => (
           <div
             key={gate.id}
-            className={`w-12 h-12 flex items-center justify-center rounded-md cursor-pointer relative ${getGateColor(gate.state)}`}
+            className={`relative flex h-12 w-12 cursor-pointer items-center justify-center rounded-md ${getGateColor(gate.state)}`}
             onMouseEnter={() => handleMouseEnter(gate.tooltip)}
             onMouseLeave={handleMouseLeave}
             onKeyDown={(e) => handleKeyDown(e, gate.tooltip)}
@@ -69,12 +78,10 @@ const GateVisualizationWidget = () => {
         ))}
       </div>
       {activeTooltip && (
-        <div className="absolute mt-2 p-2 bg-gate-viz-tooltip-bg rounded-md text-sm" role="tooltip">
+        <div className="absolute mt-2 rounded-md bg-gate-viz-tooltip-bg p-2 text-sm" role="tooltip">
           {activeTooltip}
         </div>
       )}
     </div>
   );
 };
-
-export default GateVisualizationWidget;

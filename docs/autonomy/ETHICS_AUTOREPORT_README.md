@@ -68,6 +68,7 @@ Reports are generated monthly via GitHub Actions, cryptographically signed, and 
 
 1. **Node.js 20+**
 2. **npm dependencies installed:**
+
    ```bash
    npm ci --legacy-peer-deps
    ```
@@ -119,6 +120,7 @@ npm run ethics:report
 ```
 
 Output:
+
 - `reports/ethics/ETHICS_REPORT_YYYY-MM-DD.json`
 - `reports/ethics/ETHICS_REPORT_YYYY-MM-DD.pdf`
 - Ledger entry in `governance/ledger/ledger.jsonl`
@@ -138,6 +140,7 @@ node scripts/autonomous-report.mjs [options]
 ```
 
 Options:
+
 - `--dry-run` — Generate without saving
 - `--sign` — Enable GPG signing
 - `--upload` — Flag for CI/CD (indicates commit intent)
@@ -222,7 +225,7 @@ The system includes a pre-configured workflow: `.github/workflows/ethics-reporti
 
 ```yaml
 schedule:
-  - cron: '0 0 1 * *'  # Monthly: 1st day at 00:00 UTC
+  - cron: '0 0 1 * *' # Monthly: 1st day at 00:00 UTC
 ```
 
 **Alternative Schedules:**
@@ -268,22 +271,24 @@ crontab -e
 
 ### File Locations
 
-| File Type | Path | Purpose |
-|-----------|------|---------|
-| JSON Report | `reports/ethics/ETHICS_REPORT_YYYY-MM-DD.json` | Machine-readable data |
-| PDF Report | `reports/ethics/ETHICS_REPORT_YYYY-MM-DD.pdf` | Human-readable document |
-| GPG Signature | `reports/ethics/ETHICS_REPORT_YYYY-MM-DD.pdf.sig` | Cryptographic attestation |
-| Ledger Entry | `governance/ledger/ledger.jsonl` | Immutable governance record |
+| File Type     | Path                                              | Purpose                     |
+| ------------- | ------------------------------------------------- | --------------------------- |
+| JSON Report   | `reports/ethics/ETHICS_REPORT_YYYY-MM-DD.json`    | Machine-readable data       |
+| PDF Report    | `reports/ethics/ETHICS_REPORT_YYYY-MM-DD.pdf`     | Human-readable document     |
+| GPG Signature | `reports/ethics/ETHICS_REPORT_YYYY-MM-DD.pdf.sig` | Cryptographic attestation   |
+| Ledger Entry  | `governance/ledger/ledger.jsonl`                  | Immutable governance record |
 
 ### Retention Policy
 
 **Repository (Git):**
+
 - ✅ Retained indefinitely
 - ✅ Version controlled
 - ✅ Publicly accessible
 - ✅ Immutable history
 
 **GitHub Actions Artifacts:**
+
 - ✅ Retained for 365 days
 - ✅ Downloadable via Actions UI
 - ✅ Separate from repository (backup)
@@ -314,6 +319,7 @@ npm run ethics:verify-reporting
 ```
 
 Checks:
+
 - ✅ API endpoints exist
 - ✅ Scripts and libraries present
 - ✅ Report files generated
@@ -349,6 +355,7 @@ gpg --verify reports/ethics/ETHICS_REPORT_2025-10-28.pdf.sig \
 ### Issue: Report Generation Fails
 
 **Symptoms:**
+
 - Script exits with error
 - No files created in `reports/ethics/`
 
@@ -366,11 +373,13 @@ ls -lh governance/consent/ledger.jsonl
 **Solutions:**
 
 1. **Missing dependencies:**
+
    ```bash
    npm ci --legacy-peer-deps
    ```
 
 2. **Ledger file missing:**
+
    ```bash
    # Create empty ledger
    touch governance/ledger/ledger.jsonl
@@ -387,6 +396,7 @@ ls -lh governance/consent/ledger.jsonl
 ### Issue: GPG Signing Fails
 
 **Symptoms:**
+
 - Report generated but no `.sig` file
 - Warning: "GPG signing skipped"
 
@@ -404,10 +414,11 @@ echo "$GPG_PRIVATE_KEY" | base64 -d | gpg --import
 **Solutions:**
 
 1. **GPG not configured:**
+
    ```bash
    # Generate key
    gpg --full-generate-key
-   
+
    # Export and set environment variable
    export GPG_KEY_ID="0x1234ABCD"
    export GPG_PRIVATE_KEY=$(gpg --export-secret-keys --armor $GPG_KEY_ID | base64)
@@ -418,10 +429,11 @@ echo "$GPG_PRIVATE_KEY" | base64 -d | gpg --import
    - Check for `.sig` file after generation
 
 3. **GPG not installed:**
+
    ```bash
    # macOS
    brew install gnupg
-   
+
    # Ubuntu/Debian
    sudo apt-get install gnupg
    ```
@@ -431,6 +443,7 @@ echo "$GPG_PRIVATE_KEY" | base64 -d | gpg --import
 ### Issue: Ledger Entry Not Created
 
 **Symptoms:**
+
 - Report files generated
 - No new entry in `ledger.jsonl`
 
@@ -447,12 +460,14 @@ npm run ethics:report 2>&1 | grep -i error
 **Solutions:**
 
 1. **Dry-run mode active:**
+
    ```bash
    # Run without --dry-run flag
    npm run ethics:report
    ```
 
 2. **Ledger file permissions:**
+
    ```bash
    chmod u+w governance/ledger/ledger.jsonl
    ```
@@ -466,6 +481,7 @@ npm run ethics:report 2>&1 | grep -i error
 ### Issue: GitHub Actions Workflow Fails
 
 **Symptoms:**
+
 - Workflow runs but fails
 - Red X in Actions tab
 
@@ -537,16 +553,19 @@ curl -X POST https://www.quantumpoly.ai/api/ethics/report/generate \
 ### Cryptographic Attestation
 
 **SHA-256 Hashing:**
+
 - Every report file is hashed
 - Hash stored in ledger entry
 - Enables tamper detection
 
 **GPG Signing (Optional):**
+
 - Provides legal verifiability
 - Proves authorship
 - Requires private key (kept secret)
 
 **Merkle Root:**
+
 - Global proof of ledger integrity
 - Combines governance + consent ledgers
 - Publicly verifiable
@@ -554,11 +573,13 @@ curl -X POST https://www.quantumpoly.ai/api/ethics/report/generate \
 ### Privacy Guarantees
 
 ✅ **No Personal Data in Reports**
+
 - Consent statistics are aggregated
 - No user IDs, emails, or IP addresses
 - No individual behavior tracking
 
 ✅ **Aggregation at Source**
+
 - Data is aggregated before report generation
 - Raw logs never included
 - Pseudonymization enforced
@@ -568,17 +589,20 @@ curl -X POST https://www.quantumpoly.ai/api/ethics/report/generate \
 ## Performance
 
 **Report Generation Time:**
+
 - JSON: ~1-2 seconds
 - PDF: ~3-5 seconds
 - GPG signing: ~1-2 seconds
 - **Total:** ~5-10 seconds
 
 **Resource Usage:**
+
 - CPU: Low (Node.js script)
 - Memory: ~50-100 MB
 - Disk: ~500 KB per report (JSON + PDF)
 
 **Scalability:**
+
 - Monthly reports: ~6 MB/year
 - Ledger growth: ~1 KB per entry
 - No performance impact on production site
@@ -588,6 +612,7 @@ curl -X POST https://www.quantumpoly.ai/api/ethics/report/generate \
 ## Future Enhancements
 
 **Planned (Q1 2026):**
+
 1. EII qualitative labels in PDF ("Excellent", "Good", etc.)
 2. Historical trend charts (1-year view)
 3. Industry benchmark comparisons
@@ -595,6 +620,7 @@ curl -X POST https://www.quantumpoly.ai/api/ethics/report/generate \
 5. Multi-language report generation (DE, FR, ES)
 
 **Under Consideration:**
+
 1. Real-time EII dashboard widget
 2. Email notifications for report generation
 3. Automated social media posting (transparency)
@@ -605,16 +631,19 @@ curl -X POST https://www.quantumpoly.ai/api/ethics/report/generate \
 ## Support
 
 **Documentation:**
-- Main: `BLOCK9.4_PUBLIC_ETHICS_API.md`
+
+- Main: `BLOCK09.4_PUBLIC_ETHICS_API.md`
 - OpenAPI: `public/api-schema.json`
 - Governance: `governance/README.md`
 
 **Scripts:**
+
 - Generation: `scripts/autonomous-report.mjs`
 - Verification: `scripts/verify-ethics-reporting.mjs`
 - Ledger verification: `scripts/verify-ledger.mjs`
 
 **Contact:**
+
 - Governance Officer: governance@quantumpoly.ai
 - Technical Lead: tech@quantumpoly.ai
 
@@ -626,5 +655,4 @@ curl -X POST https://www.quantumpoly.ai/api/ethics/report/generate \
 
 ---
 
-*This guide is part of the QuantumPoly Governance Architecture and is maintained under version control.*
-
+_This guide is part of the QuantumPoly Governance Architecture and is maintained under version control._

@@ -1,4 +1,5 @@
 # Legacy Onboarding (Archived 2025-10-25)
+
 # QuantumPoly Onboarding Guide
 
 **Welcome to QuantumPoly!**
@@ -97,23 +98,24 @@ QuantumPoly serves as a **living example** of ethical AI development. Our public
 
 ### Technology Stack Rationale
 
-| Technology      | Version | Rationale                                                      |
-|-----------------|---------|----------------------------------------------------------------|
-| **Next.js**     | 14.x    | App Router for modern routing, SSG for performance, SEO-friendly |
-| **React**       | 18.x    | Industry standard, excellent ecosystem, accessibility support  |
-| **TypeScript**  | 5.x     | Type safety prevents bugs, improves maintainability            |
-| **Tailwind CSS**| 3.x     | Utility-first, responsive, dark mode support, accessible colors |
-| **next-intl**   | 4.x     | First-class i18n for Next.js, server-side translation support  |
-| **Zod**         | 3.x     | Runtime validation for API inputs, type-safe schemas           |
-| **Jest**        | 29.x    | Unit testing with great TypeScript support                     |
-| **Playwright**  | 1.x     | E2E testing with built-in accessibility tools                  |
-| **Axe**         | 4.x     | Industry-standard accessibility testing                        |
+| Technology       | Version | Rationale                                                        |
+| ---------------- | ------- | ---------------------------------------------------------------- |
+| **Next.js**      | 14.x    | App Router for modern routing, SSG for performance, SEO-friendly |
+| **React**        | 18.x    | Industry standard, excellent ecosystem, accessibility support    |
+| **TypeScript**   | 5.x     | Type safety prevents bugs, improves maintainability              |
+| **Tailwind CSS** | 3.x     | Utility-first, responsive, dark mode support, accessible colors  |
+| **next-intl**    | 4.x     | First-class i18n for Next.js, server-side translation support    |
+| **Zod**          | 3.x     | Runtime validation for API inputs, type-safe schemas             |
+| **Jest**         | 29.x    | Unit testing with great TypeScript support                       |
+| **Playwright**   | 1.x     | E2E testing with built-in accessibility tools                    |
+| **Axe**          | 4.x     | Industry-standard accessibility testing                          |
 
 ### Key Design Decisions
 
 **1. Accessibility-First Architecture**
 
 All components are designed with accessibility from the start, not retrofitted:
+
 - Semantic HTML structure
 - Proper ARIA labels and roles
 - Keyboard navigation support
@@ -123,6 +125,7 @@ All components are designed with accessibility from the start, not retrofitted:
 **2. Performance Budgets**
 
 Strict limits enforce fast, efficient code:
+
 - JavaScript bundle: <250 KB per route
 - Lighthouse Performance: ≥90
 - Core Web Vitals: LCP ≤2.5s, TBT <300ms, CLS <0.1
@@ -130,6 +133,7 @@ Strict limits enforce fast, efficient code:
 **3. Governance Integration**
 
 Every major decision is documented and tracked:
+
 - Transparency ledger for public accountability
 - Ethical Integrity Index (EII) as measurable outcome
 - CI/CD enforcement of ethical standards
@@ -143,12 +147,14 @@ Every major decision is documented and tracked:
 **Required Software:**
 
 - **Node.js:** 20.x LTS (⚠️ Not 18.x or 22.x)
+
   ```bash
   node --version
   # Expected: v20.x.x
   ```
 
 - **npm:** 10.x or higher
+
   ```bash
   npm --version
   # Expected: 10.x.x+
@@ -472,7 +478,7 @@ import { getTranslations } from 'next-intl/server';
 
 export default async function Home() {
   const t = await getTranslations('hero');
-  
+
   return (
     <Hero
       title={t('title')}
@@ -510,14 +516,14 @@ export default async function Home() {
 
 ### Supported Locales
 
-| Locale | Language  | Status    | Completion |
-|--------|-----------|-----------|------------|
-| `en`   | English   | ✅ Complete | 100%       |
-| `de`   | Deutsch   | ✅ Complete | 100%       |
-| `tr`   | Türkçe    | ✅ Complete | 100%       |
-| `es`   | Español   | ✅ Complete | 100%       |
-| `fr`   | Français  | ✅ Complete | 100%       |
-| `it`   | Italiano  | ✅ Complete | 100%       |
+| Locale | Language | Status      | Completion |
+| ------ | -------- | ----------- | ---------- |
+| `en`   | English  | ✅ Complete | 100%       |
+| `de`   | Deutsch  | ✅ Complete | 100%       |
+| `tr`   | Türkçe   | ✅ Complete | 100%       |
+| `es`   | Español  | ✅ Complete | 100%       |
+| `fr`   | Français | ✅ Complete | 100%       |
+| `it`   | Italiano | ✅ Complete | 100%       |
 
 ### File Structure
 
@@ -565,7 +571,7 @@ import { useTranslations } from 'next-intl';
 
 function MyComponent() {
   const t = useTranslations('hero');
-  
+
   return <p>{t('newKey')}</p>;
 }
 ```
@@ -635,12 +641,12 @@ EII = 0.30 × Accessibility
 
 **Breakdown:**
 
-| Component      | Weight | Current | Target |
-|----------------|--------|---------|--------|
-| Accessibility  | 30%    | 92      | 95     |
-| Performance    | 30%    | 90      | 95     |
-| SEO            | 20%    | 95      | 98     |
-| Bundle         | 20%    | 88      | 90     |
+| Component     | Weight | Current | Target |
+| ------------- | ------ | ------- | ------ |
+| Accessibility | 30%    | 92      | 95     |
+| Performance   | 30%    | 90      | 95     |
+| SEO           | 20%    | 95      | 98     |
+| Bundle        | 20%    | 88      | 90     |
 
 ### Transparency Ledger
 
@@ -843,11 +849,11 @@ Triggered by:
 
 ### Deployment Environments
 
-| Environment  | Trigger          | URL                          | Approval Required |
-|--------------|------------------|------------------------------|-------------------|
-| **Preview**  | Pull Request     | `quantumpoly-pr-N-*.vercel.app` | No                |
-| **Staging**  | Merge to `main`  | Dynamic Vercel URL           | No                |
-| **Production** | Tag + Release  | `https://www.quantumpoly.ai` | Yes               |
+| Environment    | Trigger         | URL                             | Approval Required |
+| -------------- | --------------- | ------------------------------- | ----------------- |
+| **Preview**    | Pull Request    | `quantumpoly-pr-N-*.vercel.app` | No                |
+| **Staging**    | Merge to `main` | Dynamic Vercel URL              | No                |
+| **Production** | Tag + Release   | `https://www.quantumpoly.ai`    | Yes               |
 
 ### Quality Gates (All Must Pass)
 
@@ -887,15 +893,15 @@ import { Hero } from '@/components/Hero';
 describe('Hero', () => {
   it('renders title and subtitle', () => {
     render(<Hero title="Welcome" subtitle="To QuantumPoly" />);
-    
+
     expect(screen.getByRole('heading', { level: 2, name: 'Welcome' })).toBeInTheDocument();
     expect(screen.getByText('To QuantumPoly')).toBeInTheDocument();
   });
-  
+
   it('has no accessibility violations', async () => {
     const { container } = render(<Hero title="Welcome" />);
     const results = await axe(container);
-    
+
     expect(results).toHaveNoViolations();
   });
 });
@@ -921,14 +927,14 @@ import { test, expect } from '@playwright/test';
 
 test('user can switch languages', async ({ page }) => {
   await page.goto('/en');
-  
+
   // Verify English content
   await expect(page.getByRole('heading', { level: 1 })).toContainText('Welcome');
-  
+
   // Switch to German
   await page.getByRole('combobox', { name: /language/i }).selectOption('de');
   await page.waitForURL('/de');
-  
+
   // Verify German content
   await expect(page.getByRole('heading', { level: 1 })).toContainText('Willkommen');
 });
@@ -939,12 +945,14 @@ test('user can switch languages', async ({ page }) => {
 **Three-Layer Approach:**
 
 1. **ESLint (Development Time):**
+
    ```bash
    npm run lint
    # Catches common a11y mistakes while coding
    ```
 
 2. **jest-axe (Component Level):**
+
    ```bash
    npm run test:a11y
    # Validates rendered component accessibility
@@ -1003,12 +1011,12 @@ npm run budget
 
 ### Lighthouse Thresholds
 
-| Metric              | Minimum | Target | Notes                          |
-|---------------------|---------|--------|--------------------------------|
-| Performance         | 90      | 95     | Desktop profile                |
-| Accessibility       | 95      | 100    | WCAG 2.2 AA baseline           |
-| Best Practices      | 95      | 100    | Security, HTTPS, console errors |
-| SEO                 | 95      | 100    | Metadata, sitemap, robots.txt  |
+| Metric         | Minimum | Target | Notes                           |
+| -------------- | ------- | ------ | ------------------------------- |
+| Performance    | 90      | 95     | Desktop profile                 |
+| Accessibility  | 95      | 100    | WCAG 2.2 AA baseline            |
+| Best Practices | 95      | 100    | Security, HTTPS, console errors |
+| SEO            | 95      | 100    | Metadata, sitemap, robots.txt   |
 
 **Run Audits:**
 
@@ -1024,12 +1032,12 @@ npm run lh:a11y     # Accessibility
 
 ### Core Web Vitals
 
-| Metric                        | Target    | Measurement                    |
-|-------------------------------|-----------|--------------------------------|
-| Largest Contentful Paint (LCP) | ≤2.5s     | Time to largest element visible |
-| First Contentful Paint (FCP)   | ≤1.8s     | Time to first content visible  |
-| Total Blocking Time (TBT)      | <300ms    | Main thread blocking time      |
-| Cumulative Layout Shift (CLS)  | <0.1      | Visual stability               |
+| Metric                         | Target | Measurement                     |
+| ------------------------------ | ------ | ------------------------------- |
+| Largest Contentful Paint (LCP) | ≤2.5s  | Time to largest element visible |
+| First Contentful Paint (FCP)   | ≤1.8s  | Time to first content visible   |
+| Total Blocking Time (TBT)      | <300ms | Main thread blocking time       |
+| Cumulative Layout Shift (CLS)  | <0.1   | Visual stability                |
 
 ### Optimization Techniques
 
@@ -1071,6 +1079,7 @@ Escalate to governance team if:
 **Scenario:** Adding a complex interactive visualization that requires heavy JavaScript.
 
 **Resolution:**
+
 - Provide text-based alternative (accessible, lightweight)
 - Load visualization only if user opts in
 - Document limitation and alternative in UI
@@ -1133,10 +1142,10 @@ Historical context for major phases:
 - `IMPLEMENTATION_SUMMARY_BLOCK2_FINAL.md` — Modularization
 - `IMPLEMENTATION_SUMMARY_BLOCK3_FINAL.md` — i18n architecture
 - `IMPLEMENTATION_SUMMARY_BLOCK4_FINAL.md` — Newsletter backend
-- `BLOCK5_FINAL_DELIVERY_REPORT.md` — Ethics & transparency pages
-- `BLOCK6.1_SEO_IMPLEMENTATION_SUMMARY.md` — SEO optimization
-- `BLOCK7_CICD_IMPLEMENTATION_SUMMARY.md` — CI/CD pipeline
-- `BLOCK8_READINESS_REPORT.md` — Governance readiness
+- `BLOCK05.8_FINAL_DELIVERY_REPORT.md` — Ethics & transparency pages
+- `BLOCK06.1_SEO_IMPLEMENTATION_SUMMARY.md` — SEO optimization
+- `BLOCK07.0_CICD_IMPLEMENTATION_SUMMARY.md` — CI/CD pipeline
+- `BLOCK08.0_READINESS_REPORT.md` — Governance readiness
 
 ### Governance Documentation
 
@@ -1271,4 +1280,3 @@ We're excited to have you join the QuantumPoly community. Your contributions—w
 **Document Version:** 1.0.0  
 **Last Updated:** 2025-10-25  
 **Feedback:** Open GitHub issue with label `documentation` or `onboarding`
-

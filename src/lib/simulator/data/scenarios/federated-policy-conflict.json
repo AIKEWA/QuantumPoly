@@ -1,0 +1,60 @@
+{
+  "id": "federated-policy-conflict",
+  "name": "Federated Policy Conflict",
+  "description": "Simulates user friction and trust impact when a global federation policy update conflicts with local node cultural overrides.",
+  "target_metric": "trust_divergence",
+  "personas": [
+    {
+      "id": "persona_global_creator",
+      "traits": ["high_tech_literacy", "reach_oriented", "low_risk_aversion"],
+      "cultural_context": "Global-Cosmopolitan"
+    },
+    {
+      "id": "persona_local_traditionalist",
+      "traits": ["medium_tech_literacy", "high_cultural_sensitivity", "community_focused"],
+      "cultural_context": "Regional-Traditional"
+    },
+    {
+      "id": "persona_node_governor",
+      "traits": ["high_privacy_sensitivity", "high_stress_threshold", "bureaucratic_awareness"],
+      "cultural_context": "Federation-Governance"
+    }
+  ],
+  "steps": [
+    {
+      "id": "step_1_global_push",
+      "governance_rule": "Harmonized Content Standard (HCS) v2.0",
+      "situation": "The Global Federation pushes a mandatory update flagging 'ambiguous cultural symbols' as potential misinformation.",
+      "expected_concerns": [
+        "False positives for traditional content",
+        "Perception of cultural erasure"
+      ]
+    },
+    {
+      "id": "step_2_local_override",
+      "governance_rule": "Node-Specific Cultural Exception Protocol",
+      "situation": "The Local Node detects the flag on a user's post and attempts to apply an automatic 'Cultural Context' whitelist override.",
+      "expected_concerns": [
+        "System latency increasing friction",
+        "User confusion due to dual status indicators (Global: Red, Local: Green)"
+      ]
+    },
+    {
+      "id": "step_3_user_resolution",
+      "governance_rule": "Conflict Resolution UI Modal",
+      "situation": "The user is presented with a choice: 'Post only to Local Node (Safe)' or 'Appeal to Federation (Risk of Ban)'.",
+      "expected_concerns": [
+        "Decision fatigue",
+        "Abandonment of content creation",
+        "Trust score polarization (High Local / Low Federation)"
+      ]
+    }
+  ],
+  "metrics_of_interest": [
+    "Trust_Divergence_Score (Local vs Global)",
+    "Content_Abandonment_Rate",
+    "Clarification_Request_Count",
+    "Perceived_Autonomy_Index"
+  ],
+  "notes": "All personas and policy interactions are purely synthetic. This scenario tests the resilience of the 'Ethical Sandbox' when handling multi-layer governance conflicts in Stage VII."
+}

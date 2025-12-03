@@ -5,7 +5,10 @@ status: 'in-progress'
 owner: 'Engineering Team <engineering@quantumpoly.ai>'
 lastReviewed: '2025-10-13'
 nextReviewDue: '2026-01-13'
-version: 'v0.3.0'
+version: 'v0.3.1'
+license: 'CC-BY-4.0'
+responsibleParty: 'QuantumPoly Legal Team'
+versionHash: 'pending-ci'
 ---
 
 ## Einführung
@@ -103,3 +106,8 @@ Wir verfeinern unsere Praktiken kontinuierlich basierend auf Erfahrung und Branc
 ## Fragen und Zusammenarbeit
 
 Für Fragen zu unseren Ingenieurpraktiken kontaktieren Sie bitte unser Engineering Team unter engineering@quantumpoly.ai.
+
+---
+
+**Letzte Aktualisierung:** 25. November 2025
+**Version:** v0.3.1

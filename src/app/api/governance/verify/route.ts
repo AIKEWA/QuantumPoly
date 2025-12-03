@@ -11,8 +11,7 @@ import crypto from 'crypto';
 
 import { NextRequest, NextResponse } from 'next/server';
 
-import { parseConsentLedger } from '@/lib/governance/consent-aggregator';
-import { verifyLedgerIntegrity, parseLedger } from '@/lib/governance/ledger-parser';
+import { parseConsentLedger, verifyIntegrityLedger, getIntegrityLedger } from '@/lib/integrity';
 
 /**
  * Compute combined Merkle root from multiple ledgers
@@ -36,12 +35,13 @@ export async function GET(request: NextRequest) {
     const full = searchParams.get('full') === 'true';
     const scope = (searchParams.get('scope') || 'all') as 'governance' | 'consent' | 'all';
 
-    const results: Array<{ name: string; verified: boolean; entries: number; merkleRoot: string }> = [];
+    const results: Array<{ name: string; verified: boolean; entries: number; merkleRoot: string }> =
+      [];
 
     // Verify governance ledger
     if (scope === 'governance' || scope === 'all') {
       try {
-        const governanceResult = verifyLedgerIntegrity('governance/ledger/ledger.jsonl');
+        const governanceResult = verifyIntegrityLedger('governance/ledger/ledger.jsonl');
         results.push({
           name: 'governance',
           verified: governanceResult.verified,
@@ -64,14 +64,15 @@ export async function GET(request: NextRequest) {
       try {
         const consentEntries = parseConsentLedger('governance/consent/ledger.jsonl');
         const consentVerified = consentEntries.length > 0;
-        
+
         // Compute Merkle root for consent ledger
         const consentHashes = consentEntries.map((entry) =>
-          crypto.createHash('sha256').update(JSON.stringify(entry)).digest('hex')
+          crypto.createHash('sha256').update(JSON.stringify(entry)).digest('hex'),
         );
-        const consentMerkleRoot = consentHashes.length > 0
-          ? crypto.createHash('sha256').update(consentHashes.join('')).digest('hex')
-          : '';
+        const consentMerkleRoot =
+          consentHashes.length > 0
+            ? crypto.createHash('sha256').update(consentHashes.join('')).digest('hex')
+            : '';
 
         results.push({
           name: 'consent',
@@ -100,7 +101,7 @@ export async function GET(request: NextRequest) {
     // Get last update timestamp
     let lastUpdate = new Date().toISOString();
     try {
-      const governanceEntries = parseLedger('governance/ledger/ledger.jsonl');
+      const governanceEntries = getIntegrityLedger('governance/ledger/ledger.jsonl');
       if (governanceEntries.length > 0) {
         lastUpdate = governanceEntries[governanceEntries.length - 1].timestamp;
       }
@@ -154,7 +155,7 @@ export async function GET(request: NextRequest) {
         scope: 'error',
         error: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -173,4 +174,3 @@ export async function OPTIONS() {
     },
   });
 }
-

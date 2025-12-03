@@ -1,0 +1,59 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "http://quantumpoly.ai/schemas/ogp/v1/gov-ontology.json",
+  "title": "GOV-ONTO-1: OGP Governance Ontology",
+  "description": "Semantic mapping of OGP terms to ISO 42001 and IEEE 7000 concepts.",
+  "definitions": {
+    "ConceptMapping": {
+      "type": "object",
+      "properties": {
+        "ogpTerm": { "type": "string" },
+        "iso42001_Reference": {
+          "type": "string",
+          "description": "Clause/Control in ISO/IEC 42001"
+        },
+        "ieee7000_Reference": { "type": "string", "description": "Process step in IEEE 7000" },
+        "euAiAct_Reference": { "type": "string", "description": "Article in EU AI Act" },
+        "description": { "type": "string" }
+      },
+      "required": ["ogpTerm"]
+    }
+  },
+  "ontology": [
+    {
+      "ogpTerm": "Policy Artifact",
+      "iso42001_Reference": "5.2 AI Policy",
+      "ieee7000_Reference": "Value Translation (Translation of values into norms)",
+      "euAiAct_Reference": "Art 17 (Quality Management System)",
+      "description": "A formalized, machine-readable definition of a governance rule."
+    },
+    {
+      "ogpTerm": "Ledger Entry",
+      "iso42001_Reference": "A.9.2 Recording of data",
+      "ieee7000_Reference": "Transparency Management",
+      "euAiAct_Reference": "Art 12 (Record-keeping)",
+      "description": "Immutable log record of a system event or decision."
+    },
+    {
+      "ogpTerm": "Trust Proof (ZK)",
+      "iso42001_Reference": "8.4 Control of external provision of processes",
+      "ieee7000_Reference": "Ethical Verification",
+      "euAiAct_Reference": "Art 15 (Accuracy, Robustness and Cybersecurity)",
+      "description": "Cryptographic evidence that a process was followed without revealing data."
+    },
+    {
+      "ogpTerm": "Multi-Stakeholder Vote",
+      "iso42001_Reference": "5.3 Roles, responsibilities and authorities",
+      "ieee7000_Reference": "Stakeholder Engagement",
+      "euAiAct_Reference": "N/A (Internal Governance)",
+      "description": "A consensus mechanism for ratifying policy changes."
+    },
+    {
+      "ogpTerm": "Audit Record",
+      "iso42001_Reference": "9.2 Internal audit",
+      "ieee7000_Reference": "Ethical Evaluation",
+      "euAiAct_Reference": "Art 61 (Post-market monitoring)",
+      "description": "Formal attestation of compliance by a certified third party."
+    }
+  ]
+}

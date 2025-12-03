@@ -1,0 +1,39 @@
+{
+  "id": "consent-fatigue",
+  "name": "Consent Fatigue Scenario",
+  "description": "Tests user resilience and consent validity when a policy update interrupts a critical workflow.",
+  "target_metric": "refusal",
+  "personas": [
+    {
+      "id": "p1",
+      "traits": ["time_constrained", "goal_oriented", "low_patience"],
+      "cultural_context": "global_generic"
+    },
+    {
+      "id": "p2",
+      "traits": ["risk_averse", "detail_oriented", "high_literacy"],
+      "cultural_context": "global_generic"
+    }
+  ],
+  "steps": [
+    {
+      "id": "step1_login_attempt",
+      "governance_rule": "mandatory policy review before dashboard access",
+      "situation": "Persona attempts to access their dashboard to perform a time-sensitive action.",
+      "expected_concerns": ["interruption_of_workflow", "coercive_timing"]
+    },
+    {
+      "id": "step2_policy_modal",
+      "governance_rule": "display full text of 2000-word policy update",
+      "situation": "A modal appears blocking the screen. It requires scrolling to the bottom before the 'Accept' button is enabled.",
+      "expected_concerns": ["cognitive_overload", "blind_acceptance_risk", "friction_refusal"]
+    }
+  ],
+  "metrics_of_interest": [
+    "simulated_time_to_consent",
+    "friction_score",
+    "abandonment_rate",
+    "blind_acceptance_flag"
+  ],
+  "notes": "Ensure the 'time_sensitive' context is weighted heavily in the Persona Engine for P1."
+}

@@ -1,11 +1,14 @@
 ---
 title: 'Impressum'
 summary: 'Rechtliche Informationen über QuantumPoly, einschließlich Unternehmensdetails, Kontaktinformationen und verantwortlichen Parteien.'
-status: 'approved'
+status: 'published'
 owner: 'Compliance Steward <legal@quantumpoly.ai>'
 lastReviewed: '2025-10-26'
 nextReviewDue: '2026-04-26'
-version: 'v1.0.0'
+version: 'v1.0.1'
+license: 'CC-BY-4.0'
+responsibleParty: 'QuantumPoly Legal Team'
+versionHash: 'pending-ci'
 ---
 
 ## Angaben gemäß § 5 TMG und Art. 14 UWG (Schweiz)
@@ -89,7 +92,7 @@ Die durch die Seitenbetreiber erstellten Inhalte und Werke auf diesen Seiten unt
 
 ## Datenschutz
 
-Informationen zur Datenerhebung und -verarbeitung finden Sie in unserer separaten [Datenschutzerklärung](/de/privacy).
+Informationen zur Datenerhebung und -verarbeitung finden Sie in unserer separaten [Datenschutzerklärung](../privacy/de.md).
 
 ## Technischer Dienstleister
 
@@ -141,6 +144,6 @@ Dieses Impressum wurde unter Berücksichtigung der rechtlichen Anforderungen ver
 
 ---
 
-**Letzte Aktualisierung:** 26. Oktober 2025  
-**Version:** v1.0.0  
+**Letzte Aktualisierung:** 25. November 2025  
+**Version:** v1.0.1  
 **Status:** Rechtlich geprüft und freigegeben

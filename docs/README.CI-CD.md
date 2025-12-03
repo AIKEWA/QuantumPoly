@@ -698,17 +698,17 @@ For complete event-to-approval mapping, see:
 
 ## Related Documentation
 
-| Document                                | Description                                     |
-| --------------------------------------- | ----------------------------------------------- |
-| `SECRETS.inventory.md`                  | Complete secrets catalog with rotation policies |
-| `GOVERNANCE.rationale.md`               | Compliance mapping and approval justification   |
-| `TROUBLESHOOTING.and.ROLLBACK.md`       | Failure scenarios and rollback procedures       |
-| `DNS.and.Environments.md`               | Environment configuration and DNS setup         |
-| `CHANGELOG.policy.md`                   | Release notes and versioning policy             |
-| `CI-CD.MAP.md`                          | Event-to-approval matrix                        |
-| `DNS_CONFIGURATION.md`                  | Comprehensive DNS setup guide                   |
-| `CICD_REVIEW_CHECKLIST.md`              | Pre-deployment validation checklist             |
-| `BLOCK7_CICD_IMPLEMENTATION_SUMMARY.md` | Block 7 implementation details                  |
+| Document                                   | Description                                     |
+| ------------------------------------------ | ----------------------------------------------- |
+| `SECRETS.inventory.md`                     | Complete secrets catalog with rotation policies |
+| `GOVERNANCE.rationale.md`                  | Compliance mapping and approval justification   |
+| `TROUBLESHOOTING.and.ROLLBACK.md`          | Failure scenarios and rollback procedures       |
+| `DNS.and.Environments.md`                  | Environment configuration and DNS setup         |
+| `CHANGELOG.policy.md`                      | Release notes and versioning policy             |
+| `CI-CD.MAP.md`                             | Event-to-approval matrix                        |
+| `DNS_CONFIGURATION.md`                     | Comprehensive DNS setup guide                   |
+| `CICD_REVIEW_CHECKLIST.md`                 | Pre-deployment validation checklist             |
+| `BLOCK07.0_CICD_IMPLEMENTATION_SUMMARY.md` | Block 7 implementation details                  |
 
 ---
 

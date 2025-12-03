@@ -1,0 +1,24 @@
+{
+  "title": "Observatoire Public d'Éthique",
+  "subtitle": "L'Atlas de l'Intégrité de l'IA",
+  "map": {
+    "title": "Carte Mondiale de l'Intégrité",
+    "nodes": "Nœuds Actifs",
+    "pulse": "Événements/Sec"
+  },
+  "drift": {
+    "title": "Dérive Éthique (EII)",
+    "yAxis": "Indice d'Intégrité Éthique",
+    "xAxis": "Temps",
+    "annotations": {
+      "override": "Intervention Humaine",
+      "policy": "Mise à jour de Politique"
+    }
+  },
+  "proof": {
+    "label": "Lentille de Preuve",
+    "verify": "Vérifier sur le Ledger",
+    "verified": "Vérifié",
+    "pending": "Consensus en Attente"
+  }
+}

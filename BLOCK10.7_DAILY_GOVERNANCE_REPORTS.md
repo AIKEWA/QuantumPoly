@@ -11,6 +11,7 @@ Block 10.7 establishes the **Daily Ethical Heartbeat** — an automated reportin
 ### Purpose
 
 To create a measurable, auditable "heartbeat" for QuantumPoly governance by:
+
 - Generating daily JSON reports combining monitoring, integrity, feedback, and trust metrics
 - Producing weekly summaries with trend analysis and anomaly detection
 - Establishing cryptographic verification through SHA-256 hashing and ledger anchoring
@@ -20,6 +21,7 @@ To create a measurable, auditable "heartbeat" for QuantumPoly governance by:
 ### Integration Points
 
 Block 10.7 integrates with:
+
 - **Block 9.8** (Continuous Integrity): Consumes integrity verification reports
 - **Block 10.3** (Autonomous Monitoring): Consumes system monitoring data
 - **Block 10.6** (Feedback & Trust): Reads feedback aggregates and trust scores
@@ -181,12 +183,13 @@ verify-daily-reports.mjs
 **Algorithm:**
 
 1. **Endpoint Health Check:**
+
    ```javascript
    for each endpoint in [/api/status, /api/ethics/summary, /api/trust/proof, ...]:
      start_timer()
      response = https.get(endpoint, timeout=5000ms)
      response_time = stop_timer()
-     
+
      if response.statusCode == 200:
        status = "passed"
        if response_time > 3000ms:
@@ -194,7 +197,7 @@ verify-daily-reports.mjs
      else:
        status = "failed"
        note = "HTTP {statusCode}"
-     
+
      if endpoint expects Merkle root:
        merkle_root = extract_from_response(response.body)
        valid = /^[a-f0-9]{64}$/.test(merkle_root)
@@ -203,29 +206,31 @@ verify-daily-reports.mjs
    ```
 
 2. **TLS Certificate Validation:**
+
    ```javascript
    request = https.connect(hostname, port=443)
    cert = request.getPeerCertificate()
-   
+
    valid_from = parse_date(cert.valid_from)
    valid_to = parse_date(cert.valid_to)
    now = current_timestamp()
-   
+
    valid = (now >= valid_from && now <= valid_to)
    days_remaining = (valid_to - now) / (1000 * 60 * 60 * 24)
-   
+
    if days_remaining < 30:
      warning = "Certificate expires in less than 30 days"
    ```
 
 3. **System State Determination:**
+
    ```javascript
    failed_endpoints = count_where(endpoints, status == "failed")
    total_endpoints = count(endpoints)
-   
+
    if failed_endpoints > 0 OR not tls_valid:
      system_state = "degraded"
-   
+
    if failed_endpoints >= total_endpoints * 0.5 OR days_remaining < 7:
      system_state = "critical"
    else:
@@ -243,34 +248,36 @@ verify-daily-reports.mjs
 
 **Data Sources:**
 
-| Source | Path | Block | Optional |
-|--------|------|-------|----------|
-| Monitoring | `reports/monitoring/monitoring-YYYY-MM-DD.json` | 10.7 | No |
-| Integrity | `governance/integrity/reports/YYYY-MM-DD.json` | 9.8 | No |
-| Feedback | `governance/feedback/aggregates/*.json` | 10.6 | Yes |
-| Governance Ledger | `governance/ledger/ledger.jsonl` | All | No |
-| Consent Ledger | `governance/consent/ledger.jsonl` | 9.2 | Yes |
-| Federation Ledger | `governance/federation/ledger.jsonl` | 9.6 | Yes |
+| Source            | Path                                            | Block | Optional |
+| ----------------- | ----------------------------------------------- | ----- | -------- |
+| Monitoring        | `reports/monitoring/monitoring-YYYY-MM-DD.json` | 10.7  | No       |
+| Integrity         | `governance/integrity/reports/YYYY-MM-DD.json`  | 9.8   | No       |
+| Feedback          | `governance/feedback/aggregates/*.json`         | 10.6  | Yes      |
+| Governance Ledger | `governance/ledger/ledger.jsonl`                | All   | No       |
+| Consent Ledger    | `governance/consent/ledger.jsonl`               | 9.2   | Yes      |
+| Federation Ledger | `governance/federation/ledger.jsonl`            | 9.6   | Yes      |
 
 **Algorithm:**
 
 1. **Load Data Sources:**
+
    ```javascript
-   monitoring = read_json("reports/monitoring/monitoring-{date}.json")
-   integrity = read_json("governance/integrity/reports/{date}.json")
-   feedback = read_json(latest_file("governance/feedback/aggregates/*.json"))
+   monitoring = read_json('reports/monitoring/monitoring-{date}.json');
+   integrity = read_json('governance/integrity/reports/{date}.json');
+   feedback = read_json(latest_file('governance/feedback/aggregates/*.json'));
    ```
 
 2. **Calculate EII 7-Day Rolling Average:**
+
    ```javascript
    ledger_entries = read_ledger("governance/ledger/ledger.jsonl")
    eii_values = extract(ledger_entries.slice(-7), "eii" || "metrics.eii")
-   
+
    current_eii = eii_values[last]
    avg_eii = sum(eii_values) / length(eii_values)
-   
+
    diff_percent = ((current_eii - avg_eii) / avg_eii) * 100
-   
+
    if diff_percent > 5:
      trend = "improving"
    else if diff_percent < -5:
@@ -280,23 +287,25 @@ verify-daily-reports.mjs
    ```
 
 3. **Aggregate System Health:**
+
    ```javascript
    system_status = "healthy"
-   
+
    if monitoring.system_state == "critical":
      system_status = "attention_required"
    else if monitoring.system_state == "degraded":
      system_status = "degraded"
-   
+
    if integrity.system_state == "attention_required":
      system_status = "attention_required"
    else if integrity.system_state == "degraded" AND system_status == "healthy":
      system_status = "degraded"
-   
+
    // Priority: attention_required > degraded > healthy
    ```
 
 4. **Compute Hash:**
+
    ```javascript
    report_obj = {
      report_id: "daily-governance-{date}",
@@ -309,14 +318,14 @@ verify-daily-reports.mjs
      ethical_metrics: { ... },
      // ... other fields
    }
-   
+
    // Remove hash field for computation
    report_for_hash = { ...report_obj }
    delete report_for_hash.hash
-   
+
    // Deterministic JSON serialization (sorted keys)
    json_string = JSON.stringify(report_for_hash, Object.keys(report_for_hash).sort())
-   
+
    // Compute SHA-256
    report_obj.hash = sha256(json_string)
    ```
@@ -398,11 +407,13 @@ verify-daily-reports.mjs
 ### Verification Boolean Logic
 
 The `verified` field is set to `true` if:
+
 1. The report was generated successfully
 2. All data sources were accessible (or gracefully handled if missing)
 3. Hash computation completed without errors
 
 The field is set to `false` if:
+
 - Hash computation failed
 - Critical data corruption detected
 - Manual override by governance officer
@@ -418,10 +429,11 @@ The field is set to `false` if:
 **Algorithm:**
 
 1. **Load Daily Reports:**
+
    ```javascript
    week = "2025-W45"
    dates = get_week_dates(week) // Returns [Monday, ..., Sunday]
-   
+
    daily_reports = []
    for each date in dates:
      report = read_json("reports/monitoring-{date}.json")
@@ -430,35 +442,37 @@ The field is set to `false` if:
    ```
 
 2. **Statistical Aggregation:**
+
    ```javascript
    function calculate_stats(values):
      mean = sum(values) / length(values)
      variance = sum((value - mean)² for value in values) / length(values)
      stddev = sqrt(variance)
-     
+
      return {
        mean: round(mean, 2),
        stddev: round(stddev, 2),
        min: min(values),
        max: max(values)
      }
-   
+
    eii_values = extract(daily_reports, "ethical_metrics.eii_current")
    eii_stats = calculate_stats(eii_values)
-   
+
    trust_values = extract(daily_reports, "ethical_metrics.trust_score_avg")
    trust_stats = calculate_stats(trust_values)
    ```
 
 3. **Anomaly Detection (2σ Rule):**
+
    ```javascript
    function detect_anomalies(daily_reports):
      anomalies = []
-     
+
      eii_values = extract(daily_reports, "ethical_metrics.eii_current")
      stats = calculate_stats(eii_values)
      threshold = 2 * stats.stddev
-     
+
      for each { date, report } in daily_reports:
        // Check system state
        if report.system_health.status in ["degraded", "attention_required"]:
@@ -468,7 +482,7 @@ The field is set to `false` if:
            reason: "System entered {status} state",
            resolved: false
          })
-       
+
        // Check EII anomaly
        eii = report.ethical_metrics.eii_current
        deviation = abs(eii - stats.mean)
@@ -479,7 +493,7 @@ The field is set to `false` if:
            reason: "EII value {eii} deviates {deviation} points from weekly mean {stats.mean}",
            resolved: true
          })
-       
+
        // Check integrity issues
        if report.integrity_status.open_issues > 5:
          anomalies.append({
@@ -488,7 +502,7 @@ The field is set to `false` if:
            reason: "{count} integrity issues detected",
            resolved: report.integrity_status.pending_reviews == 0
          })
-       
+
        // Check performance degradation
        if report.system_health.response_time_avg_ms > 3000:
          anomalies.append({
@@ -497,37 +511,39 @@ The field is set to `false` if:
            reason: "Average response time {ms}ms exceeds threshold",
            resolved: false
          })
-     
+
      return anomalies
    ```
 
 4. **Trend Classification:**
+
    ```javascript
    function classify_trend(values):
      // Split into first half and second half
      first_half = values.slice(0, floor(length(values) / 2))
      second_half = values.slice(floor(length(values) / 2))
-     
+
      first_avg = sum(first_half) / length(first_half)
      second_avg = sum(second_half) / length(second_half)
-     
+
      change_percent = ((second_avg - first_avg) / first_avg) * 100
-     
+
      if change_percent > 5:
        return "improving"
      else if change_percent < -5:
        return "declining"
      else:
        return "stable"
-   
+
    trust_trend = classify_trend(trust_scores)
    ```
 
 5. **Recommendation Generation:**
+
    ```javascript
    function generate_recommendations(daily_reports, stats, anomalies):
      recommendations = []
-     
+
      // Check EII threshold
      if stats.eii.mean < 80:
        recommendations.append({
@@ -535,7 +551,7 @@ The field is set to `false` if:
          action: "Review ethical integrity processes",
          rationale: "Weekly average EII ({value}) is below target threshold of 80"
        })
-     
+
      // Check recurring anomalies
      unresolved = filter(anomalies, resolved == false)
      if length(unresolved) > 2:
@@ -544,7 +560,7 @@ The field is set to `false` if:
          action: "Investigate recurring system issues",
          rationale: "{count} unresolved anomalies detected this week"
        })
-     
+
      // Check trust score
      if stats.trust_score.mean < 0.5:
        recommendations.append({
@@ -552,7 +568,7 @@ The field is set to `false` if:
          action: "Improve community trust mechanisms",
          rationale: "Average trust score ({value}) indicates low confidence"
        })
-     
+
      // Check response time
      if stats.response_time.mean > 2000:
        recommendations.append({
@@ -560,26 +576,27 @@ The field is set to `false` if:
          action: "Optimize API performance",
          rationale: "Average response time ({ms}ms) exceeds 2-second target"
        })
-     
+
      return recommendations
    ```
 
 6. **Continuity Check:**
+
    ```javascript
    function verify_continuity(reports):
      dates = sort(extract(reports, "report_date"))
      missing = []
-     
+
      for i from 1 to length(dates):
        prev_date = parse_date(dates[i-1])
        curr_date = parse_date(dates[i])
        days_diff = (curr_date - prev_date) / (1000 * 60 * 60 * 24)
-       
+
        if days_diff > 1:
          for j from 1 to days_diff - 1:
            missing_date = prev_date + j * (1000 * 60 * 60 * 24)
            missing.append(format_date(missing_date))
-     
+
      return {
        valid: length(missing) == 0,
        missing_dates: missing
@@ -689,10 +706,12 @@ The field is set to `false` if:
 #### Job 1: `generate-daily-report`
 
 **Conditions:**
+
 - Scheduled daily cron, OR
 - Manual trigger with `report_type` = "daily" or "both"
 
 **Steps:**
+
 1. Checkout repository (shallow clone)
 2. Setup Node.js 20 with npm cache
 3. Install dependencies
@@ -705,6 +724,7 @@ The field is set to `false` if:
 10. Create GitHub issue if system status = "attention_required"
 
 **Commit Message Format:**
+
 ```
 chore(governance): daily report YYYY-MM-DD
 
@@ -721,10 +741,12 @@ Run: #123
 #### Job 2: `generate-weekly-summary`
 
 **Conditions:**
+
 - Scheduled weekly cron (Sunday 23:59 UTC), OR
 - Manual trigger with `report_type` = "weekly" or "both"
 
 **Steps:**
+
 1. Checkout repository (shallow clone)
 2. Setup Node.js 20 with npm cache
 3. Install dependencies
@@ -737,6 +759,7 @@ Run: #123
 10. Create GitHub issue if anomalies detected
 
 **Commit Message Format:**
+
 ```
 chore(governance): weekly summary 2025-W45
 
@@ -779,6 +802,7 @@ Run: #124
 **Current Implementation:** None (v1.0.0)
 
 **Planned Implementation (v1.1.0):**
+
 ```yaml
 - name: Generate daily report with retry
   uses: nick-invision/retry@v2
@@ -792,6 +816,7 @@ Run: #124
 ### Manual Trigger Instructions
 
 **Via GitHub UI:**
+
 1. Navigate to Actions → Daily Governance Reports
 2. Click "Run workflow"
 3. Select report type: daily, weekly, or both
@@ -799,6 +824,7 @@ Run: #124
 5. Click "Run workflow"
 
 **Via GitHub CLI:**
+
 ```bash
 # Generate daily report for today
 gh workflow run daily-governance-report.yml \
@@ -820,11 +846,11 @@ gh workflow run daily-governance-report.yml \
 
 ### Storage Locations
 
-| Artifact | Path | Retention | Backup |
-|----------|------|-----------|--------|
-| Daily Reports | `reports/monitoring-YYYY-MM-DD.json` | Git history | GitHub Actions artifacts (7 years) |
-| Weekly Summaries | `reports/governance-summary.json` | Git history | GitHub Actions artifacts (7 years) |
-| Monitoring Data | `reports/monitoring/monitoring-YYYY-MM-DD.json` | Git history | GitHub Actions artifacts (7 years) |
+| Artifact         | Path                                            | Retention   | Backup                             |
+| ---------------- | ----------------------------------------------- | ----------- | ---------------------------------- |
+| Daily Reports    | `reports/monitoring-YYYY-MM-DD.json`            | Git history | GitHub Actions artifacts (7 years) |
+| Weekly Summaries | `reports/governance-summary.json`               | Git history | GitHub Actions artifacts (7 years) |
+| Monitoring Data  | `reports/monitoring/monitoring-YYYY-MM-DD.json` | Git history | GitHub Actions artifacts (7 years) |
 
 ### GitHub Actions Artifact Retention
 
@@ -837,22 +863,24 @@ gh workflow run daily-governance-report.yml \
 
 ### Access Control Matrix
 
-| Role | Read Reports | Write Reports | Delete Reports | Access Ledger | Modify Workflow |
-|------|--------------|---------------|----------------|---------------|-----------------|
-| Public (Unauthenticated) | ❌ No | ❌ No | ❌ No | ❌ No | ❌ No |
-| Repository Viewer | ✅ Yes (via Git) | ❌ No | ❌ No | ✅ Yes (read-only) | ❌ No |
-| Repository Contributor | ✅ Yes | ❌ No (CI/CD only) | ❌ No | ✅ Yes (read-only) | ❌ No |
-| Repository Maintainer | ✅ Yes | ✅ Yes (manual) | ⚠️ Requires review | ✅ Yes | ✅ Yes |
-| CI/CD Automation | ✅ Yes | ✅ Yes (automated) | ❌ No | ✅ Yes (append-only) | ❌ No |
-| Governance Officer | ✅ Yes | ✅ Yes | ⚠️ Requires approval | ✅ Yes | ✅ Yes |
+| Role                     | Read Reports     | Write Reports      | Delete Reports       | Access Ledger        | Modify Workflow |
+| ------------------------ | ---------------- | ------------------ | -------------------- | -------------------- | --------------- |
+| Public (Unauthenticated) | ❌ No            | ❌ No              | ❌ No                | ❌ No                | ❌ No           |
+| Repository Viewer        | ✅ Yes (via Git) | ❌ No              | ❌ No                | ✅ Yes (read-only)   | ❌ No           |
+| Repository Contributor   | ✅ Yes           | ❌ No (CI/CD only) | ❌ No                | ✅ Yes (read-only)   | ❌ No           |
+| Repository Maintainer    | ✅ Yes           | ✅ Yes (manual)    | ⚠️ Requires review   | ✅ Yes               | ✅ Yes          |
+| CI/CD Automation         | ✅ Yes           | ✅ Yes (automated) | ❌ No                | ✅ Yes (append-only) | ❌ No           |
+| Governance Officer       | ✅ Yes           | ✅ Yes             | ⚠️ Requires approval | ✅ Yes               | ✅ Yes          |
 
 **Public Read Access via APIs:**
+
 - `/api/ethics/summary` - Ethical metrics summary (Block 9.4)
 - `/api/integrity/status` - Integrity status (Block 9.8)
 - `/api/trust/proof` - Trust proof verification (Block 9.7)
 - `/api/governance/verify` - Ledger verification (Block 9.3)
 
 **Authentication:**
+
 - Repository access: GitHub authentication required
 - API access: No authentication (public read-only)
 - Workflow modification: Repository write permissions + code review
@@ -863,24 +891,26 @@ gh workflow run daily-governance-report.yml \
 
 Block 10.7 reports contain **zero personally identifiable information (PII)**. All data is aggregated and anonymized:
 
-| Data Type | PII Status | Aggregation |
-|-----------|------------|-------------|
-| API Endpoints | ❌ No PII | Count, status, response time |
-| TLS Certificates | ❌ No PII | Issuer, validity period (public info) |
-| EII Values | ❌ No PII | Numeric scores, averages |
-| Trust Scores | ❌ No PII | Numeric scores, averages |
-| Consent Metrics | ❌ No PII | Counts, opt-in rates (no user IDs) |
-| Feedback Submissions | ❌ No PII | Counts, categories (no reviewer names) |
-| Federation Status | ❌ No PII | Partner counts, verification status |
-| System Logs | ❌ No PII | Aggregate status, error counts |
+| Data Type            | PII Status | Aggregation                            |
+| -------------------- | ---------- | -------------------------------------- |
+| API Endpoints        | ❌ No PII  | Count, status, response time           |
+| TLS Certificates     | ❌ No PII  | Issuer, validity period (public info)  |
+| EII Values           | ❌ No PII  | Numeric scores, averages               |
+| Trust Scores         | ❌ No PII  | Numeric scores, averages               |
+| Consent Metrics      | ❌ No PII  | Counts, opt-in rates (no user IDs)     |
+| Feedback Submissions | ❌ No PII  | Counts, categories (no reviewer names) |
+| Federation Status    | ❌ No PII  | Partner counts, verification status    |
+| System Logs          | ❌ No PII  | Aggregate status, error counts         |
 
 **Compliance:**
+
 - **GDPR Article 5(1)(c):** Data minimization ✅
 - **GDPR Article 5(1)(e):** Storage limitation ✅ (7-year retention justified)
 - **DSG 2023 Article 6:** Proportionality ✅
 - **ePrivacy Directive Article 5(3):** Consent not required (no tracking) ✅
 
 **Prohibited Data:**
+
 - User email addresses
 - IP addresses (even hashed)
 - Session IDs
@@ -897,6 +927,7 @@ Block 10.7 reports contain **zero personally identifiable information (PII)**. A
 **Scenario:** `monitor-system.mjs` exits with code 1 or 2
 
 **Behavior:**
+
 ```yaml
 - name: Run system monitoring
   id: monitoring
@@ -907,10 +938,11 @@ Block 10.7 reports contain **zero personally identifiable information (PII)**. A
       echo "status=warning"
       echo "exit_code=$?"
     fi
-  continue-on-error: true  # Non-blocking
+  continue-on-error: true # Non-blocking
 ```
 
 **Result:**
+
 - Workflow continues
 - Daily report generates with:
   ```json
@@ -929,6 +961,7 @@ Block 10.7 reports contain **zero personally identifiable information (PII)**. A
 **Scenario:** `daily-governance-report.mjs` exits with code 2
 
 **Behavior:**
+
 ```yaml
 - name: Generate daily governance report
   run: |
@@ -941,6 +974,7 @@ Block 10.7 reports contain **zero personally identifiable information (PII)**. A
 ```
 
 **Result:**
+
 - Workflow fails immediately
 - No report committed
 - No artifact uploaded
@@ -951,19 +985,21 @@ Block 10.7 reports contain **zero personally identifiable information (PII)**. A
 **Scenario:** Required data source unavailable
 
 **Behavior:**
+
 ```javascript
-const integrity = readJSON('governance/integrity/reports/2025-11-05.json')
+const integrity = readJSON('governance/integrity/reports/2025-11-05.json');
 if (!integrity) {
-  console.log('⚠️  Integrity data not found')
-  hasWarnings = true
+  console.log('⚠️  Integrity data not found');
+  hasWarnings = true;
 }
 
 // Continue with:
-report.integrity_status = null
-report.data_quality.integrity_available = false
+report.integrity_status = null;
+report.data_quality.integrity_available = false;
 ```
 
 **Result:**
+
 - Report generates with `null` fields
 - `data_quality.completeness_score` reduced
 - Exit code 1 (warning, not failure)
@@ -971,25 +1007,31 @@ report.data_quality.integrity_available = false
 ### Escalation Triggers
 
 **Trigger 1: Critical System State**
+
 ```yaml
 if: steps.metadata.outputs.system_status == 'attention_required'
 ```
+
 - GitHub issue created with priority label
 - Email notification (if configured)
 - Webhook notification (if configured)
 
 **Trigger 2: Recurring Anomalies**
+
 ```yaml
 if: steps.summary_metadata.outputs.anomaly_count > 0
 ```
+
 - GitHub issue created with anomaly details
 - Recommendations included
 - Weekly review required
 
 **Trigger 3: Workflow Failure**
+
 ```yaml
 if: failure() && steps.daily_report.outputs.status == 'failed'
 ```
+
 - GitHub issue created with error logs
 - Manual intervention required
 - Governance officer notified
@@ -1004,30 +1046,30 @@ if: failure() && steps.daily_report.outputs.status == 'failed'
 {
   // Unique identifier using date-based convention
   "report_id": "daily-governance-2025-11-05",
-  
+
   // ISO 8601 UTC timestamp of report generation
   "timestamp": "2025-11-05T23:59:59.999Z",
-  
+
   // Report date (YYYY-MM-DD format)
   "report_date": "2025-11-05",
-  
+
   // Verification status (true if hash valid)
   "verified": true,
-  
+
   // SHA-256 hash of report content (excluding this field)
   // Computed deterministically with sorted JSON keys
   "hash": "a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2",
-  
+
   // System health aggregated from monitoring and integrity
   "system_health": {
     // Overall status: healthy | degraded | attention_required
     "status": "healthy",
-    
+
     // API endpoint health (from monitor-system.mjs)
     "api_endpoints": {
       "passed": 5,
       "total": 5,
-      "success_rate": 1.0,  // 100%
+      "success_rate": 1.0, // 100%
       "details": [
         {
           "endpoint": "/api/status",
@@ -1043,7 +1085,7 @@ if: failure() && steps.daily_report.outputs.status == 'failed'
         // ... 4 more endpoints
       ]
     },
-    
+
     // TLS certificate status
     "tls_certificate": {
       "valid": true,
@@ -1051,19 +1093,19 @@ if: failure() && steps.daily_report.outputs.status == 'failed'
       "subject": "quantumpoly.ai",
       "valid_from": "2025-08-20T00:00:00Z",
       "valid_to": "2026-02-20T00:00:00Z",
-      "days_remaining": 89,  // Days until expiry
+      "days_remaining": 89, // Days until expiry
       "fingerprint": "AB:CD:EF:12:34:...",
       "error": null
     },
-    
+
     // Average response time across all endpoints
     "response_time_avg_ms": 245
   },
-  
+
   // Integrity status from Block 9.8
   "integrity_status": {
     "last_verification": "2025-11-05T00:00:00.000Z",
-    
+
     // Health of each ledger
     "ledger_health": {
       "governance": "valid",
@@ -1071,31 +1113,31 @@ if: failure() && steps.daily_report.outputs.status == 'failed'
       "federation": "valid",
       "trust_proofs": "valid"
     },
-    
+
     // Integrity metrics
     "open_issues": 0,
-    "auto_repaired": 2,  // Auto-repaired issues (e.g., stale dates)
+    "auto_repaired": 2, // Auto-repaired issues (e.g., stale dates)
     "pending_reviews": 0,
-    
+
     // Global Merkle root across all ledgers
     "global_merkle_root": "d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2"
   },
-  
+
   // Ethical metrics aggregated from ledgers
   "ethical_metrics": {
-    "eii_current": 85,        // Current EII score
-    "eii_7day_avg": 84.5,     // 7-day rolling average
-    "eii_trend": "stable",    // improving | stable | declining
-    "trust_score_avg": 0.68,  // Average trust score from feedback
-    
+    "eii_current": 85, // Current EII score
+    "eii_7day_avg": 84.5, // 7-day rolling average
+    "eii_trend": "stable", // improving | stable | declining
+    "trust_score_avg": 0.68, // Average trust score from feedback
+
     // Consent metrics from Block 9.2
     "consent_metrics": {
       "total_events": 42,
       "opt_in_events": 31,
-      "opt_in_rate": 0.73  // 73% opt-in rate
+      "opt_in_rate": 0.73 // 73% opt-in rate
     }
   },
-  
+
   // Feedback summary from Block 10.6
   "feedback_summary": {
     "new_submissions_24h": 3,
@@ -1103,14 +1145,14 @@ if: failure() && steps.daily_report.outputs.status == 'failed'
     "resolved_items": 8,
     "average_trust_score": 0.71
   },
-  
+
   // Federation status from Block 9.6
   "federation_status": {
     "partners_verified": 3,
     "network_health": "healthy",
     "last_verification": "2025-11-05T12:00:00.000Z"
   },
-  
+
   // Recommendations for governance review
   "recommendations": [
     {
@@ -1120,21 +1162,21 @@ if: failure() && steps.daily_report.outputs.status == 'failed'
       "details": "Current response time: 2100ms (target: <2000ms)"
     }
   ],
-  
+
   // Governance links for traceability
   "governance_links": {
     "ledger_entry": "entry-block10.7-daily-reports",
     "integrity_report": "governance/integrity/reports/2025-11-05.json",
     "monitoring_report": "reports/monitoring/monitoring-2025-11-05.json"
   },
-  
+
   // Data quality metrics
   "data_quality": {
     "monitoring_available": true,
     "integrity_available": true,
     "feedback_available": true,
     "federation_available": true,
-    "completeness_score": 1.0  // 100% data availability
+    "completeness_score": 1.0 // 100% data availability
   }
 }
 ```
@@ -1145,45 +1187,45 @@ if: failure() && steps.daily_report.outputs.status == 'failed'
 {
   // Unique identifier using ISO week convention
   "summary_id": "weekly-2025-W45",
-  
+
   // ISO 8601 UTC timestamp of summary generation
   "timestamp": "2025-11-10T23:59:59.999Z",
-  
+
   // ISO week number
   "week": "2025-W45",
-  
+
   // Week period (Monday to Sunday)
   "period": {
     "start": "2025-11-04",
     "end": "2025-11-10"
   },
-  
+
   // Number of daily reports included (out of 7)
   "daily_reports_included": 7,
-  
+
   // SHA-256 hash of summary content (excluding this field)
   "hash": "d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2",
-  
+
   // Verification status
   "verified": true,
-  
+
   // System health summary across the week
   "system_health_summary": {
-    "healthy_days": 6,      // 6 out of 7 days
+    "healthy_days": 6, // 6 out of 7 days
     "degraded_days": 1,
     "critical_days": 0,
-    "uptime_percentage": 99.2,  // (6/7) * 100 ≈ 85.7%, adjusted for uptime
+    "uptime_percentage": 99.2, // (6/7) * 100 ≈ 85.7%, adjusted for uptime
     "avg_response_time_ms": 267
   },
-  
+
   // Integrity summary across the week
   "integrity_summary": {
     "total_verifications": 7,
     "auto_repairs": 5,
     "pending_reviews_avg": 1.2,
-    "ledger_health_stability": "stable"  // stable | unstable | degrading | improving
+    "ledger_health_stability": "stable" // stable | unstable | degrading | improving
   },
-  
+
   // Ethical metrics summary with statistical analysis
   "ethical_metrics_summary": {
     "eii_mean": 84.8,
@@ -1192,17 +1234,17 @@ if: failure() && steps.daily_report.outputs.status == 'failed'
     "eii_max": 86,
     "trust_score_mean": 0.69,
     "trust_score_stddev": 0.04,
-    "trust_trend": "improving"  // improving | stable | declining
+    "trust_trend": "improving" // improving | stable | declining
   },
-  
+
   // Feedback summary for the week
   "feedback_summary": {
     "new_submissions": 18,
     "resolved_items": 22,
-    "open_items_eow": 10,  // End of week
+    "open_items_eow": 10, // End of week
     "avg_resolution_time_days": 3.5
   },
-  
+
   // Detected anomalies (values beyond 2σ from mean)
   "anomalies": [
     {
@@ -1212,7 +1254,7 @@ if: failure() && steps.daily_report.outputs.status == 'failed'
       "resolved": true
     }
   ],
-  
+
   // Recommendations based on weekly trends
   "recommendations": [
     {
@@ -1221,7 +1263,7 @@ if: failure() && steps.daily_report.outputs.status == 'failed'
       "rationale": "Detected stale verification leading to degraded state"
     }
   ],
-  
+
   // Referenced daily report files
   "daily_report_files": [
     "reports/monitoring-2025-11-04.json",
@@ -1247,16 +1289,8 @@ if: failure() && steps.daily_report.outputs.status == 'failed'
   "status": "approved",
   "approved_date": "2025-11-05",
   "timestamp": "2025-11-05T12:00:00.000Z",
-  "responsible_roles": [
-    "Governance Officer",
-    "Transparency Engineer",
-    "EWA v2"
-  ],
-  "regulations": [
-    "GDPR 2016/679 Art. 5(2)",
-    "DSG 2023 Art. 19, 25",
-    "ISO 42001"
-  ],
+  "responsible_roles": ["Governance Officer", "Transparency Engineer", "EWA v2"],
+  "regulations": ["GDPR 2016/679 Art. 5(2)", "DSG 2023 Art. 19, 25", "ISO 42001"],
   "documents": [
     "BLOCK10.7_DAILY_GOVERNANCE_REPORTS.md",
     "scripts/monitor-system.mjs",
@@ -1291,6 +1325,7 @@ if: failure() && steps.daily_report.outputs.status == 'failed'
 ### Verification Output Examples
 
 **Successful Verification:**
+
 ```
 🔍 Daily & Weekly Report Verification
 =======================================
@@ -1320,6 +1355,7 @@ Total Issues: 0
 ```
 
 **Failed Verification:**
+
 ```
 🔍 Daily & Weekly Report Verification
 =======================================
@@ -1361,12 +1397,14 @@ Total Issues: 2
 **Algorithm:** Secure Hash Algorithm 256-bit (SHA-256)
 
 **Properties:**
+
 - **Deterministic:** Same input always produces same output
 - **Collision-resistant:** Computationally infeasible to find two inputs with same hash
 - **One-way:** Cannot reverse hash to obtain original input
 - **Fixed length:** Always produces 64-character hexadecimal string (256 bits)
 
 **Implementation:**
+
 ```javascript
 import crypto from 'crypto';
 
@@ -1387,37 +1425,38 @@ function computeHash(report) {
   // Remove hash field (if present)
   const reportForHash = { ...report };
   delete reportForHash.hash;
-  
+
   // Sort keys alphabetically
   const sortedKeys = Object.keys(reportForHash).sort();
-  
+
   // Serialize with sorted keys
   const jsonString = JSON.stringify(reportForHash, sortedKeys);
-  
+
   // Compute SHA-256
   return sha256(jsonString);
 }
 ```
 
 **Example:**
+
 ```javascript
 // Report object
 const report = {
-  report_id: "daily-governance-2025-11-05",
-  timestamp: "2025-11-05T23:59:59.999Z",
+  report_id: 'daily-governance-2025-11-05',
+  timestamp: '2025-11-05T23:59:59.999Z',
   verified: true,
-  hash: "" // Placeholder
+  hash: '', // Placeholder
 };
 
 // Remove hash field
 const reportForHash = {
-  report_id: "daily-governance-2025-11-05",
-  timestamp: "2025-11-05T23:59:59.999Z",
-  verified: true
+  report_id: 'daily-governance-2025-11-05',
+  timestamp: '2025-11-05T23:59:59.999Z',
+  verified: true,
 };
 
 // Sorted keys: ["report_id", "timestamp", "verified"]
-const jsonString = JSON.stringify(reportForHash, ["report_id", "timestamp", "verified"]);
+const jsonString = JSON.stringify(reportForHash, ['report_id', 'timestamp', 'verified']);
 // Result: '{"report_id":"daily-governance-2025-11-05","timestamp":"2025-11-05T23:59:59.999Z","verified":true}'
 
 // Compute hash
@@ -1431,6 +1470,7 @@ report.hash = hash;
 ### Verification Script Usage
 
 **Basic Verification:**
+
 ```bash
 # Verify all reports (daily + weekly)
 npm run report:verify
@@ -1506,6 +1546,7 @@ node scripts/verify-daily-reports.mjs --type=daily \
 ```
 
 **Merkle Root Computation:**
+
 ```javascript
 function computeMerkleRoot(ledgerEntry) {
   const components = [
@@ -1513,9 +1554,9 @@ function computeMerkleRoot(ledgerEntry) {
     ledgerEntry.timestamp,
     ledgerEntry.block_id,
     JSON.stringify(ledgerEntry.documents),
-    ledgerEntry.hash
+    ledgerEntry.hash,
   ];
-  
+
   const combined = components.join('');
   return sha256(combined);
 }
@@ -1581,6 +1622,7 @@ Governance Ledger
 ### Manual Report Generation
 
 **Generate Today's Daily Report:**
+
 ```bash
 # Using npm script
 npm run report:daily
@@ -1593,6 +1635,7 @@ node scripts/daily-governance-report.mjs --date=2025-11-05 --verbose
 ```
 
 **Generate Current Week's Summary:**
+
 ```bash
 # Using npm script
 npm run report:weekly
@@ -1605,6 +1648,7 @@ node scripts/weekly-governance-summary.mjs --week=2025-W45 --verbose
 ```
 
 **Generate Both:**
+
 ```bash
 # Using npm script
 npm run report:all
@@ -1616,6 +1660,7 @@ npm run monitor && npm run report:daily
 ### Report Verification Workflow
 
 **Step 1: Verify All Reports**
+
 ```bash
 npm run report:verify
 
@@ -1626,6 +1671,7 @@ npm run report:verify
 ```
 
 **Step 2: Verify Specific Report Type**
+
 ```bash
 # Daily reports only
 node scripts/verify-daily-reports.mjs --type=daily --verbose
@@ -1635,6 +1681,7 @@ node scripts/verify-daily-reports.mjs --type=weekly --verbose
 ```
 
 **Step 3: Verify Date Range**
+
 ```bash
 # Verify November 2025 reports
 node scripts/verify-daily-reports.mjs --type=daily \
@@ -1644,12 +1691,14 @@ node scripts/verify-daily-reports.mjs --type=daily \
 ```
 
 **Step 4: Review Verification Results**
+
 - Check for hash mismatches
 - Review missing dates
 - Investigate timestamp ordering violations
 - Verify ledger references
 
 **Step 5: Remediation (if issues found)**
+
 - Re-generate affected reports
 - Verify data source integrity
 - Update ledger entries if needed
@@ -1660,11 +1709,13 @@ node scripts/verify-daily-reports.mjs --type=daily \
 **Issue 1: Monitoring Script Fails**
 
 **Symptoms:**
+
 - Exit code 1 or 2
 - No monitoring data file generated
 - Daily report shows `monitoring_available: false`
 
 **Diagnosis:**
+
 ```bash
 # Run monitoring script with verbose output
 node scripts/monitor-system.mjs --base-url=https://quantumpoly.ai --verbose
@@ -1674,6 +1725,7 @@ echo $?
 ```
 
 **Resolution:**
+
 1. Verify base URL is accessible
 2. Check TLS certificate validity
 3. Verify API endpoints are responding
@@ -1683,11 +1735,13 @@ echo $?
 **Issue 2: Daily Report Generation Fails**
 
 **Symptoms:**
+
 - Exit code 2
 - No report file generated
 - Workflow fails
 
 **Diagnosis:**
+
 ```bash
 # Run daily report script with verbose output
 node scripts/daily-governance-report.mjs --verbose
@@ -1699,6 +1753,7 @@ ls -l governance/feedback/aggregates/
 ```
 
 **Resolution:**
+
 1. Verify all data sources exist
 2. Check file permissions
 3. Verify JSON syntax in source files
@@ -1708,10 +1763,12 @@ ls -l governance/feedback/aggregates/
 **Issue 3: Hash Verification Fails**
 
 **Symptoms:**
+
 - Verification script reports hash mismatch
 - Expected hash ≠ computed hash
 
 **Diagnosis:**
+
 ```bash
 # Run verification with verbose output
 node scripts/verify-daily-reports.mjs --type=daily --verbose
@@ -1721,6 +1778,7 @@ cat reports/monitoring-2025-11-05.json | jq '.hash'
 ```
 
 **Resolution:**
+
 1. **Do NOT modify report manually**
 2. Verify report has not been tampered with
 3. Check Git history for unauthorized changes
@@ -1730,11 +1788,13 @@ cat reports/monitoring-2025-11-05.json | jq '.hash'
 **Issue 4: Weekly Summary Incomplete**
 
 **Symptoms:**
+
 - `daily_reports_included` < 7
 - Missing dates in period
 - Exit code 1
 
 **Diagnosis:**
+
 ```bash
 # List all reports for the week
 ls -l reports/monitoring-2025-11-*.json
@@ -1744,6 +1804,7 @@ node scripts/weekly-governance-summary.mjs --week=2025-W45 --verbose
 ```
 
 **Resolution:**
+
 1. Identify missing dates
 2. Generate missing daily reports
 3. Re-run weekly summary
@@ -1752,11 +1813,13 @@ node scripts/weekly-governance-summary.mjs --week=2025-W45 --verbose
 **Issue 5: Workflow Permission Denied**
 
 **Symptoms:**
+
 - Commit fails
 - Push fails
 - Artifact upload fails
 
 **Diagnosis:**
+
 ```bash
 # Check GitHub token permissions
 gh auth status
@@ -1766,6 +1829,7 @@ cat .github/workflows/daily-governance-report.yml | grep permissions -A 5
 ```
 
 **Resolution:**
+
 1. Verify `GITHUB_TOKEN` has `contents: write` permission
 2. Check repository settings → Actions → General → Workflow permissions
 3. Ensure "Read and write permissions" enabled
@@ -1776,6 +1840,7 @@ cat .github/workflows/daily-governance-report.yml | grep permissions -A 5
 **Scenario 1: All Reports Lost**
 
 **Recovery Steps:**
+
 1. Download GitHub Actions artifacts (7-year retention)
 2. Extract report files from artifacts
 3. Restore to `reports/` directory
@@ -1786,6 +1851,7 @@ cat .github/workflows/daily-governance-report.yml | grep permissions -A 5
 **Scenario 2: Ledger Entry Corruption**
 
 **Recovery Steps:**
+
 1. **Do NOT modify ledger directly**
 2. Create new corrective ledger entry:
    ```json
@@ -1811,6 +1877,7 @@ cat .github/workflows/daily-governance-report.yml | grep permissions -A 5
 **Scenario 3: Critical System State for 3+ Days**
 
 **Escalation Procedure:**
+
 1. Immediate governance officer notification
 2. Emergency review meeting within 24 hours
 3. Root cause analysis
@@ -1828,6 +1895,7 @@ cat .github/workflows/daily-governance-report.yml | grep permissions -A 5
 **Requirement:** Demonstrate compliance with data protection principles
 
 **Block 10.7 Compliance:**
+
 - ✅ Daily reports provide verifiable evidence of data protection practices
 - ✅ Cryptographic hashing ensures report integrity
 - ✅ 7-year retention enables retrospective compliance verification
@@ -1835,6 +1903,7 @@ cat .github/workflows/daily-governance-report.yml | grep permissions -A 5
 - ✅ Transparency dashboard exposes governance metrics publicly
 
 **Evidence:**
+
 - Daily reports in `reports/monitoring-*.json`
 - Weekly summaries in `reports/governance-summary.json`
 - Ledger entry `entry-block10.7-daily-reports`
@@ -1845,6 +1914,7 @@ cat .github/workflows/daily-governance-report.yml | grep permissions -A 5
 **Requirement:** Transparency of data processing, accountability for compliance
 
 **Block 10.7 Compliance:**
+
 - ✅ Automated daily reporting ensures continuous transparency
 - ✅ Public APIs expose governance metrics
 - ✅ Ledger anchoring provides immutable audit trail
@@ -1852,6 +1922,7 @@ cat .github/workflows/daily-governance-report.yml | grep permissions -A 5
 - ✅ Anomaly detection flags compliance drift
 
 **Evidence:**
+
 - `/api/integrity/status` (public read access)
 - `/api/ethics/summary` (public read access)
 - Governance ledger `governance/ledger/ledger.jsonl`
@@ -1862,6 +1933,7 @@ cat .github/workflows/daily-governance-report.yml | grep permissions -A 5
 **Requirement:** Evidence trail for AI governance decisions
 
 **Block 10.7 Compliance:**
+
 - ✅ Daily reports document AI system state (EII, trust scores)
 - ✅ Weekly summaries provide longitudinal governance insights
 - ✅ Cryptographic proof chain ensures evidence integrity
@@ -1869,6 +1941,7 @@ cat .github/workflows/daily-governance-report.yml | grep permissions -A 5
 - ✅ Retention policy enables retrospective audit
 
 **Evidence:**
+
 - EII 7-day rolling average in daily reports
 - Trust trend analysis in weekly summaries
 - Merkle root verification in integrity reports
@@ -1879,6 +1952,7 @@ cat .github/workflows/daily-governance-report.yml | grep permissions -A 5
 **Requirement:** Documentation accessible to all users
 
 **Block 10.7 Compliance:**
+
 - ✅ Markdown documentation (screen reader compatible)
 - ✅ Clear heading hierarchy (H1 → H2 → H3)
 - ✅ Descriptive link text (no "click here")
@@ -1887,6 +1961,7 @@ cat .github/workflows/daily-governance-report.yml | grep permissions -A 5
 - ✅ Alt text for diagrams (text-based ASCII art)
 
 **Verification:**
+
 ```bash
 # Check heading hierarchy
 grep -E '^#{1,6} ' BLOCK10.7_DAILY_GOVERNANCE_REPORTS.md
@@ -1904,6 +1979,7 @@ grep -oP '\[.*?\]\(.*?\)' BLOCK10.7_DAILY_GOVERNANCE_REPORTS.md
 **Daily Report Schema:** `schemas/daily-governance-report.schema.json`
 
 **Key Fields:**
+
 - `report_id` (string, pattern: `^daily-governance-\\d{4}-\\d{2}-\\d{2}$`)
 - `timestamp` (string, format: date-time)
 - `report_date` (string, pattern: `^\\d{4}-\\d{2}-\\d{2}$`)
@@ -1915,6 +1991,7 @@ grep -oP '\[.*?\]\(.*?\)' BLOCK10.7_DAILY_GOVERNANCE_REPORTS.md
 **Weekly Summary Schema:** `schemas/weekly-governance-summary.schema.json`
 
 **Key Fields:**
+
 - `summary_id` (string, pattern: `^weekly-\\d{4}-W\\d{2}$`)
 - `timestamp` (string, format: date-time)
 - `week` (string, pattern: `^\\d{4}-W\\d{2}$`)
@@ -1927,17 +2004,18 @@ grep -oP '\[.*?\]\(.*?\)' BLOCK10.7_DAILY_GOVERNANCE_REPORTS.md
 
 **Public APIs (No Authentication Required):**
 
-| Endpoint | Method | Description | Block |
-|----------|--------|-------------|-------|
-| `/api/status` | GET | System health check | Core |
-| `/api/ethics/summary` | GET | Ethical metrics summary with Merkle root | 9.4 |
-| `/api/integrity/status` | GET | Integrity verification status | 9.8 |
-| `/api/trust/proof` | GET | Trust proof verification | 9.7 |
-| `/api/federation/trust` | GET | Federation trust status | 9.6 |
-| `/api/ewa/insights` | GET | EWA insights (if available) | 9.5 |
-| `/api/governance/verify` | GET | Ledger verification | 9.3 |
+| Endpoint                 | Method | Description                              | Block |
+| ------------------------ | ------ | ---------------------------------------- | ----- |
+| `/api/status`            | GET    | System health check                      | Core  |
+| `/api/ethics/summary`    | GET    | Ethical metrics summary with Merkle root | 9.4   |
+| `/api/integrity/status`  | GET    | Integrity verification status            | 9.8   |
+| `/api/trust/proof`       | GET    | Trust proof verification                 | 9.7   |
+| `/api/federation/trust`  | GET    | Federation trust status                  | 9.6   |
+| `/api/ewa/insights`      | GET    | EWA insights (if available)              | 9.5   |
+| `/api/governance/verify` | GET    | Ledger verification                      | 9.3   |
 
 **Usage Example:**
+
 ```bash
 # Check API status
 curl https://quantumpoly.ai/api/status | jq
@@ -1976,6 +2054,7 @@ curl https://quantumpoly.ai/api/integrity/status | jq '.system_state'
 ### Appendix D: Change Log
 
 **Version 1.0.0** (2025-11-05)
+
 - Initial release of Block 10.7 Daily Governance Reports
 - Autonomous system monitoring (`monitor-system.mjs`)
 - Daily report generation (`daily-governance-report.mjs`)
@@ -1991,6 +2070,7 @@ curl https://quantumpoly.ai/api/integrity/status | jq '.system_state'
 - Trend analysis (EII, trust scores)
 
 **Planned Version 1.1.0** (TBD)
+
 - Retry logic with exponential backoff
 - Enhanced error handling
 - Automated remediation for common issues
@@ -2012,5 +2092,10 @@ This is transparency as a practice, not a promise. This is governance as code, n
 
 ---
 
-> *"QuantumPoly is alive — and documents it every day."*
+> _"QuantumPoly is alive — and documents it every day."_
 
+---
+
+**Version:** 1.0
+**Last Reviewed:** 2025-11-25
+**Reviewed By:** EWA

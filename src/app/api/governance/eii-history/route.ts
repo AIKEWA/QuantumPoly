@@ -8,7 +8,11 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 
-import { getEIIHistory, getCurrentEII, getEIIBreakdown } from '@/lib/governance/eii-calculator';
+import {
+  getIntegrityEIIHistory,
+  getIntegrityCurrentEII,
+  getIntegrityEIIBreakdown,
+} from '@/lib/integrity';
 
 /**
  * GET /api/governance/eii-history
@@ -24,11 +28,11 @@ export async function GET(request: NextRequest) {
     const days = parseInt(daysParam || '90', 10);
 
     // Get EII history
-    const history = getEIIHistory('governance/ledger/ledger.jsonl', days);
+    const history = getIntegrityEIIHistory('governance/ledger/ledger.jsonl', days);
 
     // Get current EII and breakdown
-    const currentEII = getCurrentEII();
-    const breakdown = getEIIBreakdown();
+    const currentEII = getIntegrityCurrentEII();
+    const breakdown = getIntegrityEIIBreakdown();
 
     // Build response
     const response = {
@@ -73,7 +77,7 @@ export async function GET(request: NextRequest) {
         },
         error: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -92,4 +96,3 @@ export async function OPTIONS() {
     },
   });
 }
-

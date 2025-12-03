@@ -6,9 +6,9 @@
  * Returns aggregated consent metrics (privacy-preserving)
  */
 
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 
-import { aggregateConsentMetrics } from '@/lib/governance/consent-aggregator';
+import { getIntegrityConsentMetrics } from '@/lib/integrity';
 
 /**
  * GET /api/governance/consent-metrics
@@ -16,9 +16,9 @@ import { aggregateConsentMetrics } from '@/lib/governance/consent-aggregator';
  *
  * Privacy-preserving: No individual user data exposed
  */
-export async function GET(_request: NextRequest) {
+export async function GET() {
   try {
-    const metrics = aggregateConsentMetrics('governance/consent/ledger.jsonl');
+    const metrics = getIntegrityConsentMetrics('governance/consent/ledger.jsonl');
 
     // Build response
     const response = {
@@ -57,7 +57,7 @@ export async function GET(_request: NextRequest) {
         },
         error: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -76,4 +76,3 @@ export async function OPTIONS() {
     },
   });
 }
-

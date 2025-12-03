@@ -4,10 +4,12 @@ import common from './common.json';
 import consent from './consent.json';
 import contact from './contact.json';
 import dashboard from './dashboard.json';
+import feedback from './feedback.json';
 import footer from './footer.json';
 import governance from './governance.json';
 import hero from './hero.json';
 import newsletter from './newsletter.json';
+import observatory from './observatory.json';
 import seo from './seo.json';
 import vision from './vision.json';
 
@@ -25,4 +27,6 @@ export default {
   contact,
   governance,
   consent,
+  observatory,
+  feedback,
 };

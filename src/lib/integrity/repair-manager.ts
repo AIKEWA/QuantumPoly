@@ -32,7 +32,7 @@ function sha256(data: string | Record<string, unknown>): string {
  * Compute Merkle root for repair entry
  */
 function computeMerkleRoot(entry: Partial<AutonomousRepairEntry>): string {
-  const timestamp = (entry as any).timestamp || entry.applied_at;
+  const timestamp = (entry as Record<string, unknown>).timestamp || entry.applied_at;
   const components = [
     entry.entry_id,
     timestamp,
@@ -46,21 +46,23 @@ function computeMerkleRoot(entry: Partial<AutonomousRepairEntry>): string {
 /**
  * Read JSONL ledger
  */
-function readLedger(ledgerPath: string): any[] {
+function readLedger(ledgerPath: string): Record<string, unknown>[] {
   if (!fs.existsSync(ledgerPath)) {
     return [];
   }
 
   const content = fs.readFileSync(ledgerPath, 'utf8');
   const lines = content.trim().split('\n').filter(Boolean);
-  
-  return lines.map((line) => {
-    try {
-      return JSON.parse(line);
-    } catch {
-      return null;
-    }
-  }).filter(Boolean);
+
+  return lines
+    .map((line) => {
+      try {
+        return JSON.parse(line);
+      } catch {
+        return null;
+      }
+    })
+    .filter((item): item is Record<string, unknown> => item !== null && typeof item === 'object');
 }
 
 /**
@@ -74,7 +76,11 @@ function appendToLedger(ledgerPath: string, entry: unknown): void {
 /**
  * Update ledger entry (rewrite entire ledger)
  */
-function updateLedgerEntry(ledgerPath: string, entryId: string, updates: Record<string, unknown>): boolean {
+function updateLedgerEntry(
+  ledgerPath: string,
+  entryId: string,
+  updates: Record<string, unknown>,
+): boolean {
   const entries = readLedger(ledgerPath);
   let updated = false;
 
@@ -87,7 +93,7 @@ function updateLedgerEntry(ledgerPath: string, entryId: string, updates: Record<
   });
 
   if (updated) {
-    const content = updatedEntries.map(e => JSON.stringify(e)).join('\n') + '\n';
+    const content = updatedEntries.map((e) => JSON.stringify(e)).join('\n') + '\n';
     fs.writeFileSync(ledgerPath, content, 'utf8');
   }
 
@@ -126,22 +132,20 @@ function repairStaleReviewDate(issue: IntegrityIssue, dryRun: boolean): RepairRe
   };
 
   // Compute hash and Merkle root
-  const entryForHash: any = { ...repairEntry };
+  const entryForHash: Record<string, unknown> = { ...repairEntry };
   delete entryForHash.hash;
   delete entryForHash.merkleRoot;
   delete entryForHash.signature;
-  
+
   repairEntry.hash = sha256(entryForHash);
   repairEntry.merkleRoot = computeMerkleRoot(repairEntry);
 
   if (!dryRun) {
     // Update the original entry
     const ledgerPath = `governance/${issue.affected_ledger}/ledger.jsonl`;
-    const updated = updateLedgerEntry(
-      ledgerPath,
-      issue.entry_id,
-      { next_review: 'ATTENTION_REQUIRED' }
-    );
+    const updated = updateLedgerEntry(ledgerPath, issue.entry_id, {
+      next_review: 'ATTENTION_REQUIRED',
+    });
 
     if (!updated) {
       return {
@@ -151,54 +155,6 @@ function repairStaleReviewDate(issue: IntegrityIssue, dryRun: boolean): RepairRe
     }
 
     // Append repair entry to governance ledger
-    appendToLedger('governance/ledger/ledger.jsonl', repairEntry);
-  }
-
-  return {
-    success: true,
-    repair_entry: repairEntry,
-  };
-}
-
-/**
- * Attempt to repair a hash mismatch (recompute hash for unchanged file)
- */
-function _repairHashMismatch(issue: IntegrityIssue, dryRun: boolean): RepairResult {
-  // This is a conservative repair - only recompute if we can verify the file hasn't changed
-  // For now, we escalate hash mismatches to human review
-  
-  const timestamp = new Date().toISOString();
-  const repairEntryId = `autonomous_repair-${timestamp}-${uuidv4().slice(0, 8)}`;
-
-  const repairEntry: AutonomousRepairEntry = {
-    entry_id: repairEntryId,
-    ledger_entry_type: 'autonomous_repair',
-    block_id: '9.8',
-    title: `Hash Mismatch Detected: ${issue.entry_id || 'Unknown Entry'}`,
-    status: 'pending_human_review',
-    applied_at: timestamp,
-    responsible_roles: ['Integrity Monitor Engine', 'Governance Officer'],
-    issue_classification: IssueClassification.HASH_MISMATCH,
-    original_state: issue.original_state || {},
-    new_state: {},
-    rationale: 'Hash mismatch requires human verification to rule out tampering',
-    requires_followup_by: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString(), // 3 days
-    followup_owner: 'Governance Officer',
-    hash: '',
-    merkleRoot: '',
-    signature: null,
-  };
-
-  // Compute hash and Merkle root
-  const entryForHash: any = { ...repairEntry };
-  delete entryForHash.hash;
-  delete entryForHash.merkleRoot;
-  delete entryForHash.signature;
-  
-  repairEntry.hash = sha256(entryForHash);
-  repairEntry.merkleRoot = computeMerkleRoot(repairEntry);
-
-  if (!dryRun) {
     appendToLedger('governance/ledger/ledger.jsonl', repairEntry);
   }
 
@@ -247,11 +203,11 @@ function createEscalationEntry(issue: IntegrityIssue, dryRun: boolean): RepairRe
   };
 
   // Compute hash and Merkle root
-  const entryForHash: any = { ...repairEntry };
+  const entryForHash: Record<string, unknown> = { ...repairEntry };
   delete entryForHash.hash;
   delete entryForHash.merkleRoot;
   delete entryForHash.signature;
-  
+
   repairEntry.hash = sha256(entryForHash);
   repairEntry.merkleRoot = computeMerkleRoot(repairEntry);
 
@@ -267,7 +223,7 @@ function createEscalationEntry(issue: IntegrityIssue, dryRun: boolean): RepairRe
 
 /**
  * Attempt to repair an integrity issue
- * 
+ *
  * Conservative repair scope:
  * - Stale next_review dates: Update to ATTENTION_REQUIRED
  * - Hash mismatches: Escalate to human review
@@ -281,11 +237,11 @@ export function attemptRepair(issue: IntegrityIssue, dryRun: boolean = false): R
     switch (issue.classification) {
       case IssueClassification.STALE_DATE:
         return repairStaleReviewDate(issue, dryRun);
-      
+
       case IssueClassification.MINOR_INCONSISTENCY:
         // For now, escalate even minor inconsistencies
         return createEscalationEntry(issue, dryRun);
-      
+
       default:
         return createEscalationEntry(issue, dryRun);
     }
@@ -300,7 +256,7 @@ export function attemptRepair(issue: IntegrityIssue, dryRun: boolean = false): R
  */
 export function processIssues(
   issues: IntegrityIssue[],
-  dryRun: boolean = false
+  dryRun: boolean = false,
 ): {
   repaired: RepairResult[];
   escalated: RepairResult[];
@@ -312,7 +268,7 @@ export function processIssues(
 
   issues.forEach((issue) => {
     const result = attemptRepair(issue, dryRun);
-    
+
     if (!result.success) {
       failed.push(result);
     } else if (result.repair_entry?.status === 'applied') {
@@ -330,11 +286,11 @@ export function processIssues(
  */
 export function getRecentRepairs(limit: number = 10): AutonomousRepairEntry[] {
   const entries = readLedger('governance/ledger/ledger.jsonl');
-  
+
   return entries
-    .filter(e => e.ledger_entry_type === 'autonomous_repair')
+    .filter((e) => e.ledger_entry_type === 'autonomous_repair')
     .slice(-limit)
-    .reverse() as AutonomousRepairEntry[];
+    .reverse() as unknown as AutonomousRepairEntry[];
 }
 
 /**
@@ -342,10 +298,10 @@ export function getRecentRepairs(limit: number = 10): AutonomousRepairEntry[] {
  */
 export function getPendingRepairs(): AutonomousRepairEntry[] {
   const entries = readLedger('governance/ledger/ledger.jsonl');
-  
+
   return entries.filter(
-    e => e.ledger_entry_type === 'autonomous_repair' && e.status === 'pending_human_review'
-  ) as AutonomousRepairEntry[];
+    (e) => e.ledger_entry_type === 'autonomous_repair' && e.status === 'pending_human_review',
+  ) as unknown as AutonomousRepairEntry[];
 }
 
 /**
@@ -362,4 +318,3 @@ export function countOpenIssues(): Record<string, number> {
 
   return counts;
 }
-

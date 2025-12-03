@@ -1,11 +1,14 @@
 ---
 title: 'Datenschutzerklärung'
 summary: 'Wie wir Ihre personenbezogenen Daten erfassen, verwenden, schützen und weitergeben, wenn Sie mit unseren Diensten interagieren.'
-status: 'approved'
+status: 'published'
 owner: 'Compliance Steward <legal@quantumpoly.ai>'
 lastReviewed: '2025-10-26'
 nextReviewDue: '2026-04-26'
-version: 'v1.0.0'
+version: 'v1.0.1'
+license: 'CC-BY-4.0'
+responsibleParty: 'QuantumPoly Legal Team'
+versionHash: 'pending-ci'
 ---
 
 ## Einleitung
@@ -41,6 +44,7 @@ Wir beantworten Ihre Anfrage in der Regel innerhalb von 30 Tagen.
 ### 3.1 Newsletter-Anmeldung
 
 **Verarbeitete Daten:**
+
 - E-Mail-Adresse
 - Zeitstempel der Anmeldung
 - IP-Adresse (zur Missbrauchsprävention)
@@ -56,6 +60,7 @@ Wir beantworten Ihre Anfrage in der Regel innerhalb von 30 Tagen.
 ### 3.2 Kontaktformular und E-Mail-Anfragen
 
 **Verarbeitete Daten:**
+
 - Name (optional)
 - E-Mail-Adresse
 - Nachrichteninhalt
@@ -70,6 +75,7 @@ Wir beantworten Ihre Anfrage in der Regel innerhalb von 30 Tagen.
 ### 3.3 Server-Logs und technische Daten
 
 **Verarbeitete Daten:**
+
 - IP-Adresse (anonymisiert nach 7 Tagen)
 - Browsertyp und -version
 - Betriebssystem
@@ -79,7 +85,8 @@ Wir beantworten Ihre Anfrage in der Regel innerhalb von 30 Tagen.
 
 **Rechtsgrundlage:** Berechtigtes Interesse an der Systemsicherheit und technischen Fehleranalyse (Art. 6 Abs. 1 lit. f DSGVO / Art. 6 Abs. 1 DSG)
 
-**Zweck:** 
+**Zweck:**
+
 - Technische Bereitstellung der Website
 - Erkennung und Abwehr von Cyberangriffen
 - Fehleranalyse und Systemoptimierung
@@ -91,6 +98,7 @@ Wir beantworten Ihre Anfrage in der Regel innerhalb von 30 Tagen.
 ### 3.4 Cookies und Tracking-Technologien
 
 **Technisch notwendige Cookies:**
+
 - Session-Cookies für Spracheinstellungen (Speicherdauer: Session-Ende)
 - Theme-Präferenz (Hell-/Dunkelmodus, lokal im Browser gespeichert)
 - Einwilligungspräferenzen (lokal im Browser gespeichert)
@@ -102,6 +110,7 @@ Diese technisch notwendigen Cookies erfordern keine Einwilligung gemäß Art. 6 
 Wir verwenden **Vercel Analytics**, um zu verstehen, wie Besucher mit unserer Website interagieren und die Benutzererfahrung zu verbessern.
 
 **Verarbeitete Daten:**
+
 - Anonymisierte Seitenaufrufe
 - Anonymisierte Navigationsmuster
 - Gerätetyp und Browser-Informationen (aggregiert)
@@ -112,6 +121,7 @@ Wir verwenden **Vercel Analytics**, um zu verstehen, wie Besucher mit unserer We
 **Anbieter:** Vercel Inc., 440 N Barranca Ave #4133, Covina, CA 91723, USA
 
 **Datenschutzfreundliche Funktionen:**
+
 - **Cookie-freies Tracking:** Vercel Analytics setzt keine Cookies
 - **Keine Erhebung personenbezogener Daten:** Alle Daten werden anonymisiert und aggregiert
 - **DSGVO-konform by design:** Erfüllt alle EU-Datenschutzanforderungen
@@ -172,11 +182,11 @@ Eine Übermittlung in weitere Drittländer ohne Angemessenheitsbeschluss erfolgt
 
 ## 7. Speicherdauer
 
-| Datenart | Speicherdauer |
-|----------|---------------|
-| Newsletter-Abonnements | Bis zur Abmeldung |
-| Kontaktformular-Anfragen | Bis zur Bearbeitung, max. 24 Monate |
-| Server-Logs (IP-Adressen) | 7 Tage (danach anonymisiert) |
+| Datenart                     | Speicherdauer                                |
+| ---------------------------- | -------------------------------------------- |
+| Newsletter-Abonnements       | Bis zur Abmeldung                            |
+| Kontaktformular-Anfragen     | Bis zur Bearbeitung, max. 24 Monate          |
+| Server-Logs (IP-Adressen)    | 7 Tage (danach anonymisiert)                 |
 | Technisch notwendige Cookies | Session-Ende bzw. bis zur manuellen Löschung |
 
 Nach Ablauf der Speicherdauer werden die Daten unverzüglich gelöscht oder anonymisiert, sofern keine gesetzlichen Aufbewahrungspflichten bestehen.
@@ -196,6 +206,7 @@ Sie können die Berichtigung unrichtiger oder unvollständiger Daten verlangen.
 ### 8.3 Recht auf Löschung (Art. 17 DSGVO)
 
 Sie können die Löschung Ihrer Daten verlangen, sofern:
+
 - Die Daten für die Zwecke nicht mehr erforderlich sind
 - Sie Ihre Einwilligung widerrufen haben
 - Sie Widerspruch eingelegt haben
@@ -204,6 +215,7 @@ Sie können die Löschung Ihrer Daten verlangen, sofern:
 ### 8.4 Recht auf Einschränkung der Verarbeitung (Art. 18 DSGVO)
 
 Sie können die Einschränkung der Verarbeitung verlangen, wenn:
+
 - Die Richtigkeit der Daten bestritten wird
 - Die Verarbeitung unrechtmäßig ist
 - Wir die Daten nicht mehr benötigen, Sie diese aber zur Geltendmachung von Rechtsansprüchen benötigen
@@ -255,6 +267,7 @@ Trotz dieser Maßnahmen kann keine absolute Sicherheit garantiert werden. Wir em
 Wir behalten uns das Recht vor, diese Datenschutzerklärung jederzeit zu aktualisieren, um Änderungen in unseren Verarbeitungspraktiken, rechtlichen Anforderungen oder neuen Funktionen widerzuspiegeln.
 
 **Benachrichtigung bei wesentlichen Änderungen:**
+
 - Aktualisierung des Datums „Letzte Aktualisierung"
 - Erhöhung der Versionsnummer
 - Bei wesentlichen Änderungen: E-Mail-Benachrichtigung an Newsletter-Abonnenten
@@ -293,9 +306,13 @@ Diese Datenschutzerklärung unterliegt schweizerischem Recht, insbesondere dem r
 
 Diese Datenschutzerklärung dient ausschließlich zu Informationszwecken und stellt keine Rechtsberatung dar. Für spezifische rechtliche Fragen konsultieren Sie bitte einen Fachanwalt für Datenschutzrecht.
 
+### 14.3 Impressum
+
+Rechtliche Informationen finden Sie in unserem [Impressum](../imprint/de.md).
+
 ---
 
-**Letzte Aktualisierung:** 26. Oktober 2025  
-**Version:** v1.0.0  
-**Status:** Rechtlich geprüft und freigegeben  
-**Gültig ab:** 26. Oktober 2025
+**Letzte Aktualisierung:** 25. November 2025
+**Version:** v1.0.1
+**Status:** Rechtlich geprüft und freigegeben
+**Gültig ab:** 25. November 2025

@@ -137,9 +137,11 @@ INTEGRITY_WEBHOOK_SECRET=your-hmac-secret-here
 ### Auto-Repairable (Conservative Scope)
 
 #### `stale_date`
+
 **Description:** Review date is overdue  
 **Action:** Update to `ATTENTION_REQUIRED`  
 **Example:**
+
 ```json
 {
   "classification": "stale_date",
@@ -151,31 +153,37 @@ INTEGRITY_WEBHOOK_SECRET=your-hmac-secret-here
 ### Escalate Immediately
 
 #### `hash_mismatch`
+
 **Description:** Hash doesn't match expected value  
 **Action:** Create escalation entry, notify  
 **Severity:** Critical
 
 #### `missing_reference`
+
 **Description:** Referenced document not found  
 **Action:** Create escalation entry, notify  
 **Severity:** High
 
 #### `integrity_break`
+
 **Description:** Structural ledger corruption  
 **Action:** Create escalation entry, notify  
 **Severity:** Critical
 
 #### `compliance_downgrade`
+
 **Description:** Silent compliance stage downgrade  
 **Action:** Create escalation entry, notify  
 **Severity:** High
 
 #### `attestation_expired`
+
 **Description:** Trust proof expired (>90 days)  
 **Action:** Create escalation entry, notify  
 **Severity:** Medium
 
 #### `federation_stale`
+
 **Description:** Federation verification outdated (>2 days)  
 **Action:** Create escalation entry, notify  
 **Severity:** Medium
@@ -188,7 +196,7 @@ INTEGRITY_WEBHOOK_SECRET=your-hmac-secret-here
 
 ```typescript
 interface AutonomousRepairEntry {
-  entry_id: string;                    // "autonomous_repair-{ISO}-{uuid}"
+  entry_id: string; // "autonomous_repair-{ISO}-{uuid}"
   ledger_entry_type: 'autonomous_repair';
   block_id: '9.8';
   title: string;
@@ -233,6 +241,7 @@ const openIssueCounts = countOpenIssues();
 **CORS:** Public access
 
 **Response:**
+
 ```typescript
 interface IntegrityStatusResponse {
   timestamp: string;
@@ -266,6 +275,7 @@ interface IntegrityStatusResponse {
 ```
 
 **Example:**
+
 ```bash
 curl http://localhost:3000/api/integrity/status | jq .
 ```
@@ -298,6 +308,7 @@ curl http://localhost:3000/api/integrity/status | jq .
 ### Issue: Verification fails with "Ledger file not found"
 
 **Solution:** Ensure ledger files exist:
+
 ```bash
 ls -la governance/ledger/ledger.jsonl
 ls -la governance/consent/ledger.jsonl
@@ -308,6 +319,7 @@ ls -la governance/trust-proofs/active-proofs.jsonl
 ### Issue: Notifications not sent
 
 **Solution:** Check environment variables:
+
 ```bash
 echo $GOVERNANCE_OFFICER_EMAIL
 echo $INTEGRITY_WEBHOOK_URL
@@ -321,6 +333,7 @@ echo $INTEGRITY_WEBHOOK_SECRET
 ### Issue: Repair entry not created
 
 **Solution:** Check if running in dry-run mode:
+
 ```bash
 node scripts/verify-integrity.mjs  # Production (creates entries)
 node scripts/verify-integrity.mjs --dry-run  # Dry run (no entries)
@@ -427,8 +440,8 @@ on:
 
 ## Resources
 
-- [Block 9.8 Documentation](../../BLOCK9.8_CONTINUOUS_INTEGRITY.md)
-- [Integrity Dashboard](/governance/integrity)
+- [Block 9.8 Documentation](../../BLOCK09.8_CONTINUOUS_INTEGRITY.md)
+- [Integrity Dashboard](../../governance/integrity)
 - [Public API](/api/integrity/status)
 - [GitHub Actions Workflow](../../.github/workflows/integrity-verification.yml)
 
@@ -437,4 +450,3 @@ on:
 **Last Updated:** 2025-11-07  
 **Version:** 1.0.0  
 **Maintainer:** Integrity Engineering Team
-

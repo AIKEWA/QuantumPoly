@@ -6,7 +6,7 @@
  *
  * Generates machine-readable (JSON) and human-readable (PDF) ethics reports
  * with cryptographic attestation (SHA-256 + optional GPG signing)
- * 
+ *
  * Block 9.7 Enhancement: QR-based trust proof attestation embedded in PDFs
  */
 
@@ -16,9 +16,15 @@ import fs from 'fs';
 
 import PDFDocument from 'pdfkit';
 
-import { aggregateConsentMetrics } from './consent-aggregator';
-import { getCurrentEII, getEIIHistory, getEIIBreakdown } from './eii-calculator';
-import { getRecentEntries, parseLedger } from './ledger-parser';
+import {
+  getIntegrityConsentMetrics,
+  getIntegrityCurrentEII,
+  getIntegrityEIIHistory,
+  getIntegrityEIIBreakdown,
+  getIntegrityRecentEntries,
+  getIntegrityLedger,
+} from '@/lib/integrity';
+
 import { generateQRCodeForArtifact } from '../trust/qr-generator';
 import { generateAttestationPayload } from '../trust/token-generator';
 
@@ -73,16 +79,16 @@ export function generateEthicsReportJSON(outputPath?: string): EthicsReportData 
   const reportId = `ethics-report-${reportDate}`;
 
   // Gather data
-  const ledgerEntries = parseLedger('governance/ledger/ledger.jsonl');
-  const recentEntries = getRecentEntries(10);
-  const consentMetrics = aggregateConsentMetrics('governance/consent/ledger.jsonl');
-  const currentEII = getCurrentEII();
-  const eiiHistory = getEIIHistory('governance/ledger/ledger.jsonl', 90);
-  const eiiBreakdown = getEIIBreakdown();
+  const ledgerEntries = getIntegrityLedger('governance/ledger/ledger.jsonl');
+  const recentEntries = getIntegrityRecentEntries(10);
+  const consentMetrics = getIntegrityConsentMetrics('governance/consent/ledger.jsonl');
+  const currentEII = getIntegrityCurrentEII();
+  const eiiHistory = getIntegrityEIIHistory('governance/ledger/ledger.jsonl', 90);
+  const eiiBreakdown = getIntegrityEIIBreakdown();
 
   // Compute Merkle root
   const hashes = ledgerEntries.map((entry) =>
-    crypto.createHash('sha256').update(JSON.stringify(entry)).digest('hex')
+    crypto.createHash('sha256').update(JSON.stringify(entry)).digest('hex'),
   );
   const merkleRoot = crypto.createHash('sha256').update(hashes.join('')).digest('hex');
 
@@ -109,7 +115,7 @@ export function generateEthicsReportJSON(outputPath?: string): EthicsReportData 
     ethics: {
       eii: {
         current: currentEII,
-        avg90d: (eiiHistory.rollingAverage as any) || currentEII,
+        avg90d: eiiHistory.average || currentEII,
         trend: eiiHistory.trend || 'stable',
         breakdown: eiiBreakdown,
       },
@@ -143,7 +149,7 @@ export function generateEthicsReportJSON(outputPath?: string): EthicsReportData 
 
 /**
  * Generate human-readable PDF report
- * 
+ *
  * Block 9.7 Enhancement: Includes QR-based trust proof attestation
  */
 export async function generateEthicsReportPDF(
@@ -152,7 +158,7 @@ export async function generateEthicsReportPDF(
   options?: {
     includeTrustProof?: boolean;
     artifactHash?: string;
-  }
+  },
 ): Promise<void> {
   const includeTrustProof = options?.includeTrustProof !== false; // Default true
   const artifactHash = options?.artifactHash || 'pending'; // Will be computed after generation
@@ -172,10 +178,7 @@ export async function generateEthicsReportPDF(
   doc.pipe(stream);
 
   // Cover Page
-  doc
-    .fontSize(28)
-    .font('Helvetica-Bold')
-    .text('Ethics Transparency Report', { align: 'center' });
+  doc.fontSize(28).font('Helvetica-Bold').text('Ethics Transparency Report', { align: 'center' });
 
   doc.moveDown(0.5);
   doc
@@ -184,20 +187,16 @@ export async function generateEthicsReportPDF(
     .text(`Report Date: ${reportData.metadata.reportDate}`, { align: 'center' });
 
   doc.moveDown(0.5);
-  doc
-    .fontSize(12)
-    .text(`Report ID: ${reportData.metadata.reportId}`, { align: 'center' });
+  doc.fontSize(12).text(`Report ID: ${reportData.metadata.reportId}`, { align: 'center' });
 
   doc.moveDown(2);
 
   // EII Badge
   const eii = reportData.ethics.eii.current;
-  const eiiColor = eii >= 90 ? '#10b981' : eii >= 80 ? '#3b82f6' : eii >= 70 ? '#f59e0b' : '#ef4444';
-  
-  doc
-    .fontSize(48)
-    .fillColor(eiiColor)
-    .text(`EII: ${eii}`, { align: 'center' });
+  const eiiColor =
+    eii >= 90 ? '#10b981' : eii >= 80 ? '#3b82f6' : eii >= 70 ? '#f59e0b' : '#ef4444';
+
+  doc.fontSize(48).fillColor(eiiColor).text(`EII: ${eii}`, { align: 'center' });
 
   doc
     .fontSize(14)
@@ -213,18 +212,14 @@ export async function generateEthicsReportPDF(
   doc.addPage();
 
   // Executive Summary
-  doc
-    .fontSize(20)
-    .fillColor('#000000')
-    .font('Helvetica-Bold')
-    .text('Executive Summary');
+  doc.fontSize(20).fillColor('#000000').font('Helvetica-Bold').text('Executive Summary');
 
   doc.moveDown(0.5);
   doc
     .fontSize(11)
     .font('Helvetica')
     .text(
-      'This report is generated autonomously by the QuantumPoly governance system as part of Block 9.4 — Public Ethics API & Autonomous Ethical Reporting Framework. It provides a transparent, verifiable snapshot of the platform\'s ethical posture.'
+      "This report is generated autonomously by the QuantumPoly governance system as part of Block 9.4 — Public Ethics API & Autonomous Ethical Reporting Framework. It provides a transparent, verifiable snapshot of the platform's ethical posture.",
     );
 
   doc.moveDown(1);
@@ -249,7 +244,7 @@ export async function generateEthicsReportPDF(
   doc.fontSize(11).font('Helvetica');
   doc.text(`Total Users: ${reportData.consent.totalUsers}`);
   doc.text(`Total Events: ${reportData.consent.totalEvents}`);
-  const consentStats = reportData.consent.stats as any;
+  const consentStats = reportData.consent.stats as Record<string, { rate: number }>;
   if (consentStats?.analytics) {
     doc.text(`Analytics Opt-In Rate: ${(consentStats.analytics.rate * 100).toFixed(1)}%`);
   }
@@ -265,7 +260,7 @@ export async function generateEthicsReportPDF(
 
   const breakdown = reportData.ethics.eii.breakdown as Record<string, number> | undefined;
   doc.fontSize(11).font('Helvetica');
-  
+
   if (breakdown?.security !== undefined) {
     doc.text(`Security: ${breakdown.security}`);
   }
@@ -286,7 +281,10 @@ export async function generateEthicsReportPDF(
   doc.moveDown(0.5);
   doc.fontSize(10).font('Courier');
 
-  const historyPoints = reportData.ethics.history.slice(-10) as any[]; // Last 10 points
+  const historyPoints = reportData.ethics.history.slice(-10) as Array<{
+    date: string;
+    eii: number;
+  }>; // Last 10 points
   historyPoints.forEach((point) => {
     const bar = '█'.repeat(Math.floor(point.eii / 5));
     doc.text(`${point.date}: ${bar} ${point.eii}`);
@@ -299,12 +297,19 @@ export async function generateEthicsReportPDF(
   doc.moveDown(1);
   doc.fontSize(10).font('Helvetica');
 
-  reportData.governance.ledgerSummary.forEach((entry: any, index: number) => {
-    doc.font('Helvetica-Bold').text(`${index + 1}. ${entry.title || entry.id}`);
+  reportData.governance.ledgerSummary.forEach((entry: unknown, index: number) => {
+    const e = entry as {
+      title: string;
+      id: string;
+      type: string;
+      block: string;
+      timestamp: string;
+    };
+    doc.font('Helvetica-Bold').text(`${index + 1}. ${e.title || e.id}`);
     doc.font('Helvetica');
-    doc.text(`   Type: ${entry.type}`);
-    doc.text(`   Block: ${entry.block || 'N/A'}`);
-    doc.text(`   Timestamp: ${entry.timestamp}`);
+    doc.text(`   Type: ${e.type}`);
+    doc.text(`   Block: ${e.block || 'N/A'}`);
+    doc.text(`   Timestamp: ${e.timestamp}`);
     doc.moveDown(0.5);
   });
 
@@ -315,7 +320,9 @@ export async function generateEthicsReportPDF(
   doc.moveDown(1);
   doc.fontSize(11).font('Helvetica');
 
-  doc.text('This report is cryptographically attested using SHA-256 hashing and optional GPG signing.');
+  doc.text(
+    'This report is cryptographically attested using SHA-256 hashing and optional GPG signing.',
+  );
   doc.moveDown(0.5);
 
   doc.fontSize(10).font('Courier');
@@ -355,31 +362,35 @@ export async function generateEthicsReportPDF(
   // Add Trust Proof page (Block 9.7)
   if (includeTrustProof) {
     doc.addPage();
-    
+
     doc.fontSize(20).font('Helvetica-Bold').fillColor('#000000').text('Trust Proof & Verification');
     doc.moveDown(1);
     doc.fontSize(11).font('Helvetica');
-    
-    doc.text('This report includes a cryptographic trust proof that allows independent verification of its authenticity and integrity.');
+
+    doc.text(
+      'This report includes a cryptographic trust proof that allows independent verification of its authenticity and integrity.',
+    );
     doc.moveDown(0.5);
-    doc.text('Block 9.7 — Ethical Trust Proof & Attestation Layer ensures that every published artifact can be verified without privileged access.');
-    
+    doc.text(
+      'Block 9.7 — Ethical Trust Proof & Attestation Layer ensures that every published artifact can be verified without privileged access.',
+    );
+
     doc.moveDown(1);
     doc.fontSize(14).font('Helvetica-Bold').text('How to Verify This Report');
     doc.moveDown(0.5);
     doc.fontSize(10).font('Helvetica');
-    
+
     doc.text('1. SCAN THE QR CODE on the last page with your mobile device');
     doc.text('2. OR VISIT: https://www.quantumpoly.ai/api/trust/proof');
     doc.text('3. OR COMPUTE the SHA-256 hash of this PDF and compare with the ledger');
     doc.moveDown(1);
-    
+
     doc.text('The verification API will return:');
     doc.text('  • Artifact hash (compare with document hash)');
     doc.text('  • Issuance timestamp');
     doc.text('  • Ledger reference');
     doc.text('  • Verification status (valid/expired/revoked)');
-    
+
     doc.moveDown(1);
     doc.fontSize(10).fillColor('#666666');
     doc.text('Trust Proof Details:');
@@ -401,7 +412,7 @@ export async function generateEthicsReportPDF(
         `QuantumPoly Ethics Report — ${reportData.metadata.reportDate} — Page ${i + 1} of ${pages.count}`,
         50,
         doc.page.height - 30,
-        { align: 'center' }
+        { align: 'center' },
       );
   }
 
@@ -423,37 +434,37 @@ export function computeReportHash(filePath: string): string {
 
 /**
  * Add QR code trust proof to existing PDF
- * 
+ *
  * Block 9.7: This function adds a QR code page to an existing PDF
  * after the hash has been computed.
  */
 export async function addQRCodeToReport(
   pdfPath: string,
   artifactId: string,
-  artifactHash: string
+  artifactHash: string,
 ): Promise<void> {
   // Generate QR code
   const qrDataURL = await generateQRCodeForArtifact(artifactId, artifactHash);
   const payload = generateAttestationPayload(artifactId, artifactHash);
-  
+
   // Read existing PDF (for future PDF merging feature)
   // const existingPdfBytes = fs.readFileSync(pdfPath);
-  
+
   // Create new PDF with QR code page
   const doc = new PDFDocument({
     size: 'A4',
     margins: { top: 50, bottom: 50, left: 50, right: 50 },
   });
-  
+
   const tempPath = pdfPath + '.tmp';
   const stream = fs.createWriteStream(tempPath);
   doc.pipe(stream);
-  
+
   // Add QR code page
   const pageHeight = doc.page.height;
   const pageWidth = doc.page.width;
   const footerY = pageHeight / 2 - 100;
-  
+
   // Title
   doc
     .fontSize(20)
@@ -463,15 +474,15 @@ export async function addQRCodeToReport(
       width: pageWidth - 100,
       align: 'center',
     });
-  
+
   doc.moveDown(1);
-  
+
   // Draw separator line
   doc
     .moveTo(50, footerY - 20)
     .lineTo(pageWidth - 50, footerY - 20)
     .stroke('#CCCCCC');
-  
+
   // Subtitle
   doc
     .fontSize(12)
@@ -481,22 +492,22 @@ export async function addQRCodeToReport(
       width: pageWidth - 100,
       align: 'center',
     });
-  
+
   doc.moveDown(1);
-  
+
   // QR Code (centered)
   const qrSize = 150;
   const qrX = (pageWidth - qrSize) / 2;
   const qrY = footerY + 40;
-  
+
   doc.image(qrDataURL, qrX, qrY, {
     width: qrSize,
     height: qrSize,
   });
-  
+
   // Information below QR code
   const infoY = qrY + qrSize + 20;
-  
+
   doc
     .fontSize(10)
     .font('Helvetica-Bold')
@@ -505,7 +516,7 @@ export async function addQRCodeToReport(
       width: pageWidth - 100,
       align: 'center',
     });
-  
+
   doc
     .fontSize(9)
     .font('Courier')
@@ -514,7 +525,7 @@ export async function addQRCodeToReport(
       width: pageWidth - 100,
       align: 'center',
     });
-  
+
   doc
     .fontSize(10)
     .font('Helvetica-Bold')
@@ -523,7 +534,7 @@ export async function addQRCodeToReport(
       width: pageWidth - 100,
       align: 'center',
     });
-  
+
   doc
     .fontSize(9)
     .font('Helvetica')
@@ -533,7 +544,7 @@ export async function addQRCodeToReport(
       align: 'center',
       underline: true,
     });
-  
+
   // Hash (truncated for display)
   doc
     .fontSize(8)
@@ -543,7 +554,7 @@ export async function addQRCodeToReport(
       width: pageWidth - 100,
       align: 'center',
     });
-  
+
   // Timestamp
   doc
     .fontSize(8)
@@ -553,19 +564,24 @@ export async function addQRCodeToReport(
       width: pageWidth - 100,
       align: 'center',
     });
-  
+
   // Instructions
   doc
     .fontSize(9)
     .font('Helvetica')
     .fillColor('#333333')
-    .text('Scan this QR code to verify the authenticity and integrity of this report.', 50, infoY + 110, {
-      width: pageWidth - 100,
-      align: 'center',
-    });
-  
+    .text(
+      'Scan this QR code to verify the authenticity and integrity of this report.',
+      50,
+      infoY + 110,
+      {
+        width: pageWidth - 100,
+        align: 'center',
+      },
+    );
+
   doc.end();
-  
+
   await new Promise<void>((resolve, reject) => {
     stream.on('finish', () => {
       // For now, we'll just replace the original with the QR page
@@ -601,9 +617,12 @@ export function signReport(filePath: string): string | null {
 
     // Sign the file
     const signaturePath = `${filePath}.sig`;
-    execSync(`gpg --batch --yes --detach-sign --armor --local-user ${gpgKeyId} --output ${signaturePath} ${filePath}`, {
-      stdio: 'pipe',
-    });
+    execSync(
+      `gpg --batch --yes --detach-sign --armor --local-user ${gpgKeyId} --output ${signaturePath} ${filePath}`,
+      {
+        stdio: 'pipe',
+      },
+    );
 
     console.log(`✅ GPG signature created: ${signaturePath}`);
     return signaturePath;
@@ -612,4 +631,3 @@ export function signReport(filePath: string): string | null {
     return null;
   }
 }
-

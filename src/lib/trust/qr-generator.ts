@@ -9,11 +9,15 @@
 
 import QRCode from 'qrcode';
 
-import { generateAttestationPayload, createVerificationURL, getTrustProofConfig } from './token-generator';
+import {
+  generateAttestationPayload,
+  createVerificationURL,
+  getTrustProofConfig,
+} from './token-generator';
 
 /**
  * Generate QR code for an artifact
- * 
+ *
  * @param artifactId - Unique identifier for the artifact
  * @param artifactHash - SHA-256 hash of the artifact
  * @param metadata - Optional metadata
@@ -22,14 +26,13 @@ import { generateAttestationPayload, createVerificationURL, getTrustProofConfig 
 export async function generateQRCodeForArtifact(
   artifactId: string,
   artifactHash: string,
-  _metadata?: Record<string, unknown>
 ): Promise<string> {
   // Generate attestation payload
   const payload = generateAttestationPayload(artifactId, artifactHash);
-  
+
   // Create verification URL
   const verificationURL = createVerificationURL(payload.rid, payload.sig);
-  
+
   // Generate QR code as data URL
   try {
     const qrDataURL = await QRCode.toDataURL(verificationURL, {
@@ -42,7 +45,7 @@ export async function generateQRCodeForArtifact(
         light: '#FFFFFF',
       },
     });
-    
+
     return qrDataURL;
   } catch (error) {
     console.error('[Trust Proof] QR code generation failed:', error);
@@ -52,18 +55,18 @@ export async function generateQRCodeForArtifact(
 
 /**
  * Generate QR code as buffer (for embedding in PDFs)
- * 
+ *
  * @param artifactId - Unique identifier for the artifact
  * @param artifactHash - SHA-256 hash of the artifact
  * @returns QR code as PNG buffer
  */
 export async function generateQRCodeBuffer(
   artifactId: string,
-  artifactHash: string
+  artifactHash: string,
 ): Promise<Buffer> {
   const payload = generateAttestationPayload(artifactId, artifactHash);
   const verificationURL = createVerificationURL(payload.rid, payload.sig);
-  
+
   try {
     const buffer = await QRCode.toBuffer(verificationURL, {
       errorCorrectionLevel: 'M',
@@ -75,7 +78,7 @@ export async function generateQRCodeBuffer(
         light: '#FFFFFF',
       },
     });
-    
+
     return buffer;
   } catch (error) {
     console.error('[Trust Proof] QR code buffer generation failed:', error);
@@ -85,12 +88,13 @@ export async function generateQRCodeBuffer(
 
 /**
  * Embed QR code in PDF document
- * 
+ *
  * @param doc - PDFKit document instance
  * @param qrDataURL - QR code as data URL
  * @param options - Positioning and sizing options
  */
 export function embedQRInPDF(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   doc: any,
   qrDataURL: string,
   options?: {
@@ -98,7 +102,7 @@ export function embedQRInPDF(
     y?: number;
     width?: number;
     align?: 'left' | 'center' | 'right';
-  }
+  },
 ): void {
   const opts = {
     x: options?.x || 50,
@@ -128,7 +132,7 @@ export function embedQRInPDF(
 
 /**
  * Create complete trust proof footer for PDF
- * 
+ *
  * @param doc - PDFKit document instance
  * @param artifactId - Artifact identifier
  * @param artifactHash - Artifact hash
@@ -136,11 +140,12 @@ export function embedQRInPDF(
  * @param qrDataURL - QR code data URL
  */
 export function createTrustProofFooter(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   doc: any,
   artifactId: string,
   artifactHash: string,
   issuedAt: string,
-  qrDataURL: string
+  qrDataURL: string,
 ): void {
   // const config = getTrustProofConfig();
   const pageHeight = doc.page.height;
@@ -178,11 +183,8 @@ export function createTrustProofFooter(
 
   // Information below QR code
   const infoY = qrY + qrSize + 10;
-  
-  doc
-    .fontSize(8)
-    .font('Helvetica')
-    .fillColor('#333333');
+
+  doc.fontSize(8).font('Helvetica').fillColor('#333333');
 
   doc.text(`Report ID: ${artifactId}`, 50, infoY, {
     width: pageWidth - 100,
@@ -214,15 +216,12 @@ export function createTrustProofFooter(
 
 /**
  * Generate verification instructions text
- * 
+ *
  * @param artifactId - Artifact identifier
  * @param signature - Verification signature
  * @returns Human-readable verification instructions
  */
-export function generateVerificationInstructions(
-  artifactId: string,
-  signature: string
-): string {
+export function generateVerificationInstructions(artifactId: string, signature: string): string {
   const config = getTrustProofConfig();
   const verificationURL = createVerificationURL(artifactId, signature);
 
@@ -253,4 +252,3 @@ ${config.baseUrl}/governance/trust-proof
 ═════════════════════════
 `.trim();
 }
-

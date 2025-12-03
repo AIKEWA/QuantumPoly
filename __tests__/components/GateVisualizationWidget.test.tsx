@@ -1,7 +1,8 @@
-import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
+import React from 'react';
+
 import '@testing-library/jest-dom';
-import GateVisualizationWidget from '../../src/components/dashboard/GateVisualizationWidget';
+import { GateVisualizationWidget } from '../../src/components/dashboard/GateVisualizationWidget';
 
 describe('GateVisualizationWidget', () => {
   it('renders the widget title', () => {

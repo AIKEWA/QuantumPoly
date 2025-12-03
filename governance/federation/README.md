@@ -64,6 +64,7 @@ trust-report-YYYY-MM-DD-HHmmss.json
 ```
 
 Each report contains:
+
 - Network trust summary
 - Per-partner verification results
 - Trust score and health status
@@ -94,11 +95,10 @@ Each report contains:
 
 ## Documentation
 
-See `BLOCK9.6_COLLECTIVE_ETHICS_GRAPH.md` for complete specification.
+See `BLOCK09.6_COLLECTIVE_ETHICS_GRAPH.md` for complete specification.
 
 ---
 
 **Compliance Baseline:** Stage VI — Federated Transparency  
 **Last Updated:** 2025-10-26  
 **Maintained By:** Federation Trust Officer, Governance Officer
-

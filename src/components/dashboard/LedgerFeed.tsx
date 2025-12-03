@@ -38,17 +38,17 @@ interface LedgerFeedProps {
  */
 function formatEntryType(type?: string): string {
   if (!type) return 'EII Baseline';
-  
+
   const typeMap: Record<string, string> = {
     'eii-baseline': 'EII Baseline',
     'feedback-synthesis': 'Feedback Synthesis',
-    'audit_closure': 'Audit Closure',
-    'legal_compliance': 'Legal Compliance',
-    'implementation_verification': 'Implementation Verification',
-    'consent_baseline': 'Consent Management',
-    'transparency_extension': 'Transparency Framework',
+    audit_closure: 'Audit Closure',
+    legal_compliance: 'Legal Compliance',
+    implementation_verification: 'Implementation Verification',
+    consent_baseline: 'Consent Management',
+    transparency_extension: 'Transparency Framework',
   };
-  
+
   return typeMap[type] || type;
 }
 
@@ -57,14 +57,14 @@ function formatEntryType(type?: string): string {
  */
 function getStatusColor(status?: string): string {
   if (!status) return 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300';
-  
+
   const colorMap: Record<string, string> = {
     approved: 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400',
     pending: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400',
     rejected: 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400',
-    'approved_with_conditions': 'bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400',
+    approved_with_conditions: 'bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400',
   };
-  
+
   return colorMap[status] || colorMap.approved;
 }
 
@@ -129,7 +129,7 @@ export function LedgerFeed({
           e.id.toLowerCase().includes(query) ||
           (e.blockId || e.block || '').toLowerCase().includes(query) ||
           e.hash.toLowerCase().includes(query) ||
-          (e.title || '').toLowerCase().includes(query)
+          (e.title || '').toLowerCase().includes(query),
       );
     }
 
@@ -173,7 +173,9 @@ export function LedgerFeed({
       aria-label="Governance ledger feed"
     >
       <div className="mb-4 flex items-center justify-between">
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Recent Governance Entries</h3>
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+          Recent Governance Entries
+        </h3>
         <Link
           href={`/${locale}/dashboard/ledger`}
           className="text-sm font-medium text-cyan-600 hover:text-cyan-700 dark:text-cyan-400 dark:hover:text-cyan-300"
@@ -221,7 +223,9 @@ export function LedgerFeed({
       )}
 
       {displayEntries.length === 0 ? (
-        <p className="py-8 text-center text-gray-500 dark:text-gray-400">No entries match your filters</p>
+        <p className="py-8 text-center text-gray-500 dark:text-gray-400">
+          No entries match your filters
+        </p>
       ) : (
         <div className="space-y-4">
           {displayEntries.map((entry, index) => {
@@ -229,7 +233,8 @@ export function LedgerFeed({
             const isHighlighted = highlightedBlock === blockId;
 
             return (
-              <article
+              // eslint-disable-next-line jsx-a11y/no-static-element-interactions, jsx-a11y/no-noninteractive-tabindex
+              <div
                 key={entry.id}
                 id={`entry-${blockId}`}
                 className={`rounded-lg border p-4 transition-all ${
@@ -238,7 +243,15 @@ export function LedgerFeed({
                     : 'border-gray-200 bg-gray-50 hover:shadow-md dark:border-gray-700 dark:bg-gray-900'
                 } ${onEntryClick ? 'cursor-pointer' : ''}`}
                 onClick={() => onEntryClick && onEntryClick(entry)}
-                role="article"
+                onKeyDown={(e) => {
+                  if (onEntryClick && (e.key === 'Enter' || e.key === ' ')) {
+                    e.preventDefault();
+                    onEntryClick(entry);
+                  }
+                }}
+                // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex
+                tabIndex={onEntryClick ? 0 : undefined}
+                role={onEntryClick ? 'button' : 'article'}
                 aria-posinset={index + 1}
                 aria-setsize={displayEntries.length}
               >
@@ -255,12 +268,16 @@ export function LedgerFeed({
                         </span>
                       )}
                       {entry.status && (
-                        <span className={`rounded px-2 py-0.5 text-xs font-medium ${getStatusColor(entry.status)}`}>
+                        <span
+                          className={`rounded px-2 py-0.5 text-xs font-medium ${getStatusColor(entry.status)}`}
+                        >
                           {entry.status.replace(/_/g, ' ')}
                         </span>
                       )}
                     </div>
-                    {entry.title && <p className="text-sm text-gray-700 dark:text-gray-300">{entry.title}</p>}
+                    {entry.title && (
+                      <p className="text-sm text-gray-700 dark:text-gray-300">{entry.title}</p>
+                    )}
                   </div>
                 </div>
 
@@ -270,7 +287,8 @@ export function LedgerFeed({
                     <span className="font-medium">ID:</span> {entry.id}
                   </p>
                   <p>
-                    <span className="font-medium">Timestamp:</span> {formatTimestamp(entry.timestamp)}
+                    <span className="font-medium">Timestamp:</span>{' '}
+                    {formatTimestamp(entry.timestamp)}
                   </p>
                 </div>
 
@@ -293,7 +311,7 @@ export function LedgerFeed({
                     {entry.hash}
                   </code>
                 </div>
-              </article>
+              </div>
             );
           })}
         </div>
@@ -309,4 +327,3 @@ export function LedgerFeed({
     </div>
   );
 }
-

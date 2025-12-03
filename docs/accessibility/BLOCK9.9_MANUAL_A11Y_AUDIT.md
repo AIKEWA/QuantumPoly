@@ -36,6 +36,7 @@ This manual accessibility audit covers governance-related pages and interfaces a
 **Requirement:** All interactive elements must be accessible via keyboard only (no mouse).
 
 **Test Procedure:**
+
 1. Navigate to each page in scope
 2. Use Tab key to move through interactive elements
 3. Use Shift+Tab to move backwards
@@ -45,14 +46,14 @@ This manual accessibility audit covers governance-related pages and interfaces a
 
 **Results:**
 
-| Page/Component | Tab Order Logical | Focus Visible | No Traps | Pass/Fail | Notes |
-|----------------|-------------------|---------------|----------|-----------|-------|
-| `/governance` | ☐ | ☐ | ☐ | ⏳ | |
-| `/governance/review` | ☐ | ☐ | ☐ | ⏳ | |
-| `/governance/dashboard` | ☐ | ☐ | ☐ | ⏳ | |
-| Consent Banner | ☐ | ☐ | ☐ | ⏳ | |
-| Consent Modal | ☐ | ☐ | ☐ | ⏳ | |
-| `/settings/consent` | ☐ | ☐ | ☐ | ⏳ | |
+| Page/Component          | Tab Order Logical | Focus Visible | No Traps | Pass/Fail | Notes |
+| ----------------------- | ----------------- | ------------- | -------- | --------- | ----- |
+| `/governance`           | ☐                 | ☐             | ☐        | ⏳        |       |
+| `/governance/review`    | ☐                 | ☐             | ☐        | ⏳        |       |
+| `/governance/dashboard` | ☐                 | ☐             | ☐        | ⏳        |       |
+| Consent Banner          | ☐                 | ☐             | ☐        | ⏳        |       |
+| Consent Modal           | ☐                 | ☐             | ☐        | ⏳        |       |
+| `/settings/consent`     | ☐                 | ☐             | ☐        | ⏳        |       |
 
 ---
 
@@ -61,12 +62,14 @@ This manual accessibility audit covers governance-related pages and interfaces a
 **Requirement:** All content and functionality must be perceivable and operable via screen reader.
 
 **Assistive Technologies to Test:**
+
 - NVDA (Windows) + Firefox/Chrome
-- JAWS (Windows) + Firefox/Chrome  
+- JAWS (Windows) + Firefox/Chrome
 - VoiceOver (macOS) + Safari
 - TalkBack (Android) + Chrome (optional)
 
 **Test Procedure:**
+
 1. Navigate each page with screen reader active
 2. Verify all headings are announced with correct level
 3. Verify all interactive elements have meaningful labels
@@ -76,25 +79,27 @@ This manual accessibility audit covers governance-related pages and interfaces a
 
 **Results:**
 
-| Page/Component | Headings Correct | Labels Present | Errors Announced | Status Updates | Pass/Fail | Notes |
-|----------------|------------------|----------------|------------------|----------------|-----------|-------|
-| `/governance` | ☐ | ☐ | N/A | ☐ | ⏳ | |
-| `/governance/review` | ☐ | ☐ | ☐ | ☐ | ⏳ | |
-| `/governance/dashboard` | ☐ | ☐ | N/A | ☐ | ⏳ | |
-| Consent Banner | ☐ | ☐ | N/A | ☐ | ⏳ | |
-| Consent Modal | ☐ | ☐ | N/A | ☐ | ⏳ | |
-| `/settings/consent` | ☐ | ☐ | ☐ | ☐ | ⏳ | |
+| Page/Component          | Headings Correct | Labels Present | Errors Announced | Status Updates | Pass/Fail | Notes |
+| ----------------------- | ---------------- | -------------- | ---------------- | -------------- | --------- | ----- |
+| `/governance`           | ☐                | ☐              | N/A              | ☐              | ⏳        |       |
+| `/governance/review`    | ☐                | ☐              | ☐                | ☐              | ⏳        |       |
+| `/governance/dashboard` | ☐                | ☐              | N/A              | ☐              | ⏳        |       |
+| Consent Banner          | ☐                | ☐              | N/A              | ☐              | ⏳        |       |
+| Consent Modal           | ☐                | ☐              | N/A              | ☐              | ⏳        |       |
+| `/settings/consent`     | ☐                | ☐              | ☐                | ☐              | ⏳        |       |
 
 ---
 
 ### 3. Color Contrast
 
 **Requirement:** All text must meet WCAG 2.2 AA contrast ratios:
+
 - Normal text (< 18pt): 4.5:1
 - Large text (≥ 18pt or ≥ 14pt bold): 3:1
 - UI components and graphical objects: 3:1
 
 **Test Procedure:**
+
 1. Use browser DevTools or contrast checker tool
 2. Test all text against backgrounds (light and dark mode)
 3. Test interactive element states (default, hover, focus, active)
@@ -102,15 +107,15 @@ This manual accessibility audit covers governance-related pages and interfaces a
 
 **Results:**
 
-| Element Type | Light Mode | Dark Mode | Pass/Fail | Notes |
-|--------------|------------|-----------|-----------|-------|
-| Body text | ☐ | ☐ | ⏳ | |
-| Headings | ☐ | ☐ | ⏳ | |
-| Links | ☐ | ☐ | ⏳ | |
-| Buttons | ☐ | ☐ | ⏳ | |
-| Form inputs | ☐ | ☐ | ⏳ | |
-| Status badges | ☐ | ☐ | ⏳ | |
-| Error messages | ☐ | ☐ | ⏳ | |
+| Element Type   | Light Mode | Dark Mode | Pass/Fail | Notes |
+| -------------- | ---------- | --------- | --------- | ----- |
+| Body text      | ☐          | ☐         | ⏳        |       |
+| Headings       | ☐          | ☐         | ⏳        |       |
+| Links          | ☐          | ☐         | ⏳        |       |
+| Buttons        | ☐          | ☐         | ⏳        |       |
+| Form inputs    | ☐          | ☐         | ⏳        |       |
+| Status badges  | ☐          | ☐         | ⏳        |       |
+| Error messages | ☐          | ☐         | ⏳        |       |
 
 ---
 
@@ -119,6 +124,7 @@ This manual accessibility audit covers governance-related pages and interfaces a
 **Requirement:** No auto-playing animations, respects `prefers-reduced-motion`.
 
 **Test Procedure:**
+
 1. Enable `prefers-reduced-motion` in OS settings
 2. Navigate all pages in scope
 3. Verify no animations play automatically
@@ -126,13 +132,13 @@ This manual accessibility audit covers governance-related pages and interfaces a
 
 **Results:**
 
-| Page/Component | No Auto-Play | Respects Preference | Pass/Fail | Notes |
-|----------------|--------------|---------------------|-----------|-------|
-| `/governance` | ☐ | ☐ | ⏳ | |
-| `/governance/review` | ☐ | ☐ | ⏳ | |
-| `/governance/dashboard` | ☐ | ☐ | ⏳ | |
-| Consent Banner | ☐ | ☐ | ⏳ | |
-| Consent Modal | ☐ | ☐ | ⏳ | |
+| Page/Component          | No Auto-Play | Respects Preference | Pass/Fail | Notes |
+| ----------------------- | ------------ | ------------------- | --------- | ----- |
+| `/governance`           | ☐            | ☐                   | ⏳        |       |
+| `/governance/review`    | ☐            | ☐                   | ⏳        |       |
+| `/governance/dashboard` | ☐            | ☐                   | ⏳        |       |
+| Consent Banner          | ☐            | ☐                   | ⏳        |       |
+| Consent Modal           | ☐            | ☐                   | ⏳        |       |
 
 ---
 
@@ -141,6 +147,7 @@ This manual accessibility audit covers governance-related pages and interfaces a
 **Requirement:** All form fields must have labels, required fields indicated, errors clearly communicated.
 
 **Test Procedure:**
+
 1. Identify all forms in scope
 2. Verify each input has associated label
 3. Verify required fields are marked (visually and for AT)
@@ -149,11 +156,11 @@ This manual accessibility audit covers governance-related pages and interfaces a
 
 **Results:**
 
-| Form | Labels Present | Required Marked | Errors Clear | Pass/Fail | Notes |
-|------|----------------|-----------------|--------------|-----------|-------|
-| Sign-Off Form (`/governance/review`) | ☐ | ☐ | ☐ | ⏳ | |
-| Exception Justification | ☐ | ☐ | ☐ | ⏳ | |
-| Consent Settings | ☐ | ☐ | ☐ | ⏳ | |
+| Form                                 | Labels Present | Required Marked | Errors Clear | Pass/Fail | Notes |
+| ------------------------------------ | -------------- | --------------- | ------------ | --------- | ----- |
+| Sign-Off Form (`/governance/review`) | ☐              | ☐               | ☐            | ⏳        |       |
+| Exception Justification              | ☐              | ☐               | ☐            | ⏳        |       |
+| Consent Settings                     | ☐              | ☐               | ☐            | ⏳        |       |
 
 ---
 
@@ -162,6 +169,7 @@ This manual accessibility audit covers governance-related pages and interfaces a
 **Requirement:** ARIA attributes used correctly, not overriding native semantics.
 
 **Test Procedure:**
+
 1. Inspect ARIA roles, states, and properties
 2. Verify roles match element purpose
 3. Verify live regions announce updates
@@ -169,12 +177,12 @@ This manual accessibility audit covers governance-related pages and interfaces a
 
 **Results:**
 
-| Component | Roles Correct | States Correct | Live Regions Work | Pass/Fail | Notes |
-|-----------|---------------|----------------|-------------------|-----------|-------|
-| Integrity Status Panel | ☐ | ☐ | ☐ | ⏳ | |
-| Sign-Off Form | ☐ | ☐ | ☐ | ⏳ | |
-| Review History | ☐ | ☐ | N/A | ⏳ | |
-| Consent Modal | ☐ | ☐ | ☐ | ⏳ | |
+| Component              | Roles Correct | States Correct | Live Regions Work | Pass/Fail | Notes |
+| ---------------------- | ------------- | -------------- | ----------------- | --------- | ----- |
+| Integrity Status Panel | ☐             | ☐              | ☐                 | ⏳        |       |
+| Sign-Off Form          | ☐             | ☐              | ☐                 | ⏳        |       |
+| Review History         | ☐             | ☐              | N/A               | ⏳        |       |
+| Consent Modal          | ☐             | ☐              | ☐                 | ⏳        |       |
 
 ---
 
@@ -184,33 +192,33 @@ This manual accessibility audit covers governance-related pages and interfaces a
 
 **Definition:** Issues that completely block access for users with disabilities.
 
-| # | Page/Component | Issue Description | WCAG Criterion | Remediation | Owner | Deadline | Status |
-|---|----------------|-------------------|----------------|-------------|-------|----------|--------|
-| 1 | | | | | | | ⏳ |
+| #   | Page/Component | Issue Description | WCAG Criterion | Remediation | Owner | Deadline | Status |
+| --- | -------------- | ----------------- | -------------- | ----------- | ----- | -------- | ------ |
+| 1   |                |                   |                |             |       |          | ⏳     |
 
 ### Serious Issues
 
 **Definition:** Issues that significantly impair access but don't completely block it.
 
-| # | Page/Component | Issue Description | WCAG Criterion | Remediation | Owner | Deadline | Status |
-|---|----------------|-------------------|----------------|-------------|-------|----------|--------|
-| 1 | | | | | | | ⏳ |
+| #   | Page/Component | Issue Description | WCAG Criterion | Remediation | Owner | Deadline | Status |
+| --- | -------------- | ----------------- | -------------- | ----------- | ----- | -------- | ------ |
+| 1   |                |                   |                |             |       |          | ⏳     |
 
 ### Moderate Issues
 
 **Definition:** Issues that cause inconvenience but don't significantly impair access.
 
-| # | Page/Component | Issue Description | WCAG Criterion | Remediation | Owner | Deadline | Status |
-|---|----------------|-------------------|----------------|-------------|-------|----------|--------|
-| 1 | | | | | | | ⏳ |
+| #   | Page/Component | Issue Description | WCAG Criterion | Remediation | Owner | Deadline | Status |
+| --- | -------------- | ----------------- | -------------- | ----------- | ----- | -------- | ------ |
+| 1   |                |                   |                |             |       |          | ⏳     |
 
 ### Minor Issues
 
 **Definition:** Issues that are best practice violations but don't significantly impact access.
 
-| # | Page/Component | Issue Description | WCAG Criterion | Remediation | Owner | Deadline | Status |
-|---|----------------|-------------------|----------------|-------------|-------|----------|--------|
-| 1 | | | | | | | ⏳ |
+| #   | Page/Component | Issue Description | WCAG Criterion | Remediation | Owner | Deadline | Status |
+| --- | -------------- | ----------------- | -------------- | ----------- | ----- | -------- | ------ |
+| 1   |                |                   |                |             |       |          | ⏳     |
 
 ---
 
@@ -228,6 +236,7 @@ This manual accessibility audit covers governance-related pages and interfaces a
 ### Pass/Fail Determination
 
 **Criteria for Approval:**
+
 - Zero critical issues
 - Zero serious issues (or all have documented mitigation plans with owners and deadlines)
 - Moderate/minor issues documented with remediation plans
@@ -243,6 +252,7 @@ This manual accessibility audit covers governance-related pages and interfaces a
 I, [REVIEWER NAME], in my role as Accessibility Reviewer, have conducted a manual accessibility audit of the governance surfaces specified in Block 9.9 using the methodologies described in this document.
 
 **Findings:**
+
 - Critical Issues: [NUMBER]
 - Serious Issues: [NUMBER]
 - Moderate Issues: [NUMBER]
@@ -262,34 +272,39 @@ I, [REVIEWER NAME], in my role as Accessibility Reviewer, have conducted a manua
 ## Appendix A: Testing Environment
 
 **Operating Systems:**
+
 - [ ] Windows 11
 - [ ] macOS Sonoma
 - [ ] Ubuntu 22.04
-- [ ] Other: ___________
+- [ ] Other: \***\*\_\_\_\*\***
 
 **Browsers:**
-- [ ] Chrome/Chromium (version: ___)
-- [ ] Firefox (version: ___)
-- [ ] Safari (version: ___)
-- [ ] Edge (version: ___)
+
+- [ ] Chrome/Chromium (version: \_\_\_)
+- [ ] Firefox (version: \_\_\_)
+- [ ] Safari (version: \_\_\_)
+- [ ] Edge (version: \_\_\_)
 
 **Screen Readers:**
-- [ ] NVDA (version: ___)
-- [ ] JAWS (version: ___)
-- [ ] VoiceOver (version: ___)
-- [ ] Other: ___________
+
+- [ ] NVDA (version: \_\_\_)
+- [ ] JAWS (version: \_\_\_)
+- [ ] VoiceOver (version: \_\_\_)
+- [ ] Other: \***\*\_\_\_\*\***
 
 **Contrast Checker Tools:**
+
 - [ ] Chrome DevTools
 - [ ] WebAIM Contrast Checker
 - [ ] Colour Contrast Analyser (CCA)
-- [ ] Other: ___________
+- [ ] Other: \***\*\_\_\_\*\***
 
 ---
 
 ## Appendix B: WCAG 2.2 AA Success Criteria Reference
 
 ### Perceivable
+
 - 1.1.1 Non-text Content (Level A)
 - 1.3.1 Info and Relationships (Level A)
 - 1.3.2 Meaningful Sequence (Level A)
@@ -300,6 +315,7 @@ I, [REVIEWER NAME], in my role as Accessibility Reviewer, have conducted a manua
 - 1.4.5 Images of Text (Level AA)
 
 ### Operable
+
 - 2.1.1 Keyboard (Level A)
 - 2.1.2 No Keyboard Trap (Level A)
 - 2.4.1 Bypass Blocks (Level A)
@@ -311,6 +327,7 @@ I, [REVIEWER NAME], in my role as Accessibility Reviewer, have conducted a manua
 - 2.4.7 Focus Visible (Level AA)
 
 ### Understandable
+
 - 3.1.1 Language of Page (Level A)
 - 3.1.2 Language of Parts (Level AA)
 - 3.2.1 On Focus (Level A)
@@ -321,6 +338,7 @@ I, [REVIEWER NAME], in my role as Accessibility Reviewer, have conducted a manua
 - 3.3.4 Error Prevention (Legal, Financial, Data) (Level AA)
 
 ### Robust
+
 - 4.1.1 Parsing (Level A)
 - 4.1.2 Name, Role, Value (Level A)
 - 4.1.3 Status Messages (Level AA)
@@ -331,3 +349,8 @@ I, [REVIEWER NAME], in my role as Accessibility Reviewer, have conducted a manua
 **Last Updated:** 2025-11-07  
 **Status:** Template — Awaiting Manual Review
 
+---
+
+**Version:** 1.0
+**Last Reviewed:** 2025-11-25
+**Reviewed By:** EWA

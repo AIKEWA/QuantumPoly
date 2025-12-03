@@ -68,23 +68,27 @@ NEXT_PUBLIC_PLAUSIBLE_API_HOST=https://plausible.io
 ### Switching Providers
 
 #### Use Vercel Only (Default)
+
 ```bash
 NEXT_PUBLIC_ANALYTICS_PROVIDER=vercel
 ```
 
 #### Use Plausible Only
+
 ```bash
 NEXT_PUBLIC_ANALYTICS_PROVIDER=plausible
 NEXT_PUBLIC_PLAUSIBLE_ENABLED=true
 ```
 
 #### Use Both (Comparative Research)
+
 ```bash
 NEXT_PUBLIC_ANALYTICS_PROVIDER=both
 NEXT_PUBLIC_PLAUSIBLE_ENABLED=true
 ```
 
 #### Disable All Analytics
+
 ```bash
 NEXT_PUBLIC_ANALYTICS_PROVIDER=none
 ```
@@ -135,26 +139,29 @@ export const revalidate = 21600; // 6 hours in seconds
 ### Manual Refresh
 
 #### Option 1: Rebuild Static Pages
+
 ```bash
 npm run build
 ```
 
 #### Option 2: On-Demand Revalidation (Production)
+
 ```bash
 curl -X POST https://quantumpoly.ai/api/revalidate?secret=YOUR_SECRET&path=/governance/dashboard
 ```
 
 #### Option 3: Use Verification Widget
+
 Users can click "Verify Now" in the dashboard to trigger live data fetch.
 
 ### Data Sources
 
-| Component       | Data Source                        | Refresh Strategy      |
-|-----------------|------------------------------------|-----------------------|
-| EII Chart       | `governance/ledger/ledger.jsonl`   | 6-hour revalidation   |
-| Consent Metrics | `governance/consent/ledger.jsonl`  | 6-hour revalidation   |
-| Ledger Feed     | `governance/ledger/ledger.jsonl`   | 6-hour revalidation   |
-| Verification    | API `/api/governance/verify`       | On-demand (button)    |
+| Component       | Data Source                       | Refresh Strategy    |
+| --------------- | --------------------------------- | ------------------- |
+| EII Chart       | `governance/ledger/ledger.jsonl`  | 6-hour revalidation |
+| Consent Metrics | `governance/consent/ledger.jsonl` | 6-hour revalidation |
+| Ledger Feed     | `governance/ledger/ledger.jsonl`  | 6-hour revalidation |
+| Verification    | API `/api/governance/verify`      | On-demand (button)  |
 
 ---
 
@@ -163,6 +170,7 @@ Users can click "Verify Now" in the dashboard to trigger live data fetch.
 ### Command-Line Verification
 
 #### Verify Governance Ledger Only
+
 ```bash
 npm run ethics:verify-ledger
 # or
@@ -170,11 +178,13 @@ node scripts/verify-ledger.mjs --scope=governance
 ```
 
 #### Verify Consent Ledger Only
+
 ```bash
 node scripts/verify-ledger.mjs --scope=consent
 ```
 
 #### Verify Both Ledgers (Global Merkle Root)
+
 ```bash
 npm run ethics:verify-ledger -- --scope=all
 ```
@@ -215,9 +225,9 @@ npm run ethics:verify-ledger -- --scope=all
 ### Programmatic Verification
 
 ```typescript
-import { verifyLedgerIntegrity } from '@/lib/governance/ledger-parser';
+import { verifyIntegrityLedger } from '@/lib/integrity';
 
-const result = verifyLedgerIntegrity('governance/ledger/ledger.jsonl');
+const result = verifyIntegrityLedger('governance/ledger/ledger.jsonl');
 
 if (result.verified) {
   console.log('✅ Ledger verified');
@@ -248,6 +258,7 @@ curl https://quantumpoly.ai/api/governance/verify?scope=all
 ```
 
 **Response:**
+
 ```json
 {
   "verified": true,
@@ -300,11 +311,11 @@ curl https://quantumpoly.ai/api/governance/consent-metrics
 
 ```tsx
 import { EIIChart } from '@/components/dashboard/EiiChart';
-import { getEIIHistory } from '@/lib/governance/eii-calculator';
+import { getIntegrityEIIHistory } from '@/lib/integrity';
 
 export default function MyPage() {
-  const eiiHistory = getEIIHistory('governance/ledger/ledger.jsonl', 90);
-  
+  const eiiHistory = getIntegrityEIIHistory('governance/ledger/ledger.jsonl', 90);
+
   const chartData = eiiHistory.dataPoints.map((dp, index) => ({
     date: dp.date,
     eii: dp.eii,
@@ -319,10 +330,10 @@ export default function MyPage() {
 
 ```tsx
 import { ConsentMetrics } from '@/components/dashboard/ConsentMetrics';
-import { aggregateConsentMetrics } from '@/lib/governance/consent-aggregator';
+import { getIntegrityConsentMetrics } from '@/lib/integrity';
 
 export default function MyPage() {
-  const metrics = aggregateConsentMetrics('governance/consent/ledger.jsonl');
+  const metrics = getIntegrityConsentMetrics('governance/consent/ledger.jsonl');
 
   return <ConsentMetrics metrics={metrics} />;
 }
@@ -332,10 +343,10 @@ export default function MyPage() {
 
 ```tsx
 import { LedgerFeed } from '@/components/dashboard/LedgerFeed';
-import { getRecentEntries } from '@/lib/governance/ledger-parser';
+import { getIntegrityRecentEntries } from '@/lib/integrity';
 
 export default function MyPage() {
-  const entries = getRecentEntries(5, 'governance/ledger/ledger.jsonl');
+  const entries = getIntegrityRecentEntries(5, 'governance/ledger/ledger.jsonl');
 
   return <LedgerFeed entries={entries} locale="en" maxEntries={5} />;
 }
@@ -360,6 +371,7 @@ export default function MyPage() {
 **Symptoms:** Analytics scripts not appearing in page source
 
 **Solution:**
+
 1. Check environment variables in `.env.local`
 2. Verify consent is given (check browser localStorage for `quantumpoly_consent`)
 3. Check browser console for errors
@@ -375,6 +387,7 @@ console.log(ANALYTICS_CONFIG);
 **Symptoms:** Empty charts and widgets
 
 **Solution:**
+
 1. Verify ledger files exist:
    ```bash
    ls -la governance/ledger/ledger.jsonl
@@ -395,6 +408,7 @@ console.log(ANALYTICS_CONFIG);
 **Symptoms:** API endpoints returning server errors
 
 **Solution:**
+
 1. Check server logs for detailed error messages
 2. Verify ledger files are readable
 3. Ensure file paths are correct (relative to project root)
@@ -408,6 +422,7 @@ console.log(ANALYTICS_CONFIG);
 **Symptoms:** `npm run ethics:verify-ledger` reports errors
 
 **Solution:**
+
 1. Check ledger file format (valid JSONL)
 2. Verify chronological order of entries
 3. Check hash formats (must be 64-character hex strings)
@@ -418,6 +433,7 @@ console.log(ANALYTICS_CONFIG);
 **Symptoms:** Consent ledger appears empty
 
 **Solution:**
+
 1. Verify consent ledger file exists:
    ```bash
    ls -la governance/consent/ledger.jsonl
@@ -434,13 +450,14 @@ console.log(ANALYTICS_CONFIG);
 **Symptoms:** Chart component shows error or blank space
 
 **Solution:**
+
 1. Verify Recharts is installed:
    ```bash
    npm list recharts
    ```
 2. Check for EII entries in governance ledger:
    ```typescript
-   import { getEIIEntries } from '@/lib/governance/ledger-parser';
+   import { getEIIEntries } from '@/lib/integrity';
    console.log(getEIIEntries());
    ```
 3. Ensure data format matches expected structure
@@ -453,6 +470,7 @@ console.log(ANALYTICS_CONFIG);
 ### Adding New Ledger Entry
 
 1. Create entry object:
+
    ```json
    {
      "id": "my-entry-id",
@@ -467,6 +485,7 @@ console.log(ANALYTICS_CONFIG);
    ```
 
 2. Append to ledger:
+
    ```bash
    echo '{"id":"..."}' >> governance/ledger/ledger.jsonl
    ```
@@ -496,12 +515,12 @@ npm test -- path/to/test.test.ts
 
 ```typescript
 // In your component or API route
-import { parseLedger, getLedgerStats } from '@/lib/governance/ledger-parser';
+import { getIntegrityLedger, getIntegrityLedgerStats } from '@/lib/integrity';
 
-const entries = parseLedger('governance/ledger/ledger.jsonl');
+const entries = getIntegrityLedger('governance/ledger/ledger.jsonl');
 console.log('Entries:', entries);
 
-const stats = getLedgerStats();
+const stats = getIntegrityLedgerStats();
 console.log('Stats:', stats);
 ```
 
@@ -510,30 +529,35 @@ console.log('Stats:', stats);
 ## Best Practices
 
 ### 1. Data Integrity
+
 - Always verify ledger integrity after modifications
 - Use atomic writes for ledger updates
 - Maintain chronological order
 - Compute hashes correctly
 
 ### 2. Privacy
+
 - Never expose individual user data
 - Aggregate consent metrics before display
 - Pseudonymize user IDs
 - Hash IP addresses if stored
 
 ### 3. Performance
+
 - Use caching for expensive operations
 - Implement pagination for large datasets
 - Optimize chart data (limit data points)
 - Use server-side rendering for initial load
 
 ### 4. Accessibility
+
 - Include ARIA labels on all interactive elements
 - Ensure keyboard navigation works
 - Test with screen readers
 - Maintain color contrast ratios (WCAG 2.2 AA)
 
 ### 5. Testing
+
 - Write tests for all new components
 - Test API endpoints with various parameters
 - Verify error handling
@@ -543,7 +567,7 @@ console.log('Stats:', stats);
 
 ## Additional Resources
 
-- **Main Documentation:** `BLOCK9.3_TRANSPARENCY_FRAMEWORK.md`
+- **Main Documentation:** `BLOCK09.3_TRANSPARENCY_FRAMEWORK.md`
 - **Governance Overview:** `/governance/README.md`
 - **API Reference:** See individual route files in `src/app/api/governance/`
 - **Component Docs:** See JSDoc comments in component files
@@ -566,5 +590,4 @@ For questions or issues:
 
 ---
 
-*This guide is part of the QuantumPoly Transparency Framework (Block 9.3) and is continuously updated as the system evolves.*
-
+_This guide is part of the QuantumPoly Transparency Framework (Block 9.3) and is continuously updated as the system evolves._

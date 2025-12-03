@@ -1,100 +1,176 @@
 # 📖 MASTERPLAN.md
+
 **Project:** QuantumPoly website
 **Owner:** Aykut Aydin (A.I.K)
 **Advisor:** Prof. Dr. Esta Willy Armstrong (EWA)
+**Last Synced:** 2025-11-26
+
 ---
+
 ## 🌌 Vision
+
 The QuantumPoly website is more than just a landing page: it is a **showcase for technological excellence** and a **testing ground for AI-supported development**.
 Our mission: **Clean code, clear architecture, i18n-ready, accessible, SEO-optimized, secure and transparent.**
+
 ---
-## 🛠 Project Phases & Prompt Blocks
-### **Prompt Block 1: Codebase & Hygiene Check**
-🎯 Goal: Inventory, standardize structure, remove duplicates, set up basic configurations.
-* Inventory: `src/` tree structure, router (app/pages), i18n folder, CSS strategy, Lint/Prettier.
-* Identify and clean up duplicate files (e.g., `globals.css`).
-* Standardized structure: `src/components`, `src/styles`, `src/locales`.
-* Baseline configurations: `eslint.config.mjs`, `.prettierrc.json`, `tailwind.config.js`.
-* README extension: "Codebase Hygiene & Conventions".
-* Scripts: `lint`, `format`, `format:write`, `dev`.
+
+## 🛠 Project Blocks & Documentation Index
+
 ---
-### **Prompt Block 2: Modularization of the Main Components**
-🎯 Goal: Extract main areas into **reusable components**.
-* Components: `Hero`, `About`, `Vision`, `NewsletterForm`, `Footer`.
-* Props strictly typed, i18n-capable, accessible, Tailwind light/dark.
-* Tests (Jest + RTL) + Storybook Stories.
-* Accessibility first: semantics, ARIA, focus control.
-* Extensible (slots/props for media, social links, etc.).
+
+### **Block Family 04**
+
+- [BLOCK04.2_VALIDATION_REPORT.md](./BLOCK04.2_VALIDATION_REPORT.md)
+- [BLOCK04.3_IMPLEMENTATION_SUMMARY.md](./BLOCK04.3_IMPLEMENTATION_SUMMARY.md)
+- [BLOCK04.4_IMPLEMENTATION_SUMMARY.md](./BLOCK04.4_IMPLEMENTATION_SUMMARY.md)
+
 ---
-### **Prompt Block 3: Internationalization & Content Architecture**
-🎯 Goal: Full i18n architecture with `next-intl`.
-* Locale routing: `/[locale]` → `en`, `de`, `tr`.
-* JSON files with namespaces (`hero`, `about`, `vision`, `newsletter`, `footer`, `language`).
-* `LanguageSwitcher`: A11y, routing, focus handling.
-* Middleware for default locale.
-* Typing & CI check for consistent keys.
-* README documentation: "Add a new language/string".
+
+### **Block Family 05**
+
+- [BLOCK05.8_FINAL_DELIVERY_REPORT.md](./BLOCK05.8_FINAL_DELIVERY_REPORT.md)
+- [BLOCK05.8_IMPLEMENTATION_SUMMARY.md](./BLOCK05.8_IMPLEMENTATION_SUMMARY.md)
+
 ---
-### **Prompt Block 4: Newsletter Backend & API Routing**
-🎯 Goal: Complete newsletter flow.
-* API: `app/api/newsletter/route.ts` (App Router).
-* Validation with **Zod**, status codes: `201`, `400`, `409`, `429`, `500`.
-* In-memory storage + adapter for Supabase.
-* `NewsletterForm`: consumes API, displays success/error via i18n.
-* Tests: unit + integration (MSW/Supertest).
-* README: how to extend locale keys and storage.
+
+### **Block Family 06**
+
+- [BLOCK06.1_SEO_IMPLEMENTATION_SUMMARY.md](./BLOCK06.1_SEO_IMPLEMENTATION_SUMMARY.md)
+- [BLOCK06.2_SITEMAP_ROBOTS_IMPLEMENTATION.md](./BLOCK06.2_SITEMAP_ROBOTS_IMPLEMENTATION.md)
+- [BLOCK06.3_A11Y_CI_IMPLEMENTATION_SUMMARY.md](./BLOCK06.3_A11Y_CI_IMPLEMENTATION_SUMMARY.md)
+
 ---
-### **Prompt Block 5: Ethics, Transparency, GEP & Privacy Pages**
-🎯 Goal: Compliance-oriented pages, clear & accessible.
-* Static pages: `/ethics`, `/gep`, `/privacy`, `/imprint`.
-* Content: Markdown/JSON in `/content/policies/`.
-* Front matter: `title`, `summary`, `status`, `owner`, `lastReviewed`, `nextReviewDue`, `version`.
-* Components: `PolicyLayout`, `FAQ`, `LastUpdatedFooter`.
-* SEO: `noindex` if `status !== published`.
-* Footer/navigation links.
-* Tests: Schema validation + A11y.
+
+### **Block Family 07**
+
+- [BLOCK07.0_CICD_IMPLEMENTATION_SUMMARY.md](./BLOCK07.0_CICD_IMPLEMENTATION_SUMMARY.md)
+
 ---
-### **Prompt Block 6: SEO, Meta, Accessibility, Performance**
-🎯 Goal: SEO/A11y/performance optimization for launch.
-* Dynamic metadata (`generateMetadata`) with i18n.
-* Sitemap + robots.txt with hreflang.
-* Accessibility: `eslint-plugin-jsx-a11y`, jest-axe tests.
-* Performance: `next/image`, code splitting, Lighthouse >90.
-* README: "SEO/A11y/Perf" section.
+
+### **Block Family 08**
+
+- [BLOCK08.0_READINESS_REPORT.md](./BLOCK08.0_READINESS_REPORT.md)
+- [BLOCK08.0_TRANSITION_SUMMARY.md](./BLOCK08.0_TRANSITION_SUMMARY.md)
+- [BLOCK08.7_FEEDBACK_FRAMEWORK_IMPLEMENTATION_SUMMARY.md](./BLOCK08.7_FEEDBACK_FRAMEWORK_IMPLEMENTATION_SUMMARY.md)
+- [BLOCK08.8_AUDIT_CLOSURE_AND_COMPLIANCE_BASELINE.md](./BLOCK08.8_AUDIT_CLOSURE_AND_COMPLIANCE_BASELINE.md)
+- [BLOCK08.8_AUDIT_CLOSURE_EXECUTIVE_VERSION.md](./BLOCK08.8_AUDIT_CLOSURE_EXECUTIVE_VERSION.md)
+- [BLOCK08.8_PART1.md](./BLOCK08.8_PART1.md)
+- [BLOCK08.8_PART2.md](./BLOCK08.8_PART2.md)
+- [BLOCK08.8_PART3.md](./BLOCK08.8_PART3.md)
+
 ---
-### **Prompt Block 7: CI/CD, Testing & Deployment**
-🎯 Goal: Robust pipeline (GitHub + Vercel).
-* `.github/workflows/ci.yml`: PRs, Lint, Typecheck, Tests, Build, Preview Deploy.
-* `.github/workflows/release.yml`: main → Staging, Tag → Production (with approval).
-* Secrets: `VERCEL_TOKEN`, `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID`.
-* DNS documentation (`docs/DNS.md`).
-* README: Pipeline overview, "Why this design".
+
+### **Block Family 09**
+
+- [BLOCK09.0_LEGAL_COMPLIANCE_BASELINE.md](./BLOCK09.0_LEGAL_COMPLIANCE_BASELINE.md)
+- [BLOCK09.1_IMPLEMENTATION_SUMMARY.md](./BLOCK09.1_IMPLEMENTATION_SUMMARY.md)
+- [BLOCK09.1_WEBSITE_IMPLEMENTATION_CHECKLIST.md](./BLOCK09.1_WEBSITE_IMPLEMENTATION_CHECKLIST.md)
+- [BLOCK09.2_CONSENT_MANAGEMENT_FRAMEWORK.md](./BLOCK09.2_CONSENT_MANAGEMENT_FRAMEWORK.md)
+- [BLOCK09.2_FINAL_DELIVERY_REPORT.md](./BLOCK09.2_FINAL_DELIVERY_REPORT.md)
+- [BLOCK09.2_IMPLEMENTATION_SUMMARY.md](./BLOCK09.2_IMPLEMENTATION_SUMMARY.md)
+- [BLOCK09.3_IMPLEMENTATION_SUMMARY.md](./BLOCK09.3_IMPLEMENTATION_SUMMARY.md)
+- [BLOCK09.3_TRANSPARENCY_FRAMEWORK.md](./BLOCK09.3_TRANSPARENCY_FRAMEWORK.md)
+- [BLOCK09.4_IMPLEMENTATION_SUMMARY.md](./BLOCK09.4_IMPLEMENTATION_SUMMARY.md)
+- [BLOCK09.4_PUBLIC_ETHICS_API.md](./BLOCK09.4_PUBLIC_ETHICS_API.md)
+- [BLOCK09.5_ETHICAL_AUTONOMY.md](./BLOCK09.5_ETHICAL_AUTONOMY.md)
+- [BLOCK09.5_IMPLEMENTATION_SUMMARY.md](./BLOCK09.5_IMPLEMENTATION_SUMMARY.md)
+- [BLOCK09.6_COLLECTIVE_ETHICS_GRAPH.md](./BLOCK09.6_COLLECTIVE_ETHICS_GRAPH.md)
+- [BLOCK09.6_COMPLETION_CHECKLIST.md](./BLOCK09.6_COMPLETION_CHECKLIST.md)
+- [BLOCK09.6_IMPLEMENTATION_SUMMARY.md](./BLOCK09.6_IMPLEMENTATION_SUMMARY.md)
+- [BLOCK09.7_IMPLEMENTATION_SUMMARY.md](./BLOCK09.7_IMPLEMENTATION_SUMMARY.md)
+- [BLOCK09.7_TRUST_PROOF_FRAMEWORK.md](./BLOCK09.7_TRUST_PROOF_FRAMEWORK.md)
+- [BLOCK09.8_CONTINUOUS_INTEGRITY.md](./BLOCK09.8_CONTINUOUS_INTEGRITY.md)
+- [BLOCK09.8_IMPLEMENTATION_SUMMARY.md](./BLOCK09.8_IMPLEMENTATION_SUMMARY.md)
+- [BLOCK09.9_COMPLETION_CHECKLIST.md](./BLOCK09.9_COMPLETION_CHECKLIST.md)
+- [BLOCK09.9_FINAL_AUDIT_AND_HANDOFF.md](./BLOCK09.9_FINAL_AUDIT_AND_HANDOFF.md)
+- [BLOCK09.9_IMPLEMENTATION_SUMMARY.md](./BLOCK09.9_IMPLEMENTATION_SUMMARY.md)
+
 ---
-### **Prompt Block 8: Review, Launch & Next Steps**
-🎯 Goal: Finalization & handover.
-* Review with Lighthouse, Axe, Jest.
-* Check: Policy pages are correct; language is cautious.
-* Next steps:
-* Community/blog module
-* AI agent demo (showcase)
-* Case studies/showreel
-* Onboarding README for new team members.
+
+### **Block Family 10**
+
+- [BLOCK10.0_ACCESSIBILITY_AUDIT.md](./BLOCK10.0_ACCESSIBILITY_AUDIT.md)
+- [BLOCK10.0_BASELINE_PUSH_COMPLETE.md](./BLOCK10.0_BASELINE_PUSH_COMPLETE.md)
+- [BLOCK10.0_IMPLEMENTATION_SUMMARY.md](./BLOCK10.0_IMPLEMENTATION_SUMMARY.md)
+- [BLOCK10.0_PUBLIC_BASELINE_RELEASE.md](./BLOCK10.0_PUBLIC_BASELINE_RELEASE.md)
+- [BLOCK10.0_RELEASE_CHECKLIST.md](./BLOCK10.0_RELEASE_CHECKLIST.md)
+- [BLOCK10.1_COMPLETE.md](./BLOCK10.1_COMPLETE.md)
+- [BLOCK10.1_IMPLEMENTATION_SUMMARY.md](./BLOCK10.1_IMPLEMENTATION_SUMMARY.md)
+- [BLOCK10.1_POSTLAUNCH_FEEDBACK.md](./BLOCK10.1_POSTLAUNCH_FEEDBACK.md)
+- [BLOCK10.2_IMPLEMENTATION_SUMMARY.md](./BLOCK10.2_IMPLEMENTATION_SUMMARY.md)
+- [BLOCK10.2_TRANSPARENCY_API_AND_PORTAL.md](./BLOCK10.2_TRANSPARENCY_API_AND_PORTAL.md)
+- [BLOCK10.3_COMPLETION_SUMMARY.md](./BLOCK10.3_COMPLETION_SUMMARY.md)
+- [BLOCK10.3_ETHICAL_REFLECTION.md](./BLOCK10.3_ETHICAL_REFLECTION.md)
+- [BLOCK10.3_IMPLEMENTATION_SUMMARY.md](./BLOCK10.3_IMPLEMENTATION_SUMMARY.md)
+- [BLOCK10.4_DASHBOARD_REFINEMENT.md](./BLOCK10.4_DASHBOARD_REFINEMENT.md)
+- [BLOCK10.5_LEGAL_AND_ACCESSIBILITY.md](./BLOCK10.5_LEGAL_AND_ACCESSIBILITY.md)
+- [BLOCK10.6_FEEDBACK_AND_TRUST.md](./BLOCK10.6_FEEDBACK_AND_TRUST.md)
+- [BLOCK10.7_DAILY_GOVERNANCE_REPORTS.md](./BLOCK10.7_DAILY_GOVERNANCE_REPORTS.md)
+- [BLOCK10.7_IMPLEMENTATION_SUMMARY.md](./BLOCK10.7_IMPLEMENTATION_SUMMARY.md)
+- [BLOCK10.8_ACCESSIBILITY_AUDIT.md](./BLOCK10.8_ACCESSIBILITY_AUDIT.md)
+- [BLOCK10.9_CLOSURE.md](./BLOCK10.9_CLOSURE.md)
+- [BLOCK10.9_IMPLEMENTATION_SUMMARY.md](./BLOCK10.9_IMPLEMENTATION_SUMMARY.md)
+- [BLOCK10.10_COMPLETION_REPORT.md](./BLOCK10.10_COMPLETION_REPORT.md)
+- [BLOCK10.10_IMPLEMENTATION_SUMMARY.md](./BLOCK10.10_IMPLEMENTATION_SUMMARY.md)
+- [BLOCK10.10_VALIDATION_SUMMARY.md](./BLOCK10.10_VALIDATION_SUMMARY.md)
+- [BLOCK10.10_YAML_VALIDATION_REPORT.md](./BLOCK10.10_YAML_VALIDATION_REPORT.md)
+- [BLOCK10.11_LINT_CLEANUP_REPORT.md](./BLOCK10.11_LINT_CLEANUP_REPORT.md)
+- [BLOCK10.12_BUGFIX_DIVISION_BY_ZERO.md](./BLOCK10.12_BUGFIX_DIVISION_BY_ZERO.md)
+
 ---
+
+### **Block Family 11**
+
+- [BLOCK11.0_COLLECTIVE_FEDERATION.md](./BLOCK11.0_COLLECTIVE_FEDERATION.md)
+- [BLOCK11.0_EXPLANATION.md](./BLOCK11.0_EXPLANATION.md)
+- [BLOCK11.1_AI_PERSONA_SIMULATION.md](./BLOCK11.1_AI_PERSONA_SIMULATION.md)
+- [BLOCK11.1_ARCHITECTURE.md](./BLOCK11.1_ARCHITECTURE.md)
+- [BLOCK11.1_COMMS.md](./BLOCK11.1_COMMS.md)
+- [BLOCK11.1_FEEDBACK_LOOPS.md](./BLOCK11.1_FEEDBACK_LOOPS.md)
+- [BLOCK11.1_IMPLEMENTATION_SUMMARY.md](./BLOCK11.1_IMPLEMENTATION_SUMMARY.md)
+- [BLOCK11.1_REQUIREMENTS.md](./BLOCK11.1_REQUIREMENTS.md)
+- [BLOCK11.1_TEST_RESULTS.md](./BLOCK11.1_TEST_RESULTS.md)
+- [BLOCK11.2_ARCHITECTURE.md](./BLOCK11.2_ARCHITECTURE.md)
+- [BLOCK11.2_ETHICAL_CONSENSUS_PROTOCOLS.md](./BLOCK11.2_ETHICAL_CONSENSUS_PROTOCOLS.md)
+
+---
+
+### **Block Family 12**
+
+- [BLOCK12.0_COMMUNICATIONS_PACK.md](./BLOCK12.0_COMMUNICATIONS_PACK.md)
+- [BLOCK12.0_ROADMAP_STAGE_VIII.md](./BLOCK12.0_ROADMAP_STAGE_VIII.md)
+- [BLOCK12.0_STRATEGIC_OVERVIEW.md](./BLOCK12.0_STRATEGIC_OVERVIEW.md)
+- [BLOCK12.1_ARCHITECTURE.md](./BLOCK12.1_ARCHITECTURE.md)
+- [BLOCK12.1_CERTIFICATION_FLOW.md](./BLOCK12.1_CERTIFICATION_FLOW.md)
+- [BLOCK12.1_COMMUNICATIONS_PACK.md](./BLOCK12.1_COMMUNICATIONS_PACK.md)
+- [BLOCK12.1_CURRICULUM_BLUEPRINT.md](./BLOCK12.1_CURRICULUM_BLUEPRINT.md)
+- [BLOCK12.1_EDUCATION_STRATEGY.md](./BLOCK12.1_EDUCATION_STRATEGY.md)
+- [BLOCK12.2_DASHBOARD_SPEC.md](./BLOCK12.2_DASHBOARD_SPEC.md)
+- [BLOCK12.2_PUBLIC_ETHICS_OBSERVATORY.md](./BLOCK12.2_PUBLIC_ETHICS_OBSERVATORY.md)
+- [BLOCK12.3_DATA_GOVERNANCE_STANDARDS.md](./BLOCK12.3_DATA_GOVERNANCE_STANDARDS.md)
+
+---
+
+### **Block Family 13**
+
+- [BLOCK13.0_OPEN_GOVERNANCE_PROTOCOL.md](./BLOCK13.0_OPEN_GOVERNANCE_PROTOCOL.md)
+- [BLOCK13.1_ANNUAL_REPORT_TEMPLATE.md](./BLOCK13.1_ANNUAL_REPORT_TEMPLATE.md)
+- [BLOCK13.1_INSTITUTIONALIZATION_DRAFT.md](./BLOCK13.1_INSTITUTIONALIZATION_DRAFT.md)
+- [BLOCK13.1_SUSTAINABILITY_FRAMEWORK.md](./BLOCK13.1_SUSTAINABILITY_FRAMEWORK.md)
+- [BLOCK13.2_ETHICS_SINGULARITY.md](./BLOCK13.2_ETHICS_SINGULARITY.md)
+- [BLOCK13.2_ETHICS_SINGULARITY_FRAMEWORK.md](./BLOCK13.2_ETHICS_SINGULARITY_FRAMEWORK.md)
+- [BLOCK13.2_SYMPOSIUM_BLUEPRINT.md](./BLOCK13.2_SYMPOSIUM_BLUEPRINT.md)
+
+---
+
 ## 📌 Definition of Done
-* Clean structure, consistent configurations, no duplicates.
-* Modular, tested, i18n-capable components.
-* Newsletter flow (frontend + backend) working.
-* Compliance pages available, accessible.
-* SEO/A11y/Perf ≥ 90 in Lighthouse.
-* CI/CD running (preview + staging + prod).
-* Documentation: hygiene, i18n, policies, SEO/Perf, CI/CD.
+
+- Clean structure, consistent configurations, no duplicates.
+- Modular, tested, i18n-capable components.
+- Newsletter flow (frontend + backend) working.
+- Compliance pages available, accessible.
+- SEO/A11y/Perf ≥ 90 in Lighthouse.
+- CI/CD running (preview + staging + prod).
+- Documentation: hygiene, i18n, policies, SEO/Perf, CI/CD.
+
 ---
-## 📅 Workflow recommendation
-1. Only implement **one prompt block per sprint**.
-2. After each block: **commit + push**.
-3. Only move on when tests and build pass ✅.
-4. Never skip documentation (README/DOCS).
----
-## 👥 Roles
-* **A.I.K (Aykut Aydin):** Visionary, project manager, developer.
-* **EWA (Prof. Dr. Esta Willy Armstrong):** Architect, mentor, quality assurance.
-* **Copilot / Cursor / Grok:** Tools that implement tactical tasks.

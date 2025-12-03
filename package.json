@@ -15,6 +15,7 @@
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage --passWithNoTests",
     "test:api": "jest __tests__/api --coverage --ci --reporters=default --reporters=jest-junit --collectCoverageFrom='src/app/api/**/*.ts' --coverageThreshold='{}'",
+    "test:dashboard": "jest __tests__/components/dashboard/dashboard-metrics.test.tsx --passWithNoTests",
     "test:integration": "jest __tests__/integration --passWithNoTests",
     "test:a11y": "jest --config jest.a11y.config.js --passWithNoTests",
     "test:e2e": "playwright test",
@@ -95,6 +96,8 @@
     "report:verify": "node scripts/verify-daily-reports.mjs",
     "report:all": "npm run monitor && npm run report:daily",
     "verify:block-c": "node scripts/verify-block-c-bootstrap.mjs",
+    "ledger:validate": "node scripts/ledger-normalize.mjs governance/ledger --report",
+    "simulate:governance": "ts-node --compiler-options '{\"module\":\"commonjs\"}' scripts/simulate-governance.ts",
     "ci": "npm run validate:translations && npm run validate && npm run build && npm run build-storybook",
     "vercel-build": "npm install --legacy-peer-deps && npm run build"
   },

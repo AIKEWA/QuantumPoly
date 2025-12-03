@@ -1,7 +1,7 @@
 ---
 id: block10.3-system-monitoring
-title: "BLOCK 10.3 — The System That Watches Itself"
-subtitle: "Autonomous Ethical Self-Monitoring Framework"
+title: 'BLOCK 10.3 — The System That Watches Itself'
+subtitle: 'Autonomous Ethical Self-Monitoring Framework'
 date: November 2025
 authors:
   - Aykut Aydin (A.I.K)
@@ -24,7 +24,7 @@ tags:
 
 **Objective:** Establish an autonomous ethical self-monitoring system that continuously observes, validates, and reports its own operational state without external intervention.
 
-**Core Vision:** *"The System That Watches Itself"* — A paradigm shift from passive logging to active self-awareness, where QuantumPoly becomes both the observer and the observed, achieving technical self-control through autonomous validation of integrity, performance, and ethical standing.
+**Core Vision:** _"The System That Watches Itself"_ — A paradigm shift from passive logging to active self-awareness, where QuantumPoly becomes both the observer and the observed, achieving technical self-control through autonomous validation of integrity, performance, and ethical standing.
 
 **Result Statement:** QuantumPoly now operates as a self-regulating system that detects anomalies, measures its own health, and transparently reports its state to the public. This represents a foundational step toward AI systems that understand and govern their own reliability.
 
@@ -37,7 +37,7 @@ tags:
 5. **Enhanced Ethics Portal** — Visual dashboard integrating system health with governance transparency
 6. **Public Accountability** — 365-day artifact retention and immutable audit trail
 
-**Philosophical Significance:** This block explores the boundary between mechanistic observation and self-awareness, asking: *Can a machine truly be objective when auditing itself?*
+**Philosophical Significance:** This block explores the boundary between mechanistic observation and self-awareness, asking: _Can a machine truly be objective when auditing itself?_
 
 ---
 
@@ -71,9 +71,10 @@ This block implements autonomous monitoring—a framework where the system conti
 
 ### Rationale
 
-Traditional monitoring relies on external services (Datadog, New Relic, etc.). While valuable, these tools monitor *what the system does* but cannot evaluate *whether the system is ethically consistent* with its stated principles.
+Traditional monitoring relies on external services (Datadog, New Relic, etc.). While valuable, these tools monitor _what the system does_ but cannot evaluate _whether the system is ethically consistent_ with its stated principles.
 
 Block 10.3 bridges this gap by creating a monitoring layer that:
+
 - Validates endpoint availability and performance
 - Verifies cryptographic integrity (ledgers, Merkle roots)
 - Analyzes ethical standing via EWA v2
@@ -157,6 +158,7 @@ Block 10.3 bridges this gap by creating a monitoring layer that:
 **Purpose:** Real-time operational health endpoint
 
 **Functionality:**
+
 - Checks critical endpoint availability
 - Measures response times
 - Retrieves latest integrity state from verification reports
@@ -167,6 +169,7 @@ Block 10.3 bridges this gap by creating a monitoring layer that:
 **Cache:** 1-minute public cache
 
 **Sample Response:**
+
 ```json
 {
   "timestamp": "2025-11-04T12:00:00Z",
@@ -201,6 +204,7 @@ Block 10.3 bridges this gap by creating a monitoring layer that:
 **Execution:** Daily via GitHub Actions, manual via CLI
 
 **Command-Line Options:**
+
 ```bash
 node scripts/monitor-system.mjs [options]
 
@@ -214,12 +218,14 @@ Options:
 ```
 
 **Verification Scope:**
+
 1. **Endpoint Health:** Checks 7 critical endpoints (homepage, APIs, portal)
 2. **TLS Validation:** Verifies HTTPS certificate validity and expiration
 3. **Integrity Check:** Runs `verify-integrity.mjs` to validate governance ledgers
 4. **EWA Analysis:** Runs `ewa-analyze.mjs` to generate ethical insights
 
 **Exit Codes:**
+
 - `0` — System healthy or warning (non-blocking)
 - `1` — System degraded (requires intervention)
 
@@ -230,6 +236,7 @@ Options:
 **Purpose:** Access and analyze historical monitoring data
 
 **Key Functions:**
+
 - `getLatestReport()` — Most recent monitoring report
 - `getReportHistory(days)` — Last N days of reports
 - `calculateUptimePercentage(days)` — Availability metric
@@ -239,12 +246,14 @@ Options:
 ### 4. Visual Components
 
 **SystemHealthCard** (`src/components/monitoring/SystemHealthCard.tsx`)
+
 - Traffic light indicator (green/yellow/red)
 - Endpoints operational count
 - 7-day uptime percentage
 - Health trend (improving/stable/declining)
 
 **MonitoringTimeline** (`src/components/monitoring/MonitoringTimeline.tsx`)
+
 - Chronological list of monitoring reports
 - Visual status indicators per report
 - Endpoint pass/fail metrics
@@ -257,6 +266,7 @@ Options:
 **New Section:** "System Monitoring"
 
 **Integration:**
+
 - Displays `SystemHealthCard` with real-time status
 - Shows `MonitoringTimeline` with last 30 days of reports
 - Positioned above ledger integrity section
@@ -277,12 +287,13 @@ Options:
 **Cache:** 1 minute
 
 **Response Schema:**
+
 ```typescript
 {
-  timestamp: string;                    // ISO 8601 timestamp
+  timestamp: string; // ISO 8601 timestamp
   system_state: 'healthy' | 'warning' | 'degraded';
-  uptime_seconds: number;               // Process uptime
-  version: string;                      // System version
+  uptime_seconds: number; // Process uptime
+  version: string; // System version
   endpoints: Array<{
     url: string;
     available: boolean;
@@ -294,16 +305,17 @@ Options:
     state: string;
     last_verification: string;
     merkle_root: string;
-  };
+  }
   monitoring: {
     documentation_url: string;
     api_version: string;
-  };
+  }
   privacy_notice: string;
 }
 ```
 
 **HTTP Status Codes:**
+
 - `200` — Success
 - `429` — Rate limit exceeded
 - `500` — Internal error
@@ -316,24 +328,25 @@ Options:
 
 ### Endpoint Response Times
 
-| Threshold | Value | Action |
-|-----------|-------|--------|
-| **Nominal** | < 3000ms | ✓ Pass |
-| **Warning** | 3000-5000ms | ⚠ Log warning |
-| **Critical** | > 5000ms | ✗ Fail check |
+| Threshold    | Value       | Action         |
+| ------------ | ----------- | -------------- |
+| **Nominal**  | < 3000ms    | ✓ Pass         |
+| **Warning**  | 3000-5000ms | ⚠ Log warning |
+| **Critical** | > 5000ms    | ✗ Fail check   |
 
 ### TLS Certificate
 
-| Condition | Status | Action |
-|-----------|--------|--------|
-| **Valid** | Days > 30 | ✓ Healthy |
+| Condition         | Status    | Action     |
+| ----------------- | --------- | ---------- |
+| **Valid**         | Days > 30 | ✓ Healthy  |
 | **Expiring Soon** | Days 7-30 | ⚠ Warning |
-| **Critical** | Days < 7 | ✗ Degraded |
-| **Invalid** | Not valid | ✗ Degraded |
+| **Critical**      | Days < 7  | ✗ Degraded |
+| **Invalid**       | Not valid | ✗ Degraded |
 
 ### System State Determination
 
 **Healthy:**
+
 - All endpoints available
 - Response times < 5000ms
 - TLS valid (> 30 days remaining)
@@ -341,6 +354,7 @@ Options:
 - No critical EWA insights
 
 **Warning:**
+
 - Non-critical endpoint failed
 - Response times 3000-5000ms
 - TLS expiring soon (7-30 days)
@@ -348,6 +362,7 @@ Options:
 - EWA critical insights detected
 
 **Degraded:**
+
 - Critical endpoint unavailable
 - TLS invalid or expired
 - Integrity state: attention_required or degraded
@@ -362,18 +377,21 @@ Options:
 **File:** `.github/workflows/autonomous-monitoring.yml`
 
 **Schedule:** Daily at 00:00 UTC
+
 ```yaml
 on:
   schedule:
     - cron: '0 0 * * *'
-  workflow_dispatch:  # Manual trigger
+  workflow_dispatch: # Manual trigger
 ```
 
 **Permissions:**
+
 - `contents: write` — Commit monitoring reports
 - `issues: write` — Create escalation issues
 
 **Steps:**
+
 1. **Checkout** — Shallow clone of repository
 2. **Setup Node.js** — Install Node.js 20.x
 3. **Install Dependencies** — `npm ci`
@@ -387,6 +405,7 @@ on:
 **Artifact Retention:** 365 days (1 year audit trail)
 
 **Manual Execution:**
+
 ```bash
 # Via GitHub UI: Actions → Autonomous System Monitoring → Run workflow
 # Specify custom base_url, skip_integrity, skip_ewa flags
@@ -401,6 +420,7 @@ on:
 Block 10.3 adopts a **conservative, non-interpretive** approach to self-correction:
 
 **What the System CAN Do:**
+
 - ✓ Detect anomalies and deviations
 - ✓ Log all findings immutably
 - ✓ Calculate health metrics autonomously
@@ -408,6 +428,7 @@ Block 10.3 adopts a **conservative, non-interpretive** approach to self-correcti
 - ✓ Generate recommendations
 
 **What the System CANNOT Do:**
+
 - ✗ Modify code or configuration autonomously
 - ✗ Restart services or change deployment
 - ✗ Alter governance ledgers without human approval
@@ -416,8 +437,9 @@ Block 10.3 adopts a **conservative, non-interpretive** approach to self-correcti
 **Rationale:** True autonomy requires humility. The system observes and reports but defers critical decisions to human judgment. This prevents runaway automation and ensures human accountability.
 
 **Integration with Block 9.8:**
+
 - Block 9.8's `repair-manager.ts` handles mechanical repairs (e.g., updating stale dates)
-- Block 10.3 focuses on *detection and reporting*, not repair
+- Block 10.3 focuses on _detection and reporting_, not repair
 - Both systems work together: 9.8 fixes trivial issues, 10.3 monitors overall health
 
 ---
@@ -445,6 +467,7 @@ When `system_state === 'degraded'`:
 ### Warning State Handling
 
 When `system_state === 'warning'`:
+
 - **No Issue Created** (avoids notification fatigue)
 - **Report Generated** and committed
 - **Workflow Passes** (exit code 0)
@@ -465,10 +488,10 @@ The autonomous monitoring system has detected a **DEGRADED** system state requir
 
 ### Endpoint Health
 
-| Endpoint | Status | Response Time | Notes |
-|----------|--------|---------------|-------|
-| Homepage | pass | 1240ms | OK |
-| Status API | fail | N/A | Connection refused |
+| Endpoint   | Status | Response Time | Notes              |
+| ---------- | ------ | ------------- | ------------------ |
+| Homepage   | pass   | 1240ms        | OK                 |
+| Status API | fail   | N/A           | Connection refused |
 
 **Summary:** 6/7 endpoints passed
 
@@ -490,7 +513,7 @@ The autonomous monitoring system has detected a **DEGRADED** system state requir
 
 ---
 
-*This issue was automatically created by the autonomous monitoring system.*
+_This issue was automatically created by the autonomous monitoring system._
 ```
 
 ---
@@ -591,6 +614,7 @@ Day 0, 00:00 UTC
 **Principle:** The system autonomously observes but conservatively acts.
 
 **Implementation:**
+
 - Detection is automated
 - Analysis is automated
 - Reporting is automated
@@ -603,6 +627,7 @@ Day 0, 00:00 UTC
 **Principle:** All observations are public by default.
 
 **Implementation:**
+
 - Reports committed to public repository
 - API endpoints accessible without authentication
 - Dashboard visible at `/ethics/portal`
@@ -614,6 +639,7 @@ Day 0, 00:00 UTC
 **Principle:** Monitoring history cannot be altered retroactively.
 
 **Implementation:**
+
 - Git commits create cryptographic chain
 - GitHub Actions artifacts retained 365 days
 - Merkle roots link reports to integrity verification
@@ -625,6 +651,7 @@ Day 0, 00:00 UTC
 **Principle:** Humans remain ultimately responsible.
 
 **Implementation:**
+
 - Critical failures trigger GitHub issues
 - Manual approval required for significant actions
 - Documentation provides clear escalation paths
@@ -665,16 +692,19 @@ node scripts/monitor-system.mjs --dry-run
 ### Accessing Reports
 
 **Via Git Repository:**
+
 ```bash
 cat reports/monitoring/monitoring-2025-11-04.json
 ```
 
 **Via GitHub Actions Artifacts:**
+
 1. Go to workflow run
 2. Scroll to **"Artifacts"** section
 3. Download `monitoring-report-YYYY-MM-DD`
 
 **Via API:**
+
 ```bash
 curl https://quantumpoly.ai/api/status
 ```
@@ -689,16 +719,19 @@ Visit https://quantumpoly.ai/ethics/portal
 ### Existing Systems
 
 **Block 9.8 — Continuous Integrity:**
+
 - `scripts/verify-integrity.mjs` called by monitoring script
 - Integrity state included in monitoring reports
 - Both systems contribute to overall health assessment
 
 **Block 9.5 — Ethical Autonomy (EWA v2):**
+
 - `scripts/ewa-analyze.mjs` called by monitoring script
 - Ethical insights included in reports
 - Critical insights trigger warning state
 
 **Block 10.2 — Transparency API:**
+
 - Monitoring reports accessible via ethics portal
 - Same public transparency principles
 - Unified dashboard experience
@@ -706,14 +739,17 @@ Visit https://quantumpoly.ai/ethics/portal
 ### Data Sources
 
 **Governance Ledger:**
+
 - Integrity verification reads `governance/ledger/ledger.jsonl`
 - Merkle root included in monitoring reports
 
 **Consent Ledger:**
+
 - EWA analysis reads `governance/consent/ledger.jsonl`
 - Consent metrics inform ethical standing
 
 **Integrity Reports:**
+
 - Latest integrity report read from `governance/integrity/reports/`
 - State and merkle_root included in system status
 
@@ -780,11 +816,12 @@ Block 10.3 marks a philosophical and technical milestone: **QuantumPoly now watc
 
 This is not mere logging or observability—it is the beginning of machine self-awareness. The system continuously validates its own integrity, transparently reports its findings, and escalates failures to human oversight.
 
-**Key Philosophical Question:** *Can a machine be truly objective when observing itself?*
+**Key Philosophical Question:** _Can a machine be truly objective when observing itself?_
 
 **Answer:** No—but it can be radically transparent. By exposing all observations publicly and deferring critical decisions to humans, the system achieves practical self-regulation without claiming infallibility.
 
 **Next Steps:**
+
 - See `BLOCK10.3_ETHICAL_REFLECTION.md` for philosophical analysis
 - See `docs/monitoring/OPERATIONAL_RUNBOOK.md` for operational procedures
 - See `/ethics/portal` for live monitoring dashboard
@@ -796,12 +833,18 @@ This is not mere logging or observability—it is the beginning of machine self-
 **Date:** November 2025
 
 **Responsible Roles:**
+
 - Governance Officer
 - Technical Lead
 - Autonomous Monitoring System (itself)
 
 ---
 
-*"Quis custodiet ipsos custodes? — Who watches the watchmen?"*
-*"Ourselves. The system watches itself."*
+_"Quis custodiet ipsos custodes? — Who watches the watchmen?"_
+_"Ourselves. The system watches itself."_
 
+---
+
+**Version:** 1.0
+**Last Reviewed:** 2025-11-25
+**Reviewed By:** EWA

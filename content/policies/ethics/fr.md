@@ -5,7 +5,10 @@ status: 'in-progress'
 owner: 'Trust Team <trust@quantumpoly.ai>'
 lastReviewed: '2025-10-13'
 nextReviewDue: '2026-01-13'
-version: 'v0.1.0'
+version: 'v0.1.1'
+license: 'CC-BY-4.0'
+responsibleParty: 'QuantumPoly Legal Team'
+versionHash: 'pending-ci'
 ---
 
 ## Notre Fondement Éthique
@@ -51,3 +54,8 @@ Nous accueillons les questions, préoccupations et suggestions concernant nos pr
 ## Avertissement
 
 Ce document décrit notre approche et nos engagements actuels, mais ne constitue pas un conseil juridique. Il est sujet à changement à mesure que nous continuons à apprendre et à améliorer nos pratiques.
+
+---
+
+**Dernière mise à jour :** 25 novembre 2025
+**Version :** v0.1.1

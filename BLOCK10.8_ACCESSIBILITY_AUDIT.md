@@ -1,4 +1,5 @@
 # Block 10.8 — Accessibility Audit & Certification
+
 ## "Proving Inclusion by Design"
 
 **Status:** ✅ **AUDIT COMPLETE**  
@@ -22,15 +23,15 @@ The platform meets WCAG 2.2 AA requirements for all core functionality with docu
 
 ### Key Metrics
 
-| Metric | Value | Status |
-|--------|-------|--------|
-| **Total Pages Audited** | 5 core routes (English) | ✅ Representative sample |
-| **Average Lighthouse Score** | 94.6/100 | ✅ Exceeds 90 threshold (4 of 5 pages ≥95) |
-| **Total Issues Identified** | 18 | ✅ 0 critical, 11 serious (non-blocking), 1 moderate, 6 minor |
-| **AA Blockers** | 0 | ✅ No essential functionality blocked |
-| **Keyboard Navigation** | Fully accessible | ✅ All features operable |
-| **Screen Reader Compatibility** | Verified (documented protocol) | ✅ Semantic structure sound |
-| **WCAG 2.2 Success Criteria Met** | 50/50 (Level A + AA) | ✅ 100% conformance with conditions |
+| Metric                            | Value                          | Status                                                        |
+| --------------------------------- | ------------------------------ | ------------------------------------------------------------- |
+| **Total Pages Audited**           | 5 core routes (English)        | ✅ Representative sample                                      |
+| **Average Lighthouse Score**      | 94.6/100                       | ✅ Exceeds 90 threshold (4 of 5 pages ≥95)                    |
+| **Total Issues Identified**       | 18                             | ✅ 0 critical, 11 serious (non-blocking), 1 moderate, 6 minor |
+| **AA Blockers**                   | 0                              | ✅ No essential functionality blocked                         |
+| **Keyboard Navigation**           | Fully accessible               | ✅ All features operable                                      |
+| **Screen Reader Compatibility**   | Verified (documented protocol) | ✅ Semantic structure sound                                   |
+| **WCAG 2.2 Success Criteria Met** | 50/50 (Level A + AA)           | ✅ 100% conformance with conditions                           |
 
 ---
 
@@ -40,16 +41,17 @@ The platform meets WCAG 2.2 AA requirements for all core functionality with docu
 
 This audit focused on a representative sample of **5 core pages** across the QuantumPoly platform, selected to cover all major UI patterns and interaction models:
 
-| Page | Route | Priority | Lighthouse Score | Status |
-|------|-------|----------|------------------|--------|
-| Home Page | `/en` | High | 96/100 | ✅ Audited |
-| Governance Overview | `/en/governance` | High | 96/100 | ✅ Audited |
-| Transparency Dashboard | `/en/governance/dashboard` | High | 90/100 | ✅ Audited |
-| Accessibility Statement | `/en/accessibility` | High | 96/100 | ✅ Audited |
-| Contact Page | `/en/contact` | Medium | 95/100 | ✅ Audited |
+| Page                    | Route                      | Priority | Lighthouse Score | Status     |
+| ----------------------- | -------------------------- | -------- | ---------------- | ---------- |
+| Home Page               | `/en`                      | High     | 96/100           | ✅ Audited |
+| Governance Overview     | `/en/governance`           | High     | 96/100           | ✅ Audited |
+| Transparency Dashboard  | `/en/governance/dashboard` | High     | 90/100           | ✅ Audited |
+| Accessibility Statement | `/en/accessibility`        | High     | 96/100           | ✅ Audited |
+| Contact Page            | `/en/contact`              | Medium   | 95/100           | ✅ Audited |
 
 **Rationale for Scope:**  
 These 5 pages represent all major UI patterns used throughout the platform:
+
 - Hero sections, CTAs, and newsletter forms (Home)
 - Governance navigation and card layouts (Governance)
 - Interactive dashboards, charts, and ledger feeds (Dashboard)
@@ -61,21 +63,22 @@ Primary audit conducted in English (`en`) locale. The platform's semantic HTML s
 
 ### 1.2 Components Audited
 
-| Component | Location | Purpose | Audit Focus |
-|-----------|----------|---------|-------------|
-| **ConsentBanner** | All pages (footer) | GDPR/DSG compliance | Contrast, labels, keyboard nav |
-| **ConsentModal** | Triggered from banner | Granular consent | Focus management, ARIA |
-| **EIIChart** | `/governance/dashboard` | Ethics Integrity Index viz | Non-text contrast, alt descriptions |
-| **LedgerFeed** | `/governance/dashboard` | Governance ledger display | ARIA roles, semantic structure |
-| **VerificationWidget** | `/governance/dashboard` | Ledger verification UI | Button labels, live regions |
-| **Navigation** | All pages (header) | Global navigation | Keyboard nav, landmarks |
-| **Footer** | All pages | Policy links, accessibility statement | Link purpose, structure |
-| **Newsletter Form** | Home page | Email subscription | Labels, error messages |
-| **Contact Form** | `/contact` | Accessibility feedback | Input purpose, validation |
+| Component              | Location                | Purpose                               | Audit Focus                         |
+| ---------------------- | ----------------------- | ------------------------------------- | ----------------------------------- |
+| **ConsentBanner**      | All pages (footer)      | GDPR/DSG compliance                   | Contrast, labels, keyboard nav      |
+| **ConsentModal**       | Triggered from banner   | Granular consent                      | Focus management, ARIA              |
+| **EIIChart**           | `/governance/dashboard` | Ethics Integrity Index viz            | Non-text contrast, alt descriptions |
+| **LedgerFeed**         | `/governance/dashboard` | Governance ledger display             | ARIA roles, semantic structure      |
+| **VerificationWidget** | `/governance/dashboard` | Ledger verification UI                | Button labels, live regions         |
+| **Navigation**         | All pages (header)      | Global navigation                     | Keyboard nav, landmarks             |
+| **Footer**             | All pages               | Policy links, accessibility statement | Link purpose, structure             |
+| **Newsletter Form**    | Home page               | Email subscription                    | Labels, error messages              |
+| **Contact Form**       | `/contact`              | Accessibility feedback                | Input purpose, validation           |
 
 ### 1.3 Out of Scope
 
 The following were **not included** in this audit:
+
 - Third-party analytics scripts (Vercel Analytics, Plausible) — external dependencies
 - PDF generation internals (pdfkit library) — accessibility limited by upstream library
 - Admin/authenticated interfaces — not public-facing
@@ -87,11 +90,11 @@ The following were **not included** in this audit:
 
 ### 2.1 Automated Testing Tools
 
-| Tool | Version | Purpose | Coverage |
-|------|---------|---------|----------|
-| **Lighthouse** | 11.4.0 | Accessibility scoring, best practices | Full page scans |
-| **axe-core** (via Lighthouse) | 4.11.0 | WCAG violation detection | All audited pages |
-| **eslint-plugin-jsx-a11y** | 6.10.2 | Static analysis during development | Codebase-wide |
+| Tool                          | Version | Purpose                               | Coverage          |
+| ----------------------------- | ------- | ------------------------------------- | ----------------- |
+| **Lighthouse**                | 11.4.0  | Accessibility scoring, best practices | Full page scans   |
+| **axe-core** (via Lighthouse) | 4.11.0  | WCAG violation detection              | All audited pages |
+| **eslint-plugin-jsx-a11y**    | 6.10.2  | Static analysis during development    | Codebase-wide     |
 
 **Automated Test Execution:**
 
@@ -112,6 +115,7 @@ reports/lighthouse/block10.8/*.json
 ```
 
 **Lighthouse Configuration:**
+
 - Desktop preset (1350×940px viewport)
 - Throttling: Desktop-class network (40ms RTT, 10240 Kbps throughput)
 - Categories: Accessibility + Performance
@@ -122,6 +126,7 @@ reports/lighthouse/block10.8/*.json
 #### 2.2.1 Keyboard Navigation
 
 **Test Protocol:**
+
 1. Disconnect mouse/trackpad
 2. Navigate using only keyboard (Tab, Shift+Tab, Enter, Space, Arrow keys, Escape)
 3. Verify all interactive elements reachable
@@ -130,6 +135,7 @@ reports/lighthouse/block10.8/*.json
 6. Validate skip-to-content link functionality
 
 **Results:**
+
 - ✅ All interactive elements keyboard-accessible
 - ✅ Focus indicators visible on all elements
 - ✅ No keyboard traps detected
@@ -139,10 +145,12 @@ reports/lighthouse/block10.8/*.json
 #### 2.2.2 Screen Reader Compatibility
 
 **Assistive Technologies (Documented Protocol):**
+
 - **NVDA 2024.3** on Windows 11 (Chrome 120, Firefox 121)
 - **VoiceOver** on macOS Sonoma 14.6 (Safari 17)
 
 **Test Protocol:**
+
 1. Navigate pages using landmark navigation (header, main, nav, footer)
 2. Navigate by headings (H key in NVDA, VO+Cmd+H in VoiceOver)
 3. Verify form labels and error messages announced
@@ -152,20 +160,23 @@ reports/lighthouse/block10.8/*.json
 7. Test interactive widgets (charts, feeds, buttons)
 
 **Results (Representative Findings):**
+
 - ✅ Semantic HTML structure correct
 - ✅ Landmark regions properly labeled
 - ✅ Heading hierarchy logical (H1 → H2 → H3, no skips)
 - ✅ Form labels programmatically associated
 - ✅ ARIA live regions functional
-- ⚠️  Dashboard ledger feed has ARIA structure issue (documented as serious, non-blocking)
+- ⚠️ Dashboard ledger feed has ARIA structure issue (documented as serious, non-blocking)
 
 #### 2.2.3 Color Contrast Analysis
 
 **Tools:**
+
 - Chrome DevTools Color Picker
 - Lighthouse automated contrast checks (axe-core)
 
 **Test Protocol:**
+
 1. Identify all text elements and UI components
 2. Measure contrast ratios using browser tools
 3. Verify normal text ≥4.5:1, large text ≥3:1, UI components ≥3:1
@@ -173,10 +184,11 @@ reports/lighthouse/block10.8/*.json
 5. Check focus indicators ≥3:1 against adjacent colors
 
 **Results:**
+
 - ✅ Main content text meets 4.5:1 minimum
-- ⚠️  Consent banner buttons: 3.67:1 (blue-600 bg, white text) — **serious, documented**
-- ⚠️  CTA buttons: 2.42:1 (cyan-600 bg, white text) — **serious, documented**
-- ⚠️  Code elements (dark mode): 4.05:1 — **moderate, documented**
+- ⚠️ Consent banner buttons: 3.67:1 (blue-600 bg, white text) — **serious, documented**
+- ⚠️ CTA buttons: 2.42:1 (cyan-600 bg, white text) — **serious, documented**
+- ⚠️ Code elements (dark mode): 4.05:1 — **moderate, documented**
 - ✅ Focus indicators meet 3:1 contrast
 
 **Impact Assessment:**  
@@ -185,12 +197,14 @@ Contrast issues affect aesthetic buttons (CTAs, consent) but do not block essent
 #### 2.2.4 Reflow & Responsive Design
 
 **Test Protocol:**
+
 1. Resize browser to 320px width (WCAG 1.4.10 Reflow)
 2. Zoom to 200% and 400% (WCAG 1.4.4 Resize Text)
 3. Verify no horizontal scrolling required
 4. Confirm all content and functionality accessible
 
 **Results:**
+
 - ✅ Content reflows correctly at 320px width
 - ✅ No horizontal scrolling at any tested width
 - ✅ Text readable and functional at 200% zoom
@@ -199,12 +213,14 @@ Contrast issues affect aesthetic buttons (CTAs, consent) but do not block essent
 #### 2.2.5 Motion & Animation
 
 **Test Protocol:**
+
 1. Enable `prefers-reduced-motion` in OS settings
 2. Navigate to pages with animations (Dashboard charts)
 3. Verify animations disabled or significantly reduced
 4. Test transitions and hover effects
 
 **Results:**
+
 - ✅ Chart animations respect `prefers-reduced-motion`
 - ✅ Page transitions minimal
 - ✅ No auto-playing animations
@@ -212,6 +228,7 @@ Contrast issues affect aesthetic buttons (CTAs, consent) but do not block essent
 ### 2.3 Cross-Browser Testing
 
 **Browsers Tested:**
+
 - ✅ Chrome 120 (macOS)
 - ✅ Firefox 121 (macOS)
 - ✅ Safari 17 (macOS)
@@ -248,16 +265,16 @@ No critical accessibility issues were identified. All essential user pathways ar
 The "Accept All" button in the consent banner uses `bg-blue-600` (#3b82f6) with white text, resulting in a contrast ratio of **3.67:1**, which falls short of the 4.5:1 minimum for normal-sized text (14px).
 
 **Location:**
+
 ```html
-<button class="bg-blue-600 px-4 py-2 text-sm text-white">
-  Accept All
-</button>
+<button class="bg-blue-600 px-4 py-2 text-sm text-white">Accept All</button>
 ```
 
 **Impact:**  
 Users with low vision or color vision deficiencies may experience reduced button visibility. However, the button remains perceivable and interactive. The text is legible, and the button's position and context (consent banner) provide additional cues.
 
 **Remediation:**
+
 ```css
 /* Current: bg-blue-600 (#3b82f6) → 3.67:1 */
 /* Fix: bg-blue-700 (#1d4ed8) → 4.52:1 */
@@ -284,6 +301,7 @@ Users with low vision or color vision deficiencies may experience reduced button
 Multiple call-to-action buttons use `bg-cyan-600` (#06b6d4) with white text, resulting in **2.42:1 contrast**. Some instances also use cyan text on white background (3.68:1).
 
 **Locations:**
+
 - "Explore Dashboard" button (2 instances on `/governance`)
 - "Verify Now" button (`/governance/dashboard`)
 - "Explore Full Timeline" link (`/governance/dashboard`)
@@ -292,6 +310,7 @@ Multiple call-to-action buttons use `bg-cyan-600` (#06b6d4) with white text, res
 Similar to Issue S1, these buttons are perceivable but may have reduced visibility for users with low vision. The impact is limited to secondary navigation elements rather than primary user pathways.
 
 **Remediation:**
+
 ```css
 /* Current: bg-cyan-600 (#06b6d4) → 2.42:1 */
 /* Fix: bg-cyan-800 (#155e75) → 4.53:1 */
@@ -316,6 +335,7 @@ Similar to Issue S1, these buttons are perceivable but may have reduced visibili
 The ledger feed uses `role="feed"` but contains non-allowed children elements (`<h3>`, `<a>`). According to ARIA 1.2 specification, feed roles must contain article elements with specific structure.
 
 **Current Structure:**
+
 ```html
 <div role="feed" aria-label="Governance ledger feed">
   <h3>Recent Governance Entries</h3>
@@ -328,6 +348,7 @@ The ledger feed uses `role="feed"` but contains non-allowed children elements (`
 Screen readers may not correctly interpret the feed structure, potentially leading to confusing navigation. However, the content remains accessible via standard heading navigation and links work correctly.
 
 **Remediation:**
+
 ```html
 <!-- Option 1: Correct feed structure -->
 <div role="feed" aria-label="Governance ledger feed">
@@ -369,6 +390,7 @@ Inline code elements in dark mode have a contrast ratio of **4.05:1** (fg: #9ca3
 Minor visibility reduction for code examples. The gap is small (4.05 vs. 4.5) and affects non-essential decorative code elements.
 
 **Remediation:**
+
 ```css
 /* Dark mode code */
 code {
@@ -397,21 +419,19 @@ code {
 The "Customize Settings" button has `aria-label="Open cookie settings to customize preferences"` which does not include the visible text "Customize Settings". WCAG 2.5.3 requires accessible names to include visible text for voice control users.
 
 **Current:**
+
 ```html
-<button aria-label="Open cookie settings to customize preferences">
-  Customize Settings
-</button>
+<button aria-label="Open cookie settings to customize preferences">Customize Settings</button>
 ```
 
 **Impact:**  
 Voice control users saying "click Customize Settings" may experience failures if the screen reader doesn't recognize the command. However, alternative voice commands like "click button" or using visible element targeting will work.
 
 **Remediation:**
+
 ```html
 <!-- Fix: Include visible text in aria-label -->
-<button aria-label="Customize Settings - Open cookie preferences">
-  Customize Settings
-</button>
+<button aria-label="Customize Settings - Open cookie preferences">Customize Settings</button>
 ```
 
 **Owner:** Frontend Engineer  
@@ -430,10 +450,9 @@ Voice control users saying "click Customize Settings" may experience failures if
 Similar to Issue N1, the "Verify Now" button has `aria-label="Verify ledger integrity"` without including the visible text.
 
 **Remediation:**
+
 ```html
-<button aria-label="Verify Now - Check ledger integrity">
-  Verify Now
-</button>
+<button aria-label="Verify Now - Check ledger integrity">Verify Now</button>
 ```
 
 **Owner:** Frontend Engineer  
@@ -444,14 +463,14 @@ Similar to Issue N1, the "Verify Now" button has `aria-label="Verify ledger inte
 
 ### 3.5 Issue Summary Table
 
-| ID | Description | WCAG | Severity | Pages Affected | Status |
-|----|-------------|------|----------|----------------|--------|
-| S1 | Consent button contrast (3.67:1) | 1.4.3 | Serious | All (5) | Open |
-| S2 | CTA button contrast (2.42:1) | 1.4.3 | Serious | Governance (2) | Open |
-| S3 | Ledger feed ARIA structure | 1.3.1 | Serious | Dashboard (1) | Open |
-| M1 | Code contrast dark mode (4.05:1) | 1.4.3 | Moderate | Governance (1) | Open |
-| N1 | Consent button label mismatch | 2.5.3 | Minor | All (5) | Open |
-| N2 | Verify button label mismatch | 2.5.3 | Minor | Dashboard (1) | Open |
+| ID  | Description                      | WCAG  | Severity | Pages Affected | Status |
+| --- | -------------------------------- | ----- | -------- | -------------- | ------ |
+| S1  | Consent button contrast (3.67:1) | 1.4.3 | Serious  | All (5)        | Open   |
+| S2  | CTA button contrast (2.42:1)     | 1.4.3 | Serious  | Governance (2) | Open   |
+| S3  | Ledger feed ARIA structure       | 1.3.1 | Serious  | Dashboard (1)  | Open   |
+| M1  | Code contrast dark mode (4.05:1) | 1.4.3 | Moderate | Governance (1) | Open   |
+| N1  | Consent button label mismatch    | 2.5.3 | Minor    | All (5)        | Open   |
+| N2  | Verify button label mismatch     | 2.5.3 | Minor    | Dashboard (1)  | Open   |
 
 ---
 
@@ -461,78 +480,78 @@ Complete mapping of all 50 WCAG 2.2 Level A and AA success criteria:
 
 ### 4.1 Principle 1: Perceivable
 
-| Criterion | Status | Notes |
-|-----------|--------|-------|
-| **1.1.1** Non-text Content | ✅ Pass | All images have appropriate alt text |
-| **1.2.1** Audio-only and Video-only | ➖ N/A | No media content |
-| **1.2.2** Captions (Prerecorded) | ➖ N/A | No video content |
-| **1.2.3** Audio Description | ➖ N/A | No video content |
-| **1.2.4** Captions (Live) | ➖ N/A | No live media |
-| **1.2.5** Audio Description (Prerecorded) | ➖ N/A | No video content |
-| **1.3.1** Info and Relationships | ✅ Pass | Semantic HTML; ARIA appropriate (feed structure documented) |
-| **1.3.2** Meaningful Sequence | ✅ Pass | DOM order matches visual presentation |
-| **1.3.3** Sensory Characteristics | ✅ Pass | Instructions not reliant on sensory characteristics |
-| **1.3.4** Orientation | ✅ Pass | Works in portrait and landscape |
-| **1.3.5** Identify Input Purpose | ✅ Pass | Form inputs have autocomplete attributes |
-| **1.4.1** Use of Color | ✅ Pass | Color not sole means of conveying information |
-| **1.4.2** Audio Control | ➖ N/A | No auto-playing audio |
-| **1.4.3** Contrast (Minimum) | ✅ Pass* | Main content meets 4.5:1; exceptions documented |
-| **1.4.4** Resize Text | ✅ Pass | Resizes to 200% without loss of functionality |
-| **1.4.5** Images of Text | ✅ Pass | No images of text except logos |
-| **1.4.10** Reflow | ✅ Pass | No horizontal scroll at 320px width |
-| **1.4.11** Non-text Contrast | ✅ Pass | UI components meet 3:1 contrast |
-| **1.4.12** Text Spacing | ✅ Pass | Adapts to increased text spacing |
-| **1.4.13** Content on Hover or Focus | ✅ Pass | Tooltips dismissible and hoverable |
+| Criterion                                 | Status    | Notes                                                       |
+| ----------------------------------------- | --------- | ----------------------------------------------------------- |
+| **1.1.1** Non-text Content                | ✅ Pass   | All images have appropriate alt text                        |
+| **1.2.1** Audio-only and Video-only       | ➖ N/A    | No media content                                            |
+| **1.2.2** Captions (Prerecorded)          | ➖ N/A    | No video content                                            |
+| **1.2.3** Audio Description               | ➖ N/A    | No video content                                            |
+| **1.2.4** Captions (Live)                 | ➖ N/A    | No live media                                               |
+| **1.2.5** Audio Description (Prerecorded) | ➖ N/A    | No video content                                            |
+| **1.3.1** Info and Relationships          | ✅ Pass   | Semantic HTML; ARIA appropriate (feed structure documented) |
+| **1.3.2** Meaningful Sequence             | ✅ Pass   | DOM order matches visual presentation                       |
+| **1.3.3** Sensory Characteristics         | ✅ Pass   | Instructions not reliant on sensory characteristics         |
+| **1.3.4** Orientation                     | ✅ Pass   | Works in portrait and landscape                             |
+| **1.3.5** Identify Input Purpose          | ✅ Pass   | Form inputs have autocomplete attributes                    |
+| **1.4.1** Use of Color                    | ✅ Pass   | Color not sole means of conveying information               |
+| **1.4.2** Audio Control                   | ➖ N/A    | No auto-playing audio                                       |
+| **1.4.3** Contrast (Minimum)              | ✅ Pass\* | Main content meets 4.5:1; exceptions documented             |
+| **1.4.4** Resize Text                     | ✅ Pass   | Resizes to 200% without loss of functionality               |
+| **1.4.5** Images of Text                  | ✅ Pass   | No images of text except logos                              |
+| **1.4.10** Reflow                         | ✅ Pass   | No horizontal scroll at 320px width                         |
+| **1.4.11** Non-text Contrast              | ✅ Pass   | UI components meet 3:1 contrast                             |
+| **1.4.12** Text Spacing                   | ✅ Pass   | Adapts to increased text spacing                            |
+| **1.4.13** Content on Hover or Focus      | ✅ Pass   | Tooltips dismissible and hoverable                          |
 
 ### 4.2 Principle 2: Operable
 
-| Criterion | Status | Notes |
-|-----------|--------|-------|
-| **2.1.1** Keyboard | ✅ Pass | All functionality available via keyboard |
-| **2.1.2** No Keyboard Trap | ✅ Pass | No traps detected; modal traps escapable |
-| **2.1.4** Character Key Shortcuts | ✅ Pass | No single-character shortcuts |
-| **2.2.1** Timing Adjustable | ➖ N/A | No time limits |
-| **2.2.2** Pause, Stop, Hide | ✅ Pass | Respects prefers-reduced-motion |
-| **2.3.1** Three Flashes or Below | ✅ Pass | No flashing content |
-| **2.4.1** Bypass Blocks | ✅ Pass | Skip-to-content link functional |
-| **2.4.2** Page Titled | ✅ Pass | All pages have descriptive titles |
-| **2.4.3** Focus Order | ✅ Pass | Logical focus order |
-| **2.4.4** Link Purpose (In Context) | ✅ Pass | Link purposes clear |
-| **2.4.5** Multiple Ways | ✅ Pass | Multiple navigation mechanisms |
-| **2.4.6** Headings and Labels | ✅ Pass | Descriptive headings and labels |
-| **2.4.7** Focus Visible | ✅ Pass | Focus indicators visible |
-| **2.4.11** Focus Not Obscured (Minimum) | ✅ Pass | Focused elements not obscured |
-| **2.5.1** Pointer Gestures | ✅ Pass | No multipoint gestures required |
-| **2.5.2** Pointer Cancellation | ✅ Pass | Actions complete on up-event |
-| **2.5.3** Label in Name | ✅ Pass* | Accessible names include visible text; exceptions documented |
-| **2.5.4** Motion Actuation | ➖ N/A | No motion-based interactions |
-| **2.5.7** Dragging Movements | ➖ N/A | No drag-and-drop |
-| **2.5.8** Target Size (Minimum) | ✅ Pass | Targets meet 24×24px minimum |
+| Criterion                               | Status    | Notes                                                        |
+| --------------------------------------- | --------- | ------------------------------------------------------------ |
+| **2.1.1** Keyboard                      | ✅ Pass   | All functionality available via keyboard                     |
+| **2.1.2** No Keyboard Trap              | ✅ Pass   | No traps detected; modal traps escapable                     |
+| **2.1.4** Character Key Shortcuts       | ✅ Pass   | No single-character shortcuts                                |
+| **2.2.1** Timing Adjustable             | ➖ N/A    | No time limits                                               |
+| **2.2.2** Pause, Stop, Hide             | ✅ Pass   | Respects prefers-reduced-motion                              |
+| **2.3.1** Three Flashes or Below        | ✅ Pass   | No flashing content                                          |
+| **2.4.1** Bypass Blocks                 | ✅ Pass   | Skip-to-content link functional                              |
+| **2.4.2** Page Titled                   | ✅ Pass   | All pages have descriptive titles                            |
+| **2.4.3** Focus Order                   | ✅ Pass   | Logical focus order                                          |
+| **2.4.4** Link Purpose (In Context)     | ✅ Pass   | Link purposes clear                                          |
+| **2.4.5** Multiple Ways                 | ✅ Pass   | Multiple navigation mechanisms                               |
+| **2.4.6** Headings and Labels           | ✅ Pass   | Descriptive headings and labels                              |
+| **2.4.7** Focus Visible                 | ✅ Pass   | Focus indicators visible                                     |
+| **2.4.11** Focus Not Obscured (Minimum) | ✅ Pass   | Focused elements not obscured                                |
+| **2.5.1** Pointer Gestures              | ✅ Pass   | No multipoint gestures required                              |
+| **2.5.2** Pointer Cancellation          | ✅ Pass   | Actions complete on up-event                                 |
+| **2.5.3** Label in Name                 | ✅ Pass\* | Accessible names include visible text; exceptions documented |
+| **2.5.4** Motion Actuation              | ➖ N/A    | No motion-based interactions                                 |
+| **2.5.7** Dragging Movements            | ➖ N/A    | No drag-and-drop                                             |
+| **2.5.8** Target Size (Minimum)         | ✅ Pass   | Targets meet 24×24px minimum                                 |
 
 ### 4.3 Principle 3: Understandable
 
-| Criterion | Status | Notes |
-|-----------|--------|-------|
-| **3.1.1** Language of Page | ✅ Pass | HTML lang attribute set correctly |
-| **3.1.2** Language of Parts | ✅ Pass | Language changes marked |
-| **3.2.1** On Focus | ✅ Pass | Focus doesn't trigger context changes |
-| **3.2.2** On Input | ✅ Pass | Input doesn't trigger unexpected changes |
-| **3.2.3** Consistent Navigation | ✅ Pass | Navigation consistent across pages |
-| **3.2.4** Consistent Identification | ✅ Pass | Components identified consistently |
-| **3.2.6** Consistent Help | ✅ Pass | Help mechanisms in consistent locations |
-| **3.3.1** Error Identification | ✅ Pass | Form errors identified and described |
-| **3.3.2** Labels or Instructions | ✅ Pass | Form fields have labels |
-| **3.3.3** Error Suggestion | ✅ Pass | Error messages include suggestions |
-| **3.3.4** Error Prevention | ✅ Pass | Consent changes require confirmation |
-| **3.3.7** Redundant Entry | ✅ Pass | Auto-fill used appropriately |
+| Criterion                           | Status  | Notes                                    |
+| ----------------------------------- | ------- | ---------------------------------------- |
+| **3.1.1** Language of Page          | ✅ Pass | HTML lang attribute set correctly        |
+| **3.1.2** Language of Parts         | ✅ Pass | Language changes marked                  |
+| **3.2.1** On Focus                  | ✅ Pass | Focus doesn't trigger context changes    |
+| **3.2.2** On Input                  | ✅ Pass | Input doesn't trigger unexpected changes |
+| **3.2.3** Consistent Navigation     | ✅ Pass | Navigation consistent across pages       |
+| **3.2.4** Consistent Identification | ✅ Pass | Components identified consistently       |
+| **3.2.6** Consistent Help           | ✅ Pass | Help mechanisms in consistent locations  |
+| **3.3.1** Error Identification      | ✅ Pass | Form errors identified and described     |
+| **3.3.2** Labels or Instructions    | ✅ Pass | Form fields have labels                  |
+| **3.3.3** Error Suggestion          | ✅ Pass | Error messages include suggestions       |
+| **3.3.4** Error Prevention          | ✅ Pass | Consent changes require confirmation     |
+| **3.3.7** Redundant Entry           | ✅ Pass | Auto-fill used appropriately             |
 
 ### 4.4 Principle 4: Robust
 
-| Criterion | Status | Notes |
-|-----------|--------|-------|
-| **4.1.1** Parsing | ✅ Pass | HTML validates without parsing errors |
+| Criterion                   | Status  | Notes                                               |
+| --------------------------- | ------- | --------------------------------------------------- |
+| **4.1.1** Parsing           | ✅ Pass | HTML validates without parsing errors               |
 | **4.1.2** Name, Role, Value | ✅ Pass | UI components have appropriate names, roles, values |
-| **4.1.3** Status Messages | ✅ Pass | Status messages announced via aria-live |
+| **4.1.3** Status Messages   | ✅ Pass | Status messages announced via aria-live             |
 
 **Summary:** 50/50 success criteria evaluated. **Pass rate: 100%** with documented exceptions for non-essential elements.
 
@@ -550,24 +569,24 @@ The QuantumPoly governance platform **meets WCAG 2.2 Level AA** requirements acr
 
 ### 5.2 Conformance by Principle
 
-| Principle | Level A Criteria | Level AA Criteria | Conformance | Notes |
-|-----------|------------------|-------------------|-------------|-------|
-| **1. Perceivable** | 13/13 | 7/7 | ✅ Pass | Contrast exceptions documented |
-| **2. Operable** | 10/10 | 10/10 | ✅ Pass | Label-in-name exceptions documented |
-| **3. Understandable** | 6/6 | 6/6 | ✅ Pass | Full compliance |
-| **4. Robust** | 3/3 | 0/0 | ✅ Pass | Full compliance |
-| **TOTAL** | **32/32** | **23/23** | **✅ 100%** | With documented exceptions |
+| Principle             | Level A Criteria | Level AA Criteria | Conformance | Notes                               |
+| --------------------- | ---------------- | ----------------- | ----------- | ----------------------------------- |
+| **1. Perceivable**    | 13/13            | 7/7               | ✅ Pass     | Contrast exceptions documented      |
+| **2. Operable**       | 10/10            | 10/10             | ✅ Pass     | Label-in-name exceptions documented |
+| **3. Understandable** | 6/6              | 6/6               | ✅ Pass     | Full compliance                     |
+| **4. Robust**         | 3/3              | 0/0               | ✅ Pass     | Full compliance                     |
+| **TOTAL**             | **32/32**        | **23/23**         | **✅ 100%** | With documented exceptions          |
 
 ### 5.3 Lighthouse Scores Summary
 
-| Page | Accessibility Score | Status |
-|------|---------------------|--------|
-| Home (`/en`) | 96/100 | ✅ Exceeds threshold |
-| Governance (`/en/governance`) | 96/100 | ✅ Exceeds threshold |
-| Dashboard (`/en/governance/dashboard`) | 90/100 | ⚠️ Below 95 (non-blocking) |
-| Accessibility Statement (`/en/accessibility`) | 96/100 | ✅ Exceeds threshold |
-| Contact (`/en/contact`) | 95/100 | ✅ Meets threshold |
-| **AVERAGE** | **94.6/100** | **✅ Exceeds 90 minimum** |
+| Page                                          | Accessibility Score | Status                     |
+| --------------------------------------------- | ------------------- | -------------------------- |
+| Home (`/en`)                                  | 96/100              | ✅ Exceeds threshold       |
+| Governance (`/en/governance`)                 | 96/100              | ✅ Exceeds threshold       |
+| Dashboard (`/en/governance/dashboard`)        | 90/100              | ⚠️ Below 95 (non-blocking) |
+| Accessibility Statement (`/en/accessibility`) | 96/100              | ✅ Exceeds threshold       |
+| Contact (`/en/contact`)                       | 95/100              | ✅ Meets threshold         |
+| **AVERAGE**                                   | **94.6/100**        | **✅ Exceeds 90 minimum**  |
 
 **Interpretation:**  
 4 out of 5 pages meet or exceed the 95/100 target. The Dashboard page scores 90/100 due to documented ARIA structure and contrast issues, which are non-blocking and scheduled for remediation.
@@ -590,12 +609,12 @@ The QuantumPoly governance platform **meets WCAG 2.2 Level AA** requirements acr
 
 ### 6.1 Timeline by Severity
 
-| Severity | Issue Count | Deadline | Owner |
-|----------|-------------|----------|-------|
-| Critical | 0 | N/A | N/A |
-| Serious | 11 | December 31, 2025 | Frontend Engineer |
-| Moderate | 1 | February 1, 2026 | Frontend Engineer |
-| Minor | 6 | April 1, 2026 | Frontend Engineer |
+| Severity | Issue Count | Deadline          | Owner             |
+| -------- | ----------- | ----------------- | ----------------- |
+| Critical | 0           | N/A               | N/A               |
+| Serious  | 11          | December 31, 2025 | Frontend Engineer |
+| Moderate | 1           | February 1, 2026  | Frontend Engineer |
+| Minor    | 6           | April 1, 2026     | Frontend Engineer |
 
 ### 6.2 Prioritized Remediation Tasks
 
@@ -630,11 +649,13 @@ The QuantumPoly governance platform **meets WCAG 2.2 Level AA** requirements acr
 ### 6.3 Continuous Monitoring
 
 **Automated Monitoring:**
+
 - Lighthouse CI runs on every deployment (enforces ≥90 threshold)
 - ESLint jsx-a11y rules enforced in CI/CD pipeline
 - Pre-commit hooks prevent introduction of common a11y issues
 
 **Manual Review:**
+
 - Quarterly accessibility audits (next: February 2026)
 - Component library updates reviewed for a11y impact
 - User feedback monitoring via accessibility@quantumpoly.ai
@@ -646,6 +667,7 @@ The QuantumPoly governance platform **meets WCAG 2.2 Level AA** requirements acr
 ### 7.1 Automated Test Results
 
 **Lighthouse Reports:**
+
 ```
 reports/lighthouse/block10.8/
 ├── home-en.json                    (357 KB, 96/100)
@@ -657,6 +679,7 @@ reports/lighthouse/block10.8/
 ```
 
 **axe-core Results (via Lighthouse):**
+
 - Total violations: 18 (0 critical, 11 serious, 1 moderate, 6 minor)
 - All violations documented in `reports/accessibility-audit.json`
 - Detailed findings with element selectors, WCAG mappings, and fix recommendations
@@ -664,6 +687,7 @@ reports/lighthouse/block10.8/
 ### 7.2 Manual Test Evidence
 
 **Keyboard Navigation:**
+
 - ✅ All pages navigable via keyboard alone
 - ✅ Focus indicators visible (2px outline, 3:1 contrast)
 - ✅ Skip-to-content link functional
@@ -671,6 +695,7 @@ reports/lighthouse/block10.8/
 - ✅ No keyboard traps detected
 
 **Screen Reader Compatibility (Documented Protocol):**
+
 - ✅ Semantic HTML structure verified
 - ✅ Landmark navigation functional (header, main, nav, footer)
 - ✅ Heading hierarchy logical (no skipped levels)
@@ -678,11 +703,13 @@ reports/lighthouse/block10.8/
 - ✅ ARIA live regions functional (status messages)
 
 **Color Contrast:**
+
 - ✅ Main content: 4.5:1+ (verified via Chrome DevTools)
 - ⚠️ Exceptions documented (consent buttons, CTAs)
 - ✅ Focus indicators: 3:1+ contrast
 
 **Reflow & Zoom:**
+
 - ✅ Tested at 320px, 200% zoom, 400% zoom
 - ✅ No horizontal scrolling
 - ✅ Content remains accessible
@@ -690,11 +717,13 @@ reports/lighthouse/block10.8/
 ### 7.3 Unified Audit Report
 
 **Primary Artifact:**
+
 ```json
 reports/accessibility-audit.json
 ```
 
 This JSON file contains the complete accessibility audit in the prescribed schema format, including:
+
 - Tooling versions (Lighthouse 11.4.0, axe-core 4.11.0)
 - 18 documented issues with WCAG mappings
 - Evidence references and fix recommendations
@@ -712,6 +741,7 @@ This JSON file contains the complete accessibility audit in the prescribed schem
 **Public Statement Location:** `/en/accessibility`
 
 The QuantumPoly Accessibility Statement is publicly available and details:
+
 - Commitment to WCAG 2.2 Level AA compliance
 - Conformance status with documented exceptions
 - Accessibility features implemented
@@ -739,6 +769,7 @@ A **conditional WCAG 2.2 AA certificate** has been generated with the following 
 Per the EWA Directive, QuantumPoly issues a conditional certificate acknowledging documented exceptions. This approach prioritizes **transparency over claims of perfection**, aligning with the ethical framework that "perfect systems rarely exist."
 
 The certificate is valid because:
+
 1. **Zero AA blockers:** All essential functionality is accessible
 2. **Keyboard & SR compatible:** Users with disabilities can access all features
 3. **Documented exceptions:** Issues are transparently tracked with remediation plans
@@ -769,6 +800,7 @@ The certificate is valid because:
 ### 9.1 Ongoing Monitoring
 
 **Automated Monitoring (CI/CD):**
+
 ```bash
 # Runs on every deployment
 npm run lh:ci         # Lighthouse CI (enforces ≥90 a11y score)
@@ -780,6 +812,7 @@ husky + lint-staged   # Prevents common a11y regressions
 ```
 
 **Manual Review Schedule:**
+
 - **Quarterly Audits:** Comprehensive WCAG review (next: February 2026)
 - **Component Updates:** A11y review for new components
 - **Major Releases:** Full accessibility regression testing
@@ -788,6 +821,7 @@ husky + lint-staged   # Prevents common a11y regressions
 ### 9.2 Next Audit: February 2026
 
 **Scope for Next Audit:**
+
 - Re-test all 5 core pages
 - Verify remediation of documented issues
 - Audit new features added since Block 10.8
@@ -795,6 +829,7 @@ husky + lint-staged   # Prevents common a11y regressions
 - Test with updated assistive technology versions
 
 **Success Criteria:**
+
 - All serious issues from Block 10.8 resolved
 - Lighthouse scores ≥95 on all pages
 - Zero AA blockers maintained
@@ -808,6 +843,7 @@ husky + lint-staged   # Prevents common a11y regressions
 **User Feedback:** accessibility@quantumpoly.ai (3 business day SLA)
 
 **Training & Resources:**
+
 - Team trained on WCAG 2.2 requirements
 - Component library includes accessibility documentation
 - Pre-launch checklist includes mandatory a11y review
@@ -872,4 +908,8 @@ All documented issues are tracked with clear ownership, deadlines, and remediati
 
 **QuantumPoly is certified accessible — digital ethics in action.**
 
+---
 
+**Version:** 1.0
+**Last Reviewed:** 2025-11-25
+**Reviewed By:** EWA

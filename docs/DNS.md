@@ -1029,7 +1029,7 @@ vercel alias set quantumpoly-xyz789.vercel.app www.quantumpoly.ai --token=$VERCE
 
 **⚠️ Production Release Checklist:**
 
-For production releases (tagged versions), also complete the [Release Review Checklist](/docs/review-checklist.md) which includes:
+For production releases (tagged versions), also complete the [Release Review Checklist](review-checklist.md) which includes:
 
 - Stage C (Post-Deployment) verification
 - Governance ledger updates
@@ -1451,7 +1451,7 @@ echo | openssl s_client -servername www.quantumpoly.ai -connect www.quantumpoly.
 
 All production DNS changes **must** be documented in the QuantumPoly governance ledger for audit trail and compliance purposes.
 
-**Ledger Location:** [Governance Ledger – Block 6](../../governance/ledger/README.md)
+**Ledger Location:** [Governance Ledger – Block 6](../README.md)
 
 **When to Create Ledger Entry:**
 
@@ -1461,14 +1461,14 @@ All production DNS changes **must** be documented in the QuantumPoly governance 
 
 **⚠️ For Production Releases:**
 
-DNS changes as part of production releases are tracked through the [Release Review Checklist](/docs/review-checklist.md). The checklist automatically:
+DNS changes as part of production releases are tracked through the [Release Review Checklist](review-checklist.md). The checklist automatically:
 
 - Validates DNS verification steps (Stage C, items 1-2)
 - Synchronizes sign-off matrix to governance ledger
 - Creates immutable audit trail at `/governance/ledger/releases/`
 - Enforces compliance requirements via CI/CD automation
 
-See: [scripts/audit-sync-ledger.sh](/scripts/audit-sync-ledger.sh) for automation details.
+See: [scripts/audit-sync-ledger.sh](../scripts/audit-sync-ledger.sh) for automation details.
 
 ---
 

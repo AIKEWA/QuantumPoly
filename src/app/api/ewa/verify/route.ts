@@ -10,7 +10,7 @@ import crypto from 'crypto';
 
 import { NextResponse } from 'next/server';
 
-import { parseLedger } from '@/lib/governance/ledger-parser';
+import { getIntegrityLedger } from '@/lib/integrity';
 
 /**
  * GET /api/ewa/verify
@@ -19,12 +19,10 @@ import { parseLedger } from '@/lib/governance/ledger-parser';
 export async function GET() {
   try {
     // Parse governance ledger
-    const entries = parseLedger('governance/ledger/ledger.jsonl');
+    const entries = getIntegrityLedger('governance/ledger/ledger.jsonl');
 
     // Filter autonomous_analysis entries
-    const autonomousEntries = entries.filter(
-      (entry) => entry.entryType === 'autonomous_analysis'
-    );
+    const autonomousEntries = entries.filter((entry) => entry.entryType === 'autonomous_analysis');
 
     if (autonomousEntries.length === 0) {
       return NextResponse.json(
@@ -39,7 +37,7 @@ export async function GET() {
             'Cache-Control': 'public, s-maxage=300',
             'Access-Control-Allow-Origin': '*',
           },
-        }
+        },
       );
     }
 
@@ -87,7 +85,7 @@ export async function GET() {
           'Access-Control-Allow-Methods': 'GET, OPTIONS',
           'Access-Control-Allow-Headers': 'Content-Type',
         },
-      }
+      },
     );
   } catch (error) {
     console.error('Failed to verify autonomous analysis entries:', error);
@@ -96,7 +94,7 @@ export async function GET() {
         error: 'Verification failed',
         message: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -147,7 +145,6 @@ export async function OPTIONS() {
         'Access-Control-Allow-Methods': 'GET, OPTIONS',
         'Access-Control-Allow-Headers': 'Content-Type',
       },
-    }
+    },
   );
 }
-

@@ -1,11 +1,14 @@
 ---
 title: 'Privacy Policy'
 summary: 'How we collect, use, protect, and share your personal information when you interact with our services.'
-status: 'approved'
+status: 'published'
 owner: 'Compliance Steward <legal@quantumpoly.ai>'
 lastReviewed: '2025-10-26'
 nextReviewDue: '2026-04-26'
-version: 'v1.0.0'
+version: 'v1.0.1'
+license: 'CC-BY-4.0'
+responsibleParty: 'QuantumPoly Legal Team'
+versionHash: 'pending-ci'
 ---
 
 ## Introduction
@@ -41,6 +44,7 @@ We typically respond to inquiries within 30 days.
 ### 3.1 Newsletter Subscription
 
 **Processed Data:**
+
 - Email address
 - Subscription timestamp
 - IP address (for abuse prevention)
@@ -56,6 +60,7 @@ We typically respond to inquiries within 30 days.
 ### 3.2 Contact Form and Email Inquiries
 
 **Processed Data:**
+
 - Name (optional)
 - Email address
 - Message content
@@ -70,6 +75,7 @@ We typically respond to inquiries within 30 days.
 ### 3.3 Server Logs and Technical Data
 
 **Processed Data:**
+
 - IP address (anonymized after 7 days)
 - Browser type and version
 - Operating system
@@ -80,6 +86,7 @@ We typically respond to inquiries within 30 days.
 **Legal Basis:** Legitimate interest in system security and technical error analysis (Art. 6(1)(f) GDPR / Art. 6(1) DSG)
 
 **Purpose:**
+
 - Technical provision of the website
 - Detection and defense against cyber attacks
 - Error analysis and system optimization
@@ -91,6 +98,7 @@ We typically respond to inquiries within 30 days.
 ### 3.4 Cookies and Tracking Technologies
 
 **Technically Necessary Cookies:**
+
 - Session cookies for language preferences (duration: end of session)
 - Theme preference (light/dark mode, stored locally in browser)
 - Consent preferences (stored locally in browser)
@@ -102,6 +110,7 @@ These technically necessary cookies do not require consent under Art. 6(1)(f) GD
 We use **Vercel Analytics** to understand how visitors interact with our website and improve user experience.
 
 **Processed Data:**
+
 - Anonymized page views
 - Anonymized navigation patterns
 - Device type and browser information (aggregated)
@@ -112,6 +121,7 @@ We use **Vercel Analytics** to understand how visitors interact with our website
 **Provider:** Vercel Inc., 440 N Barranca Ave #4133, Covina, CA 91723, USA
 
 **Privacy-Friendly Features:**
+
 - **Cookie-free tracking:** No cookies are set by Vercel Analytics
 - **No personal data collection:** All data is anonymized and aggregated
 - **GDPR-compliant by design:** Meets all EU data protection requirements
@@ -172,11 +182,11 @@ No transfers to other third countries without an adequacy decision occur.
 
 ## 7. Retention Periods
 
-| Data Type | Retention Period |
-|-----------|------------------|
-| Newsletter subscriptions | Until unsubscribe |
-| Contact form inquiries | Until processed, max. 24 months |
-| Server logs (IP addresses) | 7 days (then anonymized) |
+| Data Type                     | Retention Period                        |
+| ----------------------------- | --------------------------------------- |
+| Newsletter subscriptions      | Until unsubscribe                       |
+| Contact form inquiries        | Until processed, max. 24 months         |
+| Server logs (IP addresses)    | 7 days (then anonymized)                |
 | Technically necessary cookies | End of session or until manual deletion |
 
 After the retention period expires, data is promptly deleted or anonymized unless legal retention obligations exist.
@@ -196,6 +206,7 @@ You can request the correction of inaccurate or incomplete data.
 ### 8.3 Right to Erasure (Art. 17 GDPR)
 
 You can request the deletion of your data if:
+
 - The data is no longer necessary for the purposes
 - You have withdrawn your consent
 - You have objected to processing
@@ -204,6 +215,7 @@ You can request the deletion of your data if:
 ### 8.4 Right to Restriction of Processing (Art. 18 GDPR)
 
 You can request restriction of processing if:
+
 - The accuracy of the data is contested
 - The processing is unlawful
 - We no longer need the data, but you need it for legal claims
@@ -255,6 +267,7 @@ Despite these measures, absolute security cannot be guaranteed. We recommend not
 We reserve the right to update this Privacy Policy at any time to reflect changes in our processing practices, legal requirements, or new features.
 
 **Notification of Material Changes:**
+
 - Update of the "Last Updated" date
 - Increase of version number
 - For material changes: Email notification to newsletter subscribers
@@ -293,9 +306,13 @@ This Privacy Policy is governed by Swiss law, in particular the revised Federal 
 
 This Privacy Policy is provided for informational purposes only and does not constitute legal advice. For specific legal questions, please consult a data protection attorney.
 
+### 14.3 Imprint
+
+For legal information about the operator of this website, please refer to our [Imprint](../imprint/en.md).
+
 ---
 
-**Last Updated:** October 26, 2025  
-**Version:** v1.0.0  
-**Status:** Legally reviewed and approved  
-**Effective Date:** October 26, 2025
+**Last Updated:** November 25, 2025
+**Version:** v1.0.1
+**Status:** Legally reviewed and approved
+**Effective Date:** November 25, 2025

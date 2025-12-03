@@ -220,6 +220,7 @@ Feedback synthesis creates ledger entries with type `feedback-synthesis`:
 **GitHub:** Open issue with labels `feedback` and `governance`
 
 **Anonymity Options:**
+
 - Public (name visible)
 - Anonymized (role only)
 - Restricted (governance team only)
@@ -240,6 +241,7 @@ npm run feedback:aggregate -- --cycle 2025-Q4-validation
 ```
 
 This script:
+
 - Validates raw-findings.json against schema
 - Computes artifact hashes (SHA256)
 - Generates ledger entry
@@ -259,7 +261,7 @@ This script:
 The ledger supports multiple entry types:
 
 - **`eii-baseline`** — Ethical Integrity Index baseline measurements
-- **`feedback-synthesis`** — Quarterly feedback synthesis reports  
+- **`feedback-synthesis`** — Quarterly feedback synthesis reports
 - **`audit_closure`** — Audit closure and compliance baselines
 - **`legal_compliance`** — Legal and regulatory compliance milestones
 
@@ -302,7 +304,8 @@ QuantumPoly has established a comprehensive legal compliance baseline for public
 - **Tracking Status:** Zero tracking tools currently active (consent banner planned for future)
 
 **Documentation:**
-- Master Summary: `BLOCK9.0_LEGAL_COMPLIANCE_BASELINE.md`
+
+- Master Summary: `BLOCK09.0_LEGAL_COMPLIANCE_BASELINE.md`
 - Imprint (DE): `content/policies/imprint/de.md` (v1.0.0)
 - Imprint (EN): `content/policies/imprint/en.md` (v1.0.0)
 - Privacy Policy (DE): `content/policies/privacy/de.md` (v1.0.0)

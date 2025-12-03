@@ -33,6 +33,12 @@ export interface PolicyMetadata {
   nextReviewDue: string;
   /** Semantic version (e.g., "v1.0.0") */
   version: string;
+  /** License for the content (e.g., "CC-BY-4.0") */
+  license?: string;
+  /** Responsible legal entity or team */
+  responsibleParty?: string;
+  /** Commit hash or signature for version tracking */
+  versionHash?: string;
 }
 
 /**
@@ -55,6 +61,9 @@ export const policyMetadataSchema = z.object({
   version: z
     .string()
     .regex(/^v\d+\.\d+\.\d+$/, 'version must follow semantic versioning (e.g., v1.0.0)'),
+  license: z.string().optional(),
+  responsibleParty: z.string().optional(),
+  versionHash: z.string().optional(),
 });
 
 /**

@@ -5,7 +5,10 @@ status: 'in-progress'
 owner: 'Legal Team <legal@quantumpoly.ai>'
 lastReviewed: '2025-10-13'
 nextReviewDue: '2026-01-13'
-version: 'v0.2.0'
+version: 'v0.2.1'
+license: 'CC-BY-4.0'
+responsibleParty: 'QuantumPoly Legal Team'
+versionHash: 'pending-ci'
 ---
 
 ## Yasal Bilgiler
@@ -98,5 +101,5 @@ E-posta: legal@quantumpoly.ai
 
 ---
 
-**Son Güncelleme:** 13 Ekim 2025  
-**Versiyon:** v0.2.0
+**Son Güncelleme:** 25 Kasım 2025  
+**Versiyon:** v0.2.1

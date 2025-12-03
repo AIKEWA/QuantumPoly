@@ -1,0 +1,33 @@
+name: Link Validation
+
+on:
+  push:
+    branches: [ main, develop ]
+    paths:
+      - 'docs/**/*.md'
+      - 'content/**/*.md'
+      - 'prompts/**/*.md'
+      - 'sim/**/*.md'
+  pull_request:
+    branches: [ main, develop ]
+    paths:
+      - 'docs/**/*.md'
+      - 'content/**/*.md'
+      - 'prompts/**/*.md'
+      - 'sim/**/*.md'
+  workflow_dispatch:
+
+jobs:
+  link-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Link Checker
+        uses: gaurav-nelson/github-action-markdown-link-check@v1
+        with:
+          config-file: '.markdown-link-check.json'
+          use-quiet-mode: 'yes'
+          use-verbose-mode: 'yes'
+          folder-path: 'docs,content,prompts,sim'
+

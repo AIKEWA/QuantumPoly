@@ -9,11 +9,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 import {
-  getRecentEntries,
-  getEntriesByType,
-  getEntriesByDateRange,
+  getIntegrityRecentEntries,
+  getIntegrityEntriesByType,
+  getIntegrityEntriesByDateRange,
   type LedgerEntryType,
-} from '@/lib/governance/ledger-parser';
+} from '@/lib/integrity';
 
 /**
  * GET /api/governance/feed
@@ -28,7 +28,7 @@ import {
 export async function GET(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams;
-    
+
     // Parse parameters
     const limitParam = searchParams.get('limit');
     const limit = Math.min(parseInt(limitParam || '10', 10), 50);
@@ -40,11 +40,11 @@ export async function GET(request: NextRequest) {
 
     // Apply filters
     if (startDate && endDate) {
-      entries = getEntriesByDateRange(startDate, endDate);
+      entries = getIntegrityEntriesByDateRange(startDate, endDate);
     } else if (type) {
-      entries = getEntriesByType(type);
+      entries = getIntegrityEntriesByType(type);
     } else {
-      entries = getRecentEntries(limit);
+      entries = getIntegrityRecentEntries(limit);
     }
 
     // Limit results
@@ -81,7 +81,7 @@ export async function GET(request: NextRequest) {
         total: 0,
         error: error instanceof Error ? error.message : 'Unknown error',
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -100,4 +100,3 @@ export async function OPTIONS() {
     },
   });
 }
-

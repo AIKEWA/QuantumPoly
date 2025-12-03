@@ -597,7 +597,7 @@ gpg> quit
 - **Validation Scenarios:** `/docs/governance/GPG_SIGNING_VALIDATION.md`
 - **Example Integration:** `/docs/examples/release-with-gpg-signing.yml`
 - **General Governance:** `/governance/README.md`
-- **CI/CD Implementation:** `/BLOCK7_CICD_IMPLEMENTATION_SUMMARY.md`
+- **CI/CD Implementation:** `/BLOCK07.0_CICD_IMPLEMENTATION_SUMMARY.md`
 
 ---
 

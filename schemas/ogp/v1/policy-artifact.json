@@ -1,0 +1,67 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "http://quantumpoly.ai/schemas/ogp/v1/policy-artifact.json",
+  "title": "OGP-P-01 Policy Artifact",
+  "description": "Schema for machine-readable ethical policies, compatible with OPA/Rego logic.",
+  "type": "object",
+  "properties": {
+    "policyId": {
+      "type": "string",
+      "description": "Unique identifier for this policy (e.g., POL-FAIRNESS-001)"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Semantic version of the policy"
+    },
+    "meta": {
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "author": { "type": "string", "description": "DID of the author" },
+        "created": { "type": "string", "format": "date-time" },
+        "validUntil": { "type": "string", "format": "date-time" },
+        "tags": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      },
+      "required": ["title", "author", "created"]
+    },
+    "rules": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "ruleId": { "type": "string" },
+          "description": { "type": "string" },
+          "severity": { "type": "string", "enum": ["INFO", "WARNING", "CRITICAL", "BLOCKING"] },
+          "logic": {
+            "type": "object",
+            "properties": {
+              "engine": { "type": "string", "enum": ["OPA/Rego", "JSON-Logic", "CEL"] },
+              "expression": { "type": "string", "description": "The actual code/logic string" },
+              "entrypoint": {
+                "type": "string",
+                "description": "Function name to call (e.g., 'allow')"
+              }
+            },
+            "required": ["engine", "expression"]
+          },
+          "remediation": { "type": "string", "description": "Suggested action if rule fails" }
+        },
+        "required": ["ruleId", "severity", "logic"]
+      }
+    },
+    "hash": {
+      "type": "string",
+      "description": "SHA-256 hash of the canonical JSON representation (excluding this hash field)"
+    },
+    "signature": {
+      "type": "string",
+      "description": "Digital signature of the hash by the author"
+    }
+  },
+  "required": ["policyId", "version", "meta", "rules"]
+}

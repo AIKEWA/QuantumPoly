@@ -80,14 +80,14 @@ This matrix demonstrates that the existing QuantumPoly CI/CD pipeline **exceeds*
 
 ## 5. Evidence & Rationale Requirements
 
-| Requirement                  | Prompt Specification        | Current Implementation                             | Status | Evidence                                        |
-| ---------------------------- | --------------------------- | -------------------------------------------------- | ------ | ----------------------------------------------- |
-| **Node Version Comment**     | Explain version choice      | ✅ Will add inline comments (Task 2)               | 🔄     | Planned enhancement                             |
-| **Caching Strategy Comment** | Explain cache approach      | ✅ Will add inline comments (Task 2)               | 🔄     | Planned enhancement                             |
-| **Test Runner Comment**      | Explain test setup          | ✅ Will add inline comments (Task 2)               | 🔄     | Planned enhancement                             |
-| **Approval Rationale**       | Explain manual gate         | ✅ Will add inline comments (Task 2)               | 🔄     | Planned enhancement                             |
-| **"Why This Design"**        | Short documentation section | ✅ Exists in BLOCK7_CICD_IMPLEMENTATION_SUMMARY.md | ✅     | `BLOCK7_CICD_IMPLEMENTATION_SUMMARY.md:365-454` |
-| **Extend to README**         | Add to README               | ✅ Will enhance in Task 4                          | 🔄     | Planned enhancement                             |
+| Requirement                  | Prompt Specification        | Current Implementation                                | Status | Evidence                                           |
+| ---------------------------- | --------------------------- | ----------------------------------------------------- | ------ | -------------------------------------------------- |
+| **Node Version Comment**     | Explain version choice      | ✅ Will add inline comments (Task 2)                  | 🔄     | Planned enhancement                                |
+| **Caching Strategy Comment** | Explain cache approach      | ✅ Will add inline comments (Task 2)                  | 🔄     | Planned enhancement                                |
+| **Test Runner Comment**      | Explain test setup          | ✅ Will add inline comments (Task 2)                  | 🔄     | Planned enhancement                                |
+| **Approval Rationale**       | Explain manual gate         | ✅ Will add inline comments (Task 2)                  | 🔄     | Planned enhancement                                |
+| **"Why This Design"**        | Short documentation section | ✅ Exists in BLOCK07.0_CICD_IMPLEMENTATION_SUMMARY.md | ✅     | `BLOCK07.0_CICD_IMPLEMENTATION_SUMMARY.md:365-454` |
+| **Extend to README**         | Add to README               | ✅ Will enhance in Task 4                             | 🔄     | Planned enhancement                                |
 
 **Note:** Design rationale exists in BLOCK7 implementation summary; will be enhanced with inline comments and README section.
 

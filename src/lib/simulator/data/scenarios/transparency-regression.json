@@ -1,0 +1,34 @@
+{
+  "id": "transparency-regression",
+  "name": "Transparency Regression Test",
+  "description": "Evaluates the impact of new data usage language on user trust and comprehension.",
+  "target_metric": "comprehension",
+  "personas": [
+    {
+      "id": "p1",
+      "traits": ["privacy_sensitive", "skeptical", "tech_savvy"],
+      "cultural_context": "regional_mixed"
+    },
+    {
+      "id": "p2",
+      "traits": ["low_tech_literacy", "trusting", "clarity_dependent"],
+      "cultural_context": "regional_mixed"
+    }
+  ],
+  "steps": [
+    {
+      "id": "step1_view_notice",
+      "governance_rule": "show layered transparency notice",
+      "situation": "Persona views a summary card stating 'We improve services using your usage patterns.'",
+      "expected_concerns": ["ambiguity_of_terms", "clarity_of_purpose"]
+    },
+    {
+      "id": "step2_expand_details",
+      "governance_rule": "provide detailed legal definition on expansion",
+      "situation": "Persona clicks 'Learn More' and encounters complex clauses about third-party federation.",
+      "expected_concerns": ["unexpected_data_sharing", "jargon_overload", "trust_erosion"]
+    }
+  ],
+  "metrics_of_interest": ["trust_score_delta", "comprehension_score", "opt_out_rate"],
+  "notes": "Verify that 'trusted partners' is flagged as a trigger word for the 'privacy_sensitive' trait in the Reaction Analyzer."
+}

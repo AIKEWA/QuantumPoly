@@ -25,6 +25,7 @@ Block 10.6 implements a trust-based public feedback system that enables "bidirec
 ### Governance Integration
 
 This system extends Block 10.1's feedback framework with:
+
 - **Real-time trust scoring** (0-1 scale) for quality signal calibration
 - **Enhanced privacy controls** (email hashing, PII minimization)
 - **Stricter rate limiting** (5 req/min, burst 10) to prevent abuse
@@ -127,6 +128,7 @@ Input Signals → Weighted Components → Final Score (0-1)
 ```
 
 **Components:**
+
 - **Signal Quality (0.35):** Context completeness, text coherence
 - **Account Signals (0.25):** Verified status, account age (if authenticated)
 - **Behavioral (0.20):** Rate limit compliance, duplicate detection
@@ -171,22 +173,22 @@ Input Signals → Weighted Components → Final Score (0-1)
 
 ### Schema Validation Rules
 
-| Field | Type | Required | Constraints | Description |
-|-------|------|----------|-------------|-------------|
-| `topic` | `string` | Either `topic` or `type` | One of: `governance`, `ethics`, `safety`, `ux`, `bug`, `other` | Feedback category (Block 10.6) |
-| `type` | `string` | Either `topic` or `type` | One of: `accessibility`, `ethics`, `incident` | Legacy type (Block 10.1, backward compatible) |
-| `message` | `string` | **Yes** | 1-2000 characters | Feedback message content |
-| `consent_contact` | `boolean` | No (default: `false`) | - | Whether user consents to follow-up |
-| `email` | `string` | If `consent_contact` is `true` | Valid email format | Email address (hashed at rest) |
-| `context` | `object` | No | - | Submission context for trust scoring |
-| `context.path` | `string` | No | - | Path where feedback was submitted |
-| `context.user_agent` | `string` | No | - | User agent string |
-| `context.locale` | `string` | No | - | User locale (e.g., `en`, `de`) |
-| `metadata` | `object` | No | - | Metadata for trust scoring |
-| `metadata.trust_opt_in` | `boolean` | No (default: `false`) | - | Opt into trust scoring |
-| `metadata.signals` | `object` | No | - | Account signals (if authenticated) |
-| `metadata.signals.account_age_days` | `number` | No | ≥ 0 | Account age in days |
-| `metadata.signals.verified` | `boolean` | No | - | Whether account is verified |
+| Field                               | Type      | Required                       | Constraints                                                    | Description                                   |
+| ----------------------------------- | --------- | ------------------------------ | -------------------------------------------------------------- | --------------------------------------------- |
+| `topic`                             | `string`  | Either `topic` or `type`       | One of: `governance`, `ethics`, `safety`, `ux`, `bug`, `other` | Feedback category (Block 10.6)                |
+| `type`                              | `string`  | Either `topic` or `type`       | One of: `accessibility`, `ethics`, `incident`                  | Legacy type (Block 10.1, backward compatible) |
+| `message`                           | `string`  | **Yes**                        | 1-2000 characters                                              | Feedback message content                      |
+| `consent_contact`                   | `boolean` | No (default: `false`)          | -                                                              | Whether user consents to follow-up            |
+| `email`                             | `string`  | If `consent_contact` is `true` | Valid email format                                             | Email address (hashed at rest)                |
+| `context`                           | `object`  | No                             | -                                                              | Submission context for trust scoring          |
+| `context.path`                      | `string`  | No                             | -                                                              | Path where feedback was submitted             |
+| `context.user_agent`                | `string`  | No                             | -                                                              | User agent string                             |
+| `context.locale`                    | `string`  | No                             | -                                                              | User locale (e.g., `en`, `de`)                |
+| `metadata`                          | `object`  | No                             | -                                                              | Metadata for trust scoring                    |
+| `metadata.trust_opt_in`             | `boolean` | No (default: `false`)          | -                                                              | Opt into trust scoring                        |
+| `metadata.signals`                  | `object`  | No                             | -                                                              | Account signals (if authenticated)            |
+| `metadata.signals.account_age_days` | `number`  | No                             | ≥ 0                                                            | Account age in days                           |
+| `metadata.signals.verified`         | `boolean` | No                             | -                                                              | Whether account is verified                   |
 
 ### Response (Success - 201)
 
@@ -240,6 +242,7 @@ Input Signals → Weighted Components → Final Score (0-1)
 ```
 
 **Headers:**
+
 - `Retry-After: 12` (seconds until next request allowed)
 
 #### 500 — Internal Server Error
@@ -255,12 +258,12 @@ Input Signals → Weighted Components → Final Score (0-1)
 
 ### Error Code Reference
 
-| Code | Status | Meaning | Action |
-|------|--------|---------|--------|
-| `400_VALIDATION` | 400 | Schema validation failed | Check `field` and `detail` for specifics |
-| `415_UNSUPPORTED` | 415 | Wrong Content-Type | Use `application/json` |
-| `429_RATE_LIMIT` | 429 | Too many requests | Wait `retryAfter` seconds |
-| `500_INTERNAL` | 500 | Server error | Retry or contact support |
+| Code              | Status | Meaning                  | Action                                   |
+| ----------------- | ------ | ------------------------ | ---------------------------------------- |
+| `400_VALIDATION`  | 400    | Schema validation failed | Check `field` and `detail` for specifics |
+| `415_UNSUPPORTED` | 415    | Wrong Content-Type       | Use `application/json`                   |
+| `429_RATE_LIMIT`  | 429    | Too many requests        | Wait `retryAfter` seconds                |
+| `500_INTERNAL`    | 500    | Server error             | Retry or contact support                 |
 
 ---
 
@@ -272,22 +275,24 @@ Trust scores (0-1) provide a quality signal for governance analysis without expo
 
 ### Weight Definitions
 
-| Component | Weight | Rationale |
-|-----------|--------|-----------|
-| **Signal Quality** | 0.35 | Prioritizes content value over identity; measures context completeness and text coherence |
-| **Account Signals** | 0.25 | Deliberately lower to avoid discriminating against new/anonymous users; uses verified status and account age |
-| **Behavioral** | 0.20 | Focuses on abuse patterns (rate limits, duplicates), not user characteristics |
-| **Content Features** | 0.20 | Uses objective metrics (length optimization, basic toxicity checks) without subjective judgment |
+| Component            | Weight | Rationale                                                                                                    |
+| -------------------- | ------ | ------------------------------------------------------------------------------------------------------------ |
+| **Signal Quality**   | 0.35   | Prioritizes content value over identity; measures context completeness and text coherence                    |
+| **Account Signals**  | 0.25   | Deliberately lower to avoid discriminating against new/anonymous users; uses verified status and account age |
+| **Behavioral**       | 0.20   | Focuses on abuse patterns (rate limits, duplicates), not user characteristics                                |
+| **Content Features** | 0.20   | Uses objective metrics (length optimization, basic toxicity checks) without subjective judgment              |
 
 ### Signal Quality (0.35)
 
 **Context Completeness (0.4):**
+
 - Has context object: +0.3
 - Includes path: +0.2
 - Includes locale: +0.2
 - Includes user agent: +0.3
 
 **Text Coherence (0.6):**
+
 - Message ≥ 50 characters: +0.3
 - Contains sentence punctuation (`.!?`): +0.3
 - Has proper capitalization (not all caps): +0.2
@@ -300,6 +305,7 @@ Trust scores (0-1) provide a quality signal for governance analysis without expo
 **Verified Bonus:** +0.15 if `metadata.signals.verified === true`
 
 **Account Age Bonus:** Up to +0.35 based on `account_age_days`:
+
 - Formula: `min(1, account_age_days / 30) * 0.35`
 - 30+ days = full bonus
 
@@ -308,6 +314,7 @@ Trust scores (0-1) provide a quality signal for governance analysis without expo
 **Baseline:** 0.7 (neutral)
 
 **Penalties:**
+
 - Message < 10 characters: -0.3
 - (Future) Rate limit violations: -0.1 per violation
 - (Future) Duplicate submissions: -0.15 per duplicate
@@ -316,11 +323,13 @@ Trust scores (0-1) provide a quality signal for governance analysis without expo
 ### Content Features (0.20)
 
 **Length Optimization (0.6):**
+
 - 50-1500 characters: Full score (0.6)
 - < 50 characters: Proportional penalty
-- 1500-2000 characters: Slight penalty (excess ratio * 0.3)
+- 1500-2000 characters: Slight penalty (excess ratio \* 0.3)
 
 **Toxicity Filter (0.4):**
+
 - Passes basic checks: 0.4
 - Excessive character repetition: 0.1
 - Excessive caps (>70%): 0.1
@@ -329,33 +338,32 @@ Trust scores (0-1) provide a quality signal for governance analysis without expo
 ### Final Score Calculation
 
 ```typescript
-totalScore = 
-  (signalQuality * 0.35) +
-  (accountSignals * 0.25) +
-  (behavioral * 0.20) +
-  (contentFeatures * 0.20)
+totalScore =
+  signalQuality * 0.35 + accountSignals * 0.25 + behavioral * 0.2 + contentFeatures * 0.2;
 
-finalScore = clamp(totalScore, 0, 1) // Round to 2 decimals
+finalScore = clamp(totalScore, 0, 1); // Round to 2 decimals
 ```
 
 ### Bias Analysis & Mitigation
 
 **Excluded Signals (to prevent discrimination):**
+
 - Geographic location (privacy, discrimination risk)
 - Device type (economic bias)
 - Time of submission (timezone bias)
 - Language complexity (education/native speaker bias)
 
 **Monitoring:**
+
 - Monthly review of score distribution by topic
 - Quarterly bias audit comparing scores across user segments
 - Annual recalibration based on governance feedback
 
 **Calibration History:**
 
-| Version | Date | Changes | Rationale |
-|---------|------|---------|-----------|
-| 1.0.0 | 2025-11-05 | Initial weights | Balanced approach prioritizing content quality while remaining accessible to all users |
+| Version | Date       | Changes         | Rationale                                                                              |
+| ------- | ---------- | --------------- | -------------------------------------------------------------------------------------- |
+| 1.0.0   | 2025-11-05 | Initial weights | Balanced approach prioritizing content quality while remaining accessible to all users |
 
 ---
 
@@ -366,6 +374,7 @@ finalScore = clamp(totalScore, 0, 1) // Round to 2 decimals
 **Algorithm:** SHA-256 with salt
 
 **Implementation:**
+
 ```typescript
 const salt = process.env.FEEDBACK_EMAIL_SALT; // 32-byte hex string
 const emailHash = sha256(email + salt);
@@ -378,12 +387,14 @@ const emailHash = sha256(email + salt);
 ### PII Minimization
 
 **Collected:**
+
 - Message content (required)
 - Email hash (only if `consent_contact=true`)
 - Context metadata (path, locale, user agent)
 - Trust signals (opt-in)
 
 **Not Collected:**
+
 - Names, addresses, phone numbers
 - IP addresses (used only for rate limiting, not stored)
 - Device fingerprints
@@ -392,17 +403,20 @@ const emailHash = sha256(email + salt);
 ### Abuse Controls
 
 **Rate Limiting:**
+
 - Algorithm: Token bucket
 - Limit: 5 requests/minute per IP
 - Burst capacity: 10 requests
 - Enforcement: API-level, returns `429` with `Retry-After` header
 
 **Content Filtering:**
+
 - Basic toxicity heuristics (character repetition, excessive caps, spam keywords)
 - Does NOT block submission; flags for governance review
 - Future: CAPTCHA fallback after soft threshold
 
 **Duplicate Detection:**
+
 - Hash-based deduplication (future enhancement)
 - Flags high-frequency similar messages for review
 
@@ -411,6 +425,7 @@ const emailHash = sha256(email + salt);
 **CSRF:** Protected by Next.js built-in CSRF token (POST requests)
 
 **CORS:**
+
 - `Access-Control-Allow-Origin`: Same-origin only
 - `Access-Control-Allow-Methods`: `GET, POST, OPTIONS`
 - `Access-Control-Allow-Headers`: `Content-Type`
@@ -420,16 +435,19 @@ const emailHash = sha256(email + salt);
 ### Data Retention
 
 **Raw Feedback:**
+
 - Retention: 12 months
 - Location: `governance/feedback/feedback-YYYY-MM-DD.jsonl`
 - Archival: After 12 months, anonymize (remove email hashes) and move to cold storage
 
 **Aggregates:**
+
 - Retention: Indefinite
 - Location: `governance/feedback/aggregates/trust-trend.json`
 - Purpose: Historical trend analysis for governance
 
 **Access Control:**
+
 - Raw feedback: Governance team only (internal)
 - Aggregates: Public (no PII)
 
@@ -446,11 +464,13 @@ const emailHash = sha256(email + salt);
 ### Accessibility Features
 
 **Semantic HTML:**
+
 - `<form>` with proper `<fieldset>` and `<legend>` for topic selection
 - `<label>` with explicit `for` associations
 - `<button>` with `type="submit"` and `disabled` states
 
 **ARIA Attributes:**
+
 - `role="alert"` for error summaries
 - `role="status"` with `aria-live="polite"` for success messages
 - `aria-describedby` linking inputs to descriptions/errors
@@ -458,23 +478,27 @@ const emailHash = sha256(email + salt);
 - `aria-pressed` on topic chips
 
 **Focus Management:**
+
 - Visible focus indicators (2px blue ring, offset 2px)
 - Error summary receives focus on validation failure
 - Success message receives focus on submission
 - Tab order follows visual layout
 
 **Keyboard Navigation:**
+
 - **Tab:** Move between fields
 - **Enter:** Submit form / Select topic chip
 - **Escape:** Cancel and reset to idle state
 - **Arrow keys:** Navigate topic chips (future enhancement)
 
 **Screen Reader Support:**
+
 - `<div class="sr-only">` with `aria-live` for async feedback
 - Descriptive labels with context (e.g., "Email address (required if you opt in for follow-up)")
 - Character counter announced as `aria-live="polite"`
 
 **Color Contrast:**
+
 - All text meets WCAG AA minimum (4.5:1 for normal text, 3:1 for large)
 - Error states use red (#DC2626) with sufficient contrast
 - Success states use green (#059669) with sufficient contrast
@@ -507,11 +531,13 @@ const emailHash = sha256(email + salt);
 ### Screen Reader Testing Notes
 
 **Tested with:**
+
 - NVDA (Windows, Firefox)
 - JAWS (Windows, Chrome)
 - VoiceOver (macOS Safari, iOS Safari)
 
 **Key Findings:**
+
 - Error summary correctly announced as "alert"
 - Character counter updates announced without interruption
 - Success message announced after submission
@@ -522,18 +548,21 @@ const emailHash = sha256(email + salt);
 ## 7. Data Retention
 
 **Raw Feedback Files:**
+
 - **Retention:** 12 months from submission date
 - **Format:** `governance/feedback/feedback-YYYY-MM-DD.jsonl`
 - **Archival Process:** After 12 months, anonymize (remove `email_sha256` field) and move to `governance/feedback/archive/YYYY/`
 - **Access:** Governance team only
 
 **Trust Aggregates:**
+
 - **Retention:** Indefinite
 - **Format:** `governance/feedback/aggregates/trust-trend.json` (overwritten daily)
 - **Historical Snapshots:** Quarterly snapshots archived to `governance/feedback/aggregates/archive/YYYY-QN.json`
 - **Access:** Public (no PII)
 
 **Deletion Requests:**
+
 - Users may request deletion by contacting `governance@quantumpoly.ai`
 - Deletion process: Remove entry from JSONL, recompute aggregates, document in ledger
 - Timeline: Within 30 days of request (GDPR compliance)
@@ -567,12 +596,14 @@ const emailHash = sha256(email + salt);
 ### Ledger Anchor References
 
 **Trust Trend Aggregates:**
+
 - File: `governance/feedback/aggregates/trust-trend.json`
 - Checksum: `trust-trend.json.sha256` (sidecar file)
 - Ledger Entry: `entry-block10.6-feedback-system` (initial deployment)
 - Quarterly Snapshots: `entry-feedback-YYYY-QN` (synthesis cycles)
 
 **Artifact Links:**
+
 - `BLOCK10.6_FEEDBACK_AND_TRUST.md` (this document)
 - `src/app/api/feedback/report/route.ts` (API implementation)
 - `src/lib/feedback/trust-scorer.ts` (trust scoring engine)
@@ -581,6 +612,7 @@ const emailHash = sha256(email + salt);
 ### Action Item Workflow
 
 **Template:**
+
 ```json
 {
   "id": "action-2025-Q4-feedback-001",
@@ -607,26 +639,31 @@ const emailHash = sha256(email + salt);
 **Period:** YYYY-MM-01 to YYYY-MM-31
 
 **Trust Metrics:**
+
 - 7-Day EMA: X.XX
 - 30-Day Mean: X.XX
 - Total Submissions: NNN
 - Opt-In Rate: XX%
 
 **Topic Distribution:**
-1. [Topic]: NN% (NNN submissions)
-2. [Topic]: NN% (NNN submissions)
-3. [Topic]: NN% (NNN submissions)
+
+1. [Topic]: NN% 'NNN submissions'
+2. [Topic]: NN% 'NNN submissions'
+3. [Topic]: NN% 'NNN submissions'
 
 **Key Findings:**
+
 - [Finding 1]
 - [Finding 2]
 - [Finding 3]
 
 **Actions Taken:**
+
 - [Action 1 with link to GitHub issue]
 - [Action 2 with link to GitHub issue]
 
 **Calibration Notes:**
+
 - [If weights adjusted, document here with rationale]
 
 ---
@@ -636,6 +673,7 @@ const emailHash = sha256(email + salt);
 **Period:** 2025-11-05 to 2025-11-30
 
 **Trust Metrics:**
+
 - 7-Day EMA: (Awaiting data)
 - 30-Day Mean: (Awaiting data)
 - Total Submissions: 0
@@ -644,6 +682,7 @@ const emailHash = sha256(email + salt);
 **Status:** System deployed, awaiting first submissions
 
 **Next Steps:**
+
 - Monitor first 50 submissions for quality signals
 - Adjust weights if trust scores cluster unexpectedly (target: normal distribution 0.5-0.8)
 - Schedule governance team training on feedback analysis workflow
@@ -672,20 +711,20 @@ const emailHash = sha256(email + salt);
 
 ### Artifact Hashes (Computed Post-Implementation)
 
-| File | Type | SHA-256 | Purpose |
-|------|------|---------|---------|
-| `BLOCK10.6_FEEDBACK_AND_TRUST.md` | Documentation | (TBD) | System specification |
-| `src/app/api/feedback/report/route.ts` | API | (TBD) | Backend implementation |
-| `src/app/[locale]/feedback/page.tsx` | UI | (TBD) | Frontend form |
-| `src/lib/feedback/trust-scorer.ts` | Library | (TBD) | Trust scoring engine |
-| `src/lib/feedback/types.ts` | Types | (TBD) | TypeScript definitions |
-| `src/lib/feedback/trust-weights.json` | Config | (TBD) | Scoring weights |
-| `scripts/aggregate-feedback-trust.mjs` | Script | (TBD) | Aggregation logic |
-| `src/locales/en/feedback.json` | i18n | (TBD) | English translations |
+| File                                   | Type          | SHA-256 | Purpose                |
+| -------------------------------------- | ------------- | ------- | ---------------------- |
+| `BLOCK10.6_FEEDBACK_AND_TRUST.md`      | Documentation | (TBD)   | System specification   |
+| `src/app/api/feedback/report/route.ts` | API           | (TBD)   | Backend implementation |
+| `src/app/[locale]/feedback/page.tsx`   | UI            | (TBD)   | Frontend form          |
+| `src/lib/feedback/trust-scorer.ts`     | Library       | (TBD)   | Trust scoring engine   |
+| `src/lib/feedback/types.ts`            | Types         | (TBD)   | TypeScript definitions |
+| `src/lib/feedback/trust-weights.json`  | Config        | (TBD)   | Scoring weights        |
+| `scripts/aggregate-feedback-trust.mjs` | Script        | (TBD)   | Aggregation logic      |
+| `src/locales/en/feedback.json`         | i18n          | (TBD)   | English translations   |
 
 ### Commit SHA
 
-*To be recorded upon final commit:* `[git commit SHA]`
+_To be recorded upon final commit:_ `[git commit SHA]`
 
 ### Ledger Entry Reference
 
@@ -695,11 +734,11 @@ const emailHash = sha256(email + salt);
 
 ## 12. Changelog
 
-| Version | Date | Changes | Author |
-|---------|------|---------|--------|
-| 1.0.0 | 2025-11-05 | Initial implementation: API extension, trust scoring, public UI, aggregation script, documentation | Governance Team |
-| 1.1.0 | 2025-11-05 | Enhanced rate limiting (token bucket), improved accessibility (WCAG 2.2 AA), added email hashing | Governance Team |
-| 1.1.1 | 2025-11-05 | Bug fix: Division by zero vulnerability in trust scorer when processing whitespace-only messages; added server-side trim validation | Governance Team |
+| Version | Date       | Changes                                                                                                                             | Author          |
+| ------- | ---------- | ----------------------------------------------------------------------------------------------------------------------------------- | --------------- |
+| 1.0.0   | 2025-11-05 | Initial implementation: API extension, trust scoring, public UI, aggregation script, documentation                                  | Governance Team |
+| 1.1.0   | 2025-11-05 | Enhanced rate limiting (token bucket), improved accessibility (WCAG 2.2 AA), added email hashing                                    | Governance Team |
+| 1.1.1   | 2025-11-05 | Bug fix: Division by zero vulnerability in trust scorer when processing whitespace-only messages; added server-side trim validation | Governance Team |
 
 ---
 
@@ -707,9 +746,9 @@ const emailHash = sha256(email + salt);
 
 - **Block 10.1:** `BLOCK10.1_POSTLAUNCH_FEEDBACK.md` (Original feedback system)
 - **Governance Ledger:** `governance/README.md`
-- **Trust Proofs:** `BLOCK9.7_TRUST_PROOF_FRAMEWORK.md`
-- **Ethical Autonomy:** `BLOCK9.5_ETHICAL_AUTONOMY.md`
-- **Consent Management:** `BLOCK9.2_CONSENT_MANAGEMENT_FRAMEWORK.md`
+- **Trust Proofs:** `BLOCK09.7_TRUST_PROOF_FRAMEWORK.md`
+- **Ethical Autonomy:** `BLOCK09.5_ETHICAL_AUTONOMY.md`
+- **Consent Management:** `BLOCK09.2_CONSENT_MANAGEMENT_FRAMEWORK.md`
 
 ---
 
@@ -728,6 +767,7 @@ FEEDBACK_RATE_LIMIT_BURST=10
 ```
 
 **Security Note:** Generate a cryptographically secure salt:
+
 ```bash
 openssl rand -hex 32
 ```
@@ -760,3 +800,8 @@ openssl rand -hex 32
 
 **End of Documentation**
 
+---
+
+**Version:** 1.0
+**Last Reviewed:** 2025-11-25
+**Reviewed By:** EWA

@@ -1,11 +1,14 @@
 ---
 title: 'Imprint (Legal Notice)'
 summary: 'Legal information about QuantumPoly, including company details, contact information, and responsible parties.'
-status: 'approved'
+status: 'published'
 owner: 'Compliance Steward <legal@quantumpoly.ai>'
 lastReviewed: '2025-10-26'
 nextReviewDue: '2026-04-26'
-version: 'v1.0.0'
+version: 'v1.0.1'
+license: 'CC-BY-4.0'
+responsibleParty: 'QuantumPoly Legal Team'
+versionHash: 'pending-ci'
 ---
 
 ## Legal Information
@@ -99,7 +102,7 @@ All mentioned trademarks and brand names are subject to trademark law and, where
 
 ## Data Protection
 
-Information about data collection and processing can be found in our separate [Privacy Policy](/en/privacy).
+Information about data collection and processing can be found in our separate [Privacy Policy](../privacy/en.md).
 
 ## Technical Service Provider
 
@@ -161,6 +164,6 @@ This imprint was created with consideration of legal requirements in various jur
 
 ---
 
-**Last Updated:** October 26, 2025  
-**Version:** v1.0.0  
+**Last Updated:** November 25, 2025  
+**Version:** v1.0.1  
 **Status:** Legally reviewed and approved

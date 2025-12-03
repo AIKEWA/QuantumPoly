@@ -41,7 +41,15 @@ JSONL (JSON Lines) file containing one consent event per line.
 **Example Entry:**
 
 ```json
-{"userId":"550e8400-e29b-41d4-a716-446655440000","timestamp":"2025-10-26T14:30:00.000Z","event":"consent_given","preferences":{"essential":true,"analytics":true,"performance":false},"policyVersion":"v1.0.0","userAgent":"Mozilla/5.0...","ipAddress":"192.168.1.0"}
+{
+  "userId": "550e8400-e29b-41d4-a716-446655440000",
+  "timestamp": "2025-10-26T14:30:00.000Z",
+  "event": "consent_given",
+  "preferences": { "essential": true, "analytics": true, "performance": false },
+  "policyVersion": "v1.0.0",
+  "userAgent": "Mozilla/5.0...",
+  "ipAddress": "192.168.1.0"
+}
 ```
 
 ## Data Protection
@@ -104,6 +112,7 @@ npm run test:consent-storage
 ```
 
 This validates:
+
 - JSONL format integrity
 - Schema compliance
 - Timestamp ordering
@@ -131,7 +140,7 @@ This ledger is referenced in:
 
 - **Main Ledger:** `governance/ledger/ledger.jsonl` (Block 9.2 baseline entry)
 - **Privacy Policy:** `content/policies/privacy/en.md` (Section 3.4)
-- **Documentation:** `BLOCK9.2_CONSENT_MANAGEMENT_FRAMEWORK.md`
+- **Documentation:** `BLOCK09.2_CONSENT_MANAGEMENT_FRAMEWORK.md`
 
 ## Support
 
@@ -146,4 +155,3 @@ For questions or audit requests, contact:
 **Last Updated:** October 26, 2025  
 **Version:** 1.0.0  
 **Status:** Active
-

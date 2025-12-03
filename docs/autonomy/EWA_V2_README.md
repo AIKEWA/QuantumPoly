@@ -22,6 +22,7 @@
 EWA v2 is a hybrid statistical + ML system that continuously analyzes governance data to detect ethical risk patterns, generate structured insights, and recommend corrective actions.
 
 **Key Capabilities:**
+
 - Statistical trend analysis (EII, consent, security)
 - Optional ML layer (anomaly detection, forecasting)
 - Multi-factor severity scoring
@@ -104,6 +105,7 @@ npm run ewa:analyze:dry-run
 ```
 
 **Output:**
+
 - Statistical analysis results
 - Insights generated
 - Recommendations
@@ -116,6 +118,7 @@ npm run ewa:analyze
 ```
 
 **Output:**
+
 - Full analysis
 - Auto-append insights (severity ≤ 0.6)
 - Add critical insights to review queue (severity > 0.6)
@@ -128,6 +131,7 @@ npm run ewa:analyze:ml
 ```
 
 **Output:**
+
 - Statistical + ML analysis
 - ML anomalies and patterns
 - Enhanced insights
@@ -143,12 +147,14 @@ npm run ewa:review
 ```
 
 **Actions:**
+
 - `[a]pprove` — Approve insight for ledger entry
 - `[r]eject` — Reject insight with reason
 - `[s]kip` — Skip to next insight
 - `[q]uit` — Exit review session
 
 **Example Session:**
+
 ```
 🔍 EWA v2 Review Queue
 =====================
@@ -200,11 +206,13 @@ Notes (optional): Verified data sources
 ```
 
 **Customization:**
+
 - Adjust `weights` to prioritize different components
 - Enable `optional_factors` for velocity/volatility adjustments
 - Modify `thresholds` for qualitative labels
 
 **Example: Security-Focused Configuration**
+
 ```json
 {
   "weights": {
@@ -230,6 +238,7 @@ export const SEVERITY_THRESHOLDS = {
 ```
 
 **Customization:**
+
 - Lower `MODERATE` threshold for stricter review requirements
 - Raise `LOW` threshold for fewer auto-appended insights
 
@@ -242,10 +251,12 @@ export const SEVERITY_THRESHOLDS = {
 **Description:** Retrieve latest ethical insights
 
 **Query Parameters:**
+
 - `limit` (number, default: 20) — Maximum insights to return
 - `severity` (string, optional) — Filter by severity (`low`, `moderate`, `critical`)
 
 **Response:**
+
 ```json
 {
   "timestamp": "2025-10-26T12:00:00Z",
@@ -275,6 +286,7 @@ export const SEVERITY_THRESHOLDS = {
 **Rate Limit:** 60 requests/minute per IP
 
 **Example:**
+
 ```bash
 curl "https://www.quantumpoly.ai/api/ewa/insights?limit=10&severity=critical" | jq .
 ```
@@ -286,10 +298,12 @@ curl "https://www.quantumpoly.ai/api/ewa/insights?limit=10&severity=critical" | 
 **Description:** Get actionable recommendations
 
 **Query Parameters:**
+
 - `limit` (number, default: 5) — Maximum recommendations
 - `priority` (string, optional) — Filter by priority (`high`, `medium`, `low`)
 
 **Response:**
+
 ```json
 {
   "timestamp": "2025-10-26T12:00:00Z",
@@ -301,10 +315,7 @@ curl "https://www.quantumpoly.ai/api/ewa/insights?limit=10&severity=critical" | 
       "category": "eii",
       "title": "Improve Ethics Integrity Index",
       "description": "EII has declined by 3.2%...",
-      "action_items": [
-        "Conduct accessibility audit",
-        "Review transparency documentation"
-      ],
+      "action_items": ["Conduct accessibility audit", "Review transparency documentation"],
       "responsible_roles": ["Governance Officer", "Accessibility Lead"],
       "estimated_impact": "high",
       "related_insights": ["eii-decline-a3f2b8c1"]
@@ -318,6 +329,7 @@ curl "https://www.quantumpoly.ai/api/ewa/insights?limit=10&severity=critical" | 
 **Rate Limit:** 60 requests/minute per IP
 
 **Example:**
+
 ```bash
 curl "https://www.quantumpoly.ai/api/ewa/recommendations?priority=high" | jq .
 ```
@@ -329,6 +341,7 @@ curl "https://www.quantumpoly.ai/api/ewa/recommendations?priority=high" | jq .
 **Description:** Verify autonomous_analysis ledger entries
 
 **Response:**
+
 ```json
 {
   "verified": true,
@@ -350,6 +363,7 @@ curl "https://www.quantumpoly.ai/api/ewa/recommendations?priority=high" | jq .
 **Rate Limit:** 60 requests/minute per IP
 
 **Example:**
+
 ```bash
 curl "https://www.quantumpoly.ai/api/ewa/verify" | jq .
 ```
@@ -361,6 +375,7 @@ curl "https://www.quantumpoly.ai/api/ewa/verify" | jq .
 **Description:** Manually trigger on-demand analysis
 
 **Request Body:**
+
 ```json
 {
   "dry_run": false,
@@ -369,6 +384,7 @@ curl "https://www.quantumpoly.ai/api/ewa/verify" | jq .
 ```
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -378,8 +394,12 @@ curl "https://www.quantumpoly.ai/api/ewa/verify" | jq .
     "total_insights": 3,
     "critical_insights": 0
   },
-  "insights": [ /* full insights */ ],
-  "recommendations": [ /* full recommendations */ ]
+  "insights": [
+    /* full insights */
+  ],
+  "recommendations": [
+    /* full recommendations */
+  ]
 }
 ```
 
@@ -388,6 +408,7 @@ curl "https://www.quantumpoly.ai/api/ewa/verify" | jq .
 **Authentication:** Optional `x-api-key` header
 
 **Example:**
+
 ```bash
 curl -X POST "https://www.quantumpoly.ai/api/ewa/analyze" \
   -H "Content-Type: application/json" \
@@ -402,21 +423,25 @@ curl -X POST "https://www.quantumpoly.ai/api/ewa/analyze" \
 ### What EWA v2 Does NOT Do
 
 ❌ **No Individual Profiling**
+
 - All analysis operates on aggregate data only
 - No user-level behavior tracking
 - No deanonymization attempts
 
 ❌ **No Automated Enforcement**
+
 - System proposes, humans decide
 - Critical insights require Governance Officer approval
 - No automated policy changes
 
 ❌ **No Predictive Profiling**
+
 - Forecasting limited to system-level metrics
 - No predictions about individuals
 - No protected attribute inference
 
 ❌ **No Silent Operation**
+
 - All insights logged to governance ledger
 - Cryptographic proof of all analyses
 - Public API access for verification
@@ -424,21 +449,25 @@ curl -X POST "https://www.quantumpoly.ai/api/ewa/analyze" \
 ### What EWA v2 DOES Do
 
 ✅ **Aggregate Analysis**
+
 - Statistical trend detection
 - System-level health monitoring
 - Governance process quality assessment
 
 ✅ **Explainable Insights**
+
 - All severity scores traceable
 - Evidence provided with every insight
 - Confidence scores based on data quality
 
 ✅ **Human Oversight**
+
 - Critical insights require manual approval
 - Review queue with audit trail
 - Governance Officer accountability
 
 ✅ **Transparency**
+
 - All analyses logged to ledger
 - Public APIs for verification
 - Open documentation of methods
@@ -450,11 +479,13 @@ curl -X POST "https://www.quantumpoly.ai/api/ewa/analyze" \
 ### Issue: Analysis Script Fails
 
 **Symptom:**
+
 ```
 ❌ Analysis failed: Cannot find module 'src/lib/ewa/engine/statistics.ts'
 ```
 
 **Solution:**
+
 ```bash
 # Rebuild TypeScript
 npm run build
@@ -468,12 +499,14 @@ npx ts-node scripts/ewa-analyze.mjs
 ### Issue: No Insights Generated
 
 **Symptom:**
+
 ```
 💡 Generating insights...
    Total Insights: 0
 ```
 
 **Solution:**
+
 - Check if governance ledger has sufficient data (≥2 EII entries)
 - Verify ledger path: `governance/ledger/ledger.jsonl`
 - Run with `--dry-run` to see analysis output
@@ -484,11 +517,13 @@ npx ts-node scripts/ewa-analyze.mjs
 ### Issue: Review Queue Empty
 
 **Symptom:**
+
 ```
 ✅ No pending reviews
 ```
 
 **Solution:**
+
 - This is expected if no critical insights (severity > 0.6)
 - Run analysis: `npm run ewa:analyze`
 - Check `governance/ewa/review-queue.jsonl` for entries
@@ -499,6 +534,7 @@ npx ts-node scripts/ewa-analyze.mjs
 ### Issue: API Returns 429 Rate Limit
 
 **Symptom:**
+
 ```json
 {
   "error": "Rate limit exceeded"
@@ -506,6 +542,7 @@ npx ts-node scripts/ewa-analyze.mjs
 ```
 
 **Solution:**
+
 - Wait for rate limit window to reset
 - Insights API: 60 req/min
 - Analyze API: 5 req/hour
@@ -517,9 +554,11 @@ npx ts-node scripts/ewa-analyze.mjs
 ### Issue: Dashboard Not Loading
 
 **Symptom:**
+
 - Blank page or error in browser console
 
 **Solution:**
+
 ```bash
 # Check build
 npm run build
@@ -626,11 +665,13 @@ npm run ewa:review
 ## Support
 
 **Documentation:**
-- Main: `BLOCK9.5_ETHICAL_AUTONOMY.md`
+
+- Main: `BLOCK09.5_ETHICAL_AUTONOMY.md`
 - Model Card: `docs/autonomy/EWA_MODEL_CARD.md`
 - API Schema: `public/api-schema.json`
 
 **Contact:**
+
 - Governance Officer: governance@quantumpoly.ai
 - Technical Support: support@quantumpoly.ai
 
@@ -639,4 +680,3 @@ npm run ewa:review
 **Document Version:** 1.0.0  
 **Last Updated:** 2025-10-26  
 **Maintained By:** QuantumPoly Governance Team
-

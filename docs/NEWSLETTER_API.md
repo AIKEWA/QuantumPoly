@@ -32,6 +32,7 @@ POST /api/newsletter
 ```
 
 **Example Request:**
+
 ```json
 {
   "email": "user@example.com"
@@ -42,8 +43,9 @@ POST /api/newsletter
 
 ```typescript
 interface NewsletterResponse {
-  messageKey: string;      // i18n translation key
-  debug?: {                // Only in non-production
+  messageKey: string; // i18n translation key
+  debug?: {
+    // Only in non-production
     errorCode: string;
     timestamp: string;
   };
@@ -52,23 +54,25 @@ interface NewsletterResponse {
 
 ### HTTP Status Codes
 
-| Status Code | Meaning | messageKey | Description |
-|-------------|---------|-----------|-------------|
-| **201** | Created | `newsletter.success` | Successfully subscribed |
-| **400** | Bad Request | `newsletter.invalidEmail` | Invalid JSON or email format |
-| **405** | Method Not Allowed | N/A | Only POST is supported (GET/PUT/DELETE/PATCH rejected) |
-| **409** | Conflict | `newsletter.alreadySubscribed` | Email already exists in database |
-| **429** | Too Many Requests | `newsletter.rateLimitExceeded` | Rate limit exceeded (email or IP) |
-| **500** | Internal Server Error | `newsletter.serverError` | Unexpected server error |
+| Status Code | Meaning               | messageKey                     | Description                                            |
+| ----------- | --------------------- | ------------------------------ | ------------------------------------------------------ |
+| **201**     | Created               | `newsletter.success`           | Successfully subscribed                                |
+| **400**     | Bad Request           | `newsletter.invalidEmail`      | Invalid JSON or email format                           |
+| **405**     | Method Not Allowed    | N/A                            | Only POST is supported (GET/PUT/DELETE/PATCH rejected) |
+| **409**     | Conflict              | `newsletter.alreadySubscribed` | Email already exists in database                       |
+| **429**     | Too Many Requests     | `newsletter.rateLimitExceeded` | Rate limit exceeded (email or IP)                      |
+| **500**     | Internal Server Error | `newsletter.serverError`       | Unexpected server error                                |
 
 ### Response Headers
 
 **Success (201):**
+
 ```
 Content-Type: application/json
 ```
 
 **Rate Limited (429):**
+
 ```
 Content-Type: application/json
 Retry-After: <seconds>              # Seconds until rate limit window expires
@@ -77,6 +81,7 @@ X-RateLimit-Window: 10              # Window size in seconds (dev only)
 ```
 
 **Method Not Allowed (405):**
+
 ```
 Allow: POST
 ```
@@ -164,6 +169,7 @@ Allow: POST
 ### Component Responsibilities
 
 #### API Route Handler
+
 - **Request Parsing**: JSON deserialization and error handling
 - **Validation**: Zod schema enforcement for email format
 - **Rate Limiting**: Dual-dimensional abuse prevention (email + IP)
@@ -172,12 +178,14 @@ Allow: POST
 - **i18n Integration**: Returns messageKeys instead of raw text
 
 #### Storage Adapter
+
 - **Abstraction**: Decouples storage implementation from business logic
 - **Interface Contract**: Enforces `add()` and `exists()` methods
 - **Error Handling**: Translates backend-specific errors to standard exceptions
 - **Extensibility**: Enables swapping backends without route changes
 
 #### Rate Limiter
+
 - **Email Dimension**: Prevents single email spam (10-second window)
 - **IP Dimension**: Prevents single IP abuse (10-second window)
 - **Current**: In-memory Maps for development
@@ -194,7 +202,7 @@ The Newsletter API uses an adapter pattern to support multiple storage backends.
 ```typescript
 /**
  * NewsletterStorageAdapter Interface
- * 
+ *
  * Abstraction layer for newsletter subscription storage.
  * Implementations must handle email normalization, duplicate detection,
  * and graceful error handling.
@@ -202,7 +210,7 @@ The Newsletter API uses an adapter pattern to support multiple storage backends.
 export interface NewsletterStorageAdapter {
   /**
    * Adds a new email subscription to storage
-   * 
+   *
    * @param email - Normalized email address (lowercase, trimmed)
    * @throws {Error} 'DUPLICATE_EMAIL' if email already exists
    * @throws {Error} Other storage-specific errors
@@ -211,7 +219,7 @@ export interface NewsletterStorageAdapter {
 
   /**
    * Checks if an email already exists in storage
-   * 
+   *
    * @param email - Normalized email address (lowercase, trimmed)
    * @returns true if email exists, false otherwise
    * @throws {Error} Storage query errors
@@ -224,11 +232,11 @@ export interface NewsletterStorageAdapter {
 
 Adapter implementations must follow this error mapping:
 
-| Error Type | Error Message/Code | API Response |
-|------------|-------------------|--------------|
-| Duplicate email | `'DUPLICATE_EMAIL'` or database unique constraint | 409 Conflict |
-| Connection failure | Any connection/timeout error | 500 Internal Server Error |
-| Query error | Database query errors | 500 Internal Server Error |
+| Error Type         | Error Message/Code                                | API Response              |
+| ------------------ | ------------------------------------------------- | ------------------------- |
+| Duplicate email    | `'DUPLICATE_EMAIL'` or database unique constraint | 409 Conflict              |
+| Connection failure | Any connection/timeout error                      | 500 Internal Server Error |
+| Query error        | Database query errors                             | 500 Internal Server Error |
 
 ### Current Implementation: In-Memory Adapter
 
@@ -249,6 +257,7 @@ function exists(email: string): boolean {
 ```
 
 **Limitations:**
+
 - ❌ Data lost on server restart
 - ❌ Not shared across serverless instances
 - ❌ No persistence layer
@@ -262,13 +271,13 @@ function exists(email: string): boolean {
 
 Create a new file: `src/lib/newsletter-supabase-adapter.ts`
 
-```typescript
+````typescript
 /**
  * Supabase Storage Adapter for Newsletter Subscriptions
- * 
+ *
  * Production-grade implementation using Supabase as the backend.
  * Handles database operations, error mapping, and connection management.
- * 
+ *
  * @module NewsletterSupabaseAdapter
  */
 
@@ -295,17 +304,17 @@ interface NewsletterSubscriber {
 
 /**
  * Creates a Supabase-backed storage adapter instance
- * 
+ *
  * @returns NewsletterStorageAdapter implementation
  * @throws {Error} If SUPABASE_URL or SUPABASE_SERVICE_KEY are not set
- * 
+ *
  * @example
  * ```typescript
  * // In API route
  * import { createSupabaseAdapter } from '@/lib/newsletter-supabase-adapter';
- * 
+ *
  * const storage = createSupabaseAdapter();
- * 
+ *
  * try {
  *   await storage.add('user@example.com');
  *   console.log('Subscription successful');
@@ -323,7 +332,7 @@ export function createSupabaseAdapter(): NewsletterStorageAdapter {
 
   if (!supabaseUrl || !supabaseKey) {
     throw new Error(
-      'Missing Supabase credentials: SUPABASE_URL and SUPABASE_SERVICE_KEY must be set'
+      'Missing Supabase credentials: SUPABASE_URL and SUPABASE_SERVICE_KEY must be set',
     );
   }
 
@@ -338,20 +347,18 @@ export function createSupabaseAdapter(): NewsletterStorageAdapter {
   return {
     /**
      * Adds a new email subscription
-     * 
+     *
      * @param email - Normalized email address
      * @throws {Error} 'DUPLICATE_EMAIL' if email already exists (Postgres 23505)
      * @throws {Error} Database connection or query errors
      */
     async add(email: string): Promise<void> {
-      const { error } = await supabase
-        .from('newsletter_subscribers')
-        .insert({
-          email,
-          subscribed_at: new Date().toISOString(),
-          // Optional: store IP for analytics (requires parameter)
-          // ip_address: ipAddress,
-        });
+      const { error } = await supabase.from('newsletter_subscribers').insert({
+        email,
+        subscribed_at: new Date().toISOString(),
+        // Optional: store IP for analytics (requires parameter)
+        // ip_address: ipAddress,
+      });
 
       if (error) {
         // Map Postgres unique constraint violation to standard error
@@ -367,7 +374,7 @@ export function createSupabaseAdapter(): NewsletterStorageAdapter {
 
     /**
      * Checks if an email exists in storage
-     * 
+     *
      * @param email - Normalized email address
      * @returns true if email exists, false otherwise
      * @throws {Error} Database query errors (except 'not found')
@@ -394,7 +401,7 @@ export function createSupabaseAdapter(): NewsletterStorageAdapter {
     },
   };
 }
-```
+````
 
 ### Integration with API Route
 
@@ -434,16 +441,16 @@ Run this SQL in the Supabase SQL Editor to create the required table:
 CREATE TABLE newsletter_subscribers (
   -- Primary key: UUID v4
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  
+
   -- Email address: unique, not null, indexed
   email TEXT UNIQUE NOT NULL,
-  
+
   -- Subscription timestamp
   subscribed_at TIMESTAMPTZ DEFAULT now(),
-  
+
   -- Optional: IP address for analytics and abuse detection
   ip_address TEXT,
-  
+
   -- Record creation timestamp
   created_at TIMESTAMPTZ DEFAULT now()
 );
@@ -451,41 +458,41 @@ CREATE TABLE newsletter_subscribers (
 -- Index for fast email lookups (enforced by UNIQUE constraint)
 -- Postgres automatically creates an index for UNIQUE constraints,
 -- but we document it here for clarity
-CREATE INDEX IF NOT EXISTS idx_newsletter_email 
+CREATE INDEX IF NOT EXISTS idx_newsletter_email
   ON newsletter_subscribers(email);
 
 -- Optional: Index for time-based queries
-CREATE INDEX IF NOT EXISTS idx_newsletter_subscribed_at 
+CREATE INDEX IF NOT EXISTS idx_newsletter_subscribed_at
   ON newsletter_subscribers(subscribed_at DESC);
 
 -- Optional: Row Level Security (RLS) policies
 ALTER TABLE newsletter_subscribers ENABLE ROW LEVEL SECURITY;
 
 -- Policy: Service role can do everything (for API route)
-CREATE POLICY "Service role full access" 
+CREATE POLICY "Service role full access"
   ON newsletter_subscribers
-  FOR ALL 
+  FOR ALL
   TO service_role
   USING (true)
   WITH CHECK (true);
 
 -- Policy: Authenticated users can only read (for admin dashboard)
-CREATE POLICY "Authenticated read access" 
+CREATE POLICY "Authenticated read access"
   ON newsletter_subscribers
-  FOR SELECT 
+  FOR SELECT
   TO authenticated
   USING (true);
 ```
 
 ### Schema Design Rationale
 
-| Column | Type | Purpose | Notes |
-|--------|------|---------|-------|
-| `id` | UUID | Primary key | Auto-generated, immutable |
-| `email` | TEXT | Subscriber email | UNIQUE constraint prevents duplicates |
+| Column          | Type        | Purpose              | Notes                                   |
+| --------------- | ----------- | -------------------- | --------------------------------------- |
+| `id`            | UUID        | Primary key          | Auto-generated, immutable               |
+| `email`         | TEXT        | Subscriber email     | UNIQUE constraint prevents duplicates   |
 | `subscribed_at` | TIMESTAMPTZ | When user subscribed | Defaults to now(), useful for analytics |
-| `ip_address` | TEXT | Client IP (optional) | For abuse detection and analytics |
-| `created_at` | TIMESTAMPTZ | Record creation time | Audit trail, defaults to now() |
+| `ip_address`    | TEXT        | Client IP (optional) | For abuse detection and analytics       |
+| `created_at`    | TIMESTAMPTZ | Record creation time | Audit trail, defaults to now()          |
 
 ### Data Retention Considerations
 
@@ -521,6 +528,7 @@ SUPABASE_SERVICE_KEY="your-service-role-key-here"
    - Copy project URL and service role key
 
 2. **Configure Environment**:
+
    ```bash
    cp .env.example .env.local
    # Edit .env.local with your Supabase credentials
@@ -568,13 +576,13 @@ The API returns only `messageKey` strings, which clients resolve to localized me
 
 #### Complete Status → messageKey → Translation Mapping
 
-| HTTP Status | messageKey | EN Translation | DE Translation | TR Translation |
-|-------------|-----------|----------------|----------------|----------------|
-| **201** | `newsletter.success` | "Successfully subscribed to our newsletter!" | "Erfolgreich für unseren Newsletter angemeldet!" | "Bültenimize başarıyla abone oldunuz!" |
-| **400** | `newsletter.invalidEmail` | "Please provide a valid email address." | "Bitte geben Sie eine gültige E-Mail-Adresse an." | "Lütfen geçerli bir e-posta adresi sağlayın." |
-| **409** | `newsletter.alreadySubscribed` | "This email is already subscribed." | "Diese E-Mail-Adresse ist bereits abonniert." | "Bu e-posta zaten abone." |
-| **429** | `newsletter.rateLimitExceeded` | "Rate limit exceeded. Please wait before trying again." | "Ratenlimit überschritten. Bitte warten Sie, bevor Sie es erneut versuchen." | "Oran sınırı aşıldı. Lütfen tekrar denemeden önce bekleyin." |
-| **500** | `newsletter.serverError` | "An unexpected error occurred. Please try again." | "Ein unerwarteter Fehler ist aufgetreten. Bitte versuchen Sie es erneut." | "Beklenmeyen bir hata oluştu. Lütfen tekrar deneyin." |
+| HTTP Status | messageKey                     | EN Translation                                          | DE Translation                                                               | TR Translation                                               |
+| ----------- | ------------------------------ | ------------------------------------------------------- | ---------------------------------------------------------------------------- | ------------------------------------------------------------ |
+| **201**     | `newsletter.success`           | "Successfully subscribed to our newsletter!"            | "Erfolgreich für unseren Newsletter angemeldet!"                             | "Bültenimize başarıyla abone oldunuz!"                       |
+| **400**     | `newsletter.invalidEmail`      | "Please provide a valid email address."                 | "Bitte geben Sie eine gültige E-Mail-Adresse an."                            | "Lütfen geçerli bir e-posta adresi sağlayın."                |
+| **409**     | `newsletter.alreadySubscribed` | "This email is already subscribed."                     | "Diese E-Mail-Adresse ist bereits abonniert."                                | "Bu e-posta zaten abone."                                    |
+| **429**     | `newsletter.rateLimitExceeded` | "Rate limit exceeded. Please wait before trying again." | "Ratenlimit überschritten. Bitte warten Sie, bevor Sie es erneut versuchen." | "Oran sınırı aşıldı. Lütfen tekrar denemeden önce bekleyin." |
+| **500**     | `newsletter.serverError`       | "An unexpected error occurred. Please try again."       | "Ein unerwarteter Fehler ist aufgetreten. Bitte versuchen Sie es erneut."    | "Beklenmeyen bir hata oluştu. Lütfen tekrar deneyin."        |
 
 #### Supported Locales
 
@@ -607,7 +615,7 @@ export function NewsletterForm() {
 
     // Resolve messageKey to localized string
     const message = t(data.messageKey.replace('newsletter.', ''));
-    
+
     if (response.ok) {
       // Success: "Successfully subscribed to our newsletter!"
       showSuccess(message);
@@ -622,9 +630,9 @@ export function NewsletterForm() {
       e.preventDefault();
       handleSubmit(e.currentTarget.email.value);
     }}>
-      <input 
-        name="email" 
-        type="email" 
+      <input
+        name="email"
+        type="email"
         placeholder={t('emailPlaceholder')}
         aria-label={t('emailLabel')}
       />
@@ -643,12 +651,14 @@ export function NewsletterForm() {
 The Newsletter API enforces rate limits on **two independent dimensions** to prevent abuse:
 
 #### 1. Email-Based Rate Limiting
+
 - **Window**: 10 seconds per normalized email
 - **Purpose**: Prevents spam from single email address
 - **Normalization**: `email.trim().toLowerCase()`
 - **Scope**: Global across all IPs
 
 #### 2. IP-Based Rate Limiting
+
 - **Window**: 10 seconds per client IP
 - **Purpose**: Prevents abuse from single source
 - **IP Detection**: `x-forwarded-for` → `x-real-ip` → `x-vercel-forwarded-for`
@@ -673,20 +683,22 @@ if (ipLastSeen.has(ip) && withinWindow(ip)) {
 ### Current Implementation (Development)
 
 **In-Memory Maps**:
+
 ```typescript
 const emailLastSeen = new Map<string, number>(); // email → timestamp
-const ipLastSeen = new Map<string, number>();    // ip → timestamp
+const ipLastSeen = new Map<string, number>(); // ip → timestamp
 
 function checkRateLimit(map: Map<string, number>, key: string): boolean {
   const lastSeen = map.get(key);
   if (!lastSeen) return false; // No prior request
-  
+
   const elapsed = Date.now() - lastSeen;
   return elapsed < 10_000; // Within 10-second window
 }
 ```
 
 **Limitations**:
+
 - ❌ Not shared across serverless instances
 - ❌ Lost on server restart
 - ❌ No distributed coordination
@@ -707,19 +719,20 @@ const redis = new Redis({
 async function checkRateLimit(dimension: 'email' | 'ip', key: string): Promise<boolean> {
   const redisKey = `rate:${dimension}:${key}`;
   const lastSeen = await redis.get<number>(redisKey);
-  
+
   if (!lastSeen) {
     // First request, set timestamp with 10s expiration
     await redis.set(redisKey, Date.now(), { ex: 10 });
     return false; // Not limited
   }
-  
+
   const elapsed = Date.now() - lastSeen;
   return elapsed < 10_000; // Within window
 }
 ```
 
 **Benefits**:
+
 - ✅ Shared state across all serverless instances
 - ✅ Automatic expiration with Redis TTL
 - ✅ Distributed coordination
@@ -740,6 +753,7 @@ Retry-After: 8
 ```
 
 **Development-Only Headers** (when `NODE_ENV !== 'production'`):
+
 ```http
 X-RateLimit-Scope: email
 X-RateLimit-Window: 10
@@ -764,6 +778,7 @@ For more sophisticated rate limiting, consider:
 **File**: `__tests__/api/newsletter.route.test.ts`
 
 **Coverage Metrics** (Block 4.4):
+
 - **Statements**: 98.73% ✅
 - **Branches**: 96.66% ✅
 - **Functions**: 100% ✅
@@ -774,22 +789,26 @@ For more sophisticated rate limiting, consider:
 ### Test Categories
 
 #### 1. Success Scenarios (3 tests)
+
 - ✅ Valid email subscription → 201
 - ✅ Email normalization (case insensitive)
 - ✅ Multiple sequential subscriptions
 
 #### 2. Validation Errors (8 tests)
+
 - ✅ Invalid JSON payload → 400
 - ✅ Missing email field → 400
 - ✅ Invalid formats (no @, missing domain, missing local) → 400
 - ✅ Empty/null/non-string email → 400
 
 #### 3. Duplicate Detection (3 tests)
+
 - ✅ Duplicate outside rate limit window → 409
 - ✅ Duplicate within rate limit window → 429
 - ✅ Normalized duplicate (case insensitive)
 
 #### 4. Rate Limiting (6 tests)
+
 - ✅ Email dimension (10s window) → 429
 - ✅ IP dimension (10s window) → 429
 - ✅ Retry-After header validation
@@ -797,13 +816,16 @@ For more sophisticated rate limiting, consider:
 - ✅ Rate limit scope indicators
 
 #### 5. Error Handling (2 tests)
+
 - ✅ Forced error simulation → 500
 - ✅ Error recovery after failures
 
 #### 6. HTTP Methods (4 tests)
+
 - ✅ GET/PUT/DELETE/PATCH → 405 with Allow: POST
 
 #### 7. Edge Cases (5 tests)
+
 - ✅ Extremely long email addresses
 - ✅ Special characters in local part
 - ✅ Subdomain email addresses
@@ -811,12 +833,14 @@ For more sophisticated rate limiting, consider:
 - ✅ Cross-test isolation
 
 #### 8. Test Utilities (4 tests)
+
 - ✅ `resetStores()` functionality
 - ✅ `setForceError()` controls
 - ✅ `getSubscriberCount()` accuracy
 - ✅ `isSubscribed()` checks
 
 #### 9. Response Contract (3 tests)
+
 - ✅ messageKey presence in all responses
 - ✅ Debug info in non-production
 - ✅ Content-Type header validation
@@ -834,15 +858,16 @@ beforeEach(() => {
 
 it('handles duplicate subscriptions', async () => {
   await POST(createRequest('test@example.com'));
-  
+
   __test__.clearRateLimits(); // Allow duplicate check outside rate limit
-  
+
   const response = await POST(createRequest('test@example.com'));
   expect(response.status).toBe(409);
 });
 ```
 
 **Available Utilities**:
+
 - `resetStores()`: Clear all in-memory state (subscribers + rate limits)
 - `clearRateLimits()`: Clear only rate limit Maps (keep subscribers)
 - `setForceError(boolean)`: Trigger error path for testing 500 responses
@@ -874,11 +899,13 @@ npm run test:watch -- __tests__/api/newsletter.route.test.ts
 **Critical**: The `SUPABASE_SERVICE_KEY` grants full database access and **must never be exposed to client-side code**.
 
 ✅ **Safe**:
+
 - API Routes (`src/app/api/**/route.ts`)
 - Server Components (default in Next.js App Router)
 - Server Actions (`'use server'` directive)
 
 ❌ **Unsafe**:
+
 - Client Components (`'use client'` directive)
 - Browser JavaScript
 - Public environment variables (e.g., `NEXT_PUBLIC_*`)
@@ -886,12 +913,14 @@ npm run test:watch -- __tests__/api/newsletter.route.test.ts
 ### IP Address Handling
 
 **Privacy Considerations**:
+
 - IP addresses are **personal data** under GDPR
 - Log IP addresses only for abuse detection and security
 - Hash or anonymize IPs before long-term storage
 - Document IP retention policies in privacy policy
 
 **Proxy Detection**:
+
 - `x-forwarded-for` can be spoofed if not validated
 - Only trust proxy headers behind Vercel/Cloudflare
 - Consider implementing IP allowlist/blocklist
@@ -899,11 +928,13 @@ npm run test:watch -- __tests__/api/newsletter.route.test.ts
 ### Email Validation
 
 **Current**: Zod email schema validation
+
 ```typescript
-z.string().email() // RFC 5322 compliant
+z.string().email(); // RFC 5322 compliant
 ```
 
 **Additional Protections**:
+
 - ✅ Normalize emails (trim, lowercase)
 - ✅ Reject invalid formats at validation layer
 - 🔄 Consider: Email verification via confirmation link
@@ -912,11 +943,13 @@ z.string().email() // RFC 5322 compliant
 ### Rate Limiting Security
 
 **Evasion Techniques**:
+
 - Attackers may rotate email addresses
 - VPNs/proxies can bypass IP rate limiting
 - Distributed attacks may stay under thresholds
 
 **Mitigations**:
+
 - Implement CAPTCHA after N failed attempts
 - Monitor for suspicious patterns (e.g., sequential emails)
 - Add allowlist for known good actors
@@ -925,6 +958,7 @@ z.string().email() // RFC 5322 compliant
 ### Database Security (Supabase)
 
 **Row Level Security (RLS)**:
+
 ```sql
 -- Enforce RLS policies
 ALTER TABLE newsletter_subscribers ENABLE ROW LEVEL SECURITY;
@@ -934,6 +968,7 @@ ALTER TABLE newsletter_subscribers ENABLE ROW LEVEL SECURITY;
 ```
 
 **Audit Logging**:
+
 - Enable Supabase audit logs
 - Monitor for unusual activity patterns
 - Alert on mass deletions or data exports
@@ -954,15 +989,17 @@ ALTER TABLE newsletter_subscribers ENABLE ROW LEVEL SECURITY;
 
 ```typescript
 // In production, use structured logging
-console.log(JSON.stringify({
-  timestamp: new Date().toISOString(),
-  level: 'info',
-  event: 'newsletter_subscription',
-  email: hashEmail(email), // Anonymized for GDPR
-  ip: hashIp(ip),           // Anonymized
-  status: 201,
-  duration_ms: elapsed,
-}));
+console.log(
+  JSON.stringify({
+    timestamp: new Date().toISOString(),
+    level: 'info',
+    event: 'newsletter_subscription',
+    email: hashEmail(email), // Anonymized for GDPR
+    ip: hashIp(ip), // Anonymized
+    status: 201,
+    duration_ms: elapsed,
+  }),
+);
 ```
 
 ### Recommended Tools
@@ -979,12 +1016,14 @@ console.log(JSON.stringify({
 ### Planned Features
 
 #### Phase 1: Production Backend (Block 5)
+
 - [ ] Supabase adapter implementation (production-ready)
 - [ ] Redis-backed rate limiting with Upstash
 - [ ] Email verification via confirmation links
 - [ ] Unsubscribe mechanism (GDPR compliance)
 
 #### Phase 2: Advanced Features (Block 6)
+
 - [ ] Admin dashboard for subscriber management
 - [ ] Export subscribers to CSV (with encryption)
 - [ ] Webhook notifications for new subscriptions (e.g., Slack, Discord)
@@ -992,6 +1031,7 @@ console.log(JSON.stringify({
 - [ ] A/B testing for newsletter form variations
 
 #### Phase 3: Scalability (Block 7+)
+
 - [ ] Distributed rate limiting with token bucket algorithm
 - [ ] Horizontal scaling with serverless functions
 - [ ] CDN caching for API metadata endpoints
@@ -1003,11 +1043,12 @@ console.log(JSON.stringify({
 The adapter pattern enables easy integration with other backends:
 
 **Firebase Firestore**:
+
 ```typescript
 export function createFirebaseAdapter(): NewsletterStorageAdapter {
   const db = getFirestore();
   const collection = db.collection('newsletter_subscribers');
-  
+
   return {
     async add(email: string) {
       await collection.doc(email).set({ subscribed_at: new Date() });
@@ -1021,12 +1062,13 @@ export function createFirebaseAdapter(): NewsletterStorageAdapter {
 ```
 
 **MongoDB**:
+
 ```typescript
 export function createMongoAdapter(): NewsletterStorageAdapter {
   const client = new MongoClient(process.env.MONGODB_URI);
   const db = client.db('quantumpoly');
   const collection = db.collection('newsletter_subscribers');
-  
+
   return {
     async add(email: string) {
       await collection.insertOne({ email, subscribed_at: new Date() });
@@ -1040,10 +1082,11 @@ export function createMongoAdapter(): NewsletterStorageAdapter {
 ```
 
 **Prisma ORM**:
+
 ```typescript
 export function createPrismaAdapter(): NewsletterStorageAdapter {
   const prisma = new PrismaClient();
-  
+
   return {
     async add(email: string) {
       await prisma.newsletterSubscriber.create({
@@ -1064,7 +1107,7 @@ export function createPrismaAdapter(): NewsletterStorageAdapter {
 
 ## Related Documentation
 
-- **[Block 4.4 Implementation Summary](../BLOCK4.4_IMPLEMENTATION_SUMMARY.md)** - Test coverage and CI integration
+- **[Block 4.4 Implementation Summary](../BLOCK04.4_IMPLEMENTATION_SUMMARY.md)** - Test coverage and CI integration
 - **[API Testing Guide](./API_TESTING_GUIDE.md)** - Comprehensive API testing strategies
 - **[I18N Guide](./I18N_GUIDE.md)** - Internationalization patterns and translation workflow
 - **[ADR-006: Multi-Agent Cognitive Architecture](./adr/ADR-006-multi-agent-cognitive-architecture.md)** - AI-supported development vision
@@ -1077,6 +1120,7 @@ export function createPrismaAdapter(): NewsletterStorageAdapter {
 ### Common Operations
 
 **Test the API locally**:
+
 ```bash
 curl -X POST http://localhost:3000/api/newsletter \
   -H "Content-Type: application/json" \
@@ -1084,11 +1128,13 @@ curl -X POST http://localhost:3000/api/newsletter \
 ```
 
 **Check test coverage**:
+
 ```bash
 npm run test:coverage -- __tests__/api/newsletter.route.test.ts
 ```
 
 **Deploy to Vercel**:
+
 ```bash
 vercel --prod
 # Remember to set SUPABASE_URL and SUPABASE_SERVICE_KEY in dashboard
@@ -1096,12 +1142,12 @@ vercel --prod
 
 ### Troubleshooting
 
-| Issue | Solution |
-|-------|----------|
-| 400 Invalid Email | Check email format, ensure JSON is valid |
-| 409 Already Subscribed | Email exists in database, check duplicate logic |
-| 429 Rate Limited | Wait 10 seconds, check if client is retrying too fast |
-| 500 Server Error | Check Supabase connection, review server logs |
+| Issue                         | Solution                                                  |
+| ----------------------------- | --------------------------------------------------------- |
+| 400 Invalid Email             | Check email format, ensure JSON is valid                  |
+| 409 Already Subscribed        | Email exists in database, check duplicate logic           |
+| 429 Rate Limited              | Wait 10 seconds, check if client is retrying too fast     |
+| 500 Server Error              | Check Supabase connection, review server logs             |
 | Missing environment variables | Verify `.env.local` exists and contains valid credentials |
 
 ---
@@ -1110,4 +1156,3 @@ vercel --prod
 **Last Updated**: October 12, 2025  
 **Maintainer**: CASP Team (QuantumPoly)  
 **Status**: ✅ Production-Ready (with in-memory storage) | 🔄 Supabase Migration Pending
-

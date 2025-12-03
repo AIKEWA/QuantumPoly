@@ -1,0 +1,24 @@
+{
+  "title": "TODO_TRANSLATION_TR",
+  "subtitle": "TODO_TRANSLATION_TR",
+  "map": {
+    "title": "TODO_TRANSLATION_TR",
+    "nodes": "TODO_TRANSLATION_TR",
+    "pulse": "TODO_TRANSLATION_TR"
+  },
+  "drift": {
+    "title": "TODO_TRANSLATION_TR",
+    "yAxis": "TODO_TRANSLATION_TR",
+    "xAxis": "TODO_TRANSLATION_TR",
+    "annotations": {
+      "override": "TODO_TRANSLATION_TR",
+      "policy": "TODO_TRANSLATION_TR"
+    }
+  },
+  "proof": {
+    "label": "TODO_TRANSLATION_TR",
+    "verify": "TODO_TRANSLATION_TR",
+    "verified": "TODO_TRANSLATION_TR",
+    "pending": "TODO_TRANSLATION_TR"
+  }
+}

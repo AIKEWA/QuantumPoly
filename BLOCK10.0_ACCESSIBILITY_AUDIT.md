@@ -24,16 +24,16 @@ The platform meets WCAG 2.2 AA requirements for core functionality with document
 
 ### 1.1 Pages Audited
 
-| Page | Route | Priority | Status |
-|------|-------|----------|--------|
-| Governance Overview | `/[locale]/governance` | High | ✅ Audited |
-| Transparency Dashboard | `/[locale]/governance/dashboard` | High | ✅ Audited |
-| Review Dashboard (Block 9.9) | `/[locale]/governance/review` | High | ✅ Audited |
-| Ethical Autonomy (EWA) | `/[locale]/governance/autonomy` | High | ✅ Audited |
-| Accessibility Statement | `/[locale]/accessibility` | High | ✅ Audited |
-| Contact Page | `/[locale]/contact` | Medium | ✅ Audited |
-| Consent Settings | `/[locale]/settings/consent` | Medium | ✅ Audited |
-| Home Page | `/[locale]` | Medium | ✅ Audited |
+| Page                         | Route                            | Priority | Status     |
+| ---------------------------- | -------------------------------- | -------- | ---------- |
+| Governance Overview          | `/[locale]/governance`           | High     | ✅ Audited |
+| Transparency Dashboard       | `/[locale]/governance/dashboard` | High     | ✅ Audited |
+| Review Dashboard (Block 9.9) | `/[locale]/governance/review`    | High     | ✅ Audited |
+| Ethical Autonomy (EWA)       | `/[locale]/governance/autonomy`  | High     | ✅ Audited |
+| Accessibility Statement      | `/[locale]/accessibility`        | High     | ✅ Audited |
+| Contact Page                 | `/[locale]/contact`              | Medium   | ✅ Audited |
+| Consent Settings             | `/[locale]/settings/consent`     | Medium   | ✅ Audited |
+| Home Page                    | `/[locale]`                      | Medium   | ✅ Audited |
 
 **Total Pages Audited:** 8 core pages × 6 locales = 48 page variants
 
@@ -54,6 +54,7 @@ The platform meets WCAG 2.2 AA requirements for core functionality with document
 ### 2.1 Automated Testing
 
 **Tools Used:**
+
 - **Lighthouse 11.4.0** — Accessibility score, best practices
 - **axe-core 4.11.0** — Automated WCAG violation detection
 - **eslint-plugin-jsx-a11y 6.10.2** — Static analysis during development
@@ -76,6 +77,7 @@ Average Score: 97.5/100
 ```
 
 **axe-core Violations:**
+
 - **Critical:** 0
 - **Serious:** 2 (documented below)
 - **Moderate:** 4 (documented below)
@@ -85,11 +87,11 @@ Average Score: 97.5/100
 
 **Assistive Technologies Tested:**
 
-| Technology | Version | Platform | Tester |
-|------------|---------|----------|--------|
-| NVDA | 2024.3 | Windows 11 | Aykut Aydin |
-| VoiceOver | macOS 14.6 | macOS Sonoma | Aykut Aydin |
-| Keyboard Navigation | N/A | Chrome 120, Firefox 121, Safari 17 | Aykut Aydin |
+| Technology          | Version    | Platform                           | Tester      |
+| ------------------- | ---------- | ---------------------------------- | ----------- |
+| NVDA                | 2024.3     | Windows 11                         | Aykut Aydin |
+| VoiceOver           | macOS 14.6 | macOS Sonoma                       | Aykut Aydin |
+| Keyboard Navigation | N/A        | Chrome 120, Firefox 121, Safari 17 | Aykut Aydin |
 
 **Manual Test Coverage:**
 
@@ -105,12 +107,14 @@ Average Score: 97.5/100
 ### 2.3 Cross-Browser Testing
 
 **Browsers Tested:**
+
 - Chrome 120 (Windows, macOS)
 - Firefox 121 (Windows, macOS)
 - Safari 17 (macOS)
 - Edge 120 (Windows)
 
 **Mobile Testing:**
+
 - iOS Safari 17 (iPhone)
 - Chrome Mobile 120 (Android)
 
@@ -137,6 +141,7 @@ No critical accessibility issues were identified that would prevent users with d
 **Impact:** Users with low vision may struggle to distinguish chart lines in dark mode.
 
 **Remediation:**
+
 - Increase chart line stroke width from 2px to 3px
 - Adjust color palette for dark mode to meet 3:1 contrast ratio
 - Add optional high-contrast mode toggle
@@ -157,6 +162,7 @@ No critical accessibility issues were identified that would prevent users with d
 **Impact:** Screen reader users may miss important feedback after form submission.
 
 **Remediation:**
+
 - Add `aria-live="polite"` region that persists across renders
 - Ensure message appears before focus management
 - Add 100ms delay before focus shift to allow announcement
@@ -179,6 +185,7 @@ No critical accessibility issues were identified that would prevent users with d
 **Impact:** Keyboard users may not be aware of skip navigation option.
 
 **Remediation:**
+
 - Add visual indicator that skip link exists (e.g., "Press Tab to skip navigation")
 - Ensure skip link is first focusable element
 - Test with multiple screen readers
@@ -199,6 +206,7 @@ No critical accessibility issues were identified that would prevent users with d
 **Impact:** Sighted keyboard users may be confused about why Tab doesn't move outside modal.
 
 **Remediation:**
+
 - Add visual overlay to indicate modal context
 - Add "Press Escape to close" hint in modal header
 - Ensure focus returns to trigger element on close
@@ -219,6 +227,7 @@ No critical accessibility issues were identified that would prevent users with d
 **Impact:** Screen readers announce timestamps in a confusing format (e.g., "2025 dash 11 dash 10 T 00 colon 00").
 
 **Remediation:**
+
 - Format timestamps as "November 10, 2025 at 12:00 AM UTC"
 - Add `aria-label` with human-readable format
 - Maintain ISO format in `datetime` attribute for machine parsing
@@ -239,6 +248,7 @@ No critical accessibility issues were identified that would prevent users with d
 **Impact:** Screen reader users cannot access detailed chart data points.
 
 **Remediation:**
+
 - Add "View as table" toggle button
 - Render data table with proper headers and captions
 - Ensure table is keyboard navigable
@@ -261,6 +271,7 @@ No critical accessibility issues were identified that would prevent users with d
 **Impact:** Users may not understand link purpose without reading surrounding text.
 
 **Remediation:**
+
 - Add `aria-label` with expanded form (e.g., "Governance Ethics Policy")
 - Consider adding tooltips on hover/focus
 - Expand abbreviations in link text
@@ -281,6 +292,7 @@ No critical accessibility issues were identified that would prevent users with d
 **Impact:** Screen reader users relying on heading navigation may be confused by hierarchy.
 
 **Remediation:**
+
 - Adjust heading levels to ensure no skips
 - Verify heading structure with accessibility tree inspector
 
@@ -300,6 +312,7 @@ No critical accessibility issues were identified that would prevent users with d
 **Impact:** Screen readers may mispronounce foreign language terms.
 
 **Remediation:**
+
 - Add `lang` attribute to foreign language spans
 - Document pattern in component library
 
@@ -319,6 +332,7 @@ No critical accessibility issues were identified that would prevent users with d
 **Impact:** Minor inconsistency in user experience for keyboard users.
 
 **Remediation:**
+
 - Standardize focus indicator styles in Tailwind config
 - Ensure minimum 2px outline thickness
 - Test across all interactive elements
@@ -339,6 +353,7 @@ No critical accessibility issues were identified that would prevent users with d
 **Impact:** Some screen readers may not announce error messages in optimal sequence.
 
 **Remediation:**
+
 - Add `aria-describedby` linking field to error message
 - Ensure error message IDs are unique
 - Test with multiple screen readers
@@ -359,6 +374,7 @@ No critical accessibility issues were identified that would prevent users with d
 **Impact:** Users sensitive to motion may still experience some animation.
 
 **Remediation:**
+
 - Audit all CSS transitions and animations
 - Ensure all motion respects user preference
 - Add toggle in settings for additional control
@@ -379,6 +395,7 @@ No critical accessibility issues were identified that would prevent users with d
 **Impact:** Screen reader users navigating by landmarks may not easily distinguish between navigation regions.
 
 **Remediation:**
+
 - Add `aria-label` to all navigation landmarks
 - Examples: "Main navigation", "Footer navigation", "Governance navigation"
 
@@ -398,6 +415,7 @@ No critical accessibility issues were identified that would prevent users with d
 **Impact:** Screen readers may not optimally associate headers with data cells.
 
 **Remediation:**
+
 - Add `scope="col"` to column headers
 - Add `scope="row"` to row headers where applicable
 
@@ -412,12 +430,12 @@ No critical accessibility issues were identified that would prevent users with d
 
 ### 4.1 WCAG 2.2 Level AA Conformance
 
-| Principle | Conformance | Notes |
-|-----------|-------------|-------|
-| **1. Perceivable** | ✅ Compliant with conditions | Issues S1, M3, M4 documented |
-| **2. Operable** | ✅ Compliant with conditions | Issues S2, M1, M2 documented |
-| **3. Understandable** | ✅ Compliant | Minor issues N1, N3, N5 documented |
-| **4. Robust** | ✅ Compliant | Minor issues N2, N7, N8 documented |
+| Principle             | Conformance                  | Notes                              |
+| --------------------- | ---------------------------- | ---------------------------------- |
+| **1. Perceivable**    | ✅ Compliant with conditions | Issues S1, M3, M4 documented       |
+| **2. Operable**       | ✅ Compliant with conditions | Issues S2, M1, M2 documented       |
+| **3. Understandable** | ✅ Compliant                 | Minor issues N1, N3, N5 documented |
+| **4. Robust**         | ✅ Compliant                 | Minor issues N2, N7, N8 documented |
 
 **Overall Conformance:** **WCAG 2.2 Level AA — Compliant with Documented Exceptions**
 
@@ -431,10 +449,12 @@ No critical accessibility issues were identified that would prevent users with d
 ### 4.3 Exceptions & Limitations
 
 **Documented Exceptions:**
+
 1. Chart color contrast in dark mode (Issue S1) — Remediation planned by 2025-12-01
 2. Live region timing (Issue S2) — Remediation planned by 2025-12-01
 
 **Known Limitations:**
+
 - Third-party analytics scripts (Vercel Analytics, Plausible) are outside audit scope
 - PDF generation for trust proofs relies on pdfkit library (accessibility limited)
 - QR codes are inherently visual but include text alternatives
@@ -445,12 +465,12 @@ No critical accessibility issues were identified that would prevent users with d
 
 ### 5.1 Remediation Timeline
 
-| Priority | Issue Count | Deadline | Owner |
-|----------|-------------|----------|-------|
-| Critical | 0 | N/A | N/A |
-| Serious | 2 | 2025-12-01 | Frontend Engineer |
-| Moderate | 4 | 2026-01-15 | Frontend Engineer |
-| Minor | 8 | 2026-04-01 | Frontend Engineer + Content Strategist |
+| Priority | Issue Count | Deadline   | Owner                                  |
+| -------- | ----------- | ---------- | -------------------------------------- |
+| Critical | 0           | N/A        | N/A                                    |
+| Serious  | 2           | 2025-12-01 | Frontend Engineer                      |
+| Moderate | 4           | 2026-01-15 | Frontend Engineer                      |
+| Minor    | 8           | 2026-04-01 | Frontend Engineer + Content Strategist |
 
 ### 5.2 Remediation Tracking
 
@@ -465,14 +485,17 @@ All issues are tracked in the governance ledger and will be reviewed in quarterl
 ### 6.1 Automated Test Results
 
 **Lighthouse Reports:**
+
 - Stored in `reports/lighthouse/block10.0/`
 - Average accessibility score: 97.5/100
 
 **axe-core Results:**
+
 - Stored in `reports/axe/block10.0/`
 - Total violations: 14 (0 critical, 2 serious, 4 moderate, 8 minor)
 
 **Playwright A11y Tests:**
+
 ```bash
 $ npm run test:e2e:a11y
 
@@ -486,15 +509,18 @@ Total: 15 tests passed, 0 failed
 ### 6.2 Manual Test Evidence
 
 **Screen Reader Testing:**
+
 - NVDA: 8 pages tested, all navigable with documented issues
 - VoiceOver: 8 pages tested, all navigable with documented issues
 
 **Keyboard Navigation:**
+
 - All interactive elements reachable via keyboard
 - Focus indicators visible on all elements
 - No keyboard traps detected (except intentional modal trap)
 
 **Color Contrast:**
+
 - All text meets 4.5:1 ratio (normal text)
 - All large text meets 3:1 ratio
 - Exception: Chart lines in dark mode (Issue S1)
@@ -526,11 +552,13 @@ All accessibility feedback is logged in the governance ledger and tracked with r
 ### 8.1 Ongoing Monitoring
 
 **Automated Testing:**
+
 - Lighthouse CI runs on every deployment
 - axe-core tests run in E2E test suite
 - ESLint jsx-a11y rules enforced in CI/CD
 
 **Manual Testing:**
+
 - Quarterly accessibility audits
 - User feedback monitoring
 - Assistive technology testing for major releases
@@ -575,6 +603,7 @@ To the best of my professional judgment and testing capabilities, the platform m
 ### 10.2 Ledger Reference
 
 This audit is recorded in the governance ledger:
+
 - **Entry ID:** `accessibility-audit-block10.0`
 - **Ledger File:** `governance/ledger/ledger.jsonl`
 - **Audit Report:** `BLOCK10.0_ACCESSIBILITY_AUDIT.md`
@@ -599,5 +628,10 @@ The platform is approved for public baseline release v1.1 with the commitment to
 
 ---
 
-*This document is part of the QuantumPoly Governance Architecture and is maintained under version control with cryptographic integrity verification.*
+_This document is part of the QuantumPoly Governance Architecture and is maintained under version control with cryptographic integrity verification._
 
+---
+
+**Version:** 1.0
+**Last Reviewed:** 2025-11-25
+**Reviewed By:** EWA

@@ -1,0 +1,277 @@
+
+> quantumpoly@1.1.0 lint
+> eslint .
+
+
+/Users/a.i.k/Desktop/QuantumPoly/Internetseite/Programmierung Internetseite/QuantumPoly-main/QuantumPoly/__tests__/components/GateVisualizationWidget.test.tsx
+  2:1  error  There should be at least one empty line between import groups          import/order
+  2:1  error  `@testing-library/react` import should occur before import of `react`  import/order
+
+/Users/a.i.k/Desktop/QuantumPoly/Internetseite/Programmierung Internetseite/QuantumPoly-main/QuantumPoly/__tests__/components/dashboard/dashboard-metrics.test.tsx
+    3:1   error  There should be at least one empty line between import groups                                               import/order
+    3:1   error  `@testing-library/react` import should occur before import of `react`                                       import/order
+    5:1   error  `@/components/dashboard/EiiChart` import should occur before import of `@/lib/integrity/metrics/eii`        import/order
+    6:1   error  `@/components/dashboard/ConsentMetrics` import should occur before import of `@/lib/integrity/metrics/eii`  import/order
+   12:43  error  Unexpected any. Specify a different type                                                                    @typescript-eslint/no-explicit-any
+   17:37  error  Unexpected any. Specify a different type                                                                    @typescript-eslint/no-explicit-any
+   20:24  error  Unexpected any. Specify a different type                                                                    @typescript-eslint/no-explicit-any
+   26:27  error  Unexpected any. Specify a different type                                                                    @typescript-eslint/no-explicit-any
+   59:13  error  'expected' is assigned a value but never used                                                               @typescript-eslint/no-unused-vars
+  213:31  error  Unexpected any. Specify a different type                                                                    @typescript-eslint/no-explicit-any
+  214:31  error  Unexpected any. Specify a different type                                                                    @typescript-eslint/no-explicit-any
+
+/Users/a.i.k/Desktop/QuantumPoly/Internetseite/Programmierung Internetseite/QuantumPoly-main/QuantumPoly/__tests__/lib/integrity.test.ts
+  1:1   error  There should be at least one empty line between import groups  import/order
+  7:28  error  'ConsentCategory' is defined but never used                    @typescript-eslint/no-unused-vars
+
+/Users/a.i.k/Desktop/QuantumPoly/Internetseite/Programmierung Internetseite/QuantumPoly-main/QuantumPoly/__tests__/localisation.test.ts
+  13:20  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  15:18  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/a.i.k/Desktop/QuantumPoly/Internetseite/Programmierung Internetseite/QuantumPoly-main/QuantumPoly/__tests__/performance/integrity.bench.ts
+  1:1  error  There should be at least one empty line between import groups  import/order
+
+/Users/a.i.k/Desktop/QuantumPoly/Internetseite/Programmierung Internetseite/QuantumPoly-main/QuantumPoly/scripts/add-locale.ts
+  84:36  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  84:42  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  94:34  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/a.i.k/Desktop/QuantumPoly/Internetseite/Programmierung Internetseite/QuantumPoly-main/QuantumPoly/scripts/aggregate-ethics.mjs
+   23:7  warning  'REPORTS_DIR' is assigned a value but never used    @typescript-eslint/no-unused-vars
+   26:7  warning  'COVERAGE_FILE' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  288:9  warning  'validation' is assigned a value but never used     @typescript-eslint/no-unused-vars
+
+/Users/a.i.k/Desktop/QuantumPoly/Internetseite/Programmierung Internetseite/QuantumPoly-main/QuantumPoly/scripts/aggregate-feedback.mjs
+  28:7  warning  'SCHEMA_FILE' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/Users/a.i.k/Desktop/QuantumPoly/Internetseite/Programmierung Internetseite/QuantumPoly-main/QuantumPoly/scripts/autonomous-report.mjs
+   28:7  warning  '__dirname' is assigned a value but never used      @typescript-eslint/no-unused-vars
+  334:9  warning  'ledgerEntries' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/Users/a.i.k/Desktop/QuantumPoly/Internetseite/Programmierung Internetseite/QuantumPoly-main/QuantumPoly/scripts/daily-governance-report.mjs
+   31:7   warning  '__dirname' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  156:34  warning  'currentDate' is defined but never used         @typescript-eslint/no-unused-vars
+
+/Users/a.i.k/Desktop/QuantumPoly/Internetseite/Programmierung Internetseite/QuantumPoly-main/QuantumPoly/scripts/ewa-analyze.mjs
+  202:7  warning  'requiresHumanReview' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/Users/a.i.k/Desktop/QuantumPoly/Internetseite/Programmierung Internetseite/QuantumPoly-main/QuantumPoly/scripts/ewa-postlaunch.mjs
+  115:11  warning  'response' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/Users/a.i.k/Desktop/QuantumPoly/Internetseite/Programmierung Internetseite/QuantumPoly-main/QuantumPoly/scripts/generate-governance-certificate.mjs
+  47:5  warning  'ledgerEntry' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/Users/a.i.k/Desktop/QuantumPoly/Internetseite/Programmierung Internetseite/QuantumPoly-main/QuantumPoly/scripts/generate-locale-report.ts
+   75:19  warning  Unexpected any. Specify a different type          @typescript-eslint/no-explicit-any
+  172:9   warning  'statusColor' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/Users/a.i.k/Desktop/QuantumPoly/Internetseite/Programmierung Internetseite/QuantumPoly-main/QuantumPoly/scripts/generate-props-md.ts
+  12:39  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  15:21  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/a.i.k/Desktop/QuantumPoly/Internetseite/Programmierung Internetseite/QuantumPoly-main/QuantumPoly/scripts/generate-pseudo-locale.ts
+  189:36  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  189:42  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  199:34  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/a.i.k/Desktop/QuantumPoly/Internetseite/Programmierung Internetseite/QuantumPoly-main/QuantumPoly/scripts/ledger-normalize.mjs
+   12:7  warning  '__dirname' is assigned a value but never used        @typescript-eslint/no-unused-vars
+   27:7  warning  'log' is assigned a value but never used              @typescript-eslint/no-unused-vars
+   67:7  warning  'totalModified' is assigned a value but never used    @typescript-eslint/no-unused-vars
+  113:9  warning  'isMultiLineJson' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/Users/a.i.k/Desktop/QuantumPoly/Internetseite/Programmierung Internetseite/QuantumPoly-main/QuantumPoly/scripts/monitor-system.mjs
+  30:8  warning  'crypto' is defined but never used              @typescript-eslint/no-unused-vars
+  35:7  warning  '__dirname' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/Users/a.i.k/Desktop/QuantumPoly/Internetseite/Programmierung Internetseite/QuantumPoly-main/QuantumPoly/scripts/simulate-governance.ts
+  2:1  error  There should be at least one empty line between import groups  import/order
+
+/Users/a.i.k/Desktop/QuantumPoly/Internetseite/Programmierung Internetseite/QuantumPoly-main/QuantumPoly/scripts/validate-ethics-data.mjs
+  16:8  warning  'path' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/a.i.k/Desktop/QuantumPoly/Internetseite/Programmierung Internetseite/QuantumPoly-main/QuantumPoly/scripts/validate-locales.ts
+  53:9  warning  'timestamp' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/Users/a.i.k/Desktop/QuantumPoly/Internetseite/Programmierung Internetseite/QuantumPoly-main/QuantumPoly/scripts/validate-translations.ts
+   64:76  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   80:41  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   99:45  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+   99:65  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  101:14  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  163:42  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  164:42  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  351:53  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  368:55  warning  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/a.i.k/Desktop/QuantumPoly/Internetseite/Programmierung Internetseite/QuantumPoly-main/QuantumPoly/scripts/verify-block-c-bootstrap.mjs
+  24:7  warning  '__dirname' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/Users/a.i.k/Desktop/QuantumPoly/Internetseite/Programmierung Internetseite/QuantumPoly-main/QuantumPoly/scripts/verify-daily-reports.mjs
+   33:7   warning  '__dirname' is assigned a value but never used  @typescript-eslint/no-unused-vars
+  102:29  warning  'reportPath' is defined but never used          @typescript-eslint/no-unused-vars
+
+/Users/a.i.k/Desktop/QuantumPoly/Internetseite/Programmierung Internetseite/QuantumPoly-main/QuantumPoly/scripts/verify-integrity.mjs
+  33:7  warning  '__dirname' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/Users/a.i.k/Desktop/QuantumPoly/Internetseite/Programmierung Internetseite/QuantumPoly-main/QuantumPoly/scripts/verify-ledger.mjs
+  254:11  warning  'computedHash' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/Users/a.i.k/Desktop/QuantumPoly/Internetseite/Programmierung Internetseite/QuantumPoly-main/QuantumPoly/scripts/verify-stage-vi-closure.mjs
+  317:26  warning  'ledgerEntry' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/a.i.k/Desktop/QuantumPoly/Internetseite/Programmierung Internetseite/QuantumPoly-main/QuantumPoly/scripts/weekly-governance-summary.mjs
+  31:7  warning  '__dirname' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+/Users/a.i.k/Desktop/QuantumPoly/Internetseite/Programmierung Internetseite/QuantumPoly-main/QuantumPoly/src/app/[locale]/governance/audit/page.tsx
+  10:1  error  There should be at least one empty line between import groups  import/order
+  26:9  error  't' is assigned a value but never used                         @typescript-eslint/no-unused-vars
+
+/Users/a.i.k/Desktop/QuantumPoly/Internetseite/Programmierung Internetseite/QuantumPoly-main/QuantumPoly/src/app/[locale]/governance/dashboard/timeline/TimelineClient.tsx
+  37:36  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/a.i.k/Desktop/QuantumPoly/Internetseite/Programmierung Internetseite/QuantumPoly-main/QuantumPoly/src/app/[locale]/observatory/page.tsx
+   2:1   error  There should be at least one empty line between import groups                                                                    import/order
+   2:1   error  `next-intl` import should occur before import of `react`                                                                         import/order
+   4:1   error  `@/components/observatory/EthicalDriftChart` import should occur before import of `@/components/observatory/GlobalIntegrityMap`  import/order
+  14:11  error  Invalid Tailwind CSS classnames order                                                                                            tailwindcss/classnames-order
+  18:15  error  Invalid Tailwind CSS classnames order                                                                                            tailwindcss/classnames-order
+  41:16  error  Invalid Tailwind CSS classnames order                                                                                            tailwindcss/classnames-order
+
+/Users/a.i.k/Desktop/QuantumPoly/Internetseite/Programmierung Internetseite/QuantumPoly-main/QuantumPoly/src/app/api/governance/consent-metrics/route.ts
+  19:27  error  '_request' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/a.i.k/Desktop/QuantumPoly/Internetseite/Programmierung Internetseite/QuantumPoly-main/QuantumPoly/src/components/audit/ReviewDashboard.tsx
+  193:15  warning  The autoFocus prop should not be used, as it can reduce usability and accessibility for users  jsx-a11y/no-autofocus
+
+/Users/a.i.k/Desktop/QuantumPoly/Internetseite/Programmierung Internetseite/QuantumPoly-main/QuantumPoly/src/components/consent/ConsentModal.tsx
+  130:5  error  Non-interactive elements should not be assigned mouse or keyboard event listeners  jsx-a11y/no-noninteractive-element-interactions
+
+/Users/a.i.k/Desktop/QuantumPoly/Internetseite/Programmierung Internetseite/QuantumPoly-main/QuantumPoly/src/components/dashboard/BlockDetailModal.tsx
+   93:20  error  Unexpected any. Specify a different type                                                        @typescript-eslint/no-explicit-any
+  107:5   error  Visible, non-interactive elements with click handlers must have at least one keyboard listener  jsx-a11y/click-events-have-key-events
+  107:5   error  Non-interactive elements should not be assigned mouse or keyboard event listeners               jsx-a11y/no-noninteractive-element-interactions
+
+/Users/a.i.k/Desktop/QuantumPoly/Internetseite/Programmierung Internetseite/QuantumPoly-main/QuantumPoly/src/components/dashboard/ConsentMetrics.tsx
+  158:44  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/a.i.k/Desktop/QuantumPoly/Internetseite/Programmierung Internetseite/QuantumPoly-main/QuantumPoly/src/components/dashboard/EiiChart.tsx
+  12:1   error  There should be at least one empty line between import groups  import/order
+  69:36  error  Unexpected any. Specify a different type                       @typescript-eslint/no-explicit-any
+  93:37  error  Unexpected any. Specify a different type                       @typescript-eslint/no-explicit-any
+
+/Users/a.i.k/Desktop/QuantumPoly/Internetseite/Programmierung Internetseite/QuantumPoly-main/QuantumPoly/src/components/dashboard/GateVisualizationWidget.tsx
+  53:10  error  Invalid Tailwind CSS classnames order  tailwindcss/classnames-order
+  54:11  error  Invalid Tailwind CSS classnames order  tailwindcss/classnames-order
+  59:13  error  Invalid Tailwind CSS classnames order  tailwindcss/classnames-order
+  72:14  error  Invalid Tailwind CSS classnames order  tailwindcss/classnames-order
+  80:8   error  Prefer named exports                   import/no-default-export
+
+/Users/a.i.k/Desktop/QuantumPoly/Internetseite/Programmierung Internetseite/QuantumPoly-main/QuantumPoly/src/components/dashboard/LedgerFeed.tsx
+  232:15  error  Visible, non-interactive elements with click handlers must have at least one keyboard listener                    jsx-a11y/click-events-have-key-events
+  232:15  error  Non-interactive elements should not be assigned mouse or keyboard event listeners                                 jsx-a11y/no-noninteractive-element-interactions
+  232:15  error  The element article has an implicit role of article. Defining this explicitly is redundant and should be avoided  jsx-a11y/no-redundant-roles
+
+/Users/a.i.k/Desktop/QuantumPoly/Internetseite/Programmierung Internetseite/QuantumPoly-main/QuantumPoly/src/components/dashboard/LedgerTimeline.tsx
+  218:32  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/a.i.k/Desktop/QuantumPoly/Internetseite/Programmierung Internetseite/QuantumPoly-main/QuantumPoly/src/components/observatory/EthicalDriftChart.tsx
+  6:1  error  Use "@ts-expect-error" instead of "@ts-ignore", as "@ts-ignore" will do nothing if the following line is error-free  @typescript-eslint/ban-ts-comment
+  7:1  error  'recharts' import is duplicated                                                                                      no-duplicate-imports
+  8:1  error  `next-intl` import should occur before import of `react`                                                             import/order
+
+/Users/a.i.k/Desktop/QuantumPoly/Internetseite/Programmierung Internetseite/QuantumPoly-main/QuantumPoly/src/components/observatory/GlobalIntegrityMap.tsx
+    3:1   error  `react` import should occur after import of `next-intl`  import/order
+   27:9   error  't' is assigned a value but never used                   @typescript-eslint/no-unused-vars
+   66:11  error  'color' is assigned a value but never used               @typescript-eslint/no-unused-vars
+   69:54  error  Unexpected any. Specify a different type                 @typescript-eslint/no-explicit-any
+   94:27  error  Unexpected any. Specify a different type                 @typescript-eslint/no-explicit-any
+  114:25  error  Unexpected any. Specify a different type                 @typescript-eslint/no-explicit-any
+  115:25  error  Unexpected any. Specify a different type                 @typescript-eslint/no-explicit-any
+  116:25  error  Unexpected any. Specify a different type                 @typescript-eslint/no-explicit-any
+  117:25  error  Unexpected any. Specify a different type                 @typescript-eslint/no-explicit-any
+  120:25  error  Unexpected any. Specify a different type                 @typescript-eslint/no-explicit-any
+  121:25  error  Unexpected any. Specify a different type                 @typescript-eslint/no-explicit-any
+  124:24  error  Unexpected any. Specify a different type                 @typescript-eslint/no-explicit-any
+  125:24  error  Unexpected any. Specify a different type                 @typescript-eslint/no-explicit-any
+  128:33  error  Unexpected any. Specify a different type                 @typescript-eslint/no-explicit-any
+  134:29  error  Unexpected any. Specify a different type                 @typescript-eslint/no-explicit-any
+  139:31  error  Unexpected any. Specify a different type                 @typescript-eslint/no-explicit-any
+
+/Users/a.i.k/Desktop/QuantumPoly/Internetseite/Programmierung Internetseite/QuantumPoly-main/QuantumPoly/src/components/observatory/ProofLens.tsx
+   2:1   error  `next-intl` import should occur before import of `react`  import/order
+  21:10  error  Invalid Tailwind CSS classnames order                     tailwindcss/classnames-order
+
+/Users/a.i.k/Desktop/QuantumPoly/Internetseite/Programmierung Internetseite/QuantumPoly-main/QuantumPoly/src/lib/analytics.ts
+  75:23  error  Require statement not part of import statement  @typescript-eslint/no-var-requires
+
+/Users/a.i.k/Desktop/QuantumPoly/Internetseite/Programmierung Internetseite/QuantumPoly-main/QuantumPoly/src/lib/audit/integrity-checker.ts
+  172:23  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/a.i.k/Desktop/QuantumPoly/Internetseite/Programmierung Internetseite/QuantumPoly-main/QuantumPoly/src/lib/ewa/engine/statistics.ts
+  89:44  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/a.i.k/Desktop/QuantumPoly/Internetseite/Programmierung Internetseite/QuantumPoly-main/QuantumPoly/src/lib/federation/types.ts
+  223:20  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/a.i.k/Desktop/QuantumPoly/Internetseite/Programmierung Internetseite/QuantumPoly-main/QuantumPoly/src/lib/feedback/trust-scorer.ts
+  114:47  error  '_signals' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/a.i.k/Desktop/QuantumPoly/Internetseite/Programmierung Internetseite/QuantumPoly-main/QuantumPoly/src/lib/governance/report-generator.ts
+   19:1   error  There should be at least one empty line between import groups  import/order
+  117:47  error  Unexpected any. Specify a different type                       @typescript-eslint/no-explicit-any
+  257:52  error  Unexpected any. Specify a different type                       @typescript-eslint/no-explicit-any
+  294:65  error  Unexpected any. Specify a different type                       @typescript-eslint/no-explicit-any
+  307:55  error  Unexpected any. Specify a different type                       @typescript-eslint/no-explicit-any
+
+/Users/a.i.k/Desktop/QuantumPoly/Internetseite/Programmierung Internetseite/QuantumPoly-main/QuantumPoly/src/lib/integrity/engine.ts
+  42:42  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/a.i.k/Desktop/QuantumPoly/Internetseite/Programmierung Internetseite/QuantumPoly-main/QuantumPoly/src/lib/integrity/index.ts
+  19:1  error  There should be no empty line within import group                         import/order
+  36:1  error  There should be no empty line within import group                         import/order
+  50:1  error  `./metrics/consent` import should occur before import of `./metrics/eii`  import/order
+
+/Users/a.i.k/Desktop/QuantumPoly/Internetseite/Programmierung Internetseite/QuantumPoly-main/QuantumPoly/src/lib/integrity/ledger/reader.ts
+  43:18  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/a.i.k/Desktop/QuantumPoly/Internetseite/Programmierung Internetseite/QuantumPoly-main/QuantumPoly/src/lib/integrity/metrics/consent.ts
+  11:1  error  There should be at least one empty line between import groups  import/order
+
+/Users/a.i.k/Desktop/QuantumPoly/Internetseite/Programmierung Internetseite/QuantumPoly-main/QuantumPoly/src/lib/integrity/metrics/eii.ts
+  10:1  error  There should be at least one empty line between import groups                     import/order
+  11:1  error  `@/types/integrity` type import should occur before import of `../ledger/reader`  import/order
+
+/Users/a.i.k/Desktop/QuantumPoly/Internetseite/Programmierung Internetseite/QuantumPoly-main/QuantumPoly/src/lib/integrity/repair-manager.ts
+   35:31  error  Unexpected any. Specify a different type         @typescript-eslint/no-explicit-any
+   49:42  error  Unexpected any. Specify a different type         @typescript-eslint/no-explicit-any
+  129:23  error  Unexpected any. Specify a different type         @typescript-eslint/no-explicit-any
+  166:10  error  '_repairHashMismatch' is defined but never used  @typescript-eslint/no-unused-vars
+  193:23  error  Unexpected any. Specify a different type         @typescript-eslint/no-explicit-any
+  250:23  error  Unexpected any. Specify a different type         @typescript-eslint/no-explicit-any
+
+/Users/a.i.k/Desktop/QuantumPoly/Internetseite/Programmierung Internetseite/QuantumPoly-main/QuantumPoly/src/lib/ogp/registry-client.ts
+  1:22  error  'fs' is defined but never used    @typescript-eslint/no-unused-vars
+  2:8   error  'path' is defined but never used  @typescript-eslint/no-unused-vars
+
+/Users/a.i.k/Desktop/QuantumPoly/Internetseite/Programmierung Internetseite/QuantumPoly-main/QuantumPoly/src/lib/simulator/engine/scenario-injector.ts
+  2:1  error  There should be at least one empty line between import groups                  import/order
+  5:1  error  `./persona-engine` import should occur before import of `./reaction-analyzer`  import/order
+
+/Users/a.i.k/Desktop/QuantumPoly/Internetseite/Programmierung Internetseite/QuantumPoly-main/QuantumPoly/src/lib/trust/qr-generator.ts
+   25:3  error  '_metadata' is defined but never used     @typescript-eslint/no-unused-vars
+   94:8  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  139:8  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+/Users/a.i.k/Desktop/QuantumPoly/Internetseite/Programmierung Internetseite/QuantumPoly-main/QuantumPoly/src/lib/visualization/timeline-helpers.ts
+  165:46  error  Unexpected any. Specify a different type      @typescript-eslint/no-explicit-any
+  165:56  error  Unexpected any. Specify a different type      @typescript-eslint/no-explicit-any
+  226:7   error  Unexpected lexical declaration in case block  no-case-declarations
+
+/Users/a.i.k/Desktop/QuantumPoly/Internetseite/Programmierung Internetseite/QuantumPoly-main/QuantumPoly/test/localisation.test.ts
+  13:20  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  15:18  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+✖ 149 problems (103 errors, 46 warnings)
+  31 errors and 0 warnings potentially fixable with the `--fix` option.
+

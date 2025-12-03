@@ -72,6 +72,7 @@ export function trackEvent(event: AnalyticsEvent | string, props?: AnalyticsEven
 function trackVercelEvent(event: string, props?: AnalyticsEventProps): void {
   try {
     // Vercel Analytics uses the track function from @vercel/analytics
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
     const { track } = require('@vercel/analytics');
     if (typeof track === 'function') {
       track(event, props);
@@ -139,4 +140,3 @@ export const ANALYTICS_METADATA = {
   consentRequired: true,
   lastUpdated: '2025-10-27',
 };
-

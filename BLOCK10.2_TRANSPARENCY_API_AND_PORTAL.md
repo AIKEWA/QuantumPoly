@@ -1,7 +1,7 @@
 ---
 id: block10.2-transparency-api
-title: "BLOCK 10.2 — Transparency API & Public Ethics Portal"
-subtitle: "Opening the Ledger to the Public"
+title: 'BLOCK 10.2 — Transparency API & Public Ethics Portal'
+subtitle: 'Opening the Ledger to the Public'
 date: November 2025
 authors:
   - Aykut Aydin (A.I.K)
@@ -27,6 +27,7 @@ tags:
 **Result statement:** Public transparency = verifiable trust anchor. QuantumPoly opens its ethical inner workings to auditors, researchers, and citizens through cryptographically verifiable APIs and an accessible public portal.
 
 **Deliverables:**
+
 - API `/api/ethics/ledger` → full public governance ledger as JSON with hashes, checksums, signatures
 - API `/api/ethics/summary` → summary (blocks, hash chain, latest changes)
 - Frontend `/ethics/portal` → public page with interactive display (timeline, hash proofs, audit status)
@@ -135,6 +136,7 @@ Accept: application/json
 ```
 
 **Query Parameters:**
+
 - `page` (optional): Page number for pagination (default: 1)
 - `limit` (optional): Entries per page (default: all, max: 100)
 
@@ -198,12 +200,7 @@ Accept: application/json
   "verified": true,
   "totalEntries": 16,
   "lastUpdate": "2025-11-03T23:07:54Z",
-  "blocks": [
-    "block7-baseline",
-    "feedback-2025-Q4-validation",
-    "audit-closure-block-8.8",
-    "..."
-  ],
+  "blocks": ["block7-baseline", "feedback-2025-Q4-validation", "audit-closure-block-8.8", "..."],
   "recentChanges": [
     {
       "block": "block10.1.1-lint-cleanup",
@@ -254,6 +251,7 @@ https://quantumpoly.ai/ethics/portal
 ### Screenshots (Conceptual)
 
 #### Desktop View
+
 ```
 ┌──────────────────────────────────────────────────────────────┐
 │  Ethics Portal                                      QuantumPoly│
@@ -291,29 +289,29 @@ Each entry in the governance ledger follows this structure:
 ```typescript
 interface LedgerEntry {
   // Core identification
-  id: string;                    // Unique entry identifier
-  entry_id?: string;             // Alternative ID field
-  
+  id: string; // Unique entry identifier
+  entry_id?: string; // Alternative ID field
+
   // Temporal information
-  timestamp: string;             // ISO 8601 timestamp
-  
+  timestamp: string; // ISO 8601 timestamp
+
   // Version control
-  commit: string;                // Git commit hash
-  commit_hash?: string;          // Alternative commit field
-  
+  commit: string; // Git commit hash
+  commit_hash?: string; // Alternative commit field
+
   // Entry classification
-  entryType?: string;            // Entry type (e.g., "audit_closure")
-  ledger_entry_type?: string;    // Alternative type field
-  
+  entryType?: string; // Entry type (e.g., "audit_closure")
+  ledger_entry_type?: string; // Alternative type field
+
   // Block reference
-  blockId?: string;              // Block identifier
-  block_id?: string;             // Alternative block field
-  
+  blockId?: string; // Block identifier
+  block_id?: string; // Alternative block field
+
   // Cryptographic proof
-  hash: string;                  // SHA-256 hash of entry
-  merkleRoot: string;            // Merkle root at this point
-  signature?: string | null;     // GPG signature (optional)
-  
+  hash: string; // SHA-256 hash of entry
+  merkleRoot: string; // Merkle root at this point
+  signature?: string | null; // GPG signature (optional)
+
   // Additional metadata (varies by entry type)
   [key: string]: unknown;
 }
@@ -323,11 +321,11 @@ interface LedgerEntry {
 
 ```typescript
 interface VerificationResult {
-  verified: boolean;             // Overall verification status
-  merkleRoot: string;            // Current Merkle root
-  entries: LedgerEntry[];        // All ledger entries
-  totalEntries: number;          // Count of entries
-  lastUpdate: string;            // ISO 8601 timestamp of last entry
+  verified: boolean; // Overall verification status
+  merkleRoot: string; // Current Merkle root
+  entries: LedgerEntry[]; // All ledger entries
+  totalEntries: number; // Count of entries
+  lastUpdate: string; // ISO 8601 timestamp of last entry
 }
 ```
 
@@ -351,7 +349,7 @@ For each entry in ledger:
   1. Verify hash format (64-character hex string)
   2. Verify timestamp is >= previous timestamp
   3. Compute cumulative Merkle root
-  
+
 If all checks pass:
   verified = true
 Else:
@@ -362,8 +360,8 @@ Else:
 
 ```typescript
 function computeMerkleRoot(entries: LedgerEntry[]): string {
-  const hashes = entries.map(e => e.hash);
-  const combined = hashes.join("");
+  const hashes = entries.map((e) => e.hash);
+  const combined = hashes.join('');
   return sha256(combined);
 }
 ```
@@ -392,11 +390,13 @@ cat hashes.txt | tr -d '\n' | shasum -a 256
 ### Privacy Boundaries
 
 **No Personal Data Exposed:**
+
 - Ledger contains only aggregate metrics and system events
 - No user identifiers, IP addresses, or behavioral data
 - Consent metrics are aggregated (no individual consent records)
 
 **Public by Design:**
+
 - All data in `/api/ethics/*` is intended for public consumption
 - No authentication required for read access
 - No sensitive internal system details exposed
@@ -429,6 +429,7 @@ cat hashes.txt | tr -d '\n' | shasum -a 256
 The Ethics Portal follows Web Content Accessibility Guidelines 2.2 at Level AA:
 
 **1. Perceivable**
+
 - Semantic HTML landmarks (`<main>`, `<section>`, `<footer>`)
 - Proper heading hierarchy (h1 → h2)
 - Sufficient color contrast (4.5:1 for text, 3:1 for UI components)
@@ -436,30 +437,33 @@ The Ethics Portal follows Web Content Accessibility Guidelines 2.2 at Level AA:
 - Dark mode support with maintained contrast
 
 **2. Operable**
+
 - Keyboard navigation for all interactive elements
 - Visible focus indicators (focus rings)
 - Skip links to main content
 - No time-based interactions
 
 **3. Understandable**
+
 - Clear, consistent labels
 - ARIA labels on badges and status indicators
 - Predictable navigation structure
 - Error messages in plain language
 
 **4. Robust**
+
 - Valid HTML5
 - ARIA roles and attributes
 - Compatible with screen readers
 
 ### Keyboard Navigation
 
-| Key | Action |
-|-----|--------|
-| Tab | Navigate to next interactive element |
+| Key       | Action                                   |
+| --------- | ---------------------------------------- |
+| Tab       | Navigate to next interactive element     |
 | Shift+Tab | Navigate to previous interactive element |
-| Enter | Activate link |
-| Space | Scroll page |
+| Enter     | Activate link                            |
+| Space     | Scroll page                              |
 
 ### Screen Reader Support
 
@@ -475,7 +479,7 @@ The Ethics Portal follows Web Content Accessibility Guidelines 2.2 at Level AA:
 
 ```javascript
 // JavaScript/Node.js
-const response = await fetch("https://quantumpoly.ai/api/ethics/summary");
+const response = await fetch('https://quantumpoly.ai/api/ethics/summary');
 const data = await response.json();
 
 console.log(`Latest block: ${data.latest}`);
@@ -520,6 +524,7 @@ curl -s "https://quantumpoly.ai/api/ethics/summary" | \
 ```
 
 Output:
+
 ```
 2025-11-03T23:07:54Z - block10.1.1-lint-cleanup: Repository-wide lint and type safety cleanup
 2025-11-03T20:00:43Z - public-baseline-v1.1: Public Baseline v1.1 deployed...
@@ -533,21 +538,25 @@ Output:
 ### For External Auditors
 
 **Step 1: Fetch Summary**
+
 ```bash
 curl -X GET "https://quantumpoly.ai/api/ethics/summary" | jq .
 ```
 
 **Step 2: Verify Reported Status**
+
 - Check `verified: true`
 - Note `merkle_root` value
 - Record `totalEntries` count
 
 **Step 3: Fetch Full Ledger**
+
 ```bash
 curl -X GET "https://quantumpoly.ai/api/ethics/ledger" | jq . > ledger-full.json
 ```
 
 **Step 4: Independent Verification**
+
 ```bash
 # Extract and concatenate hashes
 jq -r '.entries[].hash' ledger-full.json | tr -d '\n' | shasum -a 256
@@ -556,6 +565,7 @@ jq -r '.entries[].hash' ledger-full.json | tr -d '\n' | shasum -a 256
 ```
 
 **Step 5: Chronology Check**
+
 ```bash
 # Verify timestamps are monotonically increasing
 jq -r '.entries[].timestamp' ledger-full.json | \
@@ -563,6 +573,7 @@ jq -r '.entries[].timestamp' ledger-full.json | \
 ```
 
 **Step 6: Hash Format Check**
+
 ```bash
 # Verify all hashes are valid SHA-256 (64 hex chars)
 jq -r '.entries[].hash' ledger-full.json | \
@@ -583,11 +594,13 @@ If all checks pass, the ledger is cryptographically verified.
 **Implementation Status:** Documented but not enforced in code (future enhancement)
 
 **Rationale:**
+
 - Public APIs should be accessible without authentication
 - Rate limits prevent abuse while allowing legitimate research
 - Future implementation could use edge middleware or API gateway
 
 **For High-Volume Users:**
+
 - Contact governance@quantumpoly.ai for bulk access
 - Consider caching responses (5-minute freshness is acceptable for most use cases)
 - Use `/api/ethics/summary` instead of `/api/ethics/ledger` for periodic checks
@@ -597,11 +610,13 @@ If all checks pass, the ledger is cryptographically verified.
 **Current:** Site origin or wildcard (configurable)
 
 **Environment Variable:**
+
 ```bash
 NEXT_PUBLIC_SITE_URL=https://quantumpoly.ai
 ```
 
 **Headers:**
+
 ```http
 Access-Control-Allow-Origin: https://quantumpoly.ai
 Access-Control-Allow-Methods: GET, OPTIONS
@@ -678,6 +693,7 @@ src/
 ### Dependencies
 
 **Existing (no new dependencies required):**
+
 - Next.js 14
 - TypeScript
 - Node.js crypto module
@@ -703,6 +719,7 @@ NEXT_PUBLIC_SITE_URL=https://quantumpoly.ai
 ### Testing
 
 **Manual Testing Checklist:**
+
 - [ ] `/api/ethics/ledger` returns valid JSON
 - [ ] `/api/ethics/summary` returns valid JSON
 - [ ] `/ethics/portal` renders without errors
@@ -714,6 +731,7 @@ NEXT_PUBLIC_SITE_URL=https://quantumpoly.ai
 - [ ] Pagination parameters accepted (even if not enforced)
 
 **Automated Testing (Future):**
+
 - Unit tests for ledger parser
 - Integration tests for API endpoints
 - E2E tests for portal page
@@ -726,6 +744,7 @@ NEXT_PUBLIC_SITE_URL=https://quantumpoly.ai
 BLOCK 10.2 establishes QuantumPoly's public transparency layer, enabling independent verification of governance integrity. By exposing the ledger through stable APIs and an accessible portal, we demonstrate our commitment to open, verifiable ethics.
 
 **Key Achievements:**
+
 - ✓ Two public APIs for full and summarized ledger access
 - ✓ Server-side rendered portal with timeline visualization
 - ✓ WCAG 2.2 AA compliant interface
@@ -734,6 +753,7 @@ BLOCK 10.2 establishes QuantumPoly's public transparency layer, enabling indepen
 - ✓ Stable, deterministic responses
 
 **Next Steps (Block 10.3):**
+
 - Implement rate limiting
 - Add GPG signature verification
 - Deploy webhook notifications
@@ -781,23 +801,23 @@ BLOCK 10.2 establishes QuantumPoly's public transparency layer, enabling indepen
 
 ## Appendix B: Ledger Entry Types
 
-| Entry Type | Description | Block |
-|------------|-------------|-------|
-| `eii-baseline` | Ethics Integrity Index baseline measurement | 7.x |
-| `feedback-synthesis` | Synthesized feedback from review cycle | 8.7 |
-| `audit_closure` | Formal audit sign-off | 8.8 |
-| `legal_compliance` | Legal compliance verification | 9.0 |
-| `implementation_verification` | Implementation checklist completion | 9.1 |
-| `consent_baseline` | Consent management baseline | 9.2 |
-| `transparency_extension` | Transparency framework extension | 9.3 |
-| `ethics_reporting` | Public ethics API deployment | 9.4 |
-| `autonomous_analysis` | EWA autonomous analysis | 9.5 |
-| `federation_integration` | Federation network integration | 9.6 |
-| `attestation_layer_activation` | Trust proof layer activation | 9.7 |
-| `integrity_layer_activation` | Continuous integrity layer activation | 9.8 |
-| `final_audit_signoff` | Human final audit and release | 9.9 |
-| `release_public_baseline` | Public baseline release | 10.0 |
-| `code_hygiene_cleanup` | Code quality improvement | 10.1.1 |
+| Entry Type                     | Description                                 | Block  |
+| ------------------------------ | ------------------------------------------- | ------ |
+| `eii-baseline`                 | Ethics Integrity Index baseline measurement | 7.x    |
+| `feedback-synthesis`           | Synthesized feedback from review cycle      | 8.7    |
+| `audit_closure`                | Formal audit sign-off                       | 8.8    |
+| `legal_compliance`             | Legal compliance verification               | 9.0    |
+| `implementation_verification`  | Implementation checklist completion         | 9.1    |
+| `consent_baseline`             | Consent management baseline                 | 9.2    |
+| `transparency_extension`       | Transparency framework extension            | 9.3    |
+| `ethics_reporting`             | Public ethics API deployment                | 9.4    |
+| `autonomous_analysis`          | EWA autonomous analysis                     | 9.5    |
+| `federation_integration`       | Federation network integration              | 9.6    |
+| `attestation_layer_activation` | Trust proof layer activation                | 9.7    |
+| `integrity_layer_activation`   | Continuous integrity layer activation       | 9.8    |
+| `final_audit_signoff`          | Human final audit and release               | 9.9    |
+| `release_public_baseline`      | Public baseline release                     | 10.0   |
+| `code_hygiene_cleanup`         | Code quality improvement                    | 10.1.1 |
 
 ---
 
@@ -833,3 +853,8 @@ BLOCK 10.2 establishes QuantumPoly's public transparency layer, enabling indepen
 
 **End of Document**
 
+---
+
+**Version:** 1.0
+**Last Reviewed:** 2025-11-25
+**Reviewed By:** EWA

@@ -244,7 +244,7 @@ For complete architecture details, adapter interface specifications, and Supabas
 
 - **[Newsletter API Documentation](./docs/NEWSLETTER_API.md)**
 - **[API Testing Guide](./docs/API_TESTING_GUIDE.md)**
-- **[Block 4.4 Implementation Summary](./BLOCK4.4_IMPLEMENTATION_SUMMARY.md)**
+- **[Block 4.4 Implementation Summary](./BLOCK04.4_IMPLEMENTATION_SUMMARY.md)**
 
 ## Performance Optimization
 
@@ -1304,7 +1304,7 @@ For deeper dives into specific topics:
 - **[CI/CD GPG Ledger Integration](docs/CICD_GPG_LEDGER_INTEGRATION.md)** - Cryptographic signature setup
 - **[CICD Review Checklist](../.github/CICD_REVIEW_CHECKLIST.md)** - Pre-deployment validation
 - **[DNS Configuration](docs/DNS_CONFIGURATION.md)** - Production domain setup
-- **[BLOCK7 Implementation Summary](BLOCK7_CICD_IMPLEMENTATION_SUMMARY.md)** - Complete architecture overview
+- **[BLOCK7 Implementation Summary](BLOCK07.0_CICD_IMPLEMENTATION_SUMMARY.md)** - Complete architecture overview
 
 ---
 

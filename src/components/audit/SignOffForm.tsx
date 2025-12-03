@@ -66,8 +66,7 @@ export function SignOffForm({ integrityState, apiKey, onSuccess }: SignOffFormPr
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const requiresExceptions =
-    integrityState === 'attention_required' && decision === 'approved';
+  const requiresExceptions = integrityState === 'attention_required' && decision === 'approved';
 
   const handleAddException = () => {
     setExceptions([
@@ -84,12 +83,13 @@ export function SignOffForm({ integrityState, apiKey, onSuccess }: SignOffFormPr
 
   const handleRemoveException = (index: number) => {
     setExceptions(exceptions.filter((_, i) => i !== index));
+    // Focus management would ideally go here or via useEffect to focus the previous element
   };
 
   const handleExceptionChange = (
     index: number,
     field: keyof ExceptionJustification,
-    value: string
+    value: string,
   ) => {
     const updated = [...exceptions];
     updated[index] = { ...updated[index], [field]: value };
@@ -127,7 +127,7 @@ export function SignOffForm({ integrityState, apiKey, onSuccess }: SignOffFormPr
 
       // Success
       onSuccess();
-      
+
       // Reset form
       setReviewerName('');
       setNotes('');
@@ -141,10 +141,20 @@ export function SignOffForm({ integrityState, apiKey, onSuccess }: SignOffFormPr
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      <div className="rounded-lg border-2 border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-gray-800">
-        <h2 className="mb-4 text-xl font-bold text-gray-900 dark:text-gray-100">
+      <section
+        className="rounded-lg border-2 border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-gray-800"
+        aria-labelledby="signoff-form-heading"
+      >
+        <h2
+          id="signoff-form-heading"
+          className="mb-4 text-xl font-bold text-gray-900 dark:text-gray-100"
+        >
           Submit Sign-Off
         </h2>
+        <p id="form-description" className="mb-6 text-sm text-gray-600 dark:text-gray-400">
+          Please review the integrity state and provide your formal sign-off. Fields marked with an
+          asterisk (*) are required.
+        </p>
 
         {/* Reviewer Name */}
         <div className="mb-4">
@@ -152,14 +162,19 @@ export function SignOffForm({ integrityState, apiKey, onSuccess }: SignOffFormPr
             htmlFor="reviewer-name"
             className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300"
           >
-            Reviewer Name <span className="text-red-600">*</span>
+            Reviewer Name{' '}
+            <span className="text-red-600" aria-hidden="true">
+              *
+            </span>
           </label>
           <input
             type="text"
             id="reviewer-name"
+            name="reviewer-name"
             value={reviewerName}
             onChange={(e) => setReviewerName(e.target.value)}
             required
+            aria-required="true"
             className="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100"
             placeholder="Enter your full name"
           />
@@ -171,13 +186,18 @@ export function SignOffForm({ integrityState, apiKey, onSuccess }: SignOffFormPr
             htmlFor="role"
             className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300"
           >
-            Role <span className="text-red-600">*</span>
+            Role{' '}
+            <span className="text-red-600" aria-hidden="true">
+              *
+            </span>
           </label>
           <select
             id="role"
+            name="role"
             value={role}
             onChange={(e) => setRole(e.target.value as ReviewRole)}
             required
+            aria-required="true"
             className="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100"
           >
             {REVIEW_ROLES.map((r) => (
@@ -190,10 +210,16 @@ export function SignOffForm({ integrityState, apiKey, onSuccess }: SignOffFormPr
 
         {/* Review Scope (Display Only) */}
         <div className="mb-4">
-          <p className="mb-1 text-sm font-medium text-gray-700 dark:text-gray-300">
+          <p
+            id="review-scope-label"
+            className="mb-1 text-sm font-medium text-gray-700 dark:text-gray-300"
+          >
             Review Scope
           </p>
-          <ul className="list-inside list-disc space-y-1 text-sm text-gray-600 dark:text-gray-400">
+          <ul
+            aria-labelledby="review-scope-label"
+            className="list-inside list-disc space-y-1 text-sm text-gray-600 dark:text-gray-400"
+          >
             {REVIEW_SCOPES[role].map((scope) => (
               <li key={scope}>{scope}</li>
             ))}
@@ -206,115 +232,154 @@ export function SignOffForm({ integrityState, apiKey, onSuccess }: SignOffFormPr
             htmlFor="decision"
             className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300"
           >
-            Decision <span className="text-red-600">*</span>
+            Decision{' '}
+            <span className="text-red-600" aria-hidden="true">
+              *
+            </span>
           </label>
           <select
             id="decision"
+            name="decision"
             value={decision}
             onChange={(e) => setDecision(e.target.value as ReviewDecision)}
             required
+            aria-required="true"
             className="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100"
           >
             <option value="approved">Approved</option>
-            <option value="approved_with_exceptions">
-              Approved with Exceptions
-            </option>
+            <option value="approved_with_exceptions">Approved with Exceptions</option>
             <option value="rejected">Rejected</option>
           </select>
         </div>
 
         {/* Exception Justifications */}
-        {requiresExceptions && (
-          <div className="mb-4 rounded-md border-2 border-yellow-300 bg-yellow-50 p-4 dark:border-yellow-800 dark:bg-yellow-900/20">
-            <p className="mb-2 text-sm font-semibold text-yellow-800 dark:text-yellow-300">
-              ⚠️ Exception Justification Required
-            </p>
-            <p className="mb-3 text-sm text-yellow-700 dark:text-yellow-400">
-              System integrity requires attention. You must document exceptions
-              to approve.
-            </p>
-
-            {exceptions.map((exception, index) => (
-              <div
-                key={index}
-                className="mb-4 rounded border border-yellow-300 bg-white p-3 dark:border-yellow-700 dark:bg-gray-800"
-              >
-                <div className="mb-2 flex items-center justify-between">
-                  <h4 className="font-medium text-gray-900 dark:text-gray-100">
-                    Exception {index + 1}
-                  </h4>
-                  <button
-                    type="button"
-                    onClick={() => handleRemoveException(index)}
-                    className="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300"
-                  >
-                    Remove
-                  </button>
-                </div>
-
-                <div className="space-y-2">
-                  <input
-                    type="text"
-                    placeholder="Issue description *"
-                    value={exception.issue_description}
-                    onChange={(e) =>
-                      handleExceptionChange(index, 'issue_description', e.target.value)
-                    }
-                    required
-                    className="w-full rounded border border-gray-300 px-2 py-1 text-sm dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100"
-                  />
-                  <textarea
-                    placeholder="Rationale *"
-                    value={exception.rationale}
-                    onChange={(e) =>
-                      handleExceptionChange(index, 'rationale', e.target.value)
-                    }
-                    required
-                    rows={2}
-                    className="w-full rounded border border-gray-300 px-2 py-1 text-sm dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100"
-                  />
-                  <textarea
-                    placeholder="Mitigation plan *"
-                    value={exception.mitigation_plan}
-                    onChange={(e) =>
-                      handleExceptionChange(index, 'mitigation_plan', e.target.value)
-                    }
-                    required
-                    rows={2}
-                    className="w-full rounded border border-gray-300 px-2 py-1 text-sm dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100"
-                  />
-                  <input
-                    type="text"
-                    placeholder="Mitigation owner *"
-                    value={exception.mitigation_owner}
-                    onChange={(e) =>
-                      handleExceptionChange(index, 'mitigation_owner', e.target.value)
-                    }
-                    required
-                    className="w-full rounded border border-gray-300 px-2 py-1 text-sm dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100"
-                  />
-                  <input
-                    type="date"
-                    placeholder="Deadline (optional)"
-                    value={exception.deadline}
-                    onChange={(e) =>
-                      handleExceptionChange(index, 'deadline', e.target.value)
-                    }
-                    className="w-full rounded border border-gray-300 px-2 py-1 text-sm dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100"
-                  />
-                </div>
-              </div>
-            ))}
-
-            <button
-              type="button"
-              onClick={handleAddException}
-              className="text-sm font-medium text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
+        <div aria-live="polite">
+          {requiresExceptions && (
+            <div
+              className="mb-4 rounded-md border-2 border-yellow-300 bg-yellow-50 p-4 dark:border-yellow-800 dark:bg-yellow-900/20"
+              role="region"
+              aria-label="Exception Requirement"
             >
-              + Add Exception
-            </button>
-          </div>
-        )}
+              <p className="mb-2 text-sm font-semibold text-yellow-800 dark:text-yellow-300">
+                ⚠️ Exception Justification Required
+              </p>
+              <p className="mb-3 text-sm text-yellow-700 dark:text-yellow-400">
+                System integrity requires attention. You must document exceptions to approve.
+              </p>
+
+              {exceptions.map((exception, index) => (
+                <fieldset
+                  key={index}
+                  className="mb-4 rounded border border-yellow-300 bg-white p-3 dark:border-yellow-700 dark:bg-gray-800"
+                >
+                  <legend className="mb-2 font-medium text-gray-900 dark:text-gray-100">
+                    Exception {index + 1}
+                  </legend>
+                  <div className="mb-2 flex justify-end">
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveException(index)}
+                      aria-label={`Remove exception ${index + 1}`}
+                      className="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300"
+                    >
+                      Remove
+                    </button>
+                  </div>
+
+                  <div className="space-y-2">
+                    <div>
+                      <label htmlFor={`exception-${index}-desc`} className="sr-only">
+                        Issue Description
+                      </label>
+                      <input
+                        type="text"
+                        id={`exception-${index}-desc`}
+                        placeholder="Issue description *"
+                        value={exception.issue_description}
+                        onChange={(e) =>
+                          handleExceptionChange(index, 'issue_description', e.target.value)
+                        }
+                        required
+                        aria-required="true"
+                        className="w-full rounded border border-gray-300 px-2 py-1 text-sm dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100"
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor={`exception-${index}-rationale`} className="sr-only">
+                        Rationale
+                      </label>
+                      <textarea
+                        id={`exception-${index}-rationale`}
+                        placeholder="Rationale *"
+                        value={exception.rationale}
+                        onChange={(e) => handleExceptionChange(index, 'rationale', e.target.value)}
+                        required
+                        aria-required="true"
+                        rows={2}
+                        className="w-full rounded border border-gray-300 px-2 py-1 text-sm dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100"
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor={`exception-${index}-mitigation`} className="sr-only">
+                        Mitigation Plan
+                      </label>
+                      <textarea
+                        id={`exception-${index}-mitigation`}
+                        placeholder="Mitigation plan *"
+                        value={exception.mitigation_plan}
+                        onChange={(e) =>
+                          handleExceptionChange(index, 'mitigation_plan', e.target.value)
+                        }
+                        required
+                        aria-required="true"
+                        rows={2}
+                        className="w-full rounded border border-gray-300 px-2 py-1 text-sm dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100"
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor={`exception-${index}-owner`} className="sr-only">
+                        Mitigation Owner
+                      </label>
+                      <input
+                        type="text"
+                        id={`exception-${index}-owner`}
+                        placeholder="Mitigation owner *"
+                        value={exception.mitigation_owner}
+                        onChange={(e) =>
+                          handleExceptionChange(index, 'mitigation_owner', e.target.value)
+                        }
+                        required
+                        aria-required="true"
+                        className="w-full rounded border border-gray-300 px-2 py-1 text-sm dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100"
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor={`exception-${index}-deadline`} className="sr-only">
+                        Deadline
+                      </label>
+                      <input
+                        type="date"
+                        id={`exception-${index}-deadline`}
+                        placeholder="Deadline (optional)"
+                        value={exception.deadline}
+                        onChange={(e) => handleExceptionChange(index, 'deadline', e.target.value)}
+                        className="w-full rounded border border-gray-300 px-2 py-1 text-sm dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100"
+                      />
+                    </div>
+                  </div>
+                </fieldset>
+              ))}
+
+              <button
+                type="button"
+                onClick={handleAddException}
+                className="text-sm font-medium text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
+              >
+                + Add Exception
+              </button>
+            </div>
+          )}
+        </div>
 
         {/* Notes */}
         <div className="mb-4">
@@ -326,6 +391,7 @@ export function SignOffForm({ integrityState, apiKey, onSuccess }: SignOffFormPr
           </label>
           <textarea
             id="notes"
+            name="notes"
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
             rows={3}
@@ -336,23 +402,34 @@ export function SignOffForm({ integrityState, apiKey, onSuccess }: SignOffFormPr
 
         {/* Error Display */}
         {error && (
-          <div className="mb-4 rounded-md bg-red-50 p-3 dark:bg-red-900/20">
-            <p className="text-sm font-medium text-red-800 dark:text-red-300">
-              {error}
-            </p>
+          <div
+            role="alert"
+            aria-live="assertive"
+            className="mb-4 rounded-md bg-red-50 p-3 dark:bg-red-900/20"
+          >
+            <p className="text-sm font-medium text-red-800 dark:text-red-300">{error}</p>
           </div>
         )}
 
         {/* Submit Button */}
-        <button
-          type="submit"
-          disabled={isSubmitting || (requiresExceptions && exceptions.length === 0)}
-          className="w-full rounded-md bg-blue-600 px-4 py-2 font-semibold text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-blue-500 dark:hover:bg-blue-600"
-        >
-          {isSubmitting ? 'Submitting...' : 'Submit Sign-Off'}
-        </button>
-      </div>
+        <div>
+          {requiresExceptions && exceptions.length === 0 && (
+            <p id="submit-disabled-reason" className="mb-2 text-sm text-red-600 dark:text-red-400">
+              Exceptions are required for approval when system integrity needs attention.
+            </p>
+          )}
+          <button
+            type="submit"
+            disabled={isSubmitting || (requiresExceptions && exceptions.length === 0)}
+            aria-describedby={
+              requiresExceptions && exceptions.length === 0 ? 'submit-disabled-reason' : undefined
+            }
+            className="w-full rounded-md bg-blue-600 px-4 py-2 font-semibold text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-blue-500 dark:hover:bg-blue-600"
+          >
+            {isSubmitting ? 'Submitting...' : 'Submit Sign-Off'}
+          </button>
+        </div>
+      </section>
     </form>
   );
 }
-

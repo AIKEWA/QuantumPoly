@@ -5,7 +5,10 @@ status: 'in-progress'
 owner: 'Privacy Team <privacy@quantumpoly.ai>'
 lastReviewed: '2025-10-13'
 nextReviewDue: '2026-01-13'
-version: 'v0.4.0'
+version: 'v0.4.1'
+license: 'CC-BY-4.0'
+responsibleParty: 'QuantumPoly Legal Team'
+versionHash: 'pending-ci'
 ---
 
 ## Giriş
@@ -96,3 +99,12 @@ E-posta: privacy@quantumpoly.ai
 ## Sorumluluk Reddi
 
 Bu Gizlilik Politikası bilgilendirme amaçlı sağlanmıştır ve yasal tavsiye teşkil etmez. Yasal tavsiye için lütfen uygun profesyonellere danışın.
+
+## Künye
+
+Yasal bilgiler için [Künye](/tr/imprint) sayfamıza bakınız.
+
+---
+
+**Son Güncelleme:** 25 Kasım 2025
+**Sürüm:** v0.4.1

@@ -1,0 +1,50 @@
+[
+  {
+    "id": "persona_tech_savvy",
+    "name": "Alex (Tech-Savvy)",
+    "traits": {
+      "tech_literacy": "high",
+      "privacy_sensitivity": "medium",
+      "cultural_context": "US-West",
+      "stress_threshold": "high",
+      "curiosity": "high"
+    },
+    "memory": {
+      "frustration": 0,
+      "trust": 50,
+      "recent_events": []
+    }
+  },
+  {
+    "id": "persona_low_literacy",
+    "name": "Sam (Low Digital Literacy)",
+    "traits": {
+      "tech_literacy": "low",
+      "privacy_sensitivity": "low",
+      "cultural_context": "Global-Average",
+      "stress_threshold": "low",
+      "curiosity": "low"
+    },
+    "memory": {
+      "frustration": 0,
+      "trust": 50,
+      "recent_events": []
+    }
+  },
+  {
+    "id": "persona_privacy_advocate",
+    "name": "Jordan (Privacy Advocate)",
+    "traits": {
+      "tech_literacy": "high",
+      "privacy_sensitivity": "high",
+      "cultural_context": "EU-GDPR",
+      "stress_threshold": "medium",
+      "curiosity": "high"
+    },
+    "memory": {
+      "frustration": 0,
+      "trust": 50,
+      "recent_events": []
+    }
+  }
+]

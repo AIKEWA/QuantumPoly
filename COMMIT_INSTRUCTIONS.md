@@ -17,14 +17,14 @@ All Block C files have been staged and are ready for a GPG-signed governance com
 
 ### New Documentation (4)
 
-- `BLOCK_C_COMPLETION_REPORT.md` (500+ lines)
-- `BLOCK_C_IMPLEMENTATION_SUMMARY.md` (3,000+ words)
-- `BLOCK_C_VALIDATION_SUMMARY.md` (comprehensive GPG guide)
-- `BLOCK_C_YAML_VALIDATION_REPORT.md` (audit results)
+- `BLOCK10.10_COMPLETION_REPORT.md` (500+ lines)
+- `BLOCK10.10_IMPLEMENTATION_SUMMARY.md` (3,000+ words)
+- `BLOCK10.10_VALIDATION_SUMMARY.md` (comprehensive GPG guide)
+- `BLOCK10.10_YAML_VALIDATION_REPORT.md` (audit results)
 
 ### New Infrastructure (4)
 
-- `docs/governance/BLOCK_C_AUTONOMOUS_OPS.md` (6,500+ words)
+- `docs/governance/BLOCK10.10_AUTONOMOUS_OPS.md` (6,500+ words)
 - `governance/feedback/aggregates/trust-trend.json` (trust baseline)
 - `scripts/verify-block-c-bootstrap.mjs` (19 automated checks)
 - `package.json` (verify:block-c script added)
@@ -99,11 +99,11 @@ After commit, you should see:
 ```
 [main abc1234] 🧩 Governance Technical Fix — Block C YAML Validation
  14 files changed, 2500+ insertions(+), 50 deletions(-)
- create mode 100644 BLOCK_C_COMPLETION_REPORT.md
- create mode 100644 BLOCK_C_IMPLEMENTATION_SUMMARY.md
- create mode 100644 BLOCK_C_VALIDATION_SUMMARY.md
- create mode 100644 BLOCK_C_YAML_VALIDATION_REPORT.md
- create mode 100644 docs/governance/BLOCK_C_AUTONOMOUS_OPS.md
+ create mode 100644 BLOCK10.10_COMPLETION_REPORT.md
+ create mode 100644 BLOCK10.10_IMPLEMENTATION_SUMMARY.md
+ create mode 100644 BLOCK10.10_VALIDATION_SUMMARY.md
+ create mode 100644 BLOCK10.10_YAML_VALIDATION_REPORT.md
+ create mode 100644 docs/governance/BLOCK10.10_AUTONOMOUS_OPS.md
  create mode 100644 governance/feedback/aggregates/trust-trend.json
  create mode 100644 scripts/verify-block-c-bootstrap.mjs
 ```
@@ -267,9 +267,9 @@ git push origin main
 ## References
 
 - Prepared commit message: `.git/COMMIT_MSG_BLOCK_C.txt`
-- Validation summary: `BLOCK_C_VALIDATION_SUMMARY.md`
-- Completion report: `BLOCK_C_COMPLETION_REPORT.md`
-- Operations guide: `docs/governance/BLOCK_C_AUTONOMOUS_OPS.md`
+- Validation summary: `BLOCK10.10_VALIDATION_SUMMARY.md`
+- Completion report: `BLOCK10.10_COMPLETION_REPORT.md`
+- Operations guide: `docs/governance/BLOCK10.10_AUTONOMOUS_OPS.md`
 
 ---
 

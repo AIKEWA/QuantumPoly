@@ -1,0 +1,15 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "http://quantumpoly.ai/schemas/ogp/v1/trust-proof.json",
+  "title": "OGP-Z-01 Trust Proof",
+  "type": "object",
+  "properties": {
+    "proofId": { "type": "string" },
+    "policyHash": { "type": "string" },
+    "inputHash": { "type": "string" },
+    "outputHash": { "type": "string" },
+    "zkProof": { "type": "string", "description": "Base64 encoded zk-SNARK" },
+    "verificationKey": { "type": "string" }
+  },
+  "required": ["proofId", "policyHash", "zkProof"]
+}

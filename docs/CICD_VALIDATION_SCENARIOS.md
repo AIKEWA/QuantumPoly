@@ -356,7 +356,7 @@ Use this checklist when testing CI/CD changes:
 - [CI/CD Testing Guide](./CICD_TESTING_GUIDE.md) - Detailed testing procedures
 - [CICD Review Checklist](../.github/CICD_REVIEW_CHECKLIST.md) - Pre-deployment validation
 - [DNS Configuration](./DNS_CONFIGURATION.md) - Production domain setup
-- [BLOCK7 Implementation Summary](../BLOCK7_CICD_IMPLEMENTATION_SUMMARY.md) - Architecture overview
+- [BLOCK7 Implementation Summary](../BLOCK07.0_CICD_IMPLEMENTATION_SUMMARY.md) - Architecture overview
 
 ---
 

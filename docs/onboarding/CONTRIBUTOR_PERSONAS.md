@@ -490,7 +490,7 @@ You maintain CI/CD pipelines, deployment infrastructure, and monitoring systems.
 
 **Day 1-2: Pipeline Understanding**
 
-1. Read [BLOCK7_CICD_IMPLEMENTATION_SUMMARY.md](../../BLOCK7_CICD_IMPLEMENTATION_SUMMARY.md)
+1. Read [BLOCK07.0_CICD_IMPLEMENTATION_SUMMARY.md](../../BLOCK07.0_CICD_IMPLEMENTATION_SUMMARY.md)
 2. Study workflows:
    - `.github/workflows/ci.yml`
    - `.github/workflows/release.yml`
@@ -596,16 +596,16 @@ Some features require collaboration across personas:
 
 **Example: Blog Module (Future)**
 
-| Persona                 | Contribution                              |
-|-------------------------|-------------------------------------------|
-| Frontend Developer      | Implement blog components and layouts    |
-| Backend Developer       | Build RSS feed generation                |
-| Content Writer          | Write initial blog posts                 |
-| Accessibility Specialist| Audit blog layout for WCAG compliance    |
-| Designer                | Design blog post cards and layouts       |
-| DevOps                  | Set up blog deployment pipeline          |
-| QA Specialist           | Test blog functionality                  |
-| Governance Reviewer     | Review blog content guidelines           |
+| Persona                  | Contribution                          |
+| ------------------------ | ------------------------------------- |
+| Frontend Developer       | Implement blog components and layouts |
+| Backend Developer        | Build RSS feed generation             |
+| Content Writer           | Write initial blog posts              |
+| Accessibility Specialist | Audit blog layout for WCAG compliance |
+| Designer                 | Design blog post cards and layouts    |
+| DevOps                   | Set up blog deployment pipeline       |
+| QA Specialist            | Test blog functionality               |
+| Governance Reviewer      | Review blog content guidelines        |
 
 ### Communication Channels
 
@@ -652,4 +652,3 @@ Every persona plays a vital role in making QuantumPoly a success. Whether you're
 **Document Version:** 1.0.0  
 **Last Updated:** 2025-10-25  
 **Feedback:** Open GitHub issue with label `documentation` or `onboarding`
-

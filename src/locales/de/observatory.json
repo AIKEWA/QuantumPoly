@@ -1,0 +1,24 @@
+{
+  "title": "Öffentliches Ethik-Observatorium",
+  "subtitle": "Der Atlas der KI-Integrität",
+  "map": {
+    "title": "Globale Integritätskarte",
+    "nodes": "Aktive Knoten",
+    "pulse": "Ereignisse/Sek"
+  },
+  "drift": {
+    "title": "Ethische Drift (EII)",
+    "yAxis": "Ethischer Integritätsindex",
+    "xAxis": "Zeit",
+    "annotations": {
+      "override": "Menschlicher Eingriff",
+      "policy": "Richtlinien-Update"
+    }
+  },
+  "proof": {
+    "label": "Beweis-Linse",
+    "verify": "Im Ledger überprüfen",
+    "verified": "Verifiziert",
+    "pending": "Ausstehender Konsens"
+  }
+}

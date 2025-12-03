@@ -39,6 +39,7 @@ Documentation is **never finished**—it evolves with the system:
 **Purpose:** Help new contributors join responsibly with clear understanding of project maturity, capabilities, limitations, and ethical obligations.
 
 **Primary File:**
+
 - `ONBOARDING.md` — Governance-first onboarding guide (5-section structure)
   - Section 1: Project Overview & Maturity
   - Section 2: Technical Setup & Dependencies
@@ -47,6 +48,7 @@ Documentation is **never finished**—it evolves with the system:
   - Section 5: Reference Materials & Source of Truth
 
 **Supporting Files:**
+
 - `docs/onboarding/DEVELOPER_QUICKSTART.md` — Fast-track for developers (if available)
 - `docs/onboarding/ETHICAL_REVIEWER_GUIDE.md` — Ethics review process (if available)
 - `docs/onboarding/CONTRIBUTOR_PERSONAS.md` — Role-specific paths (if available)
@@ -66,6 +68,7 @@ Documentation is **never finished**—it evolves with the system:
 - Troubleshooting for common issues
 
 **Tone Requirements:**
+
 - Cautious, transparent, inclusive
 - Evidence-based claims only
 - Replace promises with conditional framing
@@ -81,6 +84,7 @@ Documentation is **never finished**—it evolves with the system:
 **Purpose:** Provide precise, authoritative information for experienced contributors.
 
 **Files:**
+
 - `README.md` — Quick technical reference
 - `docs/I18N_GUIDE.md` — Internationalization deep dive
 - `docs/ACCESSIBILITY_TESTING.md` — A11y testing comprehensive guide
@@ -103,6 +107,7 @@ Documentation is **never finished**—it evolves with the system:
 **Purpose:** Define vision, roadmap, and architectural decisions.
 
 **Files:**
+
 - `MASTERPLAN.md` — Project phases and roadmap
 - `docs/STRATEGIC_ROADMAP.md` — Future feature architecture
 - `BLOCK*_IMPLEMENTATION_SUMMARY.md` — Historical implementation records
@@ -124,6 +129,7 @@ Documentation is **never finished**—it evolves with the system:
 **Purpose:** Define workflows, standards, and procedures.
 
 **Files:**
+
 - `CONTRIBUTING.md` — Contribution workflow
 - `docs/DOCUMENTATION_STANDARDS.md` — This document
 - `.github/workflows/*.yml` — CI/CD process (inline comments)
@@ -145,6 +151,7 @@ Documentation is **never finished**—it evolves with the system:
 **Purpose:** Document ethical principles, policies, and transparency commitments.
 
 **Files:**
+
 - `content/policies/ethics/en.md` — Ethics policy
 - `content/policies/privacy/en.md` — Privacy policy
 - `content/policies/gep/en.md` — Good Engineering Practices
@@ -197,14 +204,14 @@ version: 'vX.Y.Z'
 
 ### File Naming Conventions
 
-| Type                     | Convention                        | Example                           |
-|--------------------------|-----------------------------------|-----------------------------------|
-| Onboarding               | `UPPERCASE.md`                    | `ONBOARDING.md`                   |
-| Technical guides         | `SCREAMING_SNAKE_CASE.md`         | `ACCESSIBILITY_TESTING.md`        |
-| Strategic docs           | `SCREAMING_SNAKE_CASE.md`         | `STRATEGIC_ROADMAP.md`            |
-| Process docs             | `UPPERCASE.md`                    | `CONTRIBUTING.md`                 |
-| Implementation summaries | `BLOCKN_DESCRIPTION.md`           | `BLOCK7_CICD_IMPLEMENTATION_SUMMARY.md` |
-| Governance docs          | Front matter + kebab-case folders | `content/policies/ethics/en.md`   |
+| Type                     | Convention                        | Example                                    |
+| ------------------------ | --------------------------------- | ------------------------------------------ |
+| Onboarding               | `UPPERCASE.md`                    | `ONBOARDING.md`                            |
+| Technical guides         | `SCREAMING_SNAKE_CASE.md`         | `ACCESSIBILITY_TESTING.md`                 |
+| Strategic docs           | `SCREAMING_SNAKE_CASE.md`         | `STRATEGIC_ROADMAP.md`                     |
+| Process docs             | `UPPERCASE.md`                    | `CONTRIBUTING.md`                          |
+| Implementation summaries | `BLOCKN_DESCRIPTION.md`           | `BLOCK07.0_CICD_IMPLEMENTATION_SUMMARY.md` |
+| Governance docs          | Front matter + kebab-case folders | `content/policies/ethics/en.md`            |
 
 ### Heading Hierarchy
 
@@ -255,8 +262,8 @@ Consider using tools like `markdown-toc` for long documents.
 
 **Always specify language:**
 
-```markdown
-```bash
+`````markdown
+````bash
 npm install
 
 ```typescript
@@ -266,7 +273,10 @@ const foo = 'bar';
 {
   "key": "value"
 }
-```
+````
+`````
+
+`````
 
 **Inline code:**
 
@@ -280,7 +290,7 @@ Use backticks for code, commands, file paths, and technical terms:
 
 **Internal Links (within project):**
 
-- Use relative paths: `[ONBOARDING.md](./ONBOARDING.md)`
+- Use relative paths: `[ONBOARDING.md](../ONBOARDING.md)`
 - Use anchor links for sections: `[Getting Started](#getting-started)`
 
 **External Links:**
@@ -300,10 +310,10 @@ Use backticks for code, commands, file paths, and technical terms:
 **Use for structured data:**
 
 ```markdown
-| Column 1      | Column 2    | Column 3     |
-|---------------|-------------|--------------|
-| Data          | More data   | Even more    |
-| Another row   | Values      | Information  |
+| Column 1    | Column 2  | Column 3    |
+| ----------- | --------- | ----------- |
+| Data        | More data | Even more   |
+| Another row | Values    | Information |
 ```
 
 **Best Practices:**
@@ -467,9 +477,11 @@ Always provide full commands with context:
 
 ```markdown
 # Install dependencies
+
 npm ci
 
 # Run tests
+
 npm run test
 ```
 
@@ -562,7 +574,7 @@ npm run test
 **Document Version in Front Matter or Footer:**
 
 ```markdown
-**Document Version:** 1.0.0  
+**Document Version:** 1.0.0
 **Last Updated:** 2025-10-25
 ```
 
@@ -648,13 +660,13 @@ npm run test
 
 ### Regular Reviews
 
-| Documentation Type       | Review Frequency | Trigger                          |
-|--------------------------|------------------|----------------------------------|
-| Onboarding               | Quarterly        | Onboarding process changes       |
-| Technical Reference      | As needed        | Related code/tool updates        |
-| Strategic                | Quarterly        | Major milestones or pivots       |
-| Process                  | Semi-annually    | Retrospectives, process changes  |
-| Governance (Policies)    | Every 3 months   | Defined in front matter          |
+| Documentation Type    | Review Frequency | Trigger                         |
+| --------------------- | ---------------- | ------------------------------- |
+| Onboarding            | Quarterly        | Onboarding process changes      |
+| Technical Reference   | As needed        | Related code/tool updates       |
+| Strategic             | Quarterly        | Major milestones or pivots      |
+| Process               | Semi-annually    | Retrospectives, process changes |
+| Governance (Policies) | Every 3 months   | Defined in front matter         |
 
 ### Audit Checklist
 
@@ -727,13 +739,13 @@ npx markdown-toc -i DOCUMENT.md
 
 ### Example: Technical Guide Structure
 
-```markdown
+````markdown
 # Guide Title
 
 **Brief Description**
 
-**Document Version:** 1.0.0  
-**Last Updated:** YYYY-MM-DD  
+**Document Version:** 1.0.0
+**Last Updated:** YYYY-MM-DD
 **Estimated Reading Time:** X minutes
 
 ---
@@ -765,8 +777,9 @@ Brief overview of what this guide covers and why it matters.
 command here
 
 **Expected Output:**
-
 ```
+`````
+
 output here
 
 ### Step 2: Do That
@@ -788,7 +801,8 @@ output here
 
 **Document Version:** 1.0.0  
 **Feedback:** Open GitHub issue with label `documentation`
-```
+
+````
 
 ### Example: Policy Document Structure
 
@@ -828,7 +842,7 @@ How and when this policy is reviewed.
 ## Contact
 
 For questions: email@quantumpoly.ai
-```
+````
 
 ---
 
@@ -850,4 +864,3 @@ Documentation is **living infrastructure** that supports the project's growth, t
 **Review Cycle:** Quarterly  
 **Feedback:** Open GitHub issue with label `documentation` or `meta`  
 **Maintainer:** Documentation Team <docs@quantumpoly.ai>
-

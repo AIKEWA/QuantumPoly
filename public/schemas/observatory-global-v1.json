@@ -1,0 +1,95 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://quantumpoly.ai/schemas/observatory-global-v1.json",
+  "title": "QuantumPoly Global Governance Indices & Observatory API",
+  "description": "Schema for the /api/observatory/global public endpoint, exposing global governance indices, ethics signals, and integrity proofs.",
+  "type": "object",
+  "required": ["meta", "indices", "integrity_proof"],
+  "properties": {
+    "meta": {
+      "type": "object",
+      "required": ["timestamp", "version", "region"],
+      "properties": {
+        "timestamp": {
+          "type": "string",
+          "format": "date-time",
+          "description": "ISO-8601 timestamp of the response generation."
+        },
+        "version": {
+          "type": "string",
+          "description": "API version (semver)."
+        },
+        "region": {
+          "type": "string",
+          "description": "Geographic scope of the data (e.g., 'Global', 'EU', 'US').",
+          "default": "Global"
+        }
+      }
+    },
+    "indices": {
+      "type": "object",
+      "description": "High-level ethical performance scores.",
+      "required": ["eii_composite", "transparency_score", "accountability_score"],
+      "properties": {
+        "eii_composite": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Ethical Integrity Index (0.0 to 1.0)."
+        },
+        "transparency_score": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Score reflecting system observability and openness."
+        },
+        "accountability_score": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Score reflecting responsiveness to oversight and correction."
+        },
+        "fairness_delta": {
+          "type": "number",
+          "description": "Measured deviation from baseline fairness metrics (lower is better)."
+        }
+      }
+    },
+    "benchmarks": {
+      "type": "object",
+      "description": "Comparative benchmarks against external standards.",
+      "properties": {
+        "eu_ai_act_readiness": {
+          "type": "string",
+          "enum": ["Low", "Medium", "High", "Compliant"],
+          "description": "Estimated readiness for EU AI Act compliance."
+        },
+        "industry_average": {
+          "type": "number",
+          "description": "Benchmark average for the sector (if available)."
+        }
+      }
+    },
+    "integrity_proof": {
+      "type": "object",
+      "description": "Cryptographic evidence of data authenticity.",
+      "required": ["ledger_hash"],
+      "properties": {
+        "ledger_hash": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$",
+          "description": "SHA-256 hash of the governance ledger state used to derive these metrics."
+        },
+        "signature": {
+          "type": "string",
+          "description": "Digital signature of the index authority."
+        },
+        "merkle_root": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$",
+          "description": "Merkle root of the federated transparency graph."
+        }
+      }
+    }
+  }
+}

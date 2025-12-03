@@ -12,7 +12,7 @@ import type { IntegritySnapshot, SystemState, ReadinessState } from './types';
  * Fetch current integrity status from Block 9.8 API
  */
 export async function fetchIntegrityStatus(
-  baseUrl: string = 'http://localhost:3000'
+  baseUrl: string = 'http://localhost:3000',
 ): Promise<IntegritySnapshot> {
   try {
     const response = await fetch(`${baseUrl}/api/integrity/status`, {
@@ -46,7 +46,7 @@ export function assessBlockingIssues(snapshot: IntegritySnapshot): string[] {
   // Check system state
   if (snapshot.system_state === 'attention_required') {
     blockingIssues.push(
-      'System integrity state requires attention - conditional approval with exceptions required'
+      'System integrity state requires attention - conditional approval with exceptions required',
     );
   }
 
@@ -59,13 +59,13 @@ export function assessBlockingIssues(snapshot: IntegritySnapshot): string[] {
 
   // Check for high-severity open issues
   const criticalOpenIssues = snapshot.open_issues.filter(
-    (issue) => issue.severity === 'critical' || issue.severity === 'high'
+    (issue) => issue.severity === 'critical' || issue.severity === 'high',
   );
 
   if (criticalOpenIssues.length > 0) {
     criticalOpenIssues.forEach((issue) => {
       blockingIssues.push(
-        `${issue.severity.toUpperCase()}: ${issue.classification} (${issue.count} instances)`
+        `${issue.severity.toUpperCase()}: ${issue.classification} (${issue.count} instances)`,
       );
     });
   }
@@ -73,7 +73,7 @@ export function assessBlockingIssues(snapshot: IntegritySnapshot): string[] {
   // Check for pending human reviews
   if (snapshot.pending_human_reviews > 0) {
     blockingIssues.push(
-      `${snapshot.pending_human_reviews} pending human review(s) from integrity monitoring`
+      `${snapshot.pending_human_reviews} pending human review(s) from integrity monitoring`,
     );
   }
 
@@ -86,7 +86,7 @@ export function assessBlockingIssues(snapshot: IntegritySnapshot): string[] {
 export function determineReadinessState(
   integrityState: SystemState,
   completedSignOffs: string[],
-  requiredSignOffs: string[]
+  requiredSignOffs: string[],
 ): ReadinessState {
   // Check if all sign-offs are complete
   const allSignOffsComplete = requiredSignOffs.every((role) => completedSignOffs.includes(role));
@@ -112,7 +112,7 @@ export function isConditionalApprovalAllowed(snapshot: IntegritySnapshot): boole
   // but NOT for critical ledger failures
   if (snapshot.system_state === 'attention_required') {
     const hasCriticalLedgerIssue = Object.values(snapshot.ledger_status).some(
-      (status) => status === 'critical'
+      (status) => status === 'critical',
     );
     return !hasCriticalLedgerIssue;
   }
@@ -169,6 +169,7 @@ export function generateIntegritySummary(snapshot: IntegritySnapshot): string {
  */
 export function validateIntegritySnapshot(data: unknown): data is IntegritySnapshot {
   // Temporary: Cast to any for type guard validation — will fix in Stage VII (ticket #QPOLY-TYPE-001)
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const obj = data as any;
   return (
     data &&
@@ -215,4 +216,3 @@ export function calculateIntegrityHealthScore(snapshot: IntegritySnapshot): numb
 
   return Math.max(0, Math.min(100, score));
 }
-

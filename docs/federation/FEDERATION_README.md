@@ -74,7 +74,7 @@ The verification script fetches each partner's FederationRecord from their `gove
 const response = await fetch(partner.governance_endpoint, {
   method: 'GET',
   headers: {
-    'Accept': 'application/json',
+    Accept: 'application/json',
     'User-Agent': 'QuantumPoly-Federation/1.0',
   },
 });
@@ -109,10 +109,10 @@ if (daysSinceUpdate > staleThreshold) {
 
 ```typescript
 enum TrustStatus {
-  VALID = 'valid',      // Proof consistent, no violations
-  STALE = 'stale',      // No recent update, overdue
-  FLAGGED = 'flagged',  // Inconsistency, requires review
-  ERROR = 'error'       // Unable to verify
+  VALID = 'valid', // Proof consistent, no violations
+  STALE = 'stale', // No recent update, overdue
+  FLAGGED = 'flagged', // Inconsistency, requires review
+  ERROR = 'error', // Unable to verify
 }
 ```
 
@@ -164,15 +164,12 @@ const payload = {
   event_type: 'merkle_update',
   timestamp: new Date().toISOString(),
   payload: {
-    merkle_root: 'new-root-hash...'
-  }
+    merkle_root: 'new-root-hash...',
+  },
 };
 
 const payloadString = JSON.stringify(payload);
-const signature = crypto
-  .createHmac('sha256', webhookSecret)
-  .update(payloadString)
-  .digest('hex');
+const signature = crypto.createHmac('sha256', webhookSecret).update(payloadString).digest('hex');
 
 await fetch(webhookUrl, {
   method: 'POST',
@@ -181,8 +178,8 @@ await fetch(webhookUrl, {
   },
   body: JSON.stringify({
     ...payload,
-    signature
-  })
+    signature,
+  }),
 });
 ```
 
@@ -192,15 +189,9 @@ await fetch(webhookUrl, {
 import crypto from 'crypto';
 
 function verifyHmacSignature(payload: string, signature: string, secret: string): boolean {
-  const expectedSignature = crypto
-    .createHmac('sha256', secret)
-    .update(payload)
-    .digest('hex');
+  const expectedSignature = crypto.createHmac('sha256', secret).update(payload).digest('hex');
 
-  return crypto.timingSafeEqual(
-    Buffer.from(signature),
-    Buffer.from(expectedSignature)
-  );
+  return crypto.timingSafeEqual(Buffer.from(signature), Buffer.from(expectedSignature));
 }
 ```
 
@@ -217,13 +208,10 @@ const payload = JSON.stringify({
   partner_id: 'quantumpoly.ai',
   event_type: 'merkle_update',
   timestamp: new Date().toISOString(),
-  payload: { merkle_root: 'abc123...' }
+  payload: { merkle_root: 'abc123...' },
 });
 
-const signature = crypto
-  .createHmac('sha256', 'your-secret-key')
-  .update(payload)
-  .digest('hex');
+const signature = crypto.createHmac('sha256', 'your-secret-key').update(payload).digest('hex');
 
 console.log(signature);
 ```
@@ -308,6 +296,7 @@ curl -X POST https://quantumpoly.ai/api/federation/register \
 **Cause:** Partner hasn't updated their FederationRecord in >30 days.
 
 **Solution:**
+
 1. Check partner's governance endpoint: `curl https://partner.org/api/federation/record`
 2. Verify timestamp is recent
 3. Contact partner if timestamp is old
@@ -318,6 +307,7 @@ curl -X POST https://quantumpoly.ai/api/federation/register \
 **Cause:** Merkle root format is invalid or inconsistency detected.
 
 **Solution:**
+
 1. Review verification logs: `npm run federation:status -- --verbose`
 2. Check partner's Merkle root format (must be 64-character hex)
 3. Contact partner to investigate integrity issue
@@ -328,6 +318,7 @@ curl -X POST https://quantumpoly.ai/api/federation/register \
 **Cause:** Unable to reach partner's governance endpoint.
 
 **Solution:**
+
 1. Check endpoint accessibility: `curl -I https://partner.org/api/federation/record`
 2. Verify DNS resolution
 3. Check for network/firewall issues
@@ -338,6 +329,7 @@ curl -X POST https://quantumpoly.ai/api/federation/register \
 **Cause:** Missing dependencies or configuration.
 
 **Solution:**
+
 1. Install dependencies: `npm ci --legacy-peer-deps`
 2. Verify partner config exists: `cat config/federation-partners.json`
 3. Check federation ledger directory: `ls -la governance/federation/`
@@ -471,7 +463,7 @@ npm run federation:status --verbose
 For questions or issues:
 
 1. Check this documentation
-2. Review `BLOCK9.6_COLLECTIVE_ETHICS_GRAPH.md`
+2. Review `BLOCK09.6_COLLECTIVE_ETHICS_GRAPH.md`
 3. Check federation ledger: `cat governance/federation/ledger.jsonl`
 4. Run status check: `npm run federation:status --verbose`
 5. Contact Federation Trust Officer
@@ -481,4 +473,3 @@ For questions or issues:
 **Last Updated:** 2025-10-26  
 **Version:** 1.0.0  
 **Maintained By:** Federation Trust Officer, Governance Officer
-

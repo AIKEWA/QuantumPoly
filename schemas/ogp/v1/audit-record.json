@@ -1,0 +1,20 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "http://quantumpoly.ai/schemas/ogp/v1/audit-record.json",
+  "title": "OGP-A-01 Audit Record",
+  "type": "object",
+  "properties": {
+    "auditId": { "type": "string" },
+    "targetNode": { "type": "string", "description": "DID of audited system" },
+    "auditor": {
+      "type": "object",
+      "properties": {
+        "organization": { "type": "string" },
+        "certificationId": { "type": "string" }
+      }
+    },
+    "verdict": { "type": "string", "enum": ["COMPLIANT", "NON_COMPLIANT"] },
+    "proof": { "type": "string", "description": "Cryptographic proof of audit" }
+  },
+  "required": ["auditId", "targetNode", "auditor", "verdict"]
+}

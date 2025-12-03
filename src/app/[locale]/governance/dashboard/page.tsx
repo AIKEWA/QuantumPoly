@@ -16,9 +16,13 @@ import { EIIChart, EIIBreakdown } from '@/components/dashboard/EiiChart';
 import { LedgerFeed } from '@/components/dashboard/LedgerFeed';
 import { VerificationWidget } from '@/components/dashboard/VerificationWidget';
 import { isValidLocale, locales } from '@/i18n';
-import { aggregateConsentMetrics } from '@/lib/governance/consent-aggregator';
-import { getEIIHistory, getEIIBreakdown } from '@/lib/governance/eii-calculator';
-import { getRecentEntries, type LedgerEntry } from '@/lib/governance/ledger-parser';
+import {
+  getIntegrityConsentMetrics,
+  getIntegrityEIIHistory,
+  getIntegrityEIIBreakdown,
+  getIntegrityRecentEntries,
+  type LedgerEntry,
+} from '@/lib/integrity';
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -56,7 +60,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   return {
     title: `Transparency Dashboard | QuantumPoly`,
-    description: 'Real-time governance transparency dashboard with EII metrics, consent statistics, and ledger verification',
+    description:
+      'Real-time governance transparency dashboard with EII metrics, consent statistics, and ledger verification',
     robots: 'index, follow',
     openGraph: {
       title: 'Transparency Dashboard',
@@ -98,10 +103,10 @@ export default async function TransparencyDashboardPage({ params }: Props) {
   let recentEntries: LedgerEntry[];
 
   try {
-    eiiHistory = getEIIHistory('governance/ledger/ledger.jsonl', 90);
-    eiiBreakdown = getEIIBreakdown('governance/ledger/ledger.jsonl');
-    consentMetrics = aggregateConsentMetrics('governance/consent/ledger.jsonl');
-    recentEntries = getRecentEntries(5, 'governance/ledger/ledger.jsonl');
+    eiiHistory = getIntegrityEIIHistory('governance/ledger/ledger.jsonl', 90);
+    eiiBreakdown = getIntegrityEIIBreakdown('governance/ledger/ledger.jsonl');
+    consentMetrics = getIntegrityConsentMetrics('governance/consent/ledger.jsonl');
+    recentEntries = getIntegrityRecentEntries(5, 'governance/ledger/ledger.jsonl');
   } catch (error) {
     console.error('Failed to load dashboard data:', error);
     // Use fallback empty data
@@ -132,12 +137,18 @@ export default async function TransparencyDashboardPage({ params }: Props) {
     recentEntries = [];
   }
 
-  // Prepare chart data
-  const chartData = eiiHistory.dataPoints.map((dp, index) => ({
-    date: dp.date,
-    eii: dp.eii,
-    average: eiiHistory.rollingAverage[index]?.average,
-  }));
+  // Fetch validation report
+  let validationStatus: { status: string; timestamp: string; totalErrors: number } | null = null;
+  try {
+    const fs = await import('fs/promises');
+    const path = await import('path');
+    const reportPath = path.resolve(process.cwd(), 'governance/ledger/validation-report.json');
+    const reportContent = await fs.readFile(reportPath, 'utf-8');
+    validationStatus = JSON.parse(reportContent);
+  } catch (e) {
+    // Report might not exist yet or fails to read in some envs
+    console.warn('Could not read validation report');
+  }
 
   return (
     <main className="min-h-screen bg-gray-50 dark:bg-gray-900">
@@ -168,6 +179,11 @@ export default async function TransparencyDashboardPage({ params }: Props) {
             <span className="rounded-full bg-purple-100 px-3 py-1 font-medium text-purple-800 dark:bg-purple-900/20 dark:text-purple-400">
               ✓ Privacy-Preserving
             </span>
+            {validationStatus?.status === 'valid' && (
+              <span className="rounded-full bg-cyan-100 px-3 py-1 font-medium text-cyan-800 dark:bg-cyan-900/20 dark:text-cyan-400">
+                ✓ Schema Validated
+              </span>
+            )}
           </div>
         </div>
       </section>
@@ -180,7 +196,7 @@ export default async function TransparencyDashboardPage({ params }: Props) {
           </h2>
           <div className="grid gap-6 lg:grid-cols-3">
             <div className="lg:col-span-2">
-              <EIIChart data={chartData} showAverage={true} height={350} />
+              <EIIChart history={eiiHistory} height={350} />
             </div>
             <div>
               <EIIBreakdown metrics={eiiBreakdown} />
@@ -227,7 +243,8 @@ export default async function TransparencyDashboardPage({ params }: Props) {
                 Interactive Ledger Timeline
               </h2>
               <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-                Explore the complete governance ledger with interactive visualization, zoom controls, and hash chain verification
+                Explore the complete governance ledger with interactive visualization, zoom
+                controls, and hash chain verification
               </p>
             </div>
             <Link
@@ -240,30 +257,63 @@ export default async function TransparencyDashboardPage({ params }: Props) {
           <div className="rounded-lg border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-gray-800">
             <div className="mb-4">
               <p className="text-sm text-gray-600 dark:text-gray-400">
-                The timeline visualization provides an interactive view of all governance entries with:
+                The timeline visualization provides an interactive view of all governance entries
+                with:
               </p>
               <ul className="mt-3 grid gap-2 text-sm text-gray-700 md:grid-cols-2 dark:text-gray-300">
                 <li className="flex items-center gap-2">
-                  <svg className="h-4 w-4 text-cyan-600 dark:text-cyan-400" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  <svg
+                    className="h-4 w-4 text-cyan-600 dark:text-cyan-400"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                      clipRule="evenodd"
+                    />
                   </svg>
                   Real-time hash chain verification
                 </li>
                 <li className="flex items-center gap-2">
-                  <svg className="h-4 w-4 text-cyan-600 dark:text-cyan-400" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  <svg
+                    className="h-4 w-4 text-cyan-600 dark:text-cyan-400"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                      clipRule="evenodd"
+                    />
                   </svg>
                   Zoom and pan controls
                 </li>
                 <li className="flex items-center gap-2">
-                  <svg className="h-4 w-4 text-cyan-600 dark:text-cyan-400" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  <svg
+                    className="h-4 w-4 text-cyan-600 dark:text-cyan-400"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                      clipRule="evenodd"
+                    />
                   </svg>
                   Keyboard navigation support
                 </li>
                 <li className="flex items-center gap-2">
-                  <svg className="h-4 w-4 text-cyan-600 dark:text-cyan-400" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  <svg
+                    className="h-4 w-4 text-cyan-600 dark:text-cyan-400"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                      clipRule="evenodd"
+                    />
                   </svg>
                   Detailed block inspection
                 </li>
@@ -272,11 +322,25 @@ export default async function TransparencyDashboardPage({ params }: Props) {
             <div className="rounded-lg bg-gradient-to-r from-cyan-600 to-blue-600 p-1">
               <div className="flex h-48 items-center justify-center rounded-lg bg-white dark:bg-gray-800">
                 <div className="text-center">
-                  <svg className="mx-auto h-16 w-16 text-cyan-600 dark:text-cyan-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                  <svg
+                    className="mx-auto h-16 w-16 text-cyan-600 dark:text-cyan-400"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+                    />
                   </svg>
-                  <p className="mt-4 font-semibold text-gray-900 dark:text-gray-100">Interactive Timeline Preview</p>
-                  <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">Click "Explore Full Timeline" to view the complete visualization</p>
+                  <p className="mt-4 font-semibold text-gray-900 dark:text-gray-100">
+                    Interactive Timeline Preview
+                  </p>
+                  <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+                    Click "Explore Full Timeline" to view the complete visualization
+                  </p>
                 </div>
               </div>
             </div>
@@ -325,6 +389,34 @@ export default async function TransparencyDashboardPage({ params }: Props) {
                 Status: Approved (2025-10-26)
               </p>
             </div>
+
+            {/* FPP-10: Ledger Validation Status */}
+            <div
+              className={`rounded-lg border-2 p-6 ${
+                validationStatus?.status === 'valid'
+                  ? 'border-green-200 bg-green-50 dark:border-green-800 dark:bg-green-900/20'
+                  : 'border-yellow-200 bg-yellow-50 dark:border-yellow-800 dark:bg-yellow-900/20'
+              }`}
+            >
+              <div className="mb-2 text-3xl">
+                {validationStatus?.status === 'valid' ? '✅' : '⚠️'}
+              </div>
+              <h3 className="mb-2 font-semibold text-gray-900 dark:text-gray-100">
+                Ledger Schema Status
+              </h3>
+              <p className="text-sm text-gray-700 dark:text-gray-300">
+                {validationStatus?.status === 'valid'
+                  ? 'All governance entries pass strict schema validation.'
+                  : 'Schema drift detected. Validation required.'}
+              </p>
+              {validationStatus && (
+                <p
+                  className={`mt-2 text-xs ${validationStatus.status === 'valid' ? 'text-green-700 dark:text-green-400' : 'text-yellow-700 dark:text-yellow-400'}`}
+                >
+                  Last check: {new Date(validationStatus.timestamp).toISOString().split('T')[0]}
+                </p>
+              )}
+            </div>
           </div>
         </section>
 
@@ -334,7 +426,8 @@ export default async function TransparencyDashboardPage({ params }: Props) {
             Public API Access
           </h2>
           <p className="mb-4 text-gray-700 dark:text-gray-300">
-            All governance data is available via public APIs for transparency and third-party verification.
+            All governance data is available via public APIs for transparency and third-party
+            verification.
           </p>
           <div className="space-y-2 text-sm">
             <div className="rounded bg-gray-50 p-3 dark:bg-gray-900">
@@ -350,13 +443,17 @@ export default async function TransparencyDashboardPage({ params }: Props) {
               </p>
             </div>
             <div className="rounded bg-gray-50 p-3 dark:bg-gray-900">
-              <code className="text-cyan-600 dark:text-cyan-400">GET /api/governance/eii-history</code>
+              <code className="text-cyan-600 dark:text-cyan-400">
+                GET /api/governance/eii-history
+              </code>
               <p className="mt-1 text-xs text-gray-600 dark:text-gray-400">
                 Get EII history with 90-day rolling average
               </p>
             </div>
             <div className="rounded bg-gray-50 p-3 dark:bg-gray-900">
-              <code className="text-cyan-600 dark:text-cyan-400">GET /api/governance/consent-metrics</code>
+              <code className="text-cyan-600 dark:text-cyan-400">
+                GET /api/governance/consent-metrics
+              </code>
               <p className="mt-1 text-xs text-gray-600 dark:text-gray-400">
                 Get aggregated consent statistics (privacy-preserving)
               </p>
@@ -370,15 +467,24 @@ export default async function TransparencyDashboardPage({ params }: Props) {
             This dashboard is part of Block 9.3: Transparency & Multi-Analytics Framework
           </p>
           <div className="flex flex-wrap justify-center gap-4 text-sm text-gray-600 dark:text-gray-400">
-            <Link href={`/${locale}/governance`} className="hover:text-cyan-600 dark:hover:text-cyan-400">
+            <Link
+              href={`/${locale}/governance`}
+              className="hover:text-cyan-600 dark:hover:text-cyan-400"
+            >
               Governance Overview
             </Link>
             <span>•</span>
-            <Link href={`/${locale}/privacy`} className="hover:text-cyan-600 dark:hover:text-cyan-400">
+            <Link
+              href={`/${locale}/privacy`}
+              className="hover:text-cyan-600 dark:hover:text-cyan-400"
+            >
               Privacy Policy
             </Link>
             <span>•</span>
-            <Link href={`/${locale}/contact`} className="hover:text-cyan-600 dark:hover:text-cyan-400">
+            <Link
+              href={`/${locale}/contact`}
+              className="hover:text-cyan-600 dark:hover:text-cyan-400"
+            >
               Contact
             </Link>
           </div>
@@ -387,4 +493,3 @@ export default async function TransparencyDashboardPage({ params }: Props) {
     </main>
   );
 }
-

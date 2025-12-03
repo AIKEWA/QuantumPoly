@@ -24,6 +24,7 @@
 EWA v2 is a governance analysis system that combines rule-based statistical methods with optional machine learning to detect ethical risk patterns in system governance data. It generates structured insights with severity scoring, recommended actions, and confidence levels.
 
 **Primary Components:**
+
 1. **Statistical Analysis Layer** — Rule-based heuristics for trend detection
 2. **Optional ML Layer** — Anomaly detection and time-series forecasting
 3. **Severity Scoring Engine** — Multi-factor composite scoring
@@ -62,15 +63,19 @@ EWA v2 is a governance analysis system that combines rule-based statistical meth
 ### Out-of-Scope Uses
 
 ❌ **Individual User Profiling**
+
 - EWA v2 must NOT be used to profile, predict, or make decisions about individual users
 
 ❌ **Automated Enforcement**
+
 - EWA v2 must NOT be used to automatically enforce policies or take actions against users
 
 ❌ **Predictive Hiring/Lending/Insurance**
+
 - EWA v2 must NOT be used for any protected decision-making domains
 
 ❌ **Real-Time User Monitoring**
+
 - EWA v2 must NOT be used to monitor individual user behavior in real-time
 
 ---
@@ -80,16 +85,19 @@ EWA v2 is a governance analysis system that combines rule-based statistical meth
 ### Relevant Factors
 
 **Data Sources:**
+
 - Governance ledger (`governance/ledger/ledger.jsonl`)
 - Consent ledger (`governance/consent/ledger.jsonl`)
 - EII history (derived from governance ledger)
 
 **Temporal Factors:**
+
 - Analysis windows: 30-day and 90-day rolling periods
 - Daily scheduled runs (00:00 UTC)
 - On-demand manual triggers
 
 **Contextual Factors:**
+
 - System maturity (early-stage vs. established)
 - Regulatory environment (GDPR, DSG 2023)
 - User base size (affects consent metrics)
@@ -97,11 +105,13 @@ EWA v2 is a governance analysis system that combines rule-based statistical meth
 ### Evaluation Factors
 
 **Data Quality:**
+
 - Sufficient historical data (≥30 days for meaningful trends)
 - Complete ledger entries (no missing hashes or timestamps)
 - Consistent EII measurements
 
 **System State:**
+
 - Development vs. production environment
 - A/B testing or UX experiments (may cause temporary volatility)
 - External events (regulatory changes, news cycles)
@@ -113,27 +123,32 @@ EWA v2 is a governance analysis system that combines rule-based statistical meth
 ### Performance Metrics
 
 **Statistical Analysis:**
+
 - **EII Delta Accuracy** — Correct calculation of 30d/90d deltas
 - **Volatility Calculation** — Standard deviation of EII values
 - **Anomaly Detection Rate** — Proportion of true anomalies flagged
 
 **ML Layer (Optional):**
+
 - **Forecast Accuracy** — Mean Absolute Error (MAE) for 30-day EII forecast
 - **Anomaly Precision** — True positives / (True positives + False positives)
 - **Pattern Significance** — Correlation with human-identified patterns
 
 **Severity Scoring:**
+
 - **Inter-Rater Reliability** — Agreement between automated severity and human assessment
 - **Threshold Calibration** — Proportion of critical insights requiring human review
 
 ### Decision Metrics
 
 **Insight Quality:**
+
 - **Actionability** — Proportion of insights leading to implemented recommendations
 - **False Positive Rate** — Insights flagged but deemed irrelevant by humans
 - **Confidence Calibration** — Alignment between confidence scores and actual accuracy
 
 **Human Oversight:**
+
 - **Review Rate** — Proportion of critical insights reviewed within 7 days
 - **Approval Rate** — Proportion of critical insights approved vs. rejected
 - **Time to Action** — Days from insight generation to corrective action
@@ -147,10 +162,12 @@ EWA v2 is a governance analysis system that combines rule-based statistical meth
 **Data:** No training required (rule-based heuristics)
 
 **Sources:**
+
 - Governance ledger (historical EII, security metrics)
 - Consent ledger (user consent events)
 
 **Preprocessing:**
+
 - JSONL parsing
 - Chronological sorting
 - Missing value handling (default to 0 or last known value)
@@ -160,16 +177,19 @@ EWA v2 is a governance analysis system that combines rule-based statistical meth
 **Data:** Historical governance metrics (if enabled)
 
 **Features:**
+
 - EII time series (30-90 days)
 - Consent event counts (daily aggregates)
 - Security anomaly counts (rolling windows)
 
 **Preprocessing:**
+
 - Normalization (0-1 scale)
 - Rolling window aggregation
 - Outlier capping (3 standard deviations)
 
 **Limitations:**
+
 - Requires ≥30 days of data for meaningful patterns
 - Sensitive to data quality issues (missing entries, incorrect timestamps)
 - No external data sources (isolated system)
@@ -183,16 +203,19 @@ EWA v2 is a governance analysis system that combines rule-based statistical meth
 **Method:** Retrospective analysis on historical data
 
 **Test Set:**
+
 - Last 90 days of governance data (held out from rule calibration)
 - Manual annotations by Governance Officers
 - Known incidents (e.g., documented EII declines)
 
 **Metrics:**
+
 - Precision: 85% (insights deemed actionable)
 - Recall: 78% (known issues detected)
 - F1 Score: 81%
 
 **Limitations:**
+
 - Small sample size (limited historical incidents)
 - Subjective ground truth (human annotations)
 - Temporal drift (system evolves over time)
@@ -204,11 +227,13 @@ EWA v2 is a governance analysis system that combines rule-based statistical meth
 ### Privacy
 
 **Data Minimization:**
+
 - ✅ Aggregate data only (no individual user records)
 - ✅ Pseudonymized consent IDs (no PII)
 - ✅ No cross-referencing with external datasets
 
 **Consent:**
+
 - ✅ Consent ledger analysis uses only aggregate statistics
 - ✅ No individual consent decisions analyzed
 - ✅ Lawful basis: Legitimate interest (governance improvement)
@@ -216,11 +241,13 @@ EWA v2 is a governance analysis system that combines rule-based statistical meth
 ### Fairness
 
 **Protected Attributes:**
+
 - ✅ No demographic data used
 - ✅ No protected attribute inference
 - ✅ No disparate impact on user groups
 
 **Bias Mitigation:**
+
 - ✅ Aggregate analysis prevents individual bias
 - ✅ Human review for critical insights
 - ✅ Transparent severity scoring formula
@@ -228,11 +255,13 @@ EWA v2 is a governance analysis system that combines rule-based statistical meth
 ### Accountability
 
 **Auditability:**
+
 - ✅ All insights logged to governance ledger
 - ✅ Cryptographic proof (SHA-256 hashes, Merkle roots)
 - ✅ Public APIs for external verification
 
 **Human Oversight:**
+
 - ✅ Critical insights (severity > 0.6) require human approval
 - ✅ Review queue with audit trail
 - ✅ Governance Officer sign-off
@@ -240,14 +269,16 @@ EWA v2 is a governance analysis system that combines rule-based statistical meth
 ### Transparency
 
 **Explainability:**
+
 - ✅ All severity scores traceable to source data
 - ✅ Evidence provided with every insight
 - ✅ Confidence scores based on data quality
 - ✅ Open documentation of methods
 
 **Public Access:**
+
 - ✅ Public APIs (`/api/ewa/*`)
-- ✅ Open documentation (`BLOCK9.5_ETHICAL_AUTONOMY.md`)
+- ✅ Open documentation (`BLOCK09.5_ETHICAL_AUTONOMY.md`)
 - ✅ Model card (this document)
 
 ---
@@ -279,6 +310,7 @@ EWA v2 is a governance analysis system that combines rule-based statistical meth
 ### Recommendations for Use
 
 **DO:**
+
 - ✅ Use as a decision support tool, not a decision-maker
 - ✅ Combine with qualitative human reviews
 - ✅ Provide context when reviewing insights
@@ -286,6 +318,7 @@ EWA v2 is a governance analysis system that combines rule-based statistical meth
 - ✅ Update configuration as system evolves
 
 **DON'T:**
+
 - ❌ Use for individual user decisions
 - ❌ Treat insights as definitive truth
 - ❌ Ignore human review for critical insights
@@ -295,18 +328,22 @@ EWA v2 is a governance analysis system that combines rule-based statistical meth
 ### Risk Mitigation
 
 **False Positives:**
+
 - **Risk:** Flagging non-issues, causing alert fatigue
 - **Mitigation:** Confidence scores, human review, threshold tuning
 
 **False Negatives:**
+
 - **Risk:** Missing real ethical issues
 - **Mitigation:** Multiple detection methods (statistical + ML), regular audits
 
 **Misinterpretation:**
+
 - **Risk:** Insights misused to justify punitive actions
 - **Mitigation:** Clear documentation, role-based recommendations, Governance Officer oversight
 
 **Data Quality Issues:**
+
 - **Risk:** Incorrect insights due to bad data
 - **Mitigation:** Ledger integrity verification, confidence scoring, human review
 
@@ -317,25 +354,30 @@ EWA v2 is a governance analysis system that combines rule-based statistical meth
 ### Update Frequency
 
 **Statistical Layer:**
+
 - **Rule Updates:** Quarterly (based on retrospective analysis)
 - **Threshold Tuning:** Semi-annually (based on false positive/negative rates)
 
 **ML Layer (Optional):**
+
 - **Retraining:** Not applicable (no training required for current implementation)
 - **Feature Engineering:** Annually (as new metrics become available)
 
 **Configuration:**
+
 - **TTI Weights:** As needed (based on governance priorities)
 - **Severity Thresholds:** Semi-annually (based on review queue load)
 
 ### Monitoring
 
 **Automated Monitoring:**
+
 - Daily analysis runs (GitHub Actions)
 - Ledger integrity verification
 - API health checks
 
 **Manual Monitoring:**
+
 - Weekly review queue checks
 - Monthly dashboard reviews
 - Quarterly retrospective analysis
@@ -343,12 +385,14 @@ EWA v2 is a governance analysis system that combines rule-based statistical meth
 ### Decommissioning Criteria
 
 **Conditions for Decommissioning:**
+
 - Persistent false positive rate > 50%
 - Persistent false negative rate > 30%
 - Fundamental changes to governance data structure
 - Replacement by superior system
 
 **Decommissioning Process:**
+
 1. Notify stakeholders (30 days advance)
 2. Archive all historical insights and ledger entries
 3. Document lessons learned
@@ -361,6 +405,7 @@ EWA v2 is a governance analysis system that combines rule-based statistical meth
 ### Version 1.0.0 (2025-10-26)
 
 **Initial Release:**
+
 - Statistical analysis layer (EII, consent, security)
 - Optional ML layer (anomaly detection, forecasting)
 - Severity scoring engine (multi-factor composite)
@@ -371,11 +416,13 @@ EWA v2 is a governance analysis system that combines rule-based statistical meth
 - Comprehensive documentation
 
 **Known Issues:**
+
 - Limited historical data (system recently launched)
 - ML layer not yet validated (insufficient data)
 - Single-language insights (English only)
 
 **Planned Improvements:**
+
 - Multi-language insights (EN/DE/ES/FR/IT/TR)
 - Advanced ML models (Isolation Forest, Prophet)
 - Expanded metrics (inclusion, fairness, social impact)
@@ -387,7 +434,7 @@ EWA v2 is a governance analysis system that combines rule-based statistical meth
 
 ### Documentation
 
-- **Main Documentation:** `BLOCK9.5_ETHICAL_AUTONOMY.md`
+- **Main Documentation:** `BLOCK09.5_ETHICAL_AUTONOMY.md`
 - **Developer Guide:** `docs/autonomy/EWA_V2_README.md`
 - **API Schema:** `public/api-schema.json`
 
@@ -411,14 +458,17 @@ EWA v2 is a governance analysis system that combines rule-based statistical meth
 ## Contact
 
 **Governance Team:**
+
 - Email: governance@quantumpoly.ai
 - Dashboard: https://www.quantumpoly.ai/en/governance/autonomy
 
 **Technical Support:**
+
 - Email: support@quantumpoly.ai
 - Documentation: https://www.quantumpoly.ai/docs/autonomy
 
 **External Auditors:**
+
 - API: https://www.quantumpoly.ai/api/ewa/verify
 - Ledger: https://www.quantumpoly.ai/governance/ledger/ledger.jsonl
 
@@ -430,5 +480,4 @@ EWA v2 is a governance analysis system that combines rule-based statistical meth
 
 ---
 
-*This model card follows the framework proposed by Mitchell et al. (2019) and is maintained under version control with cryptographic integrity verification.*
-
+_This model card follows the framework proposed by Mitchell et al. (2019) and is maintained under version control with cryptographic integrity verification._

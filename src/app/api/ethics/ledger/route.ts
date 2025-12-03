@@ -6,9 +6,9 @@
  * Public API endpoint exposing full governance ledger for transparency and verification
  */
 
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from 'next/server';
 
-import { verifyLedgerIntegrity } from "@/lib/governance/ledger-parser";
+import { verifyIntegrityLedger } from '@/lib/integrity';
 
 /**
  * GET /api/ethics/ledger
@@ -29,13 +29,13 @@ import { verifyLedgerIntegrity } from "@/lib/governance/ledger-parser";
 export async function GET(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams;
-    
+
     // Parse pagination parameters (accepted but optional to enforce)
-    const page = parseInt(searchParams.get("page") || "1", 10);
-    const limit = parseInt(searchParams.get("limit") || "0", 10);
+    const page = parseInt(searchParams.get('page') || '1', 10);
+    const limit = parseInt(searchParams.get('limit') || '0', 10);
 
     // Verify and parse ledger
-    const result = verifyLedgerIntegrity("governance/ledger/ledger.jsonl");
+    const result = verifyIntegrityLedger('governance/ledger/ledger.jsonl');
 
     // Apply pagination if requested
     let entries = result.entries;
@@ -47,11 +47,11 @@ export async function GET(request: NextRequest) {
 
     // Determine latest block ID
     const latestEntry = result.entries[result.entries.length - 1];
-    const latestBlock = latestEntry?.id || latestEntry?.entry_id || "unknown";
+    const latestBlock = latestEntry?.id || latestEntry?.entry_id || 'unknown';
 
     // Build parent map for hash chain continuity
     const entryMap = new Map(result.entries.map((e, idx) => [e.id || e.entry_id, idx]));
-    
+
     // Build response with parent relationships
     const response = {
       entries: entries.map((entry) => {
@@ -59,12 +59,15 @@ export async function GET(request: NextRequest) {
         const entryId = entry.id || entry.entry_id;
         const globalIdx = entryMap.get(entryId);
         let parent: string | undefined;
-        
+
         if (globalIdx !== undefined && globalIdx > 0) {
           const prevEntry = result.entries[globalIdx - 1];
-          parent = prevEntry?.blockId || prevEntry?.block_id || prevEntry?.id || prevEntry?.entry_id;
+          parent = (prevEntry?.blockId ||
+            prevEntry?.block_id ||
+            prevEntry?.id ||
+            prevEntry?.entry_id) as string | undefined;
         }
-        
+
         return {
           block: entry.blockId || entry.block_id || entry.id || entry.entry_id,
           hash: entry.hash,
@@ -89,24 +92,24 @@ export async function GET(request: NextRequest) {
     return NextResponse.json(response, {
       status: 200,
       headers: {
-        "Cache-Control": "public, max-age=300",
-        "Content-Type": "application/json; charset=utf-8",
-        "Access-Control-Allow-Origin": process.env.NEXT_PUBLIC_SITE_URL || "*",
-        "Access-Control-Allow-Methods": "GET, OPTIONS",
+        'Cache-Control': 'public, max-age=300',
+        'Content-Type': 'application/json; charset=utf-8',
+        'Access-Control-Allow-Origin': process.env.NEXT_PUBLIC_SITE_URL || '*',
+        'Access-Control-Allow-Methods': 'GET, OPTIONS',
       },
     });
   } catch (error) {
-    console.error("Ethics Ledger API error:", error);
+    console.error('Ethics Ledger API error:', error);
     return NextResponse.json(
       {
         entries: [],
-        latest: "unknown",
-        merkle_root: "",
+        latest: 'unknown',
+        merkle_root: '',
         verified: false,
-        error: error instanceof Error ? error.message : "Unknown error",
+        error: error instanceof Error ? error.message : 'Unknown error',
         timestamp: new Date().toISOString(),
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -119,10 +122,9 @@ export async function OPTIONS() {
   return new NextResponse(null, {
     status: 200,
     headers: {
-      "Access-Control-Allow-Origin": process.env.NEXT_PUBLIC_SITE_URL || "*",
-      "Access-Control-Allow-Methods": "GET, OPTIONS",
-      "Access-Control-Allow-Headers": "Content-Type",
+      'Access-Control-Allow-Origin': process.env.NEXT_PUBLIC_SITE_URL || '*',
+      'Access-Control-Allow-Methods': 'GET, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type',
     },
   });
 }
-

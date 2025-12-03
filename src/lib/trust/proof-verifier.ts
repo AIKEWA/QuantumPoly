@@ -21,7 +21,7 @@ import {
   ActiveProofRecord,
   AttestationPayload,
 } from './types';
-import { parseLedger } from '../governance/ledger-parser';
+import { parseLedger } from '../integrity/ledger/reader';
 
 /**
  * Ledger entry with flexible fields for artifact verification
@@ -44,7 +44,7 @@ function isArtifactLedgerEntry(obj: unknown): obj is ArtifactLedgerEntry {
 
 /**
  * Get artifact entry from governance ledger
- * 
+ *
  * @param artifactId - The artifact identifier to search for
  * @returns Ledger entry or null if not found
  */
@@ -58,17 +58,17 @@ export function getArtifactFromLedger(artifactId: string): ArtifactLedgerEntry |
       if (!isArtifactLedgerEntry(e)) {
         return false;
       }
-      
+
       // Check if this is an ethics report entry
       if (e.entry_id === artifactId || e.id === artifactId) {
         return true;
       }
-      
+
       // Check documents array for matching report
       if (e.documents && Array.isArray(e.documents)) {
         return e.documents.some((doc: string) => doc.includes(artifactId));
       }
-      
+
       return false;
     });
 
@@ -81,12 +81,15 @@ export function getArtifactFromLedger(artifactId: string): ArtifactLedgerEntry |
 
 /**
  * Validate artifact hash against ledger entry
- * 
+ *
  * @param declaredHash - Hash from the trust token
  * @param ledgerEntry - Ledger entry containing the artifact
  * @returns True if hashes match
  */
-export function validateArtifactHash(declaredHash: string, ledgerEntry: ArtifactLedgerEntry | null): boolean {
+export function validateArtifactHash(
+  declaredHash: string,
+  ledgerEntry: ArtifactLedgerEntry | null,
+): boolean {
   if (!ledgerEntry) {
     return false;
   }
@@ -107,7 +110,7 @@ export function validateArtifactHash(declaredHash: string, ledgerEntry: Artifact
 
 /**
  * Check if a proof has been revoked
- * 
+ *
  * @param artifactId - Artifact identifier
  * @returns Revocation record if found, null otherwise
  */
@@ -117,7 +120,7 @@ export function checkRevocation(artifactId: string): RevokedProofRecord | null {
       process.cwd(),
       'governance',
       'trust-proofs',
-      'revoked-proofs.jsonl'
+      'revoked-proofs.jsonl',
     );
 
     if (!fs.existsSync(revokedPath)) {
@@ -125,7 +128,10 @@ export function checkRevocation(artifactId: string): RevokedProofRecord | null {
     }
 
     const content = fs.readFileSync(revokedPath, 'utf-8');
-    const lines = content.trim().split('\n').filter(line => line.trim());
+    const lines = content
+      .trim()
+      .split('\n')
+      .filter((line) => line.trim());
 
     for (const line of lines) {
       try {
@@ -147,7 +153,7 @@ export function checkRevocation(artifactId: string): RevokedProofRecord | null {
 
 /**
  * Get active proof record
- * 
+ *
  * @param artifactId - Artifact identifier
  * @returns Active proof record if found, null otherwise
  */
@@ -157,7 +163,7 @@ export function getActiveProof(artifactId: string): ActiveProofRecord | null {
       process.cwd(),
       'governance',
       'trust-proofs',
-      'active-proofs.jsonl'
+      'active-proofs.jsonl',
     );
 
     if (!fs.existsSync(activePath)) {
@@ -165,7 +171,10 @@ export function getActiveProof(artifactId: string): ActiveProofRecord | null {
     }
 
     const content = fs.readFileSync(activePath, 'utf-8');
-    const lines = content.trim().split('\n').filter(line => line.trim());
+    const lines = content
+      .trim()
+      .split('\n')
+      .filter((line) => line.trim());
 
     for (const line of lines) {
       try {
@@ -187,7 +196,7 @@ export function getActiveProof(artifactId: string): ActiveProofRecord | null {
 
 /**
  * Check proof status
- * 
+ *
  * @param token - Trust proof token
  * @returns Proof status
  */
@@ -222,7 +231,7 @@ export function checkProofStatus(token: TrustProofToken): TrustProofStatus {
 
 /**
  * Verify artifact proof (main verification function)
- * 
+ *
  * @param token - Trust proof token to verify
  * @returns Trust proof response with verification result
  */
@@ -300,13 +309,11 @@ export function verifyArtifactProof(token: TrustProofToken): TrustProofResponse 
 
 /**
  * Verify artifact proof by attestation payload (from QR code)
- * 
+ *
  * @param payload - Attestation payload from QR code
  * @returns Trust proof response
  */
-export function verifyArtifactProofByAttestation(
-  payload: AttestationPayload
-): TrustProofResponse {
+export function verifyArtifactProofByAttestation(payload: AttestationPayload): TrustProofResponse {
   const config = getTrustProofConfig();
   const now = new Date().toISOString();
 
@@ -317,7 +324,7 @@ export function verifyArtifactProofByAttestation(
       throw new TrustProofError(
         'No active proof found for this artifact',
         'NOT_FOUND',
-        'not_found'
+        'not_found',
       );
     }
 
@@ -417,7 +424,7 @@ export function verifyArtifactProofByAttestation(
 function getStatusNotes(
   status: TrustProofStatus,
   ledgerEntry: ArtifactLedgerEntry | null,
-  revocation: RevokedProofRecord | null
+  revocation: RevokedProofRecord | null,
 ): string {
   switch (status) {
     case 'valid':
@@ -443,7 +450,7 @@ function getStatusNotes(
 
 /**
  * Compute SHA-256 hash of a file
- * 
+ *
  * @param filePath - Path to the file
  * @returns SHA-256 hash as hex string
  */
@@ -451,4 +458,3 @@ export function computeFileHash(filePath: string): string {
   const content = fs.readFileSync(filePath);
   return crypto.createHash('sha256').update(content).digest('hex');
 }
-

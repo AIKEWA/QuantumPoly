@@ -5,7 +5,10 @@ status: 'in-progress'
 owner: 'Trust Team <trust@quantumpoly.ai>'
 lastReviewed: '2025-10-13'
 nextReviewDue: '2026-01-13'
-version: 'v0.2.0'
+version: 'v0.2.1'
+license: 'CC-BY-4.0'
+responsibleParty: 'QuantumPoly Legal Team'
+versionHash: 'pending-ci'
 ---
 
 ## Etik Temelimiz
@@ -110,3 +113,8 @@ Etik uygulamalarımızla ilgili soruları, endişeleri ve önerileri memnuniyetl
 ## Sorumluluk Reddi
 
 Bu belge mevcut yaklaşımımızı ve taahhütlerimizi açıklamaktadır ancak yasal tavsiye teşkil etmez. Öğrenmeye ve uygulamalarımızı geliştirmeye devam ettikçe değişebilir.
+
+---
+
+**Son Güncelleme:** 25 Kasım 2025
+**Versiyon:** v0.2.1

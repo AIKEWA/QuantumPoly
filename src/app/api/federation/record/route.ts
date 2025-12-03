@@ -10,7 +10,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 import { FederationRecord } from '@/lib/federation/types';
-import { parseLedger } from '@/lib/governance/ledger-parser';
+import { getIntegrityLedger } from '@/lib/integrity';
 
 /**
  * Rate limiting state
@@ -56,7 +56,8 @@ function checkRateLimit(ip: string): boolean {
 export async function GET(request: NextRequest) {
   try {
     // Rate limiting
-    const ip = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown';
+    const ip =
+      request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown';
     if (!checkRateLimit(ip)) {
       return NextResponse.json(
         {
@@ -71,7 +72,7 @@ export async function GET(request: NextRequest) {
             'X-RateLimit-Limit': String(RATE_LIMIT_MAX),
             'X-RateLimit-Remaining': '0',
           },
-        }
+        },
       );
     }
 
@@ -81,7 +82,7 @@ export async function GET(request: NextRequest) {
     let complianceStage = 'Stage VI — Federated Transparency';
 
     try {
-      const ledgerEntries = parseLedger('governance/ledger/ledger.jsonl');
+      const ledgerEntries = getIntegrityLedger('governance/ledger/ledger.jsonl');
       if (ledgerEntries.length > 0) {
         const latestEntry = ledgerEntries[ledgerEntries.length - 1];
         merkleRoot = latestEntry.merkleRoot || '';
@@ -135,7 +136,7 @@ export async function GET(request: NextRequest) {
         message: 'Failed to generate FederationRecord',
         timestamp: new Date().toISOString(),
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -154,4 +155,3 @@ export async function OPTIONS() {
     },
   });
 }
-

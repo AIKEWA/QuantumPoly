@@ -5,7 +5,10 @@ status: 'in-progress'
 owner: 'Privacy Team <privacy@quantumpoly.ai>'
 lastReviewed: '2025-10-13'
 nextReviewDue: '2026-01-13'
-version: 'v0.1.0'
+version: 'v0.1.1'
+license: 'CC-BY-4.0'
+responsibleParty: 'QuantumPoly Legal Team'
+versionHash: 'pending-ci'
 ---
 
 ## Introduction
@@ -48,3 +51,12 @@ Email: privacy@quantumpoly.ai
 ## Avertissement
 
 Cette Politique de Confidentialité est fournie à titre informatif et ne constitue pas un conseil juridique.
+
+## Mentions Légales
+
+Pour les informations légales, voir nos [Mentions Légales](/fr/imprint).
+
+---
+
+**Dernière mise à jour :** 25 novembre 2025
+**Version :** v0.1.1

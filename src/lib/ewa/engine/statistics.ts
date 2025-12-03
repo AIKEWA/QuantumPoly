@@ -7,9 +7,11 @@
  * Analyzes EII trends, consent stability, and security posture
  */
 
-import { aggregateConsentMetrics } from '@/lib/governance/consent-aggregator';
-import { getEIIHistory } from '@/lib/governance/eii-calculator';
-import { parseLedger } from '@/lib/governance/ledger-parser';
+import {
+  getIntegrityConsentMetrics,
+  getIntegrityEIIHistory,
+  getIntegrityLedger,
+} from '@/lib/integrity';
 
 import type { StatisticalAnalysis } from '../types';
 
@@ -21,10 +23,10 @@ import type { StatisticalAnalysis } from '../types';
  */
 export function performStatisticalAnalysis(
   governanceLedgerPath: string = 'governance/ledger/ledger.jsonl',
-  consentLedgerPath: string = 'governance/consent/ledger.jsonl'
+  consentLedgerPath: string = 'governance/consent/ledger.jsonl',
 ): StatisticalAnalysis {
   // EII Analysis
-  const eiiHistory = getEIIHistory(governanceLedgerPath, 90);
+  const eiiHistory = getIntegrityEIIHistory(governanceLedgerPath, 90);
   // eiiBreakdown available for future detailed analysis
   // const eiiBreakdown = getEIIBreakdown(governanceLedgerPath);
 
@@ -43,12 +45,8 @@ export function performStatisticalAnalysis(
     ninetyDaysAgo.setDate(ninetyDaysAgo.getDate() - 90);
 
     // Find closest data points
-    const recent30 = dataPoints.find(
-      (dp) => new Date(dp.date) <= thirtyDaysAgo
-    );
-    const recent90 = dataPoints.find(
-      (dp) => new Date(dp.date) <= ninetyDaysAgo
-    );
+    const recent30 = dataPoints.find((dp) => new Date(dp.date) <= thirtyDaysAgo);
+    const recent90 = dataPoints.find((dp) => new Date(dp.date) <= ninetyDaysAgo);
 
     if (recent30) {
       delta30d = currentEII - recent30.eii;
@@ -63,11 +61,10 @@ export function performStatisticalAnalysis(
   const eiiVolatility = calculateStandardDeviation(recentEII);
 
   // Consent Analysis
-  const consentMetrics = aggregateConsentMetrics(consentLedgerPath);
+  const consentMetrics = getIntegrityConsentMetrics(consentLedgerPath);
 
   const totalUsers = consentMetrics.totalUsers || 1; // Avoid division by zero
-  const withdrawalRate =
-    totalUsers > 0 ? (consentMetrics.consentRevoked / totalUsers) * 100 : 0;
+  const withdrawalRate = totalUsers > 0 ? (consentMetrics.consentRevoked / totalUsers) * 100 : 0;
 
   // Calculate category shifts (change in opt-in rates)
   const categoryShifts = {
@@ -77,18 +74,18 @@ export function performStatisticalAnalysis(
 
   // Consent volatility (variance in daily consent events)
   const dailyEvents = consentMetrics.timeSeriesData.map(
-    (ts) => ts.consentGiven + ts.consentRevoked + ts.consentUpdated
+    (ts) => ts.consentGiven + ts.consentRevoked + ts.consentUpdated,
   );
   const consentVolatility = calculateStandardDeviation(dailyEvents);
 
   // Security Analysis
-  const ledgerEntries = parseLedger(governanceLedgerPath);
+  const ledgerEntries = getIntegrityLedger(governanceLedgerPath);
   const latestEntry = ledgerEntries[ledgerEntries.length - 1];
 
   // Extract security score from latest ledger entry
   let securityScore = 88; // Default from baseline
   if (latestEntry && 'metrics' in latestEntry) {
-    const metrics = latestEntry.metrics as any;
+    const metrics = latestEntry.metrics as Record<string, number>;
     securityScore = metrics.security || 88;
   }
 
@@ -137,8 +134,7 @@ function calculateStandardDeviation(values: number[]): number {
 
   const mean = values.reduce((sum, val) => sum + val, 0) / values.length;
   const squaredDiffs = values.map((val) => Math.pow(val - mean, 2));
-  const variance =
-    squaredDiffs.reduce((sum, val) => sum + val, 0) / values.length;
+  const variance = squaredDiffs.reduce((sum, val) => sum + val, 0) / values.length;
 
   return Math.sqrt(variance);
 }
@@ -159,10 +155,7 @@ export function detectEIIDecline(delta30d: number, delta90d: number): boolean {
  * @param volatility Consent event volatility
  * @returns True if volatility spike detected
  */
-export function detectConsentVolatility(
-  withdrawalRate: number,
-  volatility: number
-): boolean {
+export function detectConsentVolatility(withdrawalRate: number, volatility: number): boolean {
   return withdrawalRate > 10 || volatility > 5;
 }
 
@@ -174,8 +167,7 @@ export function detectConsentVolatility(
  */
 export function detectSecurityConcern(
   anomaliesDetected: number,
-  trend: 'improving' | 'stable' | 'declining'
+  trend: 'improving' | 'stable' | 'declining',
 ): boolean {
   return anomaliesDetected > 2 || trend === 'declining';
 }
-

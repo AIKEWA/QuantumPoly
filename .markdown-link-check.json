@@ -1,0 +1,29 @@
+{
+  "ignorePatterns": [
+    {
+      "pattern": "^http://localhost"
+    },
+    {
+      "pattern": "^/dashboard"
+    },
+    {
+      "pattern": "^/en/settings"
+    },
+    {
+      "pattern": "^/de/settings"
+    },
+    {
+      "pattern": "^https://www.quantumpoly.ai"
+    }
+  ],
+  "replacementPatterns": [
+    {
+      "pattern": "^/",
+      "replacement": "./"
+    }
+  ],
+  "retryOn429": true,
+  "retryCount": 2,
+  "fallbackRetryDelay": "30s",
+  "aliveStatusCodes": [200, 206]
+}
