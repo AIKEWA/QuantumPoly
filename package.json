@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "prebuild": "ts-node scripts/fix-missing-dependencies.ts",
+    "presync": "ts-node scripts/verify-lockfile-sync.ts",
+    "prebuild": "npm run presync && ts-node scripts/fix-missing-dependencies.ts",
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
