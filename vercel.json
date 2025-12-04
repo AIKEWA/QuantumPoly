@@ -1,5 +1,5 @@
 {
-  "buildCommand": "npm ci || npm run presync && npm run prebuild && npm run build",
+  "buildCommand": "npm run build",
   "installCommand": "npm ci --legacy-peer-deps",
   "framework": "nextjs",
   "regions": ["iad1"],
