@@ -13,6 +13,7 @@ import Link from 'next/link';
 
 import { MonitoringTimeline } from '@/components/monitoring/MonitoringTimeline';
 import { SystemHealthCard } from '@/components/monitoring/SystemHealthCard';
+import { getGovernanceSummary } from '@/lib/governance/summary';
 import { getLatestReportSummary, getReportHistory } from '@/lib/monitoring/report-reader';
 
 /**
@@ -36,40 +37,11 @@ export const metadata: Metadata = {
 export const revalidate = 300;
 
 /**
- * Summary response from API
- */
-interface SummaryResponse {
-  latest: string;
-  merkle_root: string;
-  verified: boolean;
-  totalEntries: number;
-  lastUpdate: string;
-  blocks: string[];
-  recentChanges: Array<{
-    block: string;
-    timestamp: string;
-    entryType: string;
-    title: string;
-  }>;
-}
-
-/**
  * Fetch summary data server-side
  */
-async function fetchSummary(): Promise<SummaryResponse | null> {
+async function fetchSummary() {
   try {
-    // Use internal API route for SSR
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
-    const response = await fetch(`${baseUrl}/api/ethics/summary`, {
-      next: { revalidate: 300 },
-    });
-
-    if (!response.ok) {
-      console.error('Failed to fetch summary:', response.statusText);
-      return null;
-    }
-
-    return await response.json();
+    return await getGovernanceSummary();
   } catch (error) {
     console.error('Error fetching summary:', error);
     return null;

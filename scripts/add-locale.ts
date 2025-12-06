@@ -81,6 +81,7 @@ function parseArgs(): LocaleOptions | null {
 /**
  * Mark a translation string as needing translation
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function markForTranslation(value: any): any {
   if (typeof value === 'string') {
     return `[NEEDS_TRANSLATION] ${value}`;
@@ -91,6 +92,7 @@ function markForTranslation(value: any): any {
   }
 
   if (typeof value === 'object' && value !== null) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const result: Record<string, any> = {};
     for (const [key, val] of Object.entries(value)) {
       result[key] = markForTranslation(val);

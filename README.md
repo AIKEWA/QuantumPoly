@@ -19,6 +19,28 @@ A modern, cyberpunk-elegant landing page for QuantumPoly, built with Next.js 14+
 - 📱 Fully responsive on all devices
 - 🔍 SEO optimized
 
+## Governance Scripts
+
+QuantumPoly uses TypeScript for all governance and automation scripts (`scripts/*.ts`), but executes pre-compiled JavaScript in production/CI environments to ensure stability and remove runtime dependencies like `ts-node`.
+
+### Workflow
+
+1.  **Edit**: Modify the TypeScript source files in `scripts/` (e.g., `scripts/validate-locales.ts`).
+2.  **Compile**: Run `npm run build:scripts` to regenerate the JavaScript artifacts.
+3.  **Verify**: Ensure no compilation errors occurred.
+4.  **Commit**: Commit **both** the `.ts` source and the `.js` output.
+
+### CI Verification
+
+The CI pipeline runs `npm run verify:scripts` to ensure that the committed JavaScript files exactly match the output of compiling the TypeScript sources. If they drift, the build will fail.
+
+### Key Commands
+
+```bash
+npm run build:scripts   # Compile all scripts/*.ts to JS
+npm run verify:scripts  # Check if compiled JS matches TS source
+```
+
 ## Getting Started
 
 ### Prerequisites

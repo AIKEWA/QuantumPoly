@@ -10,21 +10,23 @@ import { EIIHistory, ConsentMetrics as ConsentMetricsType } from '@/types/integr
 // Mock Recharts to avoid SVG rendering issues in JSDOM
 jest.mock('recharts', () => ({
   ResponsiveContainer: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
-  LineChart: ({ data, children }: { data: any[]; children: React.ReactNode }) => (
+  LineChart: ({ data, children }: { data: Record<string, unknown>[]; children: React.ReactNode }) => (
     <div data-testid="line-chart" data-chart-data={JSON.stringify(data)}>
       {children}
     </div>
   ),
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   Line: ({ dataKey, name, stroke }: any) => (
     <div data-testid={`line-${dataKey}`} data-name={name} data-stroke={stroke} />
   ),
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   XAxis: ({ dataKey }: any) => <div data-testid="x-axis" data-key={dataKey} />,
   YAxis: () => <div data-testid="y-axis" />,
   CartesianGrid: () => <div data-testid="grid" />,
   Tooltip: () => <div data-testid="tooltip" />,
   Legend: () => <div data-testid="legend" />,
   PieChart: ({ children }: { children: React.ReactNode }) => <div data-testid="pie-chart">{children}</div>,
-  Pie: ({ data }: { data: any[] }) => <div data-testid="pie" data-pie-data={JSON.stringify(data)} />,
+  Pie: ({ data }: { data: unknown[] }) => <div data-testid="pie" data-pie-data={JSON.stringify(data)} />,
   Cell: () => null,
 }));
 
@@ -57,12 +59,7 @@ describe('Dashboard Metrics & Visualization Audit', () => {
         privacy: 70,
       };
       // Accessibility defaults to 0
-      const expected = 
-        80 * 0.25 + 
-        0 * 0.25 + 
-        90 * 0.25 + 
-        70 * 0.25; // 20 + 0 + 22.5 + 17.5 = 60
-
+      // 20 + 0 + 22.5 + 17.5 = 60
       expect(calculateEII(metrics)).toBe(60);
     });
 
@@ -211,7 +208,9 @@ describe('Dashboard Metrics & Visualization Audit', () => {
       const pieData = JSON.parse(pie.getAttribute('data-pie-data') || '[]');
       
       expect(pieData).toHaveLength(3);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       expect(pieData.find((d: any) => d.name === 'Essential').value).toBe(50);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       expect(pieData.find((d: any) => d.name === 'Analytics').value).toBe(25);
     });
 

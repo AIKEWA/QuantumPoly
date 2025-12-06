@@ -1,4 +1,4 @@
-import { useTranslations } from 'next-intl';
+import { getTranslations } from 'next-intl/server';
 import React from 'react';
 
 import { EthicalDriftChart } from '@/components/observatory/EthicalDriftChart';
@@ -6,8 +6,9 @@ import { GlobalIntegrityMap } from '@/components/observatory/GlobalIntegrityMap'
 import { ProofLens } from '@/components/observatory/ProofLens';
 import { getRegistryStats, getStandardsList } from '@/lib/ogp/registry-client';
 
-export default async function ObservatoryPage() {
-  const t = useTranslations('observatory');
+export default async function ObservatoryPage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'observatory' });
   const stats = await getRegistryStats();
   const standards = await getStandardsList();
 

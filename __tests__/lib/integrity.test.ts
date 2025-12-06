@@ -5,7 +5,7 @@ import {
   verifyIntegrityLedger,
   getIntegrityConsentMetrics,
 } from '@/lib/integrity';
-import { ConsentEventType, ConsentCategory } from '@/types/integrity';
+import { ConsentEventType } from '@/types/integrity';
 
 jest.mock('fs');
 jest.mock('path', () => ({

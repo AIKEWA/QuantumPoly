@@ -8,7 +8,7 @@
 
 import { NextResponse } from 'next/server';
 
-import { verifyIntegrityLedger, getIntegrityLedger } from '@/lib/integrity';
+import { getGovernanceSummary } from '@/lib/governance/summary';
 
 /**
  * GET /api/ethics/summary
@@ -26,45 +26,9 @@ import { verifyIntegrityLedger, getIntegrityLedger } from '@/lib/integrity';
  */
 export async function GET() {
   try {
-    // Verify ledger integrity
-    const result = verifyIntegrityLedger('governance/ledger/ledger.jsonl');
+    const summary = await getGovernanceSummary();
 
-    // Parse full ledger for block list
-    const entries = getIntegrityLedger('governance/ledger/ledger.jsonl');
-
-    // Extract block IDs in order
-    const blocks = entries.map(
-      (entry) => entry.blockId || entry.block_id || entry.id || entry.entry_id || 'unknown',
-    );
-
-    // Determine latest block
-    const latestEntry = entries[entries.length - 1];
-    const latestBlock = latestEntry?.id || latestEntry?.entry_id || 'unknown';
-
-    // Get recent changes (last 5 entries)
-    const recentChanges = entries
-      .slice(-5)
-      .reverse()
-      .map((entry) => ({
-        block: entry.blockId || entry.block_id || entry.id || entry.entry_id,
-        timestamp: entry.timestamp,
-        entryType: entry.entryType || entry.ledger_entry_type || 'unknown',
-        title: entry.title || (entry.summary as string)?.substring(0, 80) || 'No title',
-      }));
-
-    // Build response
-    const response = {
-      latest: latestBlock,
-      merkle_root: result.merkleRoot,
-      verified: result.verified,
-      totalEntries: result.totalEntries,
-      lastUpdate: result.lastUpdate,
-      blocks,
-      recentChanges,
-      timestamp: new Date().toISOString(),
-    };
-
-    return NextResponse.json(response, {
+    return NextResponse.json(summary, {
       status: 200,
       headers: {
         'Cache-Control': 'public, max-age=300',

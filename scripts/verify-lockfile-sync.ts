@@ -1,6 +1,6 @@
+import { execSync } from 'child_process';
 import * as fs from 'fs';
 import * as path from 'path';
-import { execSync } from 'child_process';
 
 const ROOT_DIR = path.resolve(__dirname, '..');
 const PACKAGE_JSON = path.join(ROOT_DIR, 'package.json');

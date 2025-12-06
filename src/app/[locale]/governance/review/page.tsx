@@ -14,6 +14,8 @@ import { getTranslations } from 'next-intl/server';
 import { ReviewDashboard } from '@/components/audit/ReviewDashboard';
 import { isValidLocale, locales } from '@/i18n';
 
+export const dynamic = 'force-dynamic';
+
 type Props = {
   params: Promise<{ locale: string }>;
 };
@@ -135,8 +137,8 @@ export default async function ReviewDashboardPage({ params }: Props) {
               ⚠️ Configuration Warning
             </p>
             <p className="mt-1 text-sm text-yellow-700 dark:text-yellow-400">
-              REVIEW_DASHBOARD_API_KEY environment variable is not configured.
-              Sign-off submission will not work until this is set.
+              REVIEW_DASHBOARD_API_KEY environment variable is not configured. Sign-off submission
+              will not work until this is set.
             </p>
           </div>
         )}
@@ -166,9 +168,7 @@ export default async function ReviewDashboardPage({ params }: Props) {
                   <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">
                     Block {milestone.id}
                   </p>
-                  <p className="text-xs text-gray-600 dark:text-gray-400">
-                    {milestone.title}
-                  </p>
+                  <p className="text-xs text-gray-600 dark:text-gray-400">{milestone.title}</p>
                 </div>
                 <span className="text-green-600 dark:text-green-400">✅</span>
               </div>
@@ -190,21 +190,19 @@ export default async function ReviewDashboardPage({ params }: Props) {
           </h3>
           <div className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
             <p>
-              This dashboard implements Block 9.9 of the QuantumPoly governance
-              framework — the final human accountability checkpoint before
-              production release.
+              This dashboard implements Block 9.9 of the QuantumPoly governance framework — the
+              final human accountability checkpoint before production release.
             </p>
             <p>
-              Four required roles must provide explicit sign-off: Lead Engineer,
-              Governance Officer, Legal Counsel, and Accessibility Reviewer.
+              Four required roles must provide explicit sign-off: Lead Engineer, Governance Officer,
+              Legal Counsel, and Accessibility Reviewer.
             </p>
             <p>
-              All sign-offs are recorded with cryptographic integrity verification
-              and stored in both structured files and the governance ledger.
+              All sign-offs are recorded with cryptographic integrity verification and stored in
+              both structured files and the governance ledger.
             </p>
             <p className="font-medium text-gray-700 dark:text-gray-300">
-              "Before this system touches the world, humans sign their name under
-              it."
+              "Before this system touches the world, humans sign their name under it."
             </p>
           </div>
         </div>
@@ -212,4 +210,3 @@ export default async function ReviewDashboardPage({ params }: Props) {
     </main>
   );
 }
-

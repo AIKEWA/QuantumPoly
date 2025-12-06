@@ -101,7 +101,9 @@
     "ledger:validate": "node scripts/ledger-normalize.mjs governance/ledger --report",
     "simulate:governance": "node scripts/simulate-governance.js",
     "ci": "npm run validate:translations && npm run validate && npm run build && npm run build-storybook",
-    "vercel-build": "npm install --legacy-peer-deps && npm run build"
+    "vercel-build": "npm install --legacy-peer-deps && npm run build",
+    "build:scripts": "tsc scripts/*.ts --target ES2020 --outDir scripts/ --module commonjs --esModuleInterop --skipLibCheck",
+    "verify:scripts": "scripts/verify-scripts-compilation.sh"
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",
