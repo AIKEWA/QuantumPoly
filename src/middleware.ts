@@ -35,11 +35,5 @@ export default function middleware(request: NextRequest): NextResponse {
 export const config = {
   // Match all routes except Next.js internals and static files
   // Explicitly include root path, all locale paths, and API routes
-  matcher: [
-    '/',
-    '/(de|en|tr|es|fr|it)/:path*',
-    '/api/:path*',
-    '/((?!_next|_vercel|.*\\..*).*)',
-  ],
+  matcher: ['/', '/(de|en|tr|es|fr|it)/:path*', '/((?!api|_next|_vercel|.*\\..*).*)'],
 };
-
