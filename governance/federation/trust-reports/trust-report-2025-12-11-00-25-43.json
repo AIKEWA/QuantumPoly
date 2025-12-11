@@ -1,0 +1,42 @@
+{
+  "timestamp": "2025-12-11T00:25:43.602Z",
+  "total_partners": 3,
+  "valid_partners": 0,
+  "stale_partners": 0,
+  "flagged_partners": 0,
+  "error_partners": 3,
+  "network_merkle_aggregate": "",
+  "compliance_baseline": "Stage VI — Federated Transparency",
+  "partners": [
+    {
+      "partner_id": "quantumpoly.ai",
+      "partner_display_name": "QuantumPoly (Self Reference)",
+      "last_merkle_root": "",
+      "last_verified_at": "2025-12-11T00:25:41.437Z",
+      "trust_status": "error",
+      "notes": "Failed to fetch FederationRecord: Invalid FederationRecord: missing required fields",
+      "governance_endpoint": "https://quantumpoly.ai/api/federation/record",
+      "error": "Invalid FederationRecord: missing required fields"
+    },
+    {
+      "partner_id": "ETH-ZH",
+      "partner_display_name": "ETH Zurich Ethics Lab",
+      "last_merkle_root": "",
+      "last_verified_at": "2025-12-11T00:25:43.235Z",
+      "trust_status": "error",
+      "notes": "Failed to fetch FederationRecord: fetch failed",
+      "governance_endpoint": "https://ethicslab.ethz.ch/api/federation/record",
+      "error": "fetch failed"
+    },
+    {
+      "partner_id": "AI4Gov-EU",
+      "partner_display_name": "AI4Gov European Transparency Hub",
+      "last_merkle_root": "",
+      "last_verified_at": "2025-12-11T00:25:43.415Z",
+      "trust_status": "error",
+      "notes": "Failed to fetch FederationRecord: fetch failed",
+      "governance_endpoint": "https://api.ai4gov.eu/federation/record",
+      "error": "fetch failed"
+    }
+  ]
+}
