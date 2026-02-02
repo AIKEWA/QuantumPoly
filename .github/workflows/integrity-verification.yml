@@ -21,7 +21,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20.17.25'
+          node-version: '20'
           cache: 'npm'
           
       - name: Install dependencies
@@ -60,7 +60,7 @@ jobs:
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "**Date:** $(date -u +%Y-%m-%d)" >> $GITHUB_STEP_SUMMARY
           echo "**Run ID:** ${{ github.run_number }}" >> $GITHUB_STEP_SUMMARY
-          echo "**Node Version:** 20.17.25 (Stage VI environment match)" >> $GITHUB_STEP_SUMMARY
+          echo "**Node Version:** 20 (Stage VI environment match)" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           
           # Find latest integrity report
