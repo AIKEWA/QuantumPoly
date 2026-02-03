@@ -89,9 +89,25 @@ jobs:
           
       - name: Install LHCI
         run: npm i -D @lhci/cli && npm ci
-        
+
+      - name: Wait for preview to be ready
+        run: |
+          echo "Waiting for preview deployment to be accessible..."
+          for i in {1..10}; do
+            if curl -sSf "${{ needs.preview.outputs.preview_url }}" > /dev/null 2>&1; then
+              echo "Preview is ready!"
+              exit 0
+            fi
+            echo "Attempt $i/10 - waiting 5s..."
+            sleep 5
+          done
+          echo "Preview URL not responding after 50s, proceeding anyway..."
+
       - name: Run Lighthouse CI (strict a11y)
-        run: npx lhci autorun --config=.lighthouserc.js --collect.settings.onlyCategories=accessibility --collect.url="${{ needs.preview.outputs.preview_url }}" --collect.numberOfRuns=2
+        env:
+          LHCI_MODE: external_url
+          PREVIEW_URL: ${{ needs.preview.outputs.preview_url }}
+        run: npx lhci autorun
         
       - name: Comment Lighthouse results on PR
         if: always() && github.event_name == 'pull_request'
