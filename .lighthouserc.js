@@ -22,7 +22,16 @@ module.exports = {
       url: mode === 'external_url'
         ? [normalizeUrl(previewUrl)]
         : ['http://localhost:3000'],
-      settings: { onlyCategories: ['accessibility'] },
+      settings: {
+        onlyCategories: ['accessibility'],
+        // External URLs may need different Chrome settings
+        ...(mode === 'external_url' && {
+          // Disable storage reset to avoid cookie/session issues
+          disableStorageReset: true,
+          // Extra Chrome flags for external sites in CI
+          chromeFlags: ['--ignore-certificate-errors', '--no-sandbox'],
+        }),
+      },
     },
     assert: {
       assertions: {
