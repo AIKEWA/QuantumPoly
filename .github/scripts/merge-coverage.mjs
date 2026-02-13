@@ -266,8 +266,8 @@ export class CoverageMerger {
   }
 }
 
-// Main execution
-if (import.meta.url === `file://${process.argv[1]}`) {
+// Main execution (works for relative and absolute CLI invocation paths)
+if (process.argv[1] && path.resolve(process.argv[1]) === __filename) {
   const artifactDir = process.argv[2] || './artifacts';
   const merger = new CoverageMerger(artifactDir);
   
@@ -278,4 +278,3 @@ if (import.meta.url === `file://${process.argv[1]}`) {
     process.exit(1);
   }
 }
-

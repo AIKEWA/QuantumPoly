@@ -251,10 +251,9 @@ export class EnvironmentDetector {
   }
 }
 
-// Main execution
-if (import.meta.url === `file://${process.argv[1]}`) {
+// Main execution (works for relative and absolute CLI invocation paths)
+if (process.argv[1] && path.resolve(process.argv[1]) === __filename) {
   const detector = new EnvironmentDetector();
   const results = detector.detect();
   detector.outputToGitHubActions(results);
 }
-
