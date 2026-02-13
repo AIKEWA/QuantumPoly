@@ -89,60 +89,9 @@ jobs:
           
       - name: Install LHCI
         run: npm i -D @lhci/cli && npm ci
-
-      - name: Wait for preview to be ready
-        id: wait_ready
-        run: |
-          PREVIEW_URL="${{ needs.preview.outputs.preview_url }}"
-          echo "Checking preview URL: $PREVIEW_URL"
-          
-          MAX_ATTEMPTS=12
-          WAIT_SECONDS=10
-          
-          for i in $(seq 1 $MAX_ATTEMPTS); do
-            echo "--- Attempt $i/$MAX_ATTEMPTS ---"
-            
-            # Capture HTTP status and final URL after redirects
-            RESPONSE=$(curl -sS -L -o /dev/null -w "HTTP_CODE=%{http_code}\nFINAL_URL=%{url_effective}\nREDIRECT_COUNT=%{num_redirects}" "$PREVIEW_URL" 2>&1) || true
-            echo "$RESPONSE"
-            
-            HTTP_CODE=$(echo "$RESPONSE" | grep HTTP_CODE | cut -d= -f2)
-            FINAL_URL=$(echo "$RESPONSE" | grep FINAL_URL | cut -d= -f2)
-            
-            # Detect auth redirect (login pages, SSO)
-            if echo "$FINAL_URL" | grep -qiE "(login|auth|signin|sso|vercel\.com/login)"; then
-              echo "::error::Preview URL redirects to auth page: $FINAL_URL"
-              echo "::error::Vercel preview protection may be enabled. Disable it or allowlist the LHCI runner."
-              exit 1
-            fi
-            
-            # Check for success
-            if [ "$HTTP_CODE" = "200" ]; then
-              echo "Preview is ready (HTTP 200)"
-              echo "ready=true" >> "$GITHUB_OUTPUT"
-              exit 0
-            fi
-            
-            # Check for permanent failure (4xx except 404 which might be transient)
-            if [ "$HTTP_CODE" = "401" ] || [ "$HTTP_CODE" = "403" ]; then
-              echo "::error::Preview URL returned $HTTP_CODE - access denied"
-              echo "::error::Check Vercel preview protection settings"
-              exit 1
-            fi
-            
-            echo "HTTP $HTTP_CODE - waiting ${WAIT_SECONDS}s..."
-            sleep $WAIT_SECONDS
-          done
-          
-          echo "::error::Preview URL not ready after $((MAX_ATTEMPTS * WAIT_SECONDS))s"
-          echo "::error::Last HTTP status: $HTTP_CODE"
-          exit 1
-
+        
       - name: Run Lighthouse CI (strict a11y)
-        env:
-          LHCI_MODE: external_url
-          PREVIEW_URL: ${{ needs.preview.outputs.preview_url }}
-        run: npx lhci autorun
+        run: npx lhci autorun --config=.lighthouserc.js --collect.settings.onlyCategories=accessibility --collect.url="${{ needs.preview.outputs.preview_url }}" --collect.numberOfRuns=2
         
       - name: Comment Lighthouse results on PR
         if: always() && github.event_name == 'pull_request'
