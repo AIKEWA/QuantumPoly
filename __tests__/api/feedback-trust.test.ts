@@ -1,6 +1,4 @@
 /**
- * @jest-environment node
- *
  * @fileoverview Feedback API Tests (Block 10.6)
  * @see BLOCK10.6_FEEDBACK_AND_TRUST.md
  */
@@ -10,18 +8,13 @@ import { NextRequest } from 'next/server';
 import { POST, GET } from '@/app/api/feedback/report/route';
 
 describe('POST /api/feedback/report (Block 10.6)', () => {
-  let ipSuffix = 1;
-
   // Helper to create mock request
   const createMockRequest = (body: unknown, headers: Record<string, string> = {}) => {
-    const uniqueIp = `127.0.0.${(ipSuffix % 240) + 1}`;
-    ipSuffix += 1;
-
     return new NextRequest('http://localhost:3000/api/feedback/report', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'x-forwarded-for': uniqueIp,
+        'x-forwarded-for': '127.0.0.1',
         ...headers,
       },
       body: JSON.stringify(body),
@@ -377,3 +370,4 @@ describe('GET /api/feedback/report', () => {
     expect(data.rate_limit).toContain('5 requests per minute');
   });
 });
+

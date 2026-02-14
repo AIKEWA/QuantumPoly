@@ -90,9 +90,9 @@ describe('A11y: Footer', () => {
     const { getByRole } = renderWithProvidersSync(<Footer {...defaultProps} />);
 
     // Verify each social link is accessible by its label
-    expect(getByRole('link', { name: /GitHub/i })).toBeInTheDocument();
-    expect(getByRole('link', { name: /Twitter/i })).toBeInTheDocument();
-    expect(getByRole('link', { name: /LinkedIn/i })).toBeInTheDocument();
+    expect(getByRole('link', { name: 'GitHub' })).toBeInTheDocument();
+    expect(getByRole('link', { name: 'Twitter' })).toBeInTheDocument();
+    expect(getByRole('link', { name: 'LinkedIn' })).toBeInTheDocument();
   });
 
   it('policy links are properly grouped and labeled', async () => {
@@ -120,3 +120,4 @@ describe('A11y: Footer', () => {
     expect(results).toHaveNoViolations();
   });
 });
+

@@ -80,62 +80,59 @@ export default async function Home({ params }: Props) {
   // const tCommon = await getTranslations('common');
 
   return (
-    <div className="flex min-h-screen flex-col">
-      <main className="flex-1">
-        <Hero
-          title={tHero('title')}
-          subtitle={tHero('subtitle')}
-          ctaLabel={tHero('ctaLabel')}
-          headingLevel={1}
-        />
-        <About title={tAbout('title')} body={<p>{tAbout('body')}</p>} headingLevel={2} />
-        <CodeIntelligence
-          title="Code Intelligence Suite"
-          description="Our advanced suite of tools for automated governance, verification, and optimization."
-          features={[
-            {
-              title: 'Multi-Language Stability',
-              description:
-                'Automated benchmarking across Python, JavaScript, and Rust environments.',
-            },
-            {
-              title: 'Ethical Governance',
-              description: 'Real-time ledger tracking and transparency verification.',
-            },
-            {
-              title: 'Automated Optimization',
-              description: 'Continuous performance monitoring and self-healing capabilities.',
-            },
-          ]}
-          headingLevel={2}
-        />
-        <Vision
-          title={tVision('title')}
-          headingLevel={2}
-          pillars={[
-            {
-              title: tVision('pillars.safety.title'),
-              description: tVision('pillars.safety.description'),
-            },
-            {
-              title: tVision('pillars.scale.title'),
-              description: tVision('pillars.scale.description'),
-            },
-            {
-              title: tVision('pillars.openness.title'),
-              description: tVision('pillars.openness.description'),
-            },
-          ]}
-        />
-        <NewsletterForm
-          title={tNewsletter('title')}
-          emailLabel={tNewsletter('emailLabel')}
-          emailPlaceholder={tNewsletter('emailPlaceholder')}
-          submitLabel={tNewsletter('submitLabel')}
-          successMessage={tNewsletter('successMessage')}
-          errorMessage={tNewsletter('errorMessage')}
-        />
-      </main>
+    <main className="flex min-h-screen flex-col">
+      <Hero
+        title={tHero('title')}
+        subtitle={tHero('subtitle')}
+        ctaLabel={tHero('ctaLabel')}
+        headingLevel={1}
+      />
+      <About title={tAbout('title')} body={<p>{tAbout('body')}</p>} headingLevel={2} />
+      <CodeIntelligence
+        title="Code Intelligence Suite"
+        description="Our advanced suite of tools for automated governance, verification, and optimization."
+        features={[
+          {
+            title: 'Multi-Language Stability',
+            description: 'Automated benchmarking across Python, JavaScript, and Rust environments.',
+          },
+          {
+            title: 'Ethical Governance',
+            description: 'Real-time ledger tracking and transparency verification.',
+          },
+          {
+            title: 'Automated Optimization',
+            description: 'Continuous performance monitoring and self-healing capabilities.',
+          },
+        ]}
+        headingLevel={2}
+      />
+      <Vision
+        title={tVision('title')}
+        headingLevel={2}
+        pillars={[
+          {
+            title: tVision('pillars.safety.title'),
+            description: tVision('pillars.safety.description'),
+          },
+          {
+            title: tVision('pillars.scale.title'),
+            description: tVision('pillars.scale.description'),
+          },
+          {
+            title: tVision('pillars.openness.title'),
+            description: tVision('pillars.openness.description'),
+          },
+        ]}
+      />
+      <NewsletterForm
+        title={tNewsletter('title')}
+        emailLabel={tNewsletter('emailLabel')}
+        emailPlaceholder={tNewsletter('emailPlaceholder')}
+        submitLabel={tNewsletter('submitLabel')}
+        successMessage={tNewsletter('successMessage')}
+        errorMessage={tNewsletter('errorMessage')}
+      />
       <Footer
         brand={tFooter('brand')}
         tagline={tFooter('tagline')}
@@ -157,6 +154,6 @@ export default async function Home({ params }: Props) {
         policyNavLabel={tFooter('trustNav')}
         headingLevel={2}
       />
-    </div>
+    </main>
   );
 }

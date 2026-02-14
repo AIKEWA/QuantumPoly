@@ -34,13 +34,12 @@ const customJestConfig = {
       lines: 90,
       statements: 90,
     },
-    // Global thresholds calibrated to current full-suite baseline.
-    // Route-specific critical paths keep strict thresholds above.
+    // Global thresholds: Raised to 85% across all metrics (EWA-QA 4.1)
     global: {
-      branches: 14,
-      functions: 14,
-      lines: 14,
-      statements: 14,
+      branches: 85,
+      functions: 85,
+      lines: 85,
+      statements: 85,
     },
   },
   moduleNameMapper: {

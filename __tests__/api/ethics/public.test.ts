@@ -1,6 +1,4 @@
 /**
- * @jest-environment node
- *
  * @fileoverview Tests for Public Ethics API
  * @see BLOCK9.4_PUBLIC_ETHICS_API.md
  */
@@ -21,7 +19,7 @@ describe('/api/ethics/public', () => {
       expect(data).toHaveProperty('ledger_summary');
       expect(data).toHaveProperty('consent_stats');
       expect(data).toHaveProperty('eii_score');
-      expect(data).toHaveProperty('verification_url');
+      expect(data).toHaveProperty('hash_proof');
       expect(data).toHaveProperty('version');
     });
 
@@ -87,3 +85,4 @@ describe('/api/ethics/public', () => {
     });
   });
 });
+

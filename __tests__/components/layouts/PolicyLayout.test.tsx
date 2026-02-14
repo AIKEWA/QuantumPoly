@@ -6,16 +6,13 @@ import type { TocItem } from '@/lib/policies/extract-toc';
 import type { PolicyMetadata } from '@/lib/policies/policy-schema';
 
 describe('PolicyLayout', () => {
-  const nextReviewDue = new Date();
-  nextReviewDue.setFullYear(nextReviewDue.getFullYear() + 1);
-
   const mockMetadata: PolicyMetadata = {
     title: 'Test Policy',
     summary: 'This is a test policy summary',
     status: 'published',
     owner: 'Test Team <test@example.com>',
     lastReviewed: '2025-10-13',
-    nextReviewDue: nextReviewDue.toISOString().split('T')[0],
+    nextReviewDue: '2026-01-13',
     version: 'v1.0.0',
   };
 
@@ -110,10 +107,8 @@ describe('PolicyLayout', () => {
     );
 
     expect(screen.getByText('Next Review Due')).toBeInTheDocument();
-    const expectedNextReviewDue = new Intl.DateTimeFormat('en', { dateStyle: 'medium' }).format(
-      new Date(mockMetadata.nextReviewDue),
-    );
-    const dateElement = screen.getByText(expectedNextReviewDue);
+    // Date format uses Intl.DateTimeFormat with 'medium' style
+    const dateElement = screen.getByText('Jan 13, 2026');
     expect(dateElement).toBeInTheDocument();
   });
 
@@ -312,3 +307,4 @@ describe('PolicyLayout', () => {
     expect(screen.getByText('Oct 13, 2025')).toBeInTheDocument();
   });
 });
+
