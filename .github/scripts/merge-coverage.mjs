@@ -59,10 +59,18 @@ export class CoverageMerger {
           'coverage',
           'coverage-final.json'
         );
+        const fallbackPath = path.join(
+          this.artifactDir,
+          entry.name,
+          'coverage-final.json'
+        );
 
         if (fs.existsSync(coverageFilePath)) {
           coverageFiles.push(coverageFilePath);
           console.log(`✓ Found coverage file: ${coverageFilePath}`);
+        } else if (fs.existsSync(fallbackPath)) {
+          coverageFiles.push(fallbackPath);
+          console.log(`✓ Found coverage file: ${fallbackPath}`);
         }
       }
     }
