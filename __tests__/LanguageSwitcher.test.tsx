@@ -23,6 +23,9 @@ jest.mock('next-intl', () => ({
       en: 'English',
       de: 'Deutsch',
       tr: 'Türkçe',
+      es: 'Español',
+      fr: 'Français',
+      it: 'Italiano',
     };
     return translations[key] || key;
   }),
@@ -51,10 +54,13 @@ describe('LanguageSwitcher Component', () => {
     render(<LanguageSwitcher />);
 
     const options = screen.getAllByRole('option');
-    expect(options).toHaveLength(3);
+    expect(options).toHaveLength(6);
     expect(options[0]).toHaveTextContent('English');
     expect(options[1]).toHaveTextContent('Deutsch');
     expect(options[2]).toHaveTextContent('Türkçe');
+    expect(options[3]).toHaveTextContent('Español');
+    expect(options[4]).toHaveTextContent('Français');
+    expect(options[5]).toHaveTextContent('Italiano');
   });
 
   it('has accessible label for screen readers', () => {

@@ -23,13 +23,16 @@ import {
 import { assertHeadingOrder } from '../../utils/assert-heading-order';
 
 describe('PolicyLayout - Accessibility', () => {
+  const nextReviewDue = new Date();
+  nextReviewDue.setFullYear(nextReviewDue.getFullYear() + 1);
+
   const mockMetadata: PolicyMetadata = {
     title: 'Test Policy',
     summary: 'This is a test policy for accessibility validation',
     status: 'published',
     owner: 'Trust & Safety Team <trust@quantumpoly.ai>',
     lastReviewed: '2025-10-13',
-    nextReviewDue: '2026-01-13',
+    nextReviewDue: nextReviewDue.toISOString().split('T')[0],
     version: 'v1.0.0',
   };
 
@@ -398,4 +401,3 @@ describe('PolicyLayout - Accessibility', () => {
     });
   });
 });
-

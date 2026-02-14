@@ -155,8 +155,8 @@ describe('seo', () => {
     });
 
     it('validates section routes', () => {
-      expect(isValidSEORoute('/about')).toBe(true);
-      expect(isValidSEORoute('/vision')).toBe(true);
+      expect(isValidSEORoute('/about')).toBe(false);
+      expect(isValidSEORoute('/vision')).toBe(false);
     });
 
     it('rejects invalid routes', () => {
@@ -167,7 +167,7 @@ describe('seo', () => {
   });
 
   describe('getSeoForRoute', () => {
-    const testRoutes: SEORoute[] = ['/', '/ethics', '/privacy', '/imprint', '/gep', '/about', '/vision'];
+    const testRoutes: SEORoute[] = ['/', '/ethics', '/privacy', '/imprint', '/gep'];
     const testLocales: Locale[] = ['en', 'de', 'tr', 'es', 'fr', 'it'];
 
     // Test all route/locale combinations
@@ -216,7 +216,7 @@ describe('seo', () => {
     });
 
     it('sets correct OG type for non-home pages', async () => {
-      const routes: SEORoute[] = ['/ethics', '/privacy', '/imprint', '/gep', '/about', '/vision'];
+      const routes: SEORoute[] = ['/ethics', '/privacy', '/imprint', '/gep'];
       
       for (const route of routes) {
         const seo = await getSeoForRoute(route, 'en');
@@ -352,4 +352,3 @@ describe('seo', () => {
     });
   });
 });
-

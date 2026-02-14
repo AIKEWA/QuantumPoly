@@ -32,6 +32,15 @@ beforeAll(() => {
     ) {
       return;
     }
+    const isActWarning = typeof args[0] === 'string' && args[0].includes('not wrapped in act');
+    const componentName = args.find(
+      (arg) =>
+        typeof arg === 'string' && (arg === 'NewsletterForm' || arg === 'LanguageSwitcher'),
+    );
+
+    if (isActWarning && componentName) {
+      return;
+    }
     originalError.call(console, ...args);
   };
 });
