@@ -47,7 +47,7 @@ jobs:
 
       - name: Run environment detection
         id: detect
-        run: node .github/scripts/detect-env.js
+        run: node .github/scripts/detect-env.mjs
 
       - name: Audit Node version consistency
         run: |
@@ -176,7 +176,7 @@ jobs:
           path: ./artifacts
 
       - name: Merge coverage reports
-        run: node .github/scripts/merge-coverage.js ./artifacts
+        run: node .github/scripts/merge-coverage.mjs ./artifacts
 
       - name: Upload merged coverage summary
         uses: actions/upload-artifact@v4
