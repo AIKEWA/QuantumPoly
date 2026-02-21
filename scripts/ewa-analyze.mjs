@@ -28,22 +28,144 @@ console.log(`Dry Run: ${dryRun}`);
 console.log(`ML Enabled: ${enableML}`);
 console.log(`Force Mode: ${force}\n`);
 
-/**
- * Dynamic import of EWA engine (ESM compatibility)
- */
-async function loadEWAEngine() {
-  // For now, we'll implement a simplified version that calls the analysis
-  // In production, this would dynamically import the compiled modules
-  
-  const { performStatisticalAnalysis } = await import('../src/lib/ewa/engine/statistics.ts');
-  const { calculateSeverityScore, requiresHumanReview } = await import('../src/lib/ewa/engine/severity.ts');
-  const { calculateTrustTrajectory } = await import('../src/lib/ewa/trustTrajectory.ts');
-  
+function parseJsonl(filePath) {
+  if (!fs.existsSync(filePath)) return [];
+  const content = fs.readFileSync(filePath, 'utf8').trim();
+  if (!content) return [];
+  return content
+    .split('\n')
+    .filter(Boolean)
+    .map((line) => JSON.parse(line));
+}
+
+function getEntryEII(entry) {
+  return (
+    (typeof entry.eii === 'number' && entry.eii) ||
+    (typeof entry.metrics?.eii === 'number' && entry.metrics.eii) ||
+    null
+  );
+}
+
+function performStatisticalAnalysis(
+  governanceLedgerPath = 'governance/ledger/ledger.jsonl',
+  consentLedgerPath = 'governance/consent/ledger.jsonl',
+) {
+  const governanceEntries = parseJsonl(path.join(projectRoot, governanceLedgerPath));
+  const consentEntries = parseJsonl(path.join(projectRoot, consentLedgerPath));
+  const now = Date.now();
+  const last30d = now - (30 * 24 * 60 * 60 * 1000);
+  const last90d = now - (90 * 24 * 60 * 60 * 1000);
+
+  const eiiPoints = governanceEntries
+    .map((entry) => ({
+      timestamp: new Date(entry.timestamp || entry.applied_at || 0).getTime(),
+      eii: getEntryEII(entry),
+    }))
+    .filter((point) => Number.isFinite(point.timestamp) && typeof point.eii === 'number')
+    .sort((a, b) => a.timestamp - b.timestamp);
+
+  const currentEII = eiiPoints.length > 0 ? eiiPoints[eiiPoints.length - 1].eii : 85;
+  const point30 = eiiPoints.find((point) => point.timestamp >= last30d);
+  const point90 = eiiPoints.find((point) => point.timestamp >= last90d);
+  const delta30d = point30 ? currentEII - point30.eii : 0;
+  const delta90d = point90 ? currentEII - point90.eii : 0;
+
+  const recentEII = eiiPoints.slice(-30).map((point) => point.eii);
+  const eiiMean = recentEII.length ? recentEII.reduce((sum, value) => sum + value, 0) / recentEII.length : 0;
+  const eiiVariance = recentEII.length
+    ? recentEII.reduce((sum, value) => sum + ((value - eiiMean) ** 2), 0) / recentEII.length
+    : 0;
+  const eiiVolatility = Math.sqrt(eiiVariance);
+
+  const userIds = new Set();
+  let consentRevoked = 0;
+  for (const entry of consentEntries) {
+    if (entry.userId) userIds.add(entry.userId);
+    const event = entry.event_type || entry.event;
+    if (event === 'consent_revoked' || event === 'consent_withdrawn') {
+      consentRevoked += 1;
+    }
+  }
+  const totalUsers = userIds.size || consentEntries.length || 1;
+  const withdrawalRate = totalUsers > 0 ? (consentRevoked / totalUsers) * 100 : 0;
+
+  const securityEntries = governanceEntries.slice(-10);
+  let anomaliesDetected = 0;
+  for (const entry of securityEntries) {
+    if (!entry.signature) anomaliesDetected += 1;
+    if (!entry.hash || !/^[0-9a-f]{64}$/.test(entry.hash)) anomaliesDetected += 1;
+  }
+  const latestMetrics = governanceEntries[governanceEntries.length - 1]?.metrics || {};
+  const securityScore = typeof latestMetrics.security === 'number' ? latestMetrics.security : 88;
+  const securityTrend = anomaliesDetected > 3 ? 'declining' : anomaliesDetected === 0 ? 'improving' : 'stable';
+
   return {
-    performStatisticalAnalysis,
-    calculateSeverityScore,
-    requiresHumanReview,
-    calculateTrustTrajectory,
+    eii_analysis: {
+      current: currentEII,
+      delta_30d: delta30d,
+      delta_90d: delta90d,
+      volatility: eiiVolatility,
+      trend: delta30d > 2 ? 'improving' : delta30d < -2 ? 'declining' : 'stable',
+    },
+    consent_analysis: {
+      total_users: totalUsers,
+      withdrawal_rate: withdrawalRate,
+      category_shifts: { analytics: 0, performance: 0 },
+      volatility: 0,
+    },
+    security_analysis: {
+      current_score: securityScore,
+      anomalies_detected: anomaliesDetected,
+      trend: securityTrend,
+    },
+  };
+}
+
+function calculateSeverityScore(analysis) {
+  const eiiComponent = Math.min(1, Math.max(0, Math.abs(Math.min(analysis.eii_analysis.delta_30d, 0)) / 10));
+  const consentComponent = Math.min(1, Math.max(0, analysis.consent_analysis.withdrawal_rate / 50));
+  const securityComponent = Math.min(1, Math.max(0, analysis.security_analysis.anomalies_detected / 10));
+  const score = (eiiComponent + consentComponent + securityComponent) / 3;
+  const level = score < 0.3 ? 'low' : score < 0.6 ? 'moderate' : 'critical';
+
+  return {
+    score,
+    level,
+    breakdown: {
+      eii_component: eiiComponent,
+      consent_component: consentComponent,
+      security_component: securityComponent,
+    },
+    explanation: `Composite score=${score.toFixed(2)} from EII/consent/security factors`,
+  };
+}
+
+function requiresHumanReview(severityScore) {
+  return severityScore >= 0.6;
+}
+
+function calculateTrustTrajectory(analysis) {
+  const eii = analysis.eii_analysis.current;
+  const consentStability = Math.max(0, 100 - (analysis.consent_analysis.withdrawal_rate * 2));
+  const securityPosture = analysis.security_analysis.current_score;
+  const ttiScore = Math.max(
+    0,
+    Math.min(100, (eii * 0.4) + (consentStability * 0.3) + (securityPosture * 0.3)),
+  );
+  const velocity = analysis.eii_analysis.delta_30d;
+  const trend = velocity > 2 ? 'improving' : velocity < -2 ? 'declining' : 'stable';
+
+  return {
+    timestamp: new Date().toISOString(),
+    tti_score: Math.round(ttiScore * 10) / 10,
+    components: {
+      eii,
+      consent_stability: Math.round(consentStability * 10) / 10,
+      security_posture: securityPosture,
+    },
+    trend,
+    velocity,
+    volatility: analysis.eii_analysis.volatility,
   };
 }
 
@@ -195,14 +317,6 @@ function appendToLedger(insights, trustTrajectory) {
 async function runAnalysis() {
   try {
     console.log('📊 Loading EWA v2 engine...\n');
-    
-    const {
-      performStatisticalAnalysis,
-      calculateSeverityScore,
-      requiresHumanReview,
-      calculateTrustTrajectory,
-    } = await loadEWAEngine();
-    
     console.log('🔍 Running statistical analysis...\n');
     
     const statistical = performStatisticalAnalysis(
@@ -260,4 +374,3 @@ async function runAnalysis() {
 
 // Run analysis
 runAnalysis();
-
