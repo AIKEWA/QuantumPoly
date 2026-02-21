@@ -4,10 +4,25 @@
  */
 
 import { NextRequest } from 'next/server';
+import fs from 'fs';
+import os from 'os';
+import path from 'path';
 
 import { POST, GET } from '@/app/api/feedback/report/route';
 
 describe('POST /api/feedback/report (Block 10.6)', () => {
+  let tempFeedbackDir: string;
+
+  beforeAll(() => {
+    tempFeedbackDir = fs.mkdtempSync(path.join(os.tmpdir(), 'qp-feedback-test-'));
+    process.env.FEEDBACK_STORAGE_DIR = tempFeedbackDir;
+  });
+
+  afterAll(() => {
+    delete process.env.FEEDBACK_STORAGE_DIR;
+    fs.rmSync(tempFeedbackDir, { recursive: true, force: true });
+  });
+
   // Helper to create mock request
   const createMockRequest = (body: unknown, headers: Record<string, string> = {}) => {
     return new NextRequest('http://localhost:3000/api/feedback/report', {
@@ -370,4 +385,3 @@ describe('GET /api/feedback/report', () => {
     expect(data.rate_limit).toContain('5 requests per minute');
   });
 });
-
