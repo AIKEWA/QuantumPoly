@@ -52,5 +52,9 @@ export default async function FeedbackPage({ params }: Props) {
     notFound();
   }
 
-  return <FeedbackForm />;
+  return (
+    <main id="main-content">
+      <FeedbackForm />
+    </main>
+  );
 }
