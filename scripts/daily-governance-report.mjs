@@ -163,15 +163,17 @@ function calculateEII7DayAverage(currentDate) {
   
   // Get last 7 entries with EII data
   const eiiEntries = ledger
-    .filter(entry => entry.eii || entry.metrics?.eii)
+    .filter(entry => entry.eii != null || entry.metrics?.eii != null)
     .slice(-7);
   
   if (eiiEntries.length === 0) {
     return null;
   }
   
-  const eiiValues = eiiEntries.map(entry => entry.eii || entry.metrics?.eii).filter(Boolean);
-  const currentEII = eiiValues[eiiValues.length - 1] || null;
+  const eiiValues = eiiEntries
+    .map(entry => entry.eii ?? entry.metrics?.eii)
+    .filter(value => value != null);
+  const currentEII = eiiValues[eiiValues.length - 1] ?? null;
   const avg = eiiValues.reduce((a, b) => a + b, 0) / eiiValues.length;
   
   let trend = 'stable';
@@ -422,4 +424,3 @@ main().catch((error) => {
   console.error('Fatal error:', error);
   process.exit(2);
 });
-
