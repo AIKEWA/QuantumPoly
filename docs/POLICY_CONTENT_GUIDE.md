@@ -209,13 +209,13 @@ The [`.github/workflows/policy-validation.yml`](../.github/workflows/policy-vali
 
 ### Pre-commit Hooks
 
-[lint-staged](../lint-staged.config.js) runs validation on staged files before commit:
+[lint-staged](../lint-staged.config.mjs) runs validation on staged files before commit:
 
 - **ESLint** checks for code style issues
 - **Prettier** formats code consistently
 - **Type checking** validates TypeScript
 
-Configure in `.lintstagedrc` or `lint-staged.config.js`.
+Configure in `.lintstagedrc` or `lint-staged.config.mjs`.
 
 ### Common Errors & Fixes
 
