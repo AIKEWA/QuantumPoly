@@ -1,6 +1,8 @@
 /**
  * @fileoverview Feedback API Tests (Block 10.6)
  * @see BLOCK10.6_FEEDBACK_AND_TRUST.md
+ *
+ * @jest-environment node
  */
 
 import { NextRequest } from 'next/server';

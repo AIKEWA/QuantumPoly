@@ -45,6 +45,13 @@ jobs:
         with:
           node-version: '20.x'
 
+      - name: Assert environment detection script exists
+        run: |
+          if [ ! -f .github/scripts/detect-env.mjs ]; then
+            echo "ERROR: Missing required script .github/scripts/detect-env.mjs"
+            exit 1
+          fi
+
       - name: Run environment detection
         id: detect
         run: node .github/scripts/detect-env.mjs
@@ -174,6 +181,13 @@ jobs:
         with:
           pattern: coverage-report-node-*
           path: ./artifacts
+
+      - name: Assert coverage merge script exists
+        run: |
+          if [ ! -f .github/scripts/merge-coverage.mjs ]; then
+            echo "ERROR: Missing required script .github/scripts/merge-coverage.mjs"
+            exit 1
+          fi
 
       - name: Merge coverage reports
         run: node .github/scripts/merge-coverage.mjs ./artifacts
@@ -324,7 +338,7 @@ jobs:
 
       - name: Install Playwright browsers
         if: steps.check-deps.outputs.has_a11y == 'true'
-        run: npx playwright install --with-deps chromium
+        run: npx playwright install --with-deps
 
       - name: Run accessibility tests
         if: steps.check-deps.outputs.has_a11y == 'true'

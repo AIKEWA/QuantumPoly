@@ -1,10 +1,11 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
 const { spawnSync } = require('child_process');
 
 describe('daily-governance-report script', () => {
-  it('preserves zero EII instead of converting it to null', () => {
+  test('preserves zero EII instead of converting it to null', () => {
     const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'qp-daily-report-'));
     const ledgerDir = path.join(tempDir, 'governance', 'ledger');
     const outputPath = path.join(tempDir, 'reports', 'monitoring-2026-02-21.json');
