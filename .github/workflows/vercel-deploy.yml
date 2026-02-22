@@ -111,6 +111,42 @@ jobs:
           
           echo "✅ All required secrets are configured"
 
+      - name: Vercel Preflight
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        run: |
+          set -o pipefail
+
+          MISSING_VARS=()
+          for VAR_NAME in VERCEL_TOKEN VERCEL_ORG_ID VERCEL_PROJECT_ID; do
+            if [[ -z "${!VAR_NAME}" ]]; then
+              MISSING_VARS+=("$VAR_NAME")
+            fi
+          done
+
+          if [[ ${#MISSING_VARS[@]} -gt 0 ]]; then
+            echo "❌ Missing required Vercel env vars:"
+            for VAR_NAME in "${MISSING_VARS[@]}"; do
+              echo "  - $VAR_NAME"
+            done
+            exit 1
+          fi
+
+          echo "✅ Vercel env var presence: VERCEL_TOKEN=present, VERCEL_ORG_ID=present, VERCEL_PROJECT_ID=present"
+
+          run_preflight_cmd() {
+            if ! "$@"; then
+              echo "Vercel token cannot access project/team or project linkage invalid. Recreate token or verify team access."
+              exit 1
+            fi
+          }
+
+          run_preflight_cmd npx vercel --version
+          run_preflight_cmd npx vercel whoami --token "$VERCEL_TOKEN"
+          run_preflight_cmd npx vercel pull --yes --environment=preview --token "$VERCEL_TOKEN" --scope "$VERCEL_ORG_ID"
+
       # Vercel GitHub Action deployment (community-maintained)
       # Documentation: https://github.com/amondnet/vercel-action
       # This step builds and deploys to Vercel in one action
