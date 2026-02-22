@@ -590,7 +590,7 @@ npm run test
    - Update status in front matter: `status: 'deprecated'`
    - Add notice at top:
      ```markdown
-     **⚠️ DEPRECATED:** This document has been superseded by [New Document](link).
+     **⚠️ DEPRECATED:** This document has been superseded by [New Document]/en/privacy).
      ```
 
 2. **Link to Successor:**
@@ -794,8 +794,8 @@ output here
 
 ## Further Reading
 
-- [Related Doc 1](link)
-- [Related Doc 2](link)
+- [Related Doc 1]/en/privacy)
+- [Related Doc 2]/en/imprint)
 
 ---
 

@@ -1,10 +1,7 @@
+# NOTE: Superseded by .github/workflows/ci.yml; this workflow is manual-only (workflow_dispatch).
 name: E2E Tests
 
 on:
-  pull_request:
-    branches: [main, develop]
-  push:
-    branches: [main, develop]
   workflow_dispatch:
 
 jobs:
@@ -167,4 +164,3 @@ jobs:
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "### Artifacts" >> $GITHUB_STEP_SUMMARY
           echo "Test reports and results have been uploaded as artifacts." >> $GITHUB_STEP_SUMMARY
-

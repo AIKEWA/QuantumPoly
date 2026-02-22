@@ -35,6 +35,25 @@ export interface LoadedPolicy {
   isFallback: boolean;
 }
 
+function injectHeadingIds(renderedHtml: string, toc: TocItem[]): string {
+  let tocIndex = 0;
+
+  return renderedHtml.replace(/<h([23])>/g, (match) => {
+    const tocItem = toc[tocIndex];
+    if (!tocItem) {
+      return match;
+    }
+
+    const expectedLevel = Number.parseInt(match[2], 10);
+    if (tocItem.level !== expectedLevel) {
+      return match;
+    }
+
+    tocIndex += 1;
+    return `<h${expectedLevel} id="${tocItem.id}">`;
+  });
+}
+
 /**
  * Get the absolute path to the content directory.
  * In production, content is copied to .next/server during build.
@@ -117,9 +136,11 @@ export async function loadPolicy(slug: PolicySlug, locale: Locale): Promise<Load
     })
     .process(content);
 
+  const renderedHtml = injectHeadingIds(processedContent.toString(), toc);
+
   return {
     metadata,
-    html: processedContent.toString(),
+    html: renderedHtml,
     toc,
     locale,
     resolvedLocale,

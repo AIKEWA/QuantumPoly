@@ -21,27 +21,32 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '20.x'
           cache: 'npm'
-          
+
+      - name: Diagnostics
+        run: |
+          echo "Node: $(node -v)"
+          echo "npm: $(npm -v)"
+          echo "package.json: $(test -f package.json && echo present || echo missing)"
+          echo "package-lock.json: $(test -f package-lock.json && echo present || echo missing)"
+          echo "governance/ledger/ledger.jsonl: $(test -f governance/ledger/ledger.jsonl && echo present || echo missing)"
+
       - name: Install dependencies
-        run: npm ci --legacy-peer-deps
-        
+        run: npm ci
+
       - name: Run integrity verification
         id: integrity
         run: npm run integrity:verify
         env:
           NODE_ENV: production
-        continue-on-error: true
-        
+
       - name: Verify ledger consistency
         run: npm run ethics:verify-ledger
-        continue-on-error: true
-        
+
       - name: Verify consent compliance
         run: npm run consent:verify
-        continue-on-error: true
-        
+
       - name: Upload integrity reports
         uses: actions/upload-artifact@v4
         if: always()

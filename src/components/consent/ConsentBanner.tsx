@@ -65,10 +65,16 @@ export function ConsentBanner({ onOpenSettings, locale }: ConsentBannerProps) {
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           {/* Content */}
           <div className="flex-1">
-            <h2 id="consent-banner-title" className="text-lg font-semibold text-gray-900 dark:text-white">
+            <h2
+              id="consent-banner-title"
+              className="text-lg font-semibold text-gray-900 dark:text-white"
+            >
               {t('banner.title')}
             </h2>
-            <p id="consent-banner-description" className="mt-1 text-sm text-gray-600 dark:text-gray-300">
+            <p
+              id="consent-banner-description"
+              className="mt-1 text-sm text-gray-600 dark:text-gray-300"
+            >
               {t('banner.description')}{' '}
               <a
                 href={`/${locale}/privacy`}
@@ -92,7 +98,7 @@ export function ConsentBanner({ onOpenSettings, locale }: ConsentBannerProps) {
             <button
               type="button"
               onClick={handleAcceptAll}
-              className="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:bg-blue-500 dark:hover:bg-blue-600"
+              className="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:bg-blue-600 dark:hover:bg-blue-700"
               aria-label={t('banner.acceptAriaLabel')}
             >
               {t('banner.acceptButton')}
@@ -108,4 +114,3 @@ export function ConsentBanner({ onOpenSettings, locale }: ConsentBannerProps) {
     </div>
   );
 }
-

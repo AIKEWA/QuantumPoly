@@ -25,7 +25,7 @@ export function About({ title, body, headingLevel = 2, className }: AboutProps) 
       <div className="mx-auto max-w-6xl space-y-8">
         <HeadingTag
           id={`about-title-${title.replace(/\s+/g, '-').toLowerCase()}`}
-          className="text-center text-3xl font-bold text-cyan-500 md:text-4xl dark:text-cyan-400"
+          className="text-center text-3xl font-bold text-cyan-700 md:text-4xl dark:text-cyan-300"
           aria-describedby={bodyId}
         >
           {title}

@@ -49,25 +49,58 @@ export class CoverageMerger {
     }
 
     const coverageFiles = [];
-    const entries = fs.readdirSync(this.artifactDir, { withFileTypes: true });
+    const stack = [this.artifactDir];
 
-    for (const entry of entries) {
-      if (entry.isDirectory() && entry.name.startsWith('coverage-report-')) {
-        const coverageFilePath = path.join(
-          this.artifactDir,
-          entry.name,
-          'coverage',
-          'coverage-final.json'
-        );
+    while (stack.length > 0) {
+      const currentDir = stack.pop();
+      const entries = fs.readdirSync(currentDir, { withFileTypes: true });
 
-        if (fs.existsSync(coverageFilePath)) {
-          coverageFiles.push(coverageFilePath);
-          console.log(`✓ Found coverage file: ${coverageFilePath}`);
+      for (const entry of entries) {
+        const fullPath = path.join(currentDir, entry.name);
+
+        if (entry.isDirectory()) {
+          stack.push(fullPath);
+          continue;
+        }
+
+        if (entry.isFile() && entry.name === 'coverage-final.json') {
+          coverageFiles.push(fullPath);
+          console.log(`✓ Found coverage file: ${fullPath}`);
         }
       }
     }
 
     return coverageFiles;
+  }
+
+  /**
+   * Collect sample file paths from artifact directory for diagnostics
+   * @param {number} limit
+   * @returns {string[]}
+   */
+  collectSampleFiles(limit = 25) {
+    const sampleFiles = [];
+    const stack = [this.artifactDir];
+
+    while (stack.length > 0 && sampleFiles.length < limit) {
+      const currentDir = stack.pop();
+      const entries = fs.readdirSync(currentDir, { withFileTypes: true });
+
+      for (const entry of entries) {
+        const fullPath = path.join(currentDir, entry.name);
+
+        if (entry.isDirectory()) {
+          stack.push(fullPath);
+        } else if (entry.isFile()) {
+          sampleFiles.push(path.relative(this.artifactDir, fullPath));
+          if (sampleFiles.length >= limit) {
+            break;
+          }
+        }
+      }
+    }
+
+    return sampleFiles;
   }
 
   /**
@@ -255,6 +288,11 @@ export class CoverageMerger {
     const coverageFiles = this.findCoverageFiles();
 
     if (coverageFiles.length === 0) {
+      const sampleFiles = this.collectSampleFiles(25);
+      console.error(`📂 Artifact root: ${this.artifactDir}`);
+      if (sampleFiles.length > 0) {
+        console.error(`📄 Sample downloaded files:\n  - ${sampleFiles.join('\n  - ')}`);
+      }
       console.error('❌ No coverage files found. Ensure artifacts are downloaded correctly.');
       process.exit(1);
     }
@@ -278,4 +316,3 @@ if (import.meta.url === `file://${process.argv[1]}`) {
     process.exit(1);
   }
 }
-

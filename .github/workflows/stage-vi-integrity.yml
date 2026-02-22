@@ -45,29 +45,27 @@ jobs:
         
       - name: Run linting
         run: npm run lint
-        continue-on-error: false
         
       - name: Run type checking
         run: npm run typecheck
-        continue-on-error: false
         
       - name: Run tests
         run: npm run test
-        continue-on-error: false
         
       - name: Build project
         run: npm run build
-        continue-on-error: false
         
       - name: Normalize formatting
+        if: always()
         run: npm run format:write
         
       - name: Generate Stage VI hash manifest
-        if: github.event.inputs.verify_only != 'true'
+        if: always() && github.event.inputs.verify_only != 'true'
         run: node scripts/hash-stage-vi-artifacts.mjs
         
       - name: Verify Stage VI chain checksum
         id: verify_checksum
+        if: always()
         run: |
           echo "🔍 Verifying Stage VI chain checksum..."
           node scripts/hash-stage-vi-artifacts.mjs --compare > verification_output.txt 2>&1
@@ -253,4 +251,3 @@ The Stage VI chain checksum does **NOT** match the canonical governance-verified
             echo "" >> $GITHUB_STEP_SUMMARY
             echo "The local codebase matches the canonical Stage VI governance state." >> $GITHUB_STEP_SUMMARY
           fi
-
