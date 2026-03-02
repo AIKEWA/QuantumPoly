@@ -1,6 +1,8 @@
 /**
  * @fileoverview Tests for Public Ethics API
  * @see BLOCK9.4_PUBLIC_ETHICS_API.md
+ *
+ * @jest-environment node
  */
 
 import { NextRequest } from 'next/server';

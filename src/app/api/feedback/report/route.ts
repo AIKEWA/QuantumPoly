@@ -4,7 +4,7 @@
  * @see BLOCK10.6_FEEDBACK_AND_TRUST.md
  *
  * POST /api/feedback/report
- * 
+ *
  * Public endpoint for submitting ethical feedback, accessibility issues, and incidents
  * Extended in Block 10.6 with trust scoring, enhanced privacy, and stricter rate limits
  * Stores feedback in governance/feedback/feedback-YYYY-MM-DD.jsonl for transparency
@@ -21,59 +21,69 @@ import { computeTrustScore } from '@/lib/feedback/trust-scorer';
 import type { TrustSignals } from '@/lib/feedback/types';
 
 // Validation schema (Block 10.6 — Extended)
-const FeedbackReportSchema = z.object({
-  // Legacy type field (Block 10.1 — backward compatible)
-  type: z.enum(['accessibility', 'ethics', 'incident']).optional(),
-  // New topic field (Block 10.6)
-  topic: z.enum(['governance', 'ethics', 'safety', 'ux', 'bug', 'other']).optional(),
-  // Message content (trim whitespace and validate)
-  message: z.string()
-    .min(1, 'Message is required')
-    .max(2000, 'Message must not exceed 2000 characters')
-    .transform(val => val.trim())
-    .refine(val => val.length > 0, 'Message cannot be empty or whitespace only'),
-  // Contact consent (Block 10.6)
-  consent_contact: z.boolean().optional().default(false),
-  // Email (required only if consent_contact is true)
-  email: z.string().email('Invalid email format').optional().or(z.literal('')),
-  // Context information (Block 10.6)
-  context: z.object({
-    path: z.string().optional(),
-    user_agent: z.string().optional(),
-    locale: z.string().optional(),
-  }).optional(),
-  // Metadata for trust scoring (Block 10.6)
-  metadata: z.object({
-    trust_opt_in: z.boolean().optional(),
-    signals: z.object({
-      account_age_days: z.number().optional(),
-      verified: z.boolean().optional(),
-    }).optional(),
-  }).optional(),
-  // Timestamp
-  timestamp: z.string().datetime().optional(),
-}).refine(
-  (data) => {
-    // Require either type or topic
-    return data.type !== undefined || data.topic !== undefined;
-  },
-  {
-    message: 'Either "type" or "topic" field must be provided',
-    path: ['type'],
-  }
-).refine(
-  (data) => {
-    // If consent_contact is true, email is required
-    if (data.consent_contact && (!data.email || data.email === '')) {
-      return false;
-    }
-    return true;
-  },
-  {
-    message: 'Email is required when consent_contact is true',
-    path: ['email'],
-  }
-);
+const FeedbackReportSchema = z
+  .object({
+    // Legacy type field (Block 10.1 — backward compatible)
+    type: z.enum(['accessibility', 'ethics', 'incident']).optional(),
+    // New topic field (Block 10.6)
+    topic: z.enum(['governance', 'ethics', 'safety', 'ux', 'bug', 'other']).optional(),
+    // Message content (trim whitespace and validate)
+    message: z
+      .string()
+      .min(1, 'Message is required')
+      .max(2000, 'Message must not exceed 2000 characters')
+      .transform((val) => val.trim())
+      .refine((val) => val.length > 0, 'Message cannot be empty or whitespace only'),
+    // Contact consent (Block 10.6)
+    consent_contact: z.boolean().optional().default(false),
+    // Email (required only if consent_contact is true)
+    email: z.string().email('Invalid email format').optional().or(z.literal('')),
+    // Context information (Block 10.6)
+    context: z
+      .object({
+        path: z.string().optional(),
+        user_agent: z.string().optional(),
+        locale: z.string().optional(),
+      })
+      .optional(),
+    // Metadata for trust scoring (Block 10.6)
+    metadata: z
+      .object({
+        trust_opt_in: z.boolean().optional(),
+        signals: z
+          .object({
+            account_age_days: z.number().optional(),
+            verified: z.boolean().optional(),
+          })
+          .optional(),
+      })
+      .optional(),
+    // Timestamp
+    timestamp: z.string().datetime().optional(),
+  })
+  .refine(
+    (data) => {
+      // Require either type or topic
+      return data.type !== undefined || data.topic !== undefined;
+    },
+    {
+      message: 'Either "type" or "topic" field must be provided',
+      path: ['type'],
+    },
+  )
+  .refine(
+    (data) => {
+      // If consent_contact is true, email is required
+      if (data.consent_contact && (!data.email || data.email === '')) {
+        return false;
+      }
+      return true;
+    },
+    {
+      message: 'Email is required when consent_contact is true',
+      path: ['email'],
+    },
+  );
 
 type FeedbackReport = z.infer<typeof FeedbackReportSchema>;
 
@@ -95,9 +105,9 @@ const RATE_LIMIT_BURST = Number(process.env.FEEDBACK_RATE_LIMIT_BURST) || 10; //
 
 function checkRateLimit(identifier: string): { allowed: boolean; retryAfter?: number } {
   const now = Date.now();
-  
+
   let bucket = rateLimitBuckets.get(identifier);
-  
+
   // Initialize bucket if it doesn't exist
   if (!bucket) {
     bucket = {
@@ -106,26 +116,26 @@ function checkRateLimit(identifier: string): { allowed: boolean; retryAfter?: nu
     };
     rateLimitBuckets.set(identifier, bucket);
   }
-  
+
   // Refill tokens based on time elapsed
   const timeSinceRefill = now - bucket.lastRefill;
   const tokensToAdd = Math.floor(timeSinceRefill / (RATE_LIMIT_WINDOW / RATE_LIMIT_MAX));
-  
+
   if (tokensToAdd > 0) {
     bucket.tokens = Math.min(RATE_LIMIT_BURST, bucket.tokens + tokensToAdd);
     bucket.lastRefill = now;
   }
-  
+
   // Check if request can be allowed
   if (bucket.tokens >= 1) {
     bucket.tokens -= 1;
     return { allowed: true };
   }
-  
+
   // Calculate retry-after in seconds
   const tokensNeeded = 1 - bucket.tokens;
   const retryAfter = Math.ceil((tokensNeeded * (RATE_LIMIT_WINDOW / RATE_LIMIT_MAX)) / 1000);
-  
+
   return { allowed: false, retryAfter };
 }
 
@@ -134,31 +144,34 @@ function checkRateLimit(identifier: string): { allowed: boolean; retryAfter?: nu
  */
 function hashEmail(email: string): string {
   const salt = process.env.FEEDBACK_EMAIL_SALT || 'default-salt-change-in-production';
-  return crypto.createHash('sha256').update(email + salt).digest('hex');
+  return crypto
+    .createHash('sha256')
+    .update(email + salt)
+    .digest('hex');
 }
 
 /**
  * Append feedback to daily JSONL file (Block 10.6 — Extended)
  */
 function appendFeedback(
-  feedback: FeedbackReport, 
-  entryId: string, 
-  trustScore?: { score: number; components: Record<string, unknown> }
+  feedback: FeedbackReport,
+  entryId: string,
+  trustScore?: { score: number; components: Record<string, unknown> },
 ): void {
   const date = new Date().toISOString().split('T')[0];
-  const feedbackDir = path.join(process.cwd(), 'governance/feedback');
+  const feedbackDir = process.env.FEEDBACK_STORAGE_DIR
+    ? path.resolve(process.env.FEEDBACK_STORAGE_DIR)
+    : path.join(process.cwd(), 'governance/feedback');
   const feedbackFile = path.join(feedbackDir, `feedback-${date}.jsonl`);
-  
+
   // Ensure directory exists
   if (!fs.existsSync(feedbackDir)) {
     fs.mkdirSync(feedbackDir, { recursive: true });
   }
-  
+
   // Hash email if provided (Block 10.6)
-  const emailSha256 = feedback.email && feedback.email !== '' 
-    ? hashEmail(feedback.email) 
-    : null;
-  
+  const emailSha256 = feedback.email && feedback.email !== '' ? hashEmail(feedback.email) : null;
+
   // Create feedback entry (Block 10.6 format)
   const entry = {
     id: entryId,
@@ -181,17 +194,22 @@ function appendFeedback(
     date,
     status: 'pending',
     // Hash for integrity
-    hash: crypto.createHash('sha256').update(JSON.stringify({
-      id: entryId,
-      type: feedback.type,
-      topic: feedback.topic,
-      message: feedback.message,
-      timestamp: feedback.timestamp || new Date().toISOString(),
-    })).digest('hex'),
+    hash: crypto
+      .createHash('sha256')
+      .update(
+        JSON.stringify({
+          id: entryId,
+          type: feedback.type,
+          topic: feedback.topic,
+          message: feedback.message,
+          timestamp: feedback.timestamp || new Date().toISOString(),
+        }),
+      )
+      .digest('hex'),
     // Version indicator (Block 10.6)
     version: '1.1.0',
   };
-  
+
   // Append to JSONL file
   fs.appendFileSync(feedbackFile, JSON.stringify(entry) + '\n', 'utf-8');
 }
@@ -206,7 +224,7 @@ export async function POST(request: NextRequest) {
     const forwardedFor = request.headers.get('x-forwarded-for');
     const ip = forwardedFor ? forwardedFor.split(',')[0] : 'unknown';
     const identifier = ip || 'fallback';
-    
+
     // Check rate limit (Block 10.6 — Token bucket)
     const rateLimitResult = checkRateLimit(identifier);
     if (!rateLimitResult.allowed) {
@@ -217,15 +235,15 @@ export async function POST(request: NextRequest) {
           code: '429_RATE_LIMIT',
           retryAfter: rateLimitResult.retryAfter,
         },
-        { 
+        {
           status: 429,
           headers: {
             'Retry-After': String(rateLimitResult.retryAfter || 60),
           },
-        }
+        },
       );
     }
-    
+
     // Check Content-Type
     const contentType = request.headers.get('content-type');
     if (!contentType || !contentType.includes('application/json')) {
@@ -236,16 +254,16 @@ export async function POST(request: NextRequest) {
           code: '415_UNSUPPORTED',
           detail: 'Content-Type must be application/json',
         },
-        { status: 415 }
+        { status: 415 },
       );
     }
-    
+
     // Parse request body
     const body = await request.json();
-    
+
     // Validate input
     const validationResult = FeedbackReportSchema.safeParse(body);
-    
+
     if (!validationResult.success) {
       const firstError = validationResult.error.errors[0];
       return NextResponse.json(
@@ -257,12 +275,12 @@ export async function POST(request: NextRequest) {
           detail: firstError.message,
           errors: validationResult.error.format(),
         },
-        { status: 400 }
+        { status: 400 },
       );
     }
-    
+
     const feedback = validationResult.data;
-    
+
     // Compute trust score if opted in (Block 10.6)
     let trustScore: { score: number; components: Record<string, unknown> } | undefined;
     if (feedback.metadata?.trust_opt_in) {
@@ -274,26 +292,28 @@ export async function POST(request: NextRequest) {
         account_age_days: feedback.metadata.signals?.account_age_days,
         verified: feedback.metadata.signals?.verified,
       };
-      
+
       const result = computeTrustScore(feedback.message, signals);
       trustScore = {
         score: result.score,
         components: result.components,
       };
     }
-    
+
     // Generate entry ID (Block 10.6 format)
     const timestamp = Date.now();
     const random = crypto.randomBytes(4).toString('hex');
     const category = feedback.topic || feedback.type || 'general';
     const entryId = `fbk_${timestamp}_${category}_${random}`;
-    
+
     // Append to feedback file (Block 10.6 — with trust score)
     appendFeedback(feedback, entryId, trustScore);
-    
+
     // Log to console (for monitoring)
-    console.log(`[Feedback Received] ${entryId} — Topic: ${feedback.topic || feedback.type} — Trust: ${trustScore?.score?.toFixed(2) || 'N/A'}`);
-    
+    console.log(
+      `[Feedback Received] ${entryId} — Topic: ${feedback.topic || feedback.type} — Trust: ${trustScore?.score?.toFixed(2) || 'N/A'}`,
+    );
+
     // Return success response (Block 10.6)
     return NextResponse.json(
       {
@@ -301,9 +321,11 @@ export async function POST(request: NextRequest) {
         id: entryId,
         stored_at: new Date().toISOString(),
         trust_score: trustScore?.score,
-        message: 'Feedback received successfully. Thank you for your contribution to governance transparency.',
+        message:
+          'Feedback received successfully. Thank you for your contribution to governance transparency.',
         status: 'pending',
-        next_steps: 'Your feedback will be reviewed in the next governance cycle. For urgent matters, contact governance@quantumpoly.ai.',
+        next_steps:
+          'Your feedback will be reviewed in the next governance cycle. For urgent matters, contact governance@quantumpoly.ai.',
       },
       {
         status: 201,
@@ -311,19 +333,20 @@ export async function POST(request: NextRequest) {
           'Content-Type': 'application/json',
           'X-Entry-Id': entryId,
         },
-      }
+      },
     );
   } catch (error) {
     console.error('[Feedback API Error]', error);
-    
+
     return NextResponse.json(
       {
         success: false,
         error: 'Internal server error',
         code: '500_INTERNAL',
-        message: 'Failed to process feedback. Please try again or contact governance@quantumpoly.ai.',
+        message:
+          'Failed to process feedback. Please try again or contact governance@quantumpoly.ai.',
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -336,7 +359,8 @@ export async function GET() {
   return NextResponse.json(
     {
       endpoint: '/api/feedback/report',
-      description: 'Submit ethical feedback, accessibility issues, or incident reports with optional trust scoring',
+      description:
+        'Submit ethical feedback, accessibility issues, or incident reports with optional trust scoring',
       method: 'POST',
       block_id: '10.6',
       version: '1.1.0',
@@ -398,7 +422,8 @@ export async function GET() {
       },
       example: {
         topic: 'ux',
-        message: 'The governance dashboard has insufficient color contrast in dark mode for chart labels.',
+        message:
+          'The governance dashboard has insufficient color contrast in dark mode for chart labels.',
         consent_contact: true,
         email: 'user@example.com',
         context: {
@@ -426,7 +451,7 @@ export async function GET() {
         'Content-Type': 'application/json',
         'Cache-Control': 'public, max-age=3600',
       },
-    }
+    },
   );
 }
 
@@ -445,7 +470,6 @@ export async function OPTIONS() {
         'Access-Control-Allow-Headers': 'Content-Type',
         'Access-Control-Max-Age': '86400',
       },
-    }
+    },
   );
 }
-
