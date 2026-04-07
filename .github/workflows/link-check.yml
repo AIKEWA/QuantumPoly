@@ -23,11 +23,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Link Checker
-        uses: gaurav-nelson/github-action-markdown-link-check@v1
+      - uses: actions/setup-node@v4
         with:
-          config-file: '.markdown-link-check.json'
-          use-quiet-mode: 'no'
-          use-verbose-mode: 'yes'
-          folder-path: 'docs,content,prompts,sim'
+          node-version: 20.x
 
+      - name: Link Checker
+        run: node ./scripts/link-validation.js

@@ -8,19 +8,6 @@ import '@testing-library/jest-dom';
 // jest-axe for accessibility testing
 import 'jest-axe/extend-expect';
 
-// Polyfill Next.js Web APIs for API route testing (Block 4.4)
-// Next.js uses Web APIs (Request, Response, Headers) that aren't available in JSDOM
-import { TextEncoder, TextDecoder } from 'node:util';
-import { ReadableStream, TransformStream } from 'node:stream/web';
-
-// Polyfill TextEncoder/TextDecoder
-global.TextEncoder = TextEncoder;
-global.TextDecoder = TextDecoder;
-
-// Polyfill Web Streams API
-global.ReadableStream = ReadableStream;
-global.TransformStream = TransformStream;
-
 // Suppress React DOM Test Utils act warnings in favor of React.act
 const originalError = console.error;
 beforeAll(() => {

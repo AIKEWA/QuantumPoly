@@ -4,12 +4,21 @@ on:
   pull_request:
     branches: [ main ]
 
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
 jobs:
   preview:
     name: Deploy Preview (Vercel)
     runs-on: ubuntu-latest
     outputs:
       preview_url: ${{ steps.deploy.outputs.preview_url }}
+    env:
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
 
     steps:
       - uses: actions/checkout@v4
@@ -26,25 +35,16 @@ jobs:
         run: npm i -g vercel@latest
 
       - name: Pull Vercel env (preview)
-        run: vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
-        env:
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        run: vercel pull --yes --environment=preview --token "$VERCEL_TOKEN" --scope "$VERCEL_ORG_ID"
 
       - name: Build (prebuilt output)
-        run: vercel build --token=${{ secrets.VERCEL_TOKEN }}
-        env:
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        run: vercel build --token "$VERCEL_TOKEN"
 
       - id: deploy
         name: Deploy preview
         run: |
-          URL=$(vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }})
+          URL=$(vercel deploy --prebuilt --token "$VERCEL_TOKEN")
           echo "preview_url=$URL" >> "$GITHUB_OUTPUT"
-        env:
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
 
       - name: Upload prebuilt artifact
         uses: actions/upload-artifact@v4
@@ -53,7 +53,8 @@ jobs:
           path: .vercel/output
 
       - name: Comment preview URL on PR
-        if: github.event_name == 'pull_request'
+        if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
+        continue-on-error: true
         uses: actions/github-script@v7
         with:
           script: |
@@ -69,16 +70,23 @@ jobs:
             - ⚠️ Performance & SEO scores should be ≥ 0.9
             `;
             
-            github.rest.issues.createComment({
-              ...context.repo,
-              issue_number: context.issue.number,
-              body
-            });
+            try {
+              await github.rest.issues.createComment({
+                ...context.repo,
+                issue_number: context.issue.number,
+                body
+              });
+            } catch (error) {
+              console.warn(`WARN: Could not post PR comment: ${error instanceof Error ? error.message : String(error)}`);
+            }
 
   lighthouse:
     name: Lighthouse CI (Preview)
     runs-on: ubuntu-latest
     needs: preview
+    env:
+      LHCI_MODE: external_url
+      PREVIEW_URL: ${{ needs.preview.outputs.preview_url }}
     steps:
       - uses: actions/checkout@v4
       
@@ -88,13 +96,18 @@ jobs:
           cache: 'npm'
           
       - name: Install LHCI
-        run: npm i -D @lhci/cli && npm ci
+        run: npm ci
+
+      - name: Assert PREVIEW_URL present
+        run: |
+          test -n "$PREVIEW_URL" || { echo "ERROR: PREVIEW_URL is empty. CI LHCI runs require an external preview URL."; exit 1; }
         
       - name: Run Lighthouse CI (strict a11y)
-        run: npx lhci autorun --config=.lighthouserc.js --collect.settings.onlyCategories=accessibility --collect.url="${{ needs.preview.outputs.preview_url }}" --collect.numberOfRuns=2
+        run: npx lhci autorun --config=.lighthouserc.js --collect.settings.onlyCategories=accessibility --collect.url="$PREVIEW_URL" --collect.numberOfRuns=2
         
       - name: Comment Lighthouse results on PR
-        if: always() && github.event_name == 'pull_request'
+        if: always() && github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
+        continue-on-error: true
         uses: actions/github-script@v7
         with:
           script: |
@@ -111,8 +124,12 @@ jobs:
             Check the full report in the workflow logs above.
             `;
             
-            github.rest.issues.createComment({
-              ...context.repo,
-              issue_number: context.issue.number,
-              body
-            });
+            try {
+              await github.rest.issues.createComment({
+                ...context.repo,
+                issue_number: context.issue.number,
+                body
+              });
+            } catch (error) {
+              console.warn(`WARN: Could not post PR comment: ${error instanceof Error ? error.message : String(error)}`);
+            }
