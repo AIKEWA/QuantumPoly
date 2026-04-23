@@ -16,6 +16,7 @@ on:
 permissions:
   contents: read
   pull-requests: write
+  issues: write
 
 # Prevent concurrent runs on the same PR
 concurrency:
@@ -75,14 +76,16 @@ jobs:
           fi
 
       - name: Post overdue review comment
-        if: github.event_name == 'pull_request' && env.OVERDUE_COUNT != '0'
+        if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && env.OVERDUE_COUNT != '0'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_REPOSITORY: ${{ github.repository }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
         run: |
           echo "Posting overdue review comment to PR #$PR_NUMBER..."
-          ts-node --compiler-options '{"module":"commonjs"}' scripts/post-overdue-comments.ts
+          if ! ts-node --compiler-options '{"module":"commonjs"}' scripts/post-overdue-comments.ts; then
+            echo "WARN: Could not post overdue review comment"
+          fi
         continue-on-error: true
 
       - name: Upload validation artifact
@@ -122,4 +125,3 @@ jobs:
           else
             echo "❌ Validation did not complete successfully" >> $GITHUB_STEP_SUMMARY
           fi
-
