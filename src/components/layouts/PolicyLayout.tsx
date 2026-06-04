@@ -23,7 +23,7 @@ interface PolicyLayoutProps {
 function getStatusBadgeClass(status: PolicyMetadata['status']): string {
   switch (status) {
     case 'published':
-      return 'bg-surface-secondary text-primary border-primary';
+      return 'bg-surface-secondary text-text border-primary';
     case 'in-progress':
       return 'bg-surface-secondary text-text border-gray-300';
     case 'draft':
@@ -87,7 +87,7 @@ export function PolicyLayout({
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         <div className="grid gap-8 md:grid-cols-[1fr,18rem]">
           {/* Main content area */}
-          <main id="main-content" aria-labelledby="page-title">
+          <main id="main-content" aria-labelledby="page-title" tabIndex={-1}>
             {/* Page header with metadata */}
             <header className="mb-8 border-b border-gray-200 pb-6">
               <div className="mb-4 flex flex-wrap items-center gap-2">
@@ -165,7 +165,7 @@ export function PolicyLayout({
                     >
                       <a
                         href={`#${item.id}`}
-                        className="block rounded-md px-2 py-1 text-text-muted transition-colors hover:bg-surface hover:text-primary focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+                        className="block rounded-md px-2 py-1 text-text transition-colors hover:bg-surface hover:text-primary focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
                       >
                         {item.text}
                       </a>
