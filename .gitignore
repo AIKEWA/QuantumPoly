@@ -149,6 +149,8 @@ dist/
 # testing
 /coverage
 /reports
+/playwright-report/
+/test-results/
 
 # next.js
 /.next/

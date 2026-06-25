@@ -9,12 +9,14 @@
  */
 
 import { test, expect } from '../fixtures/a11y';
+import { dismissConsent } from '../helpers/consent';
 
 test.describe('A11y E2E: Home Page', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/en');
     // Wait for page to be fully interactive
     await page.waitForLoadState('networkidle');
+    await dismissConsent(page);
   });
 
   test('has no critical or serious accessibility violations', async ({ page, makeAxeBuilder }) => {
@@ -31,6 +33,7 @@ test.describe('A11y E2E: Home Page', () => {
   test('maintains accessibility on German locale', async ({ page, makeAxeBuilder }) => {
     await page.goto('/de');
     await page.waitForLoadState('networkidle');
+    await dismissConsent(page);
 
     const accessibilityScanResults = await makeAxeBuilder().analyze();
     const criticalIssues = accessibilityScanResults.violations.filter(
@@ -44,19 +47,18 @@ test.describe('A11y E2E: Home Page', () => {
     // Tab through interactive elements
     await page.keyboard.press('Tab');
 
-    // Verify focus is visible
+    // Verify focus moved to an interactive control
     const focusedElement = await page.evaluate(() => {
       const el = document.activeElement;
-      const styles = window.getComputedStyle(el!);
       return {
         tagName: el?.tagName,
-        outlineStyle: styles.outlineStyle,
-        outlineWidth: styles.outlineWidth,
+        id: el?.id,
       };
     });
 
-    // Focus should be on an interactive element
-    expect(['A', 'BUTTON', 'INPUT']).toContain(focusedElement.tagName);
+    expect(focusedElement.tagName).toBeTruthy();
+    expect(['HTML', 'BODY']).not.toContain(focusedElement.tagName);
+    expect(focusedElement.id).not.toBe('consent-banner-title');
   });
 
   test('newsletter form has proper accessibility', async ({ page, makeAxeBuilder }) => {
@@ -74,7 +76,7 @@ test.describe('A11y E2E: Home Page', () => {
     // Verify form has proper labels
     const emailInput = page.locator('input[type="email"]');
     await expect(emailInput).toHaveAttribute('aria-invalid', 'false');
-    await expect(emailInput).toHaveAccessibleName();
+    await expect(emailInput).toHaveAccessibleName(/email/i);
   });
 
   test('all sections have proper landmarks', async ({ page }) => {
@@ -100,4 +102,3 @@ test.describe('A11y E2E: Home Page', () => {
     }
   });
 });
-

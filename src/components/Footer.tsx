@@ -59,7 +59,7 @@ const Heading = ({
   children: React.ReactNode;
 }) => {
   const Tag = `h${level}` as unknown as keyof JSX.IntrinsicElements;
-  return <Tag className="text-2xl font-bold text-cyan-400 dark:text-cyan-300">{children}</Tag>;
+  return <Tag className="text-2xl font-bold text-cyan-700 dark:text-cyan-300">{children}</Tag>;
 };
 
 export function Footer({
