@@ -2,278 +2,288 @@
 
 ## Metadata
 
-- Timestamp (Europe/Zurich): `2026-02-16 19:18:47 CET` (command output: `TZ=Europe/Zurich date '+%Y-%m-%d %H:%M:%S %Z'`)
-- Branch name: `HEAD` (command output: `git rev-parse --abbrev-ref HEAD`)
-- Commit SHA: `c9d8e02b3206c97f129cf96c0898cbd1435ee5b3` (command output: `git rev-parse HEAD`)
-- Package manager + lockfile evidence: npm + `package-lock.json` (command output: `./package-lock.json` from `rg --files -g 'package-lock.json' -g 'npm-shrinkwrap.json' -g 'yarn.lock' -g 'pnpm-lock.yaml' -g 'bun.lockb' -g 'bun.lock' .`)
-- Node local (node -v) + npm -v: `v22.15.1` / `10.9.2` (command output)
-- Node in CI (file:line evidence): `.github/workflows/ci.yml:46` (`node-version: '20.x'`), `.github/workflows/ci.yml:80` (`node-version: ['20']`), `.github/workflows/frontend-ci.yml:18` (`node-version: '20.x'`), package engine `.github` independent constraint in `package.json:6` (`"node": ">=18 <21"`)
+| Key                    | Value                                                                                                 |
+| ---------------------- | ----------------------------------------------------------------------------------------------------- |
+| Timestamp              | 2026-02-16 20:28:52 CET (Europe/Zurich)                                                               |
+| Branch                 | `pr-1-finalization`                                                                                   |
+| Commit SHA             | `74e7ff9` (`docs: add PR-1 baseline snapshot`)                                                        |
+| Package manager        | **npm** (lockfile: `package-lock.json`)                                                               |
+| Node (local)           | `v22.15.1`                                                                                            |
+| npm (local)            | `10.9.2`                                                                                              |
+| Node engine constraint | `>=18 <21` (`package.json:6`)                                                                         |
+| `.nvmrc`               | `20`                                                                                                  |
+| Node in CI             | `20` / `20.x` (all workflows via `actions/setup-node@v4`; exception: `frontend-ci.yml:16` uses `@v3`) |
 
-Evidence (STEP 0, verbatim command outputs):
+> **WARNING:** Local Node v22.15.1 is **outside** the `package.json` engine constraint `>=18 <21`.
+> CI runs Node 20.20.0. `npm ci` emits `EBADENGINE` warning locally.
 
-```text
-git rev-parse --abbrev-ref HEAD
-HEAD
-
-git status --porcelain
-
-
-git log -1 --oneline
-c9d8e02 chore(federation): daily verification results [automated]
-```
-
-Evidence (repo root listing + lockfile presence):
-
-```text
-ls -1
-...
-package-lock.json
-...
-```
-
-Evidence (workflow trigger lines, verbatim command output from `for f in .github/workflows/*.yml; do ...`):
-
-```text
-### .github/workflows/a11y.yml
-3:on:
-4:  push:
-6:  pull_request:
-### .github/workflows/autonomous-monitoring.yml
-3:on:
-7:  workflow_dispatch:  # Enable manual trigger for Day 0 bootstrap
-### .github/workflows/ci.yml
-3:on:
-4:  push:
-6:  pull_request:
-8:  workflow_dispatch:
-### .github/workflows/daily-governance-report.yml
-3:on:
-7:  workflow_dispatch:  # Enable manual trigger for Day 0 bootstrap
-### .github/workflows/e2e-tests.yml
-3:on:
-4:  pull_request:
-6:  push:
-8:  workflow_dispatch:
-### .github/workflows/ethics-reporting.yml
-3:on:
-7:  workflow_dispatch: # Allow manual triggering
-### .github/workflows/ewa-analysis.yml
-3:on:
-9:  workflow_dispatch:
-### .github/workflows/ewa-postlaunch.yml
-3:on:
-7:  workflow_dispatch:  # Enable manual trigger for Day 0 bootstrap
-### .github/workflows/federation-verification.yml
-6:on:
-11:  workflow_dispatch:
-### .github/workflows/frontend-ci.yml
-3:on:
-4:  push:
-6:  pull_request:
-### .github/workflows/governance.yml
-3:on:
-7:  workflow_dispatch:  # Enable manual trigger for Day 0 bootstrap
-### .github/workflows/i18n-validation.yml
-3:on:
-4:  pull_request:
-10:  push:
-### .github/workflows/integrity-verification.yml
-3:on:
-7:  workflow_dispatch:  # Enable manual trigger for Day 0 bootstrap
-### .github/workflows/ledger-validation.yml
-3:on:
-4:  push:
-8:  pull_request:
-12:  workflow_dispatch:
-### .github/workflows/link-check.yml
-3:on:
-4:  push:
-11:  pull_request:
-18:  workflow_dispatch:
-### .github/workflows/perf.yml
-3:on:
-4:  push:
-6:  pull_request:
-### .github/workflows/policy-validation.yml
-3:on:
-4:  pull_request:
-13:  workflow_dispatch:
-### .github/workflows/preview.yml
-3:on:
-4:  pull_request:
-### .github/workflows/release.yml
-28:on:
-29:  push:
-### .github/workflows/seo-validation.yml
-3:on:
-4:  push:
-6:  pull_request:
-### .github/workflows/stage-vi-integrity.yml
-3:on:
-6:  workflow_dispatch:
-### .github/workflows/vercel-deploy.yml
-22:on:
-23:  pull_request:
-25:  push:
-```
+---
 
 ## Local Baseline Results
 
-| Command                 | Exit code | PASS/FAIL | Notes                                                                                                                                |
-| ----------------------- | --------: | --------- | ------------------------------------------------------------------------------------------------------------------------------------ |
-| `rm -rf node_modules`   |       N/A | FAIL      | Command blocked by environment policy. Verbatim output: `Rejected("/bin/zsh -lc 'rm -rf node_modules' rejected: blocked by policy")` |
-| `npm ci`                |         0 | PASS      | `EXIT_CODE=0` (captured from command output). Full log: `docs/baseline_logs/local_npm_ci.log`                                        |
-| `npm test`              |         1 | FAIL      | `EXIT_CODE=1`. Full log: `docs/baseline_logs/local_npm_test.log`                                                                     |
-| `npm run test:coverage` |         1 | FAIL      | `EXIT_CODE=1`. Full log: `docs/baseline_logs/local_test_coverage.log`                                                                |
-| `npm run type-check`    |         0 | PASS      | `EXIT_CODE=0`. Full log: `docs/baseline_logs/local_type_check.log`                                                                   |
+| #   | Command                 | Exit Code | Status               | Notes                                                                                                 |
+| --- | ----------------------- | --------- | -------------------- | ----------------------------------------------------------------------------------------------------- |
+| 1   | `rm -rf node_modules`   | 0         | PASS                 | —                                                                                                     |
+| 2   | `npm ci`                | 0         | PASS (with warnings) | EBADENGINE: local Node v22.15.1 outside `>=18 <21`; 51 vulnerabilities (11 low, 19 moderate, 21 high) |
+| 3   | `npm test`              | 1         | **FAIL**             | 11 suites failed, 7 tests failed, 26 suites passed, 596 tests passed (625 total)                      |
+| 4   | `npm run test:coverage` | 1         | **FAIL**             | Same 11 suites / 7 tests failed; coverage collected for passing suites                                |
+| 5   | `npm run typecheck`     | 0         | PASS                 | `tsc --noEmit` — zero errors                                                                          |
+
+---
 
 ## CI Baseline Results
 
-| Workflow                                      |        Run ID | Commit SHA                                 | Failing jobs                                 | Link/“not available”                                                                                                                                                         |
-| --------------------------------------------- | ------------: | ------------------------------------------ | -------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Federation Verification (`main`, schedule)    | `22046093510` | `c9d8e02b3206c97f129cf96c0898cbd1435ee5b3` | `Verify Ledger Integrity` (failure)          | [run](https://github.com/AIKEWA/QuantumPoly/actions/runs/22046093510)                                                                                                        |
-| Daily Governance Report (`main`, schedule)    | `22046062088` | `c9d8e02b3206c97f129cf96c0898cbd1435ee5b3` | `Generate Daily Governance Report` (failure) | [run](https://github.com/AIKEWA/QuantumPoly/actions/runs/22046062088)                                                                                                        |
-| EWA v2 Autonomous Analysis (`main`, schedule) | `22045902887` | `c9d8e02b3206c97f129cf96c0898cbd1435ee5b3` | `Run EWA v2 Analysis` (failure)              | [run](https://github.com/AIKEWA/QuantumPoly/actions/runs/22045902887)                                                                                                        |
-| Current branch/PR run IDs                     | not available | not available                              | not available                                | `gh pr status` => `Current branch: There is no current branch`; `gh run list --event pull_request --commit c9d8e02b3206c97f129cf96c0898cbd1435ee5b3 --limit 10` => no output |
+### Runs on `main` (commit `74e7ff9`, pushed 2026-02-16T19:00:24Z)
+
+| Workflow               | Run ID      | Status      | Failing Job(s)                                            | Link                                                                   |
+| ---------------------- | ----------- | ----------- | --------------------------------------------------------- | ---------------------------------------------------------------------- |
+| **CI**                 | 22074544047 | failure     | `Environment Detection & Audit`, `Merge Coverage Reports` | [View](https://github.com/AIKEWA/QuantumPoly/actions/runs/22074544047) |
+| **Frontend CI**        | 22074544033 | failure     | `build` (npm test failed)                                 | [View](https://github.com/AIKEWA/QuantumPoly/actions/runs/22074544033) |
+| **Vercel Deployment**  | 22074544046 | failure     | `Deploy to Staging` (Project not found)                   | [View](https://github.com/AIKEWA/QuantumPoly/actions/runs/22074544046) |
+| **Release**            | 22074544056 | failure     | `Deploy to Staging` (Project not found)                   | [View](https://github.com/AIKEWA/QuantumPoly/actions/runs/22074544056) |
+| **Accessibility CI**   | 22074544040 | failure     | `Jest-Axe Unit Tests`, `Lighthouse A11y`                  | [View](https://github.com/AIKEWA/QuantumPoly/actions/runs/22074544040) |
+| **SEO Validation**     | 22074544053 | failure     | `Validate Sitemap & Robots` (robots.txt validation)       | [View](https://github.com/AIKEWA/QuantumPoly/actions/runs/22074544053) |
+| **Link Validation**    | 22074544044 | failure     | `link-check` (dead links in docs)                         | [View](https://github.com/AIKEWA/QuantumPoly/actions/runs/22074544044) |
+| **Stage VI Integrity** | 22074546672 | failure     | (log not available via `gh run view`)                     | [View](https://github.com/AIKEWA/QuantumPoly/actions/runs/22074546672) |
+| **E2E Tests**          | 22074544081 | in_progress | —                                                         | [View](https://github.com/AIKEWA/QuantumPoly/actions/runs/22074544081) |
+| **Performance CI**     | 22074544048 | **success** | —                                                         | [View](https://github.com/AIKEWA/QuantumPoly/actions/runs/22074544048) |
+
+### Runs on `pr-1-finalization`
+
+No CI runs exist yet (no PR opened from this branch).
+
+---
 
 ## Failing Suites & Errors (verbatim)
 
-- TEST FAILURES
-  - Suite: `__tests__/a11y.footer.test.tsx` (`docs/baseline_logs/local_npm_test.log:451`, also `docs/baseline_logs/local_test_coverage.log:41`)
+### TEST FAILURES
 
-```text
-TestingLibraryElementError: Unable to find an accessible element with the role "link" and name "GitHub"
+#### 1. `__tests__/lib/seo.test.ts`
+
+```
+● seo › isValidSEORoute › validates section routes
+
+  expect(received).toBe(expected) // Object.is equality
+
+  Expected: true
+  Received: false
 ```
 
-- Suite: `__tests__/components/layouts/PolicyLayout.a11y.test.tsx` (`docs/baseline_logs/local_npm_test.log:1165`)
+#### 2. `__tests__/components/layouts/PolicyLayout.test.tsx`
 
-```text
-TestingLibraryElementError: Found multiple elements with the role "status"
+```
+● PolicyLayout › should not show review overdue badge when date is in future
+
+  expect(element).not.toBeInTheDocument()
+
+  expected document not to contain element, found <span aria-live="polite"
+  class="inline-flex items-center rounded-md border border-red-300 bg-red-50
+  px-3 py-1 text-body-sm font-medium text-red-800" role="status">Review
+  overdue — please review this page</span> instead
 ```
 
-- Suite: `__tests__/a11y.home.test.tsx` and `__tests__/integration/heading-hierarchy.test.tsx` (`docs/baseline_logs/local_npm_test.log:53472`, `docs/baseline_logs/local_npm_test.log:53518`)
+#### 3. `__tests__/a11y.footer.test.tsx`
 
-```text
-Jest worker encountered 4 child process exceptions, exceeding retry limit
+```
+● A11y: Footer › social links have proper labels
+
+  TestingLibraryElementError: Unable to find an accessible element with the
+  role "link" and name "GitHub"
 ```
 
-- ENVIRONMENT FAILURES
-  - Suites: `__tests__/api/ethics/public.test.ts`, `__tests__/api/feedback-trust.test.ts` (`docs/baseline_logs/local_npm_test.log:1529`, `docs/baseline_logs/local_npm_test.log:1546`)
+#### 4. `__tests__/LanguageSwitcher.test.tsx`
 
-```text
-ReferenceError: Request is not defined
+```
+● LanguageSwitcher Component › displays all supported locales as options
+
+  expect(received).toHaveLength(expected)
+
+  Expected length: 3
+  Received length: 6
 ```
 
-- CI job: `Run EWA v2 Analysis` (`docs/baseline_logs/ci_run_22045902887_failed.log:237`)
+#### 5. `__tests__/components/layouts/PolicyLayout.a11y.test.tsx` (3 failures)
 
-```text
-❌ Analysis failed: TypeError [ERR_UNKNOWN_FILE_EXTENSION]: Unknown file extension ".ts" for /home/runner/work/QuantumPoly/QuantumPoly/src/lib/ewa/engine/statistics.ts
+```
+● PolicyLayout - Accessibility › Fallback Notice › should render fallback notice with proper ARIA attributes
+
+  TestingLibraryElementError: Found multiple elements with the role "status"
+
+● PolicyLayout - Accessibility › Fallback Notice › should not render fallback notice when isFallback is false
+
+  expect(element).not.toBeInTheDocument()
+
+  expected document not to contain element, found <span aria-live="polite"
+  class="inline-flex items-center rounded-md border border-red-300 bg-red-50
+  px-3 py-1 text-body-sm font-medium text-red-800" role="status">Review
+  overdue — please review this page</span> instead
+
+● PolicyLayout - Accessibility › Fallback Notice › should not render fallback notice by default
+
+  expect(element).not.toBeInTheDocument()
+
+  (same element found unexpectedly)
 ```
 
-- MODULE RESOLUTION FAILURES
-  - Suites: `__tests__/components/faq.a11y.test.tsx`, `__tests__/components/faq.test.tsx` (`docs/baseline_logs/local_npm_test.log:1563`, `docs/baseline_logs/local_npm_test.log:1579`)
+### ENVIRONMENT FAILURES
 
-```text
-Cannot find module '../../src/components/FAQ' from '__tests__/components/faq.a11y.test.tsx'
-Cannot find module '../../src/components/FAQ' from '__tests__/components/faq.test.tsx'
+#### 6. `__tests__/api/ethics/public.test.ts`
+
+```
+● Test suite failed to run
+
+  ReferenceError: Request is not defined
+
+     6 | import { NextRequest } from 'next/server';
+     7 |
+  >  8 | import { GET, OPTIONS } from '@/app/api/ethics/public/route';
+       |                 ^
+
+  at Object.Request (node_modules/next/src/server/web/spec-extension/request.ts:15:34)
+  at Object.<anonymous> (node_modules/next/server.js:2:16)
 ```
 
-- COVERAGE THRESHOLD FAILURES
-  - `docs/baseline_logs/local_test_coverage.log:53751`
+#### 7. `__tests__/api/feedback-trust.test.ts`
 
-```text
-Jest: "global" coverage threshold for statements (85%) not met: 12.14%
-Jest: "global" coverage threshold for branches (85%) not met: 11.51%
-Jest: "global" coverage threshold for lines (85%) not met: 11.94%
-Jest: "global" coverage threshold for functions (85%) not met: 12.94%
+```
+● Test suite failed to run
+
+  ReferenceError: Request is not defined
+
+     6 | import { NextRequest } from 'next/server';
+     7 |
+  >  8 | import { POST, GET } from '@/app/api/feedback/report/route';
+       |                 ^
+
+  at Object.Request (node_modules/next/src/server/web/spec-extension/request.ts:15:34)
+  at Object.<anonymous> (node_modules/next/server.js:2:16)
 ```
 
-- TYPECHECK FAILURES
-  - None observed in local baseline (`docs/baseline_logs/local_type_check.log`)
+### MODULE RESOLUTION FAILURES
 
-```text
-> quantumpoly@1.1.0 type-check
-> tsc --noEmit
+#### 8. `__tests__/components/faq.test.tsx`
+
+```
+● Test suite failed to run
+
+  Cannot find module '../../src/components/FAQ' from '__tests__/components/faq.test.tsx'
+
+  at Resolver._throwModNotFoundError (node_modules/jest-resolve/build/resolver.js:427:11)
 ```
 
-Local summaries (verbatim):
+#### 9. `__tests__/components/faq.a11y.test.tsx`
 
-```text
-Test Suites: 11 failed, 26 passed, 37 total
-Tests:       7 failed, 22 todo, 596 passed, 625 total
-Snapshots:   0 total
-Time:        9.098 s
-Ran all test suites.
+```
+● Test suite failed to run
+
+  Cannot find module '../../src/components/FAQ' from '__tests__/components/faq.a11y.test.tsx'
+
+  at Resolver._throwModNotFoundError (node_modules/jest-resolve/build/resolver.js:427:11)
 ```
 
-```text
-Test Suites: 11 failed, 26 passed, 37 total
-Tests:       7 failed, 22 todo, 596 passed, 625 total
-Snapshots:   0 total
-Time:        10.423 s
-Ran all test suites.
+### JEST WORKER CRASHES
+
+#### 10. `__tests__/a11y.home.test.tsx`
+
+```
+● Test suite failed to run
+
+  Jest worker encountered 4 child process exceptions, exceeding retry limit
+
+  at ChildProcessWorker.initialize (node_modules/jest-worker/build/workers/ChildProcessWorker.js:181:21)
 ```
 
-## Repo Scan: .js/.mjs References
+#### 11. `__tests__/integration/heading-hierarchy.test.tsx`
 
-- Search A1 (`rg -n "scripts/.*\.js\b" .`): 44 hits (`docs/baseline_logs/scan_A1_scripts_js.log`)
-- Search A2 (`rg -n "\bnode\s+.*\.js\b" .`): 33 hits (`docs/baseline_logs/scan_A2_node_js.log`)
-- Search A3 (`rg -n "\bnode\b.*scripts/.*" package.json .github/workflows`): 61 hits (`docs/baseline_logs/scan_A3_node_scripts.log`)
-- Search B (`rg -n "\.js\b" package.json .github/workflows scripts next.config.* jest.config.* tsconfig*.json`): 102 hits (`docs/baseline_logs/scan_B_generic_js_refs.log`)
-- Search C (`rg -n "(from\s+['\"].*\.js['\"]|require\(['\"].*\.js['\"]\))" .`): 4 hits, all in `storybook-static/*` generated bundles/maps (`docs/baseline_logs/scan_C_esm_cjs.log`)
-- Scoped Search C on source/config paths: no hits (command returned no output): `rg -n "(from\s+['\"].*\.js['\"]|require\(['\"].*\.js['\"]\))" src scripts __tests__ package.json jest.config.js jest.a11y.config.js next.config.mjs .github/workflows`
+```
+● Test suite failed to run
 
-Categorization:
+  Jest worker encountered 4 child process exceptions, exceeding retry limit
 
-- MUST-CHANGE (executed/imported runtime refs): `package.json:10`, `package.json:11`, `package.json:35`, `package.json:36`, `package.json:47`, `package.json:49`, `package.json:50` (runtime `node scripts/*.js` calls)
-- OPTIONAL (docs/comments/examples only): e.g. `BLOCK06.2_SITEMAP_ROBOTS_IMPLEMENTATION.md:108`, `BLOCK06.2_SITEMAP_ROBOTS_IMPLEMENTATION.md:109`, `archive/FINAL_INTEGRATION_MEMO.md:16`
-- RISKY (ESM/CJS boundary): `scripts/ewa-analyze.mjs:38`, `scripts/ewa-analyze.mjs:39`, `scripts/ewa-analyze.mjs:40` dynamic-import `.ts` files in Node runtime; CI failure evidence at `docs/baseline_logs/ci_run_22045902887_failed.log:237`
-
-## Baseline vs Regression Verdict
-
-Cannot determine (missing CI run IDs for current PR branch). Evidence: local baseline is red (`docs/baseline_logs/local_npm_test.log:54293` and `docs/baseline_logs/local_test_coverage.log:54522`), origin/main has failures too but in scheduled non-PR workflows (`gh run list --branch main --limit 10` output includes failures in `Federation Verification`, `Daily Governance Report`, `EWA v2 Autonomous Analysis`), and there is no current branch-bound PR run context (`gh pr status` shows `There is no current branch`; `gh run list --event pull_request --commit c9d8e02b3206c97f129cf96c0898cbd1435ee5b3 --limit 10` produced no output).
-
-## Patch Plan v1 (≤5 files)
-
-No patch proposed in this run.
-Reason: regression status is unproven for PR-1 scope, and the observed ESM boundary risk is in a schedule/manual workflow path (`.github/workflows/ewa-analysis.yml:3-9`) not proven as a PR-1 blocker.
-If (and only if) PR-1 scope requires this workflow green, smallest compat-only candidate would be:
-
-- File: `scripts/ewa-analyze.mjs`
-- Lines: `38-40`
-- Before:
-
-```js
-const { performStatisticalAnalysis } = await import('../src/lib/ewa/engine/statistics.ts');
-const { calculateSeverityScore, requiresHumanReview } =
-  await import('../src/lib/ewa/engine/severity.ts');
-const { calculateTrustTrajectory } = await import('../src/lib/ewa/trustTrajectory.ts');
+  at ChildProcessWorker.initialize (node_modules/jest-worker/build/workers/ChildProcessWorker.js:181:21)
 ```
 
-- After (compat wrapper or precompiled JS target only; choose one):
+### CI-ONLY FAILURES (from `gh run view --log-failed`)
 
-```js
-// Minimal compat option example (only if strictly required): import compiled .js outputs instead of .ts runtime imports
-const { performStatisticalAnalysis } = await import('../dist/lib/ewa/engine/statistics.js');
-const { calculateSeverityScore, requiresHumanReview } =
-  await import('../dist/lib/ewa/engine/severity.js');
-const { calculateTrustTrajectory } = await import('../dist/lib/ewa/trustTrajectory.js');
+#### CI workflow (22074544047) — Missing `.github/scripts/`
+
+```
+Error: Cannot find module '/home/runner/work/QuantumPoly/QuantumPoly/.github/scripts/detect-env.js'
+    at Module._resolveFilename (node:internal/modules/cjs/loader:1207:15)
+  code: 'MODULE_NOT_FOUND'
+
+Error: Cannot find module '/home/runner/work/QuantumPoly/QuantumPoly/.github/scripts/merge-coverage.js'
+    at Module._resolveFilename (node:internal/modules/cjs/loader:1207:15)
+  code: 'MODULE_NOT_FOUND'
 ```
 
-Execution context label: Executed in CI (workflow: `EWA v2 Autonomous Analysis`, job: `Run EWA v2 Analysis`), not evidenced as executed on pull_request.
+#### Vercel Deployment (22074544046) & Release (22074544056) — Project not found
+
+```
+Error! Project not found ({"VERCEL_PROJECT_ID":"***","VERCEL_ORG_ID":"***"})
+```
+
+#### SEO Validation (22074544053) — robots.txt validation
+
+```
+❌ Validation failed with errors:
+  1. Missing User-agent directive
+```
+
+#### Accessibility CI (22074544040) — `React is not defined` in a11y config
+
+```
+ReferenceError: React is not defined
+  at __tests__/a11y.policy-layout.test.tsx:38:5
+  at __tests__/a11y.footer.test.tsx:38:51
+  at __tests__/a11y.home.test.tsx:25:53
+```
+
+#### Link Validation (22074544044) — Dead links
+
+```
+[✖] link → Status: 400 [Error: ENOENT: no such file or directory, access '/github/workspace/docs/link']
+ERROR: 1 dead links found!
+
+[✖] https://canary.quantumpoly.ai → Status: 0 Error: getaddrinfo ENOTFOUND canary.quantumpoly.ai
+ERROR: 5 dead links found!
+
+[✖] ./api/integrity/status → Status: 400 [Error: ENOENT]
+ERROR: 1 dead links found!
+```
+
+### COVERAGE THRESHOLD FAILURES
+
+None (no thresholds configured; `--passWithNoTests` used).
+
+### TYPECHECK FAILURES
+
+None (`tsc --noEmit` exit 0).
+
+---
 
 ## Evidence Pointers
 
-- `docs/baseline_logs/local_npm_ci.log`
-- `docs/baseline_logs/local_npm_test.log`
-- `docs/baseline_logs/local_test_coverage.log`
-- `docs/baseline_logs/local_type_check.log`
-- `docs/baseline_logs/local_failure_excerpts.log`
-- `docs/baseline_logs/ci_run_22046093510_failed.log`
-- `docs/baseline_logs/ci_run_22046062088_failed.log`
-- `docs/baseline_logs/ci_run_22045902887_failed.log`
-- `docs/baseline_logs/scan_A1_scripts_js.log`
-- `docs/baseline_logs/scan_A2_node_js.log`
-- `docs/baseline_logs/scan_A3_node_scripts.log`
-- `docs/baseline_logs/scan_B_generic_js_refs.log`
-- `docs/baseline_logs/scan_C_esm_cjs.log`
+| Artifact          | Path                                         |
+| ----------------- | -------------------------------------------- |
+| npm ci log        | `docs/baseline_logs/local_npm_ci.log`        |
+| npm test log      | `docs/baseline_logs/local_npm_test.log`      |
+| test:coverage log | `docs/baseline_logs/local_test_coverage.log` |
+| typecheck log     | `docs/baseline_logs/local_typecheck.log`     |
+
+---
+
+## Summary Counts
+
+| Category                   | Count              |
+| -------------------------- | ------------------ |
+| Local test suites failed   | 11 / 37            |
+| Local test cases failed    | 7 / 625            |
+| Local test cases todo      | 22                 |
+| CI workflows failed (main) | 8 / 10             |
+| CI workflows passed (main) | 1 (Performance CI) |
+| CI workflows in-progress   | 1 (E2E Tests)      |
+
+---
+
+_Generated by CI-aligned release engineer. No fixes proposed._
