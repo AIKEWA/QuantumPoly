@@ -36,6 +36,7 @@ permissions:
   contents: read        # Required: Checkout repository
   deployments: write    # Required: Create GitHub deployments
   pull-requests: write  # Required: Comment on PRs with preview URLs
+  issues: write         # Required: Create PR comments via issues API
   statuses: write       # Optional: Update commit statuses
 
 # Prevent concurrent deployments per branch/tag to avoid conflicts
@@ -111,6 +112,42 @@ jobs:
           
           echo "✅ All required secrets are configured"
 
+      - name: Vercel Preflight
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        run: |
+          set -o pipefail
+
+          MISSING_VARS=()
+          for VAR_NAME in VERCEL_TOKEN VERCEL_ORG_ID VERCEL_PROJECT_ID; do
+            if [[ -z "${!VAR_NAME}" ]]; then
+              MISSING_VARS+=("$VAR_NAME")
+            fi
+          done
+
+          if [[ ${#MISSING_VARS[@]} -gt 0 ]]; then
+            echo "❌ Missing required Vercel env vars:"
+            for VAR_NAME in "${MISSING_VARS[@]}"; do
+              echo "  - $VAR_NAME"
+            done
+            exit 1
+          fi
+
+          echo "✅ Vercel env var presence: VERCEL_TOKEN=present, VERCEL_ORG_ID=present, VERCEL_PROJECT_ID=present"
+
+          run_preflight_cmd() {
+            if ! "$@"; then
+              echo "Vercel token cannot access project/team or project linkage invalid. Recreate token or verify team access."
+              exit 1
+            fi
+          }
+
+          run_preflight_cmd npx vercel --version
+          run_preflight_cmd npx vercel whoami --token "$VERCEL_TOKEN"
+          run_preflight_cmd npx vercel pull --yes --environment=preview --token "$VERCEL_TOKEN" --scope "$VERCEL_ORG_ID"
+
       # Vercel GitHub Action deployment (community-maintained)
       # Documentation: https://github.com/amondnet/vercel-action
       # This step builds and deploys to Vercel in one action
@@ -144,6 +181,8 @@ jobs:
       # Comment preview URL on PR for easy stakeholder access
       # Provides direct link to deployed preview in PR discussion
       - name: Comment preview URL on PR
+        if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
+        continue-on-error: true
         uses: actions/github-script@v7
         with:
           script: |
@@ -166,12 +205,16 @@ jobs:
             *Deployment powered by vercel/action • Updates automatically on new commits*
             `;
             
-            github.rest.issues.createComment({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: context.issue.number,
-              body: body
-            });
+            try {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: body
+              });
+            } catch (error) {
+              console.warn(`WARN: Could not post PR comment: ${error instanceof Error ? error.message : String(error)}`);
+            }
 
       - name: Preview deployment summary
         run: |
@@ -569,4 +612,3 @@ jobs:
           echo "**Timestamp:** $(date -u +"%Y-%m-%d %H:%M:%S UTC")" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "View ledger: [Governance Dashboard](/governance/README.md)" >> $GITHUB_STEP_SUMMARY
-

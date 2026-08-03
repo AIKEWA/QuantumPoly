@@ -23,6 +23,7 @@ module.exports = {
   ],
 
   // Setup files
+  setupFiles: ['<rootDir>/jest.polyfills.js'],
   setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
 
   // Module resolution
@@ -67,4 +68,3 @@ module.exports = {
   // Timeouts
   testTimeout: 10000,
 };
-
