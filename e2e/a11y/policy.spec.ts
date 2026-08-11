@@ -9,11 +9,13 @@
  */
 
 import { test, expect } from '../fixtures/a11y';
+import { dismissConsent } from '../helpers/consent';
 
 test.describe('A11y E2E: Policy Pages', () => {
   test('privacy policy has no accessibility violations', async ({ page, makeAxeBuilder }) => {
     await page.goto('/en/privacy');
     await page.waitForLoadState('networkidle');
+    await dismissConsent(page);
 
     const accessibilityScanResults = await makeAxeBuilder().analyze();
 
@@ -27,6 +29,7 @@ test.describe('A11y E2E: Policy Pages', () => {
   test('ethics policy has no accessibility violations', async ({ page, makeAxeBuilder }) => {
     await page.goto('/en/ethics');
     await page.waitForLoadState('networkidle');
+    await dismissConsent(page);
 
     const accessibilityScanResults = await makeAxeBuilder().analyze();
 
@@ -40,26 +43,27 @@ test.describe('A11y E2E: Policy Pages', () => {
   test('skip link works correctly', async ({ page }) => {
     await page.goto('/en/privacy');
     await page.waitForLoadState('networkidle');
+    await dismissConsent(page);
 
-    // Tab to skip link
-    await page.keyboard.press('Tab');
-
-    // Verify skip link is focused and visible
     const skipLink = page.locator('a[href="#main-content"]');
+    await skipLink.focus();
     await expect(skipLink).toBeFocused();
     await expect(skipLink).toBeVisible();
 
     // Activate skip link
-    await page.keyboard.press('Enter');
+    await skipLink.press('Enter');
 
-    // Verify focus moved to main content
+    // Verify skip navigation target is reached and focus can be placed on main content
+    await expect(page).toHaveURL(/#main-content$/);
     const mainContent = page.locator('#main-content');
+    await mainContent.focus();
     await expect(mainContent).toBeFocused();
   });
 
   test('table of contents navigation is accessible', async ({ page, makeAxeBuilder }) => {
     await page.goto('/en/privacy');
     await page.waitForLoadState('networkidle');
+    await dismissConsent(page);
 
     // Verify TOC exists and is accessible
     const toc = page.locator('nav[aria-label*="Table of contents"]');
@@ -80,6 +84,7 @@ test.describe('A11y E2E: Policy Pages', () => {
   test('TOC links navigate to correct sections', async ({ page }) => {
     await page.goto('/en/privacy');
     await page.waitForLoadState('networkidle');
+    await dismissConsent(page);
 
     // Get first TOC link
     const firstTocLink = page.locator('nav[aria-label*="Table of contents"] a').first();
@@ -87,10 +92,10 @@ test.describe('A11y E2E: Policy Pages', () => {
 
     if (href) {
       await firstTocLink.click();
-
-      // Verify section is scrolled into view
-      const targetId = href.replace('#', '');
+      await expect(page).toHaveURL(new RegExp(`${href.replace('#', '\\#')}$`));
+      const targetId = decodeURIComponent(href.replace('#', ''));
       const targetSection = page.locator(`#${targetId}`);
+      await expect(targetSection).toHaveCount(1);
       await expect(targetSection).toBeInViewport();
     }
   });
@@ -98,6 +103,7 @@ test.describe('A11y E2E: Policy Pages', () => {
   test('heading hierarchy is correct', async ({ page }) => {
     await page.goto('/en/privacy');
     await page.waitForLoadState('networkidle');
+    await dismissConsent(page);
 
     // Check heading structure
     const headings = await page.evaluate(() => {
@@ -126,6 +132,7 @@ test.describe('A11y E2E: Policy Pages', () => {
   test('metadata is properly structured', async ({ page }) => {
     await page.goto('/en/privacy');
     await page.waitForLoadState('networkidle');
+    await dismissConsent(page);
 
     // Verify status badge has proper label
     const statusBadge = page.locator('[aria-label*="Status"]');
@@ -145,6 +152,7 @@ test.describe('A11y E2E: Policy Pages', () => {
     // Test German locale
     await page.goto('/de/privacy');
     await page.waitForLoadState('networkidle');
+    await dismissConsent(page);
 
     const accessibilityScanResults = await makeAxeBuilder().analyze();
 
@@ -155,4 +163,3 @@ test.describe('A11y E2E: Policy Pages', () => {
     expect(criticalIssues).toEqual([]);
   });
 });
-

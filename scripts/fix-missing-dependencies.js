@@ -39,6 +39,7 @@ const child_process_1 = require("child_process");
 const ROOT_DIR = path.resolve(__dirname, '..');
 const SRC_DIR = path.join(ROOT_DIR, 'src');
 const LOG_FILE = path.join(ROOT_DIR, 'logs', 'dependency-autoheal.log');
+const IS_CI = process.env.CI === 'true' || process.env.CI === '1';
 // Built-in Node.js modules to ignore
 const BUILTINS = new Set([
     'assert', 'async_hooks', 'buffer', 'child_process', 'cluster', 'console',
@@ -185,6 +186,11 @@ async function main() {
         });
         if (missingPackages.length > 0) {
             log(`Found ${missingPackages.length} missing dependencies: ${missingPackages.join(', ')}`);
+            if (IS_CI) {
+                log('CI mode detected. Dependency auto-install is disabled for deterministic builds.');
+                log('Add missing dependencies to package.json locally and commit package-lock.json.');
+                process.exit(1);
+            }
             for (const pkg of missingPackages) {
                 log(`Installing missing package: ${pkg}...`);
                 try {
