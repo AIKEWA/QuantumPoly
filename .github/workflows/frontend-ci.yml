@@ -1,10 +1,8 @@
+# NOTE: Superseded by .github/workflows/ci.yml; this workflow is manual-only (workflow_dispatch).
 name: Frontend CI
 
 on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+  workflow_dispatch:
 
 jobs:
   build:

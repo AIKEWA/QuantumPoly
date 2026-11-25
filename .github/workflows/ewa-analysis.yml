@@ -36,12 +36,20 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '20.x'
           cache: 'npm'
-      
+
+      - name: Diagnostics
+        run: |
+          echo "Node: $(node -v)"
+          echo "npm: $(npm -v)"
+          echo "package.json: $(test -f package.json && echo present || echo missing)"
+          echo "package-lock.json: $(test -f package-lock.json && echo present || echo missing)"
+          echo "governance/ledger/ledger.jsonl: $(test -f governance/ledger/ledger.jsonl && echo present || echo missing)"
+
       - name: Install dependencies
-        run: npm ci --legacy-peer-deps
-      
+        run: npm ci
+
       - name: Run EWA v2 analysis
         env:
           EWA_ML: ${{ github.event.inputs.enable_ml || 'false' }}
@@ -106,12 +114,18 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '20.x'
           cache: 'npm'
-      
+
+      - name: Diagnostics
+        run: |
+          echo "Node: $(node -v)"
+          echo "npm: $(npm -v)"
+          echo "governance/ledger/ledger.jsonl: $(test -f governance/ledger/ledger.jsonl && echo present || echo missing)"
+
       - name: Install dependencies
-        run: npm ci --legacy-peer-deps
-      
+        run: npm ci
+
       - name: Verify autonomous analysis entries
         run: |
           echo "🔍 Verifying autonomous analysis entries..."
@@ -122,12 +136,13 @@ jobs:
           echo "📊 Generating verification report..."
           node -e "
             const fs = require('fs');
-            const { parseLedger } = require('./src/lib/governance/ledger-parser.ts');
-            
-            const entries = parseLedger('governance/ledger/ledger.jsonl');
-            const autonomousEntries = entries.filter(e => e.entryType === 'autonomous_analysis');
-            
+            const file = 'governance/ledger/ledger.jsonl';
+            const content = fs.existsSync(file) ? fs.readFileSync(file, 'utf8').trim() : '';
+            const entries = content ? content.split('\\n').filter(Boolean).map((line) => JSON.parse(line)) : [];
+            const autonomousEntries = entries.filter((e) =>
+              e.entryType === 'autonomous_analysis' || e.ledger_entry_type === 'autonomous_analysis'
+            );
             console.log('Autonomous Analysis Entries:', autonomousEntries.length);
-            console.log('Latest Entry:', autonomousEntries[autonomousEntries.length - 1]?.id || 'None');
+            const latest = autonomousEntries[autonomousEntries.length - 1];
+            console.log('Latest Entry:', latest?.id || latest?.entry_id || 'None');
           "
-

@@ -6,6 +6,7 @@ const ROOT_DIR = path.resolve(__dirname, '..');
 const PACKAGE_JSON = path.join(ROOT_DIR, 'package.json');
 const PACKAGE_LOCK = path.join(ROOT_DIR, 'package-lock.json');
 const LOG_FILE = path.join(ROOT_DIR, 'logs', 'lockfile-sync.log');
+const IS_CI = process.env.CI === 'true' || process.env.CI === '1';
 
 // Ensure log directory exists
 if (!fs.existsSync(path.dirname(LOG_FILE))) {
@@ -28,11 +29,37 @@ function shouldSync(): boolean {
     return true;
   }
 
-  const pkgStats = fs.statSync(PACKAGE_JSON);
-  const lockStats = fs.statSync(PACKAGE_LOCK);
+  try {
+    const pkg = JSON.parse(fs.readFileSync(PACKAGE_JSON, 'utf8'));
+    const lock = JSON.parse(fs.readFileSync(PACKAGE_LOCK, 'utf8'));
+    const root = lock.packages?.[''] || {};
 
-  if (pkgStats.mtime > lockStats.mtime) {
-    log('package.json is newer than package-lock.json.', 'WARN');
+    const normalize = (deps: Record<string, string> = {}) =>
+      Object.keys(deps)
+        .sort()
+        .reduce((acc: Record<string, string>, key) => {
+          acc[key] = deps[key];
+          return acc;
+        }, {});
+
+    const pkgDeps = {
+      dependencies: normalize(pkg.dependencies),
+      devDependencies: normalize(pkg.devDependencies),
+      optionalDependencies: normalize(pkg.optionalDependencies),
+    };
+
+    const lockDeps = {
+      dependencies: normalize(root.dependencies),
+      devDependencies: normalize(root.devDependencies),
+      optionalDependencies: normalize(root.optionalDependencies),
+    };
+
+    if (JSON.stringify(pkgDeps) !== JSON.stringify(lockDeps)) {
+      log('Dependency manifest mismatch between package.json and package-lock.json.', 'WARN');
+      return true;
+    }
+  } catch (error) {
+    log(`Unable to parse package manifest files: ${error}`, 'ERROR');
     return true;
   }
 
@@ -40,6 +67,11 @@ function shouldSync(): boolean {
 }
 
 function syncLockfile() {
+  if (IS_CI) {
+    log('Lockfile mismatch detected in CI. Refusing to run npm install or mutate package-lock.json.', 'ERROR');
+    log('Run "npm run lockfile:sync" locally and commit the updated package-lock.json.', 'ERROR');
+    process.exit(1);
+  }
   log('Resync triggered. Running npm install...', 'WARN');
   try {
     execSync('npm install --legacy-peer-deps', { stdio: 'inherit', cwd: ROOT_DIR });
@@ -70,6 +102,9 @@ function commitChanges() {
 
 function main() {
   log('Starting lockfile integrity check...', 'INFO');
+  if (IS_CI) {
+    log('CI mode detected: lockfile check is read-only and fail-fast.', 'INFO');
+  }
 
   const args = process.argv.slice(2);
   const autoCommit = args.includes('--commit');
@@ -85,4 +120,3 @@ function main() {
 }
 
 main();
-
